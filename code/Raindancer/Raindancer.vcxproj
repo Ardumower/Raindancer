@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C5F80730-F44F-4478-BDAE-6634EFC2CA88}</ProjectGuid>
+    <RootNamespace>
+    </RootNamespace>
+    <ProjectName>Raindancer</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>
+    </PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>
+    </PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\Programme\Arduino\libraries;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\libraries;$(ProjectDir)..\..\Arduino\libraries;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino\avr;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino\USB;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\variants\arduino_due_x;$(ProjectDir)..\Raindancer;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\arm-none-eabi\include\c++\4.8.3;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\arm-none-eabi\include\c++\4.8.3\arm-none-eabi\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\arm-none-eabi\include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\lib\gcc\arm-none-eabi\4.8.3\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam\include;$(ProjectDir)..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\arm-none-eabi\include;$(ProjectDir)..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\arm_none_eabi\include\;$(ProjectDir)..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include;$(ProjectDir)..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\sam3xa\include\pio;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\sam3xa\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\sam3xa\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.Raindancer.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>_VMDEBUG=1;printf=iprintf;F_CPU=84000000L;ARDUINO=10803;ARDUINO_SAM_DUE;ARDUINO_ARCH_SAM;__SAM3X8E__;USB_VID=0x2341;USB_PID=0x003e;USBCON;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Raindancer;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\libraries\Wire\src;$(ProjectDir)..\..\..\..\..\Programme\Arduino\libraries;$(ProjectDir)..\..\..\..\Arduino\libraries;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\libraries;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino\avr;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino\USB;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\variants\arduino_due_x;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\arm-none-eabi\include\c++\4.8.3;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\arm-none-eabi\include\c++\4.8.3\arm-none-eabi\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\arm-none-eabi\include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\tools\arm-none-eabi-gcc\4.8.3-2014q1\lib\gcc\arm-none-eabi\4.8.3\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam\include;$(ProjectDir)..\..\..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\arm-none-eabi\include;$(ProjectDir)..\..\..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\arm_none_eabi\include\;$(ProjectDir)..\..\..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include;$(ProjectDir)..\..\..\..\..\Programme\Arduino\hardware\tools\g++_arm_none_eabi\lib\gcc\arm-none-eabi\4.4.1\include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\sam3xa\include\pio;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\CMSIS\CMSIS\Include\;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\sam3xa\include;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\libsam;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL;C:\Users\Kai\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\system\CMSIS\Device\ATMEL\sam3xa\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.Raindancer.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>printf=iprintf;F_CPU=84000000L;ARDUINO=10803;ARDUINO_SAM_DUE;ARDUINO_ARCH_SAM;__SAM3X8E__;USB_VID=0x2341;USB_PID=0x003e;USBCON;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="VisualMicro" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Raindancer.ino">
+      <FileType>CppCode</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="adcman.cpp" />
+    <ClCompile Include="behaviour.cpp" />
+    <ClCompile Include="BehaviourTree.cpp" />
+    <ClCompile Include="Blackboard.cpp" />
+    <ClCompile Include="bRestoreHistory.cpp" />
+    <ClCompile Include="bt.cpp" />
+    <ClCompile Include="BufferSerial.cpp" />
+    <ClCompile Include="bumperSensor.cpp" />
+    <ClCompile Include="buzzer.cpp" />
+    <ClCompile Include="closedloopcontrol.cpp" />
+    <ClCompile Include="cmd.cpp" />
+    <ClCompile Include="config.cpp" />
+    <ClCompile Include="CRotaryEncoder.cpp" />
+    <ClCompile Include="dsp.cpp" />
+    <ClCompile Include="DueTimer.cpp" />
+    <ClCompile Include="EEPROM.cpp" />
+    <ClCompile Include="errorhandler.cpp" />
+    <ClCompile Include="FreeRam.cpp" />
+    <ClCompile Include="hardware.cpp" />
+    <ClCompile Include="helpers.cpp" />
+    <ClCompile Include="MC33926.cpp" />
+    <ClCompile Include="motor.cpp" />
+    <ClCompile Include="mowclosedloopcontrol.cpp" />
+    <ClCompile Include="perimeter.cpp" />
+    <ClCompile Include="PerimeterCoil.cpp" />
+    <ClCompile Include="pinman.cpp" />
+    <ClCompile Include="positioncontrol.cpp" />
+    <ClCompile Include="printSensordata.cpp" />
+    <ClCompile Include="rangeSensor.cpp" />
+    <ClCompile Include="RingBufferChar.cpp" />
+    <ClCompile Include="rtc.cpp" />
+    <ClCompile Include="RunningMedian.cpp" />
+    <ClCompile Include="Sabertooth.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadController.cpp" />
+    <ClCompile Include="ui.cpp" />
+    <ClCompile Include="motorSensor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="adcman.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="batterySensor.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bCharging.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bCheck2.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bConditions.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bCruise.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bDecorators.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="behaviour.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="BehaviourTree.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bEscapeObstacle.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bEscapeOOP.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bFreeBumper.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bFreePerimeter.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bGotoAreaX.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="Blackboard.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bPerimeterTracking.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bRestoreHistory.h" />
+    <ClInclude Include="bRotate.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bt.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="BufferSerial.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="bumperSensor.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="buzzer.h" />
+    <ClInclude Include="chargeSystem.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="closedloopcontrol.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="cmd.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="CRotaryEncoder.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="dsp.h" />
+    <ClInclude Include="DueTimer.h" />
+    <ClInclude Include="EEPROM.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="errorhandler.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="FreeRam.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="hardware.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="helpers.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="InOutInterface.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="MC33926.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="motor.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="mowclosedloopcontrol.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="mowmotorSensor.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="NodeStack.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="perimeter.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="PerimeterCoil.h" />
+    <ClInclude Include="pinman.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="positioncontrol.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="printSensordata.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="rangeSensor.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="RingBufferChar.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="rtc.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="RunningMedian.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="Sabertooth.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="ThreadController.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="motorSensor.h" />
+    <ClInclude Include="__vm\.Raindancer.vsarduino.h" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties arduino.upload.port="COM10" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
