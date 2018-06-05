@@ -91,16 +91,16 @@ public:
 
 };
 
-class TSetArcFEO_ROTCC : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROTCC1 : public Node    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
 
-	TSetArcFEO_ROTCC() {}
+	TSetArcFEO_ROTCC1() {}
 
 	virtual void onInitialize(Blackboard& bb) {
 		bb.flagForceRotateDirection = FRD_CC;
-		bb.driveDirection = DD_FEOROTATECC;
+		bb.driveDirection = DD_FEOROTATECC1;
 		bb.arcRotateXArc = myRandom(60, 135);
 		if (bb.flagShowRotateX) {
 			errorHandler.setInfo(F("!05,TSetArcFEO_ROTCC:60-135: %ld\r\n"), bb.arcRotateXArc);
@@ -114,16 +114,62 @@ public:
 
 };
 
-class TSetArcFEO_ROTCW : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROTCW1 : public Node    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
 
-	TSetArcFEO_ROTCW() {}
+	TSetArcFEO_ROTCW1() {}
 
 	virtual void onInitialize(Blackboard& bb) {
 		bb.flagForceRotateDirection = FRD_CW;
-		bb.driveDirection = DD_FEOROTATECW;
+		bb.driveDirection = DD_FEOROTATECW1;
+		bb.arcRotateXArc = myRandom(60, 135);
+		if (bb.flagShowRotateX) {
+			errorHandler.setInfo(F("!05,TSetArcFEO_ROTCW:60-135: %ld\r\n"), bb.arcRotateXArc);
+		}
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		return BH_SUCCESS;
+	}
+
+};
+
+class TSetArcFEO_ROTCC2 : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+public:
+
+	TSetArcFEO_ROTCC2() {}
+
+	virtual void onInitialize(Blackboard& bb) {
+		bb.flagForceRotateDirection = FRD_CC;
+		bb.driveDirection = DD_FEOROTATECC2;
+		bb.arcRotateXArc = myRandom(60, 135);
+		if (bb.flagShowRotateX) {
+			errorHandler.setInfo(F("!05,TSetArcFEO_ROTCC:60-135: %ld\r\n"), bb.arcRotateXArc);
+		}
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		return BH_SUCCESS;
+	}
+
+};
+
+class TSetArcFEO_ROTCW2 : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+public:
+
+	TSetArcFEO_ROTCW2() {}
+
+	virtual void onInitialize(Blackboard& bb) {
+		bb.flagForceRotateDirection = FRD_CW;
+		bb.driveDirection = DD_FEOROTATECW2;
 		bb.arcRotateXArc = myRandom(60, 135);
 		if (bb.flagShowRotateX) {
 			errorHandler.setInfo(F("!05,TSetArcFEO_ROTCW:60-135: %ld\r\n"), bb.arcRotateXArc);

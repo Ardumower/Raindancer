@@ -304,6 +304,41 @@ void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* 
 
 }
 
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10, Node* child11)
+{
+	setupNumberOfChildren(11);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+	addChild(child6);
+	addChild(child7);
+	addChild(child8);
+	addChild(child9);
+	addChild(child10);
+	addChild(child11);
+
+}
+
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10, Node* child11, Node* child12)
+{
+	setupNumberOfChildren(12);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+	addChild(child6);
+	addChild(child7);
+	addChild(child8);
+	addChild(child9);
+	addChild(child10);
+	addChild(child11);
+	addChild(child12);
+
+}
+
 
 // ============================================================================
 //The sequence node calls its children sequentially until one of them returns FAILURE or RUNNING. If all children return the success state, the sequence also returns SUCCESS.

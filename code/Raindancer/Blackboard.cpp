@@ -32,18 +32,27 @@ const char* enuDriveDirectionString[] = { "DD_FORWARD",
 										"DD_SPIRAL_CW",
 										"DD_FEOROTATECC",
 										"DD_FEOROTATECW",
+										"DD_FEOROTATECC1",
+										"DD_FEOROTATECW1",
+										"DD_FEOROTATECC2",
+										"DD_FEOROTATECW2",
 										"DD_FREEBUMPER", // only used for history
 										"DD_NONE",
 										//"DD_ROTATE90CW",
 										//"DD_ROTATE90CC",
 										"UNKNOWN4",
 										"UNKNOWN5",
-										"UNKNOWN6"
+										"UNKNOWN6",
+										"UNKNOWN7",
+										"UNKNOWN8",
+										"UNKNOWN9"
 };
 
 const char* enuFlagEscabeObstacleConFlagString[] = { "FEO_NONE",
-		"FEO_ROTCC",
-		"FEO_ROTCW",
+		"FEO_ROTCC1",
+		"FEO_ROTCW1",
+		"FEO_ROTCC2",
+		"FEO_ROTCW2",
 		"FEO_BACKINSIDE",
 		"FEO_ROT",
 		"UNKNOWN3",
@@ -108,7 +117,7 @@ void Blackboard::setBehaviour(enuBehaviour b)
 	flagEnableCharging = false;
 	flagEnableGotoAreaX = false;
 	flagEnableFindPerimeter = false;
-	flagEnableRestoreHistory = false;
+
 	motor.enableDefaultRamping();
 
 	switch (b) {
@@ -155,14 +164,6 @@ void Blackboard::setBehaviour(enuBehaviour b)
 		timeInMowBehaviour = millis();
 		//motor.startDistanceMeasurement();
 		errorHandler.setInfo("!04,SET BEHAV -> BH_MOW\r\n");
-		break;
-	case BH_RESTOREHISTORY:
-		flagEnableRestoreHistory = true;
-		//rangeSensor.enabled = true;
-		chargeSystem.deactivateRelay();
-		//motor.resetEncoderCounter();
-		//motor.startDistanceMeasurement();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_RESTOREHISTORY\r\n");
 		break;
 	case BH_NONE:
 		// Don't reset BB here because if you change in manual mode, you will probaly check the BB variables like history or so.
@@ -231,10 +232,12 @@ void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _dist
 }
 
 
-void Blackboard::markLastHistoryEntryAsRestored() {
+void Blackboard::deleteLastHistoryEntry() {
 
-	history[0].restored = true;
-	/*
+	//history[0].restored = true;
+	
+	errorHandler.setInfo(F("!03,delete histEntry driveDirection: %s \r\n"), enuDriveDirectionString[0]);
+
 	//Delete History entry [0] while shifting to left
 	for (int i = 0 ; i < HISTROY_BUFSIZE-1; i++) {
 		history[i] = history[i+1];
@@ -246,7 +249,7 @@ void Blackboard::markLastHistoryEntryAsRestored() {
 	history[HISTROY_BUFSIZE - 1].rotAngleSoll = 0; // [0] Sollwinkel der aktuellen Drehung
 	history[HISTROY_BUFSIZE - 1].rotAngleIst = 0;
 	history[HISTROY_BUFSIZE - 1].flagForceRotDirection = FRD_NONE;
-	*/
+	
 }
 
 
@@ -297,6 +300,7 @@ void Blackboard::resetBB()
 	cruiseSpeed = 0;
 	timeCruiseSpeedSet = 0;
 
+	flagEnableRestoreHistory = false;
 	flagBumperInsidePerActivated = false;
 	flagBumperOutsidePerActivated = false;
 	flagCruiseSpiral = false;

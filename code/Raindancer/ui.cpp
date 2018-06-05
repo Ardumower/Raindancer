@@ -135,7 +135,7 @@ void cmd_help(int arg_cnt, char **args)
 	errorHandler.setInfoNoLog(F("area,12 //drive 12m at perimeter and begin mowing\r\n"));
 	errorHandler.setInfoNoLog(F("gohome  //drive to docking station. Call again to deactivate\r\n"));
 	errorHandler.setInfoNoLog(F("tpt     //test perimeter tracking to dock. Mower stands on perimeter\r\n"));
-	errorHandler.setInfoNoLog(F("rh,3    //restores 3 drive directions of the history\r\n"));
+	//errorHandler.setInfoNoLog(F("rh,3    //restores 3 drive directions of the history\r\n"));
 
 	wait = millis();
 	while (millis() - wait < 100) executeLoop();
@@ -765,6 +765,7 @@ void cmd_cntrGotoAreaX(int arg_cnt, char **args)
 }
 
 
+/*
 void cmd_cntrRestoreHistory(int arg_cnt, char **args)
 {
 	_controlManuel = false;
@@ -776,6 +777,7 @@ void cmd_cntrRestoreHistory(int arg_cnt, char **args)
 	errorHandler.setInfoNoLog(F("Restore history: %d\r\n"), num);
 
 }
+*/
 
 void cmd_showBattery(int arg_cnt, char **args)
 {
@@ -1403,7 +1405,7 @@ void cmd_setup()
 	cmdAdd((char *)"area", cmd_cntrGotoAreaX);
 	cmdAdd((char *)"gohome", cmd_goHome);
 	cmdAdd((char *)"tpt", cmd_testPerimeterTracking);
-	cmdAdd((char *)"rh", cmd_cntrRestoreHistory);
+	//cmdAdd((char *)"rh", cmd_cntrRestoreHistory);
 
 
 	

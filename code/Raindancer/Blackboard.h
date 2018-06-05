@@ -57,8 +57,12 @@ enum enuDriveDirection {
     DD_SPIRAL_CW = 8,
 	DD_FEOROTATECC = 9,
 	DD_FEOROTATECW = 10,
-	DD_FREEBUMPER = 11, // Only used in History
-	DD_NONE = 12 //Only used in History to init the drivedirection
+	DD_FEOROTATECC1 = 11,
+	DD_FEOROTATECW1 = 12,
+	DD_FEOROTATECC2 = 13,
+	DD_FEOROTATECW2 = 14,
+	DD_FREEBUMPER = 15, // Only used in History
+	DD_NONE = 16 //Only used in History to init the drivedirection
 	//DD_ROTATE90CW = 11,
 	//DD_ROTATE90CC = 12
 };
@@ -74,11 +78,11 @@ enum enuFlagPeriStateChanged  {PSC_NONE, PSC_IO, PSC_OI};
 enum enuFlagForceRotateDirection  {FRD_NONE, FRD_CC, FRD_CW};
 extern const char* enuFlagForceRotateDirectionString[]; //in Blackboard.cpp definiert
 
-//Achtung, bei Aenderung auch enuFlagEscabeObstacleConFlagString[] aendern!!!
-enum enuFlagEscabeObstacleConFlag  {FEO_NONE, FEO_ROTCC, FEO_ROTCW, FEO_BACKINSIDE, FEO_ROT}; // Condition which algortihm will be used by mselEscabeObstacle
+//Achtung, bei Aenderung auch enuFlagEscabeObstacleConFlagString[] aendern!!! FEO = Flag Escape Obstacle
+enum enuFlagEscabeObstacleConFlag  {FEO_NONE, FEO_ROTCC1, FEO_ROTCW1, FEO_ROTCC2, FEO_ROTCW2, FEO_BACKINSIDE, FEO_ROT}; // Condition which algortihm will be used by mselEscabeObstacle
 extern const char* enuFlagEscabeObstacleConFlagString[]; //in Blackboard.cpp definiert
 
-enum enuBehaviour  {BH_NONE, BH_MOW, BH_PERITRACK, BH_CHARGING, BH_GOTOAREA, BH_FINDPERIMETER, BH_RESTOREHISTORY};
+enum enuBehaviour  {BH_NONE, BH_MOW, BH_PERITRACK, BH_CHARGING, BH_GOTOAREA, BH_FINDPERIMETER};
 
 
 //Structure for history and current rotation data
@@ -120,10 +124,11 @@ public:
 		flagEnableCharging = false;
 		flagEnableGotoAreaX = false;
 		flagEnableFindPerimeter = false;
-		flagEnableRestoreHistory = false;
+		
 	}
 
 	THistory history[HISTROY_BUFSIZE];
+	THistory hist; // use in freeBumper. TFreeBumper should inform TselEscapeAlgorithm about the last deleted node.
 	int8_t numberToRestoreHist;
 
 	long randAngle;
@@ -164,6 +169,8 @@ public:
     bool flagEnableCharging;
     bool flagEnableGotoAreaX;
     bool flagEnableFindPerimeter;
+
+
 	bool flagEnableRestoreHistory;
     
     bool flagGotoAreaXFirstCall;
@@ -213,7 +220,7 @@ public:
     void setBehaviour(enuBehaviour b );
 	//void addHistoryEntry(THistory &h);
 	void addHistoryEntry(enuDriveDirection _driveDirection, float  _distanceDriven, float _rotAngleSoll, float _rotAngleIst, enuFlagForceRotateDirection _flagForceRotDirection, enuFlagCoilsOutside   _coilFirstOutside);
-	void markLastHistoryEntryAsRestored();
+	void deleteLastHistoryEntry();
 	bool histGetTwoLastForwardDistances(float& a, float& b);
 
 

@@ -43,17 +43,18 @@ Private-use only! (you need to ask for a commercial-use)
 
 //TConFEO_BACK180 conFEO_BACK180;
 //TConFEO_FWD20   conFEO_FWD20;
-TConFEO_ROTCC   conFEO_ROTCC;
-TConFEO_ROTCW   conFEO_ROTCW;
+TConFEO_ROTCC2   conFEO_ROTCC2;
+TConFEO_ROTCW2   conFEO_ROTCW2;
+TConFEO_ROTCC1   conFEO_ROTCC1;
+TConFEO_ROTCW1   conFEO_ROTCW1;
 TConFEO_ROT     conFEO_ROT;
 TConFEO_BACKINSIDE conFEO_BACKINSIDE;
 
 
 TConWasDirectionFeoRotateCC conWasDirectionFeoRotateCC;
 TConWasDirectionFeoRotateCW conWasDirectionFeoRotateCW;
-
-TConWasDirectionFEOROTATECC conWasDirectionFEOROTATECC;
-TConWasDirectionFEOROTATECW conWasDirectionFEOROTATECW;
+TConWasDirectionFeoRotateCC1 conWasDirectionFeoRotateCC1;
+TConWasDirectionFeoRotateCW1 conWasDirectionFeoRotateCW1;
 
 TConWasDirectionForward conWasDirectionForward;
 //TConWasDirectionForward20 conWasDirectionForward20;
@@ -133,6 +134,7 @@ MemSequence mseqBumperActive;
 // Free Perimeter Behaviour
 //*************************************
 
+TConditionPerimeterNotFound conditionPerimeterNotFound;
 
 TRotateBackCW rotateBackCW;
 TRotateBackCC rotateBackCC;
@@ -155,9 +157,11 @@ MemSequence mseqPRRCO;
 MemSequence mseqPRLCO;
 MemSelector mselPerimeterReverse;
 
-
 MemSequence mseqPerimeterFeoRotCC;
 MemSequence mseqPerimeterFeoRotCW;
+
+MemSequence mseqPerimeterFeoRotCC1;
+MemSequence mseqPerimeterFeoRotCW1;
 
 
 //TPerRotateInsideCW perRotateInsideCW;
@@ -261,12 +265,15 @@ TcheckOutsideAgain checkOutsideAgain;
 
 //MemSequence mseqEscRotate;
 
+TConditionFEONotFound conditionFEONotFound;
 TEscRotateCW escRotateCW;
-MemSequence mseqEscRotateCW;
+MemSequence mseqEscRotateCW1;
+MemSequence mseqEscRotateCW2;
 
 
 TEscRotateCC escRotateCC;
-MemSequence mseqEscRotateCC;
+MemSequence mseqEscRotateCC1;
+MemSequence mseqEscRotateCC2;
 
 
 //TForward20 forward20;
@@ -304,8 +311,10 @@ MemSequence mseqRotatePer;
 
 
 TSetArcFEO_ROT    setArcFEO_ROT;
-TSetArcFEO_ROTCW setArcFEO_ROTCW;
-TSetArcFEO_ROTCC setArcFEO_ROTCC;
+TSetArcFEO_ROTCW1 setArcFEO_ROTCW1;
+TSetArcFEO_ROTCC1 setArcFEO_ROTCC1;
+TSetArcFEO_ROTCW2 setArcFEO_ROTCW2;
+TSetArcFEO_ROTCC2 setArcFEO_ROTCC2;
 
 TPreUpdateHistoryBump preUpdateHistoryBump;
 TRotateX    rotateX;
@@ -387,16 +396,18 @@ void TBehaviour::setup()
 
     //conFEO_BACK180.nodeName = (char*)"conFEO_BACK180";
     //conFEO_FWD20.nodeName = (char*)"conFEO_FWD20";
-    conFEO_ROTCC.nodeName = (char*)"conFEO_ROTCC";
-    conFEO_ROTCW.nodeName = (char*)"conFEO_ROTCW";
+    conFEO_ROTCC2.nodeName = (char*)"conFEO_ROTCC2";
+    conFEO_ROTCW2.nodeName = (char*)"conFEO_ROTCW2";
+	conFEO_ROTCC1.nodeName = (char*)"conFEO_ROTCC1";
+	conFEO_ROTCW1.nodeName = (char*)"conFEO_ROTCW1";
     conFEO_ROT.nodeName = (char*)"conFEO_ROT";
     conFEO_BACKINSIDE.nodeName = (char*)"conFEO_BACKINSIDE";
 
 
 	conWasDirectionFeoRotateCC.nodeName = (char*)"conWasDirectionFeoRotateCC";
 	conWasDirectionFeoRotateCW.nodeName = (char*)"conWasDirectionFeoRotateCW";
-	conWasDirectionFEOROTATECC.nodeName = (char*)"conWasDirectionFEOROTATECC";
-	conWasDirectionFEOROTATECW.nodeName = (char*)"conWasDirectionFEOROTATECW";
+	conWasDirectionFeoRotateCC1.nodeName = (char*)"conWasDirectionFeoRotateCC1";
+	conWasDirectionFeoRotateCW1.nodeName = (char*)"conWasDirectionFeoRotateCW1";
 
     conWasDirectionForward.nodeName = (char*)"conWasDirectionForward";
     //conWasDirectionForward20.nodeName = (char*)"conWasDirectionForward20";
@@ -478,12 +489,12 @@ void TBehaviour::setup()
     mseqEscOOPRotCW.nodeName = (char*)"mseqEscOOPRotCW";
 
     //seqEscOOPRot.addChildren(&mseqEscRotate,&setDD_FORWARD);
-    mseqEscOOPRotCC.addChildren(&conFEO_ROTCC, &secondReverse2, &setArc90CC,&mseqRotatePer, &setDD_FORWARD);
-    mseqEscOOPRotCW.addChildren(&conFEO_ROTCW, &secondReverse2, &setArc90CW, &mseqRotatePer, &setDD_FORWARD);
+    mseqEscOOPRotCC.addChildren(&conFEO_ROTCC2, &secondReverse2, &setArc90CC,&mseqRotatePer, &setDD_FORWARD);
+    mseqEscOOPRotCW.addChildren(&conFEO_ROTCW2, &secondReverse2, &setArc90CW, &mseqRotatePer, &setDD_FORWARD);
 
 	mseqEscOOPReverse.addChildren(&conFEO_BACKINSIDE, &calcAngle, &mseqRotatePer);
     //mseqEscOOPReverse.addChildren(&conFEO_BACKINSIDE,&reverseInside,&reverseFurtherInside,&mseqRotatePer);
-    mselEscObstacleOutside.addChildren(&mseqEscOOPReverse,&mseqEscOOPRotCW ,&mseqEscOOPRotCC);
+    mselEscObstacleOutside.addChildren(&mseqEscOOPReverse,&mseqEscOOPRotCW ,&mseqEscOOPRotCC, &conditionFEONotFound);
 
 
 // ************************************
@@ -503,6 +514,8 @@ void TBehaviour::setup()
 // ************************************
 // Free Perimeter Behaviour
 //*************************************
+
+	conditionPerimeterNotFound.nodeName = (char*)"conditionPerimeterNotFound";
 
 	rotateBackCW.nodeName = (char*)"rotateBackCW";
 	rotateBackCC.nodeName = (char*)"rotateBackCC";
@@ -526,6 +539,8 @@ void TBehaviour::setup()
 
 	mseqPerimeterFeoRotCC.nodeName = (char*)"mseqPerimeterFeoRotCC";
 	mseqPerimeterFeoRotCW.nodeName = (char*)"mseqPerimeterFeoRotCW";
+	mseqPerimeterFeoRotCC1.nodeName = (char*)"mseqPerimeterFeoRotCC1";
+	mseqPerimeterFeoRotCW1.nodeName = (char*)"mseqPerimeterFeoRotCW1";
 //    perRotateInsideCW.nodeName = (char*)"perRotateInsideCW";
 //    perRotateInsideCC.nodeName = (char*)"perRotateInsideCC";
 	setArc20CW.nodeName = (char*)"setArc20CW";
@@ -573,8 +588,11 @@ void TBehaviour::setup()
 
     mseqPerimeterReverse.addChildren(&conWasDirectionReverseObstacle,&motorStop,&mselPerimeterReverse);
 
-	mseqPerimeterFeoRotCW.addChildren(&conWasDirectionFeoRotateCW, &motorStop, &rotateBackCC, &secondReverse2, &setArc90CC,&mseqRotatePer);
-	mseqPerimeterFeoRotCC.addChildren(&conWasDirectionFeoRotateCC, &motorStop, &rotateBackCW, & secondReverse2, &setArc90CW, &mseqRotatePer);
+	mseqPerimeterFeoRotCW.addChildren(&conWasDirectionFeoRotateCW, &motorStop, &rotateBackCC, &setArc90CC, &mseqRotatePer);
+	mseqPerimeterFeoRotCC.addChildren(&conWasDirectionFeoRotateCC, &motorStop, &rotateBackCW, &setArc90CW, &mseqRotatePer);
+
+	mseqPerimeterFeoRotCW1.addChildren(&conWasDirectionFeoRotateCW1, &motorStop, &rotateBackCC, &secondReverse2, &setArc90CC,&mseqRotatePer);
+	mseqPerimeterFeoRotCC1.addChildren(&conWasDirectionFeoRotateCC1, &motorStop, &rotateBackCW, & secondReverse2, &setArc90CW, &mseqRotatePer);
 
     mseqPerimeterRotCC.addChildren(&conWasDirectionRotateCC,&motorStop,&setArc20CC, &mseqRotatePer, &setDD_FORWARD);
     mseqPerimeterRotCW.addChildren(&conWasDirectionRotateCW,&motorStop,&setArc20CW, &mseqRotatePer, &setDD_FORWARD);
@@ -586,7 +604,7 @@ void TBehaviour::setup()
 //	mseqPerimeterForward.addChildren(&conWasDirectionForward, &overRun, &mselPerimeterForward, &seqRotatePer);
 
     mseqPerimeterForward.addChildren(&conWasDirectionForward,&overRun, &perDriveBack, &calcAngle,&mseqRotatePer);
-	mselPerimeterActive.addChildren(&mseqPerimeterForward, &mseqPerimeterFeoRotCW, &mseqPerimeterFeoRotCC, &mseqPerimeterRotCC,&mseqPerimeterRotCW,&mseqPerimeterReverse,&mseqPerimeterForwardInside, &mseqPerimeterOverrun, &mseqPerimeterRevInside );
+	mselPerimeterActive.addChildren(&mseqPerimeterForward, &mseqPerimeterFeoRotCW, &mseqPerimeterFeoRotCC, &mseqPerimeterFeoRotCW1, &mseqPerimeterFeoRotCC1, &mseqPerimeterRotCC,&mseqPerimeterRotCW,&mseqPerimeterReverse,&mseqPerimeterForwardInside, &mseqPerimeterOverrun, &mseqPerimeterRevInside,&conditionPerimeterNotFound);
     mseqPerimeterAvtive.addChildren(&conPerOutside,&setflagCoilFirstOutside, &mselPerimeterActive);
 
 
@@ -696,16 +714,22 @@ void TBehaviour::setup()
 
     //mseqEscRotate.nodeName = (char*)"mseqEscRotate";
 
+	conditionFEONotFound.nodeName = (char*)"conditionFEONotFound";
+
 	setArcFEO_ROT.nodeName = (char*)"setArcFEO_ROT";
-	setArcFEO_ROTCW.nodeName = (char*)"setArcFEO_ROTCW";
-	setArcFEO_ROTCC.nodeName = (char*)"setArcFEO_ROTCC";
+	setArcFEO_ROTCW1.nodeName = (char*)"setArcFEO_ROTCW2";
+	setArcFEO_ROTCC1.nodeName = (char*)"setArcFEO_ROTCC2";
+	setArcFEO_ROTCW2.nodeName = (char*)"setArcFEO_ROTCW2";
+	setArcFEO_ROTCC2.nodeName = (char*)"setArcFEO_ROTCC2";
 
     escRotateCC.nodeName = (char*)"escRotateCC";
-    mseqEscRotateCW.nodeName = (char*)"mseqEscRotateCW";
+	mseqEscRotateCW1.nodeName = (char*)"mseqEscRotateCW1";
+	mseqEscRotateCW2.nodeName = (char*)"mseqEscRotateCW2";
 
 
     escRotateCW.nodeName = (char*)"escRotateCW";
-    mseqEscRotateCC.nodeName = (char*)"mseqEscRotateCC";
+	mseqEscRotateCC1.nodeName = (char*)"mseqEscRotateCC1";
+    mseqEscRotateCC2.nodeName = (char*)"mseqEscRotateCC2";
 
 
 
@@ -728,10 +752,13 @@ void TBehaviour::setup()
     //mseqEscRotateCC.addChildren(&conFEO_ROTCC,&escRotateCC);
 	//mseqEscForward.addChildren(&conFEO_FWD20,&forward20, &mseqRotatePer);
 
-	mseqEscRotateCW.addChildren(&conFEO_ROTCW, &secondReverse, &setArcFEO_ROTCW, &mseqRotateBump);
-	mseqEscRotateCC.addChildren(&conFEO_ROTCC, &secondReverse, &setArcFEO_ROTCC, &mseqRotateBump);
+	mseqEscRotateCW1.addChildren(&conFEO_ROTCW1, &setArcFEO_ROTCW1, &mseqRotateBump);
+	mseqEscRotateCC1.addChildren(&conFEO_ROTCC1, &setArcFEO_ROTCC1, &mseqRotateBump);
+
+	mseqEscRotateCW2.addChildren(&conFEO_ROTCW2, &secondReverse, &setArcFEO_ROTCW2, &mseqRotateBump);
+	mseqEscRotateCC2.addChildren(&conFEO_ROTCC2, &secondReverse, &setArcFEO_ROTCC2, &mseqRotateBump);
     mseqEscBackward.addChildren(&conFEO_ROT, &setArcFEO_ROT, &mseqRotateBump);
-    mselEscabeObstacle.addChildren(&mseqEscBackward, &mseqEscRotateCC ,&mseqEscRotateCW, &mseqPerimeterForwardInside) ;
+    mselEscabeObstacle.addChildren(&mseqEscBackward, &mseqEscRotateCC1, &mseqEscRotateCW1, &mseqEscRotateCC2 ,&mseqEscRotateCW2, &mseqPerimeterForwardInside,&conditionFEONotFound) ;
 	selEscabeObstacle1.addChildren(&mselEscabeObstacle);
     dnBumperActivated.setChild(&selEscabeObstacle1);
 
@@ -819,10 +846,10 @@ void TBehaviour::setup()
 
     selMowing.nodeName = (char*)"selMowing";
 
-    selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &mseqBumperActive, &dnBumpPeriActivated,  &mseqPerimeterAvtive,  &dnBumperActivated, &seqMowBatLow, &Check2AllCoilsOutside, &dnCruiseSpiral, &dnSetbbShortWayCounter);
+    selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &dnRestoreHistory, &mseqBumperActive, &dnBumpPeriActivated,  &mseqPerimeterAvtive,  &dnBumperActivated, &seqMowBatLow, &Check2AllCoilsOutside, &dnCruiseSpiral, &dnSetbbShortWayCounter);
 
 	// ************************************
-	// Mowing
+	// Restore history
 	//*************************************
 	selRestoreHist.nodeName = (char*)"selRestoreHist";
 	restoreHistory.nodeName = (char*)"restoreHistory";
@@ -833,7 +860,7 @@ void TBehaviour::setup()
     //*************************************
 
     selRoot.nodeName = (char*)"rootSel";
-	selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing,&dnRestoreHistory);
+	selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing);
 
 	//selRoot.addChildren(&dnCharging,&selCheck2,&dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing);
 

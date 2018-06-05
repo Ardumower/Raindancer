@@ -138,6 +138,32 @@ public:
 };
 
 
+class TConditionPerimeterNotFound : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+
+public:
+
+	TConditionPerimeterNotFound() {}
+
+
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+
+		// When not useing zone recognition, then TOverRun changes the drivedirection to DD_FORWARD if both coils inside again and the branch is executed until
+		// this node. Therfore this Node will be executed with the driveDirection==DD_Forward.
+		// To prevent setting an error, we have to chech this here..
+		if (bb.driveDirection == DD_FORWARD) {
+			return BH_SUCCESS;
+		}
+		errorHandler.setError("!03,TConditionPerimeterNotFound not found %s\r\n", enuDriveDirectionString[bb.driveDirection]);
+		return BH_SUCCESS;
+	}
+
+
+};
+
 class TOverRun : public Node    // Each task will be a class (derived from Node of course).
 {
 private:
@@ -370,7 +396,8 @@ public:
 		bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
 		bb.motor.rotateCM(-CONF_PERIMETER_DRIVE_BACK_CM, bb.cruiseSpeed); // x cm zurueckfahren
 		bb.driveDirection = DD_REVERSE_ESC_OBST; ; // DD_REVERSE_INSIDE;
-#else
+#endif
+#if CONF_USE_ZONE_RECOGNITION == true
 		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside()) {
 			// When using zone recoginition, it could be that the mower runs over the 13cm zone boarder with both coils. If this happend, drive back 10 more cm.
 			bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
@@ -478,13 +505,14 @@ public:
 			errorHandler.setInfo(F("!03,TRotateBackCW escape to DD_ROTATECC\r\n"));
 		}
 
-		// Set last rotation as restored because we restore it here
-		bb.markLastHistoryEntryAsRestored();
+		// Delete last rotation in history because we restore it here
+		bb.deleteLastHistoryEntry();
+       
+		/*
 		bb.addHistoryEntry(bb.driveDirection, 0.0f, bb.arcRotateXArc, 0.0f, bb.flagForceRotateDirection, bb.flagCoilFirstOutside);
-
 		// Set this rotation as restored because we we don't want it to restore again
 		bb.markLastHistoryEntryAsRestored();
-
+		*/
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
@@ -528,12 +556,13 @@ public:
 			errorHandler.setInfo(F("!03,TRotateBackCC escape to DD_ROTATECC\r\n"));
 		}
 
-		// Set last rotation as restored because we restore it here
-		bb.markLastHistoryEntryAsRestored();
-		bb.addHistoryEntry(bb.driveDirection, 0.0f, bb.arcRotateXArc, 0.0f, bb.flagForceRotateDirection, bb.flagCoilFirstOutside);
+		// Delete last rotation in history because we restore it here
+		bb.deleteLastHistoryEntry();
+		
+		//bb.addHistoryEntry(bb.driveDirection, 0.0f, bb.arcRotateXArc, 0.0f, bb.flagForceRotateDirection, bb.flagCoilFirstOutside);
 
 		// Set this rotation as restored because we we don't want it to restore again
-		bb.markLastHistoryEntryAsRestored();
+		//bb.markLastHistoryEntryAsRestored();
 
 
 	}
