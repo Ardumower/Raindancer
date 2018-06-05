@@ -66,7 +66,7 @@ public:
 		case 0:
 			if (getTimeInNode() > 1000) { // wait 1 sec. until contacts set
       //bber1
-        if (RAINDANCER_CHASSIS == true) {  //forward 4 cm only with raindancer chassis
+        if (CONF_PASS_THROUGH_CHARGING_STATION == true) {  //forward 4 cm 
           bb.motor.rotateCM(4, bb.CRUISE_SPEED_LOW);
           errorHandler.setInfo(F("TchargeRelayOn forward 4\r\n"));
         }
@@ -90,8 +90,8 @@ public:
 		case 2:
 			if (bb.motor.isPositionReached()) {
         //bber1
-        if (PARANELLO_CHASSIS == true) bb.motor.rotateCM(3, bb.CRUISE_SPEED_LOW); // back in station for stoping station
-        if (RAINDANCER_CHASSIS == true) bb.motor.rotateCM(2, bb.CRUISE_SPEED_LOW);// normal forward for raindancer chassis
+        if (CONF_HEAD_CHARGING_STATION == true) bb.motor.rotateCM(3, bb.CRUISE_SPEED_LOW); // back in station for stoping station
+        if (CONF_PASS_THROUGH_CHARGING_STATION == true) bb.motor.rotateCM(2, bb.CRUISE_SPEED_LOW);// normal forward for raindancer chassis
         //--------------------------
 				state = 3;
 				setTimeInNode(millis());

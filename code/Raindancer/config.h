@@ -17,11 +17,13 @@
 #define PARANELLO_CHASSIS  false
 #define RAINDANCER_CHASSIS true
 
-
 //======================================================================================================================
 // CONFIG FOR ARDUMOWER CHASSIS
 //======================================================================================================================
 #if ARDUMOWER_CHASSIS == true
+#define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
+#define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
+
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			19200 // Speed bluetooth - Original Ardumower has 19200
 
@@ -117,6 +119,8 @@
 // CONFIG FOR PARANELLO CHASSIS
 //======================================================================================================================
 #if PARANELLO_CHASSIS == true
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can cross over the station
+#define CONF_HEAD_CHARGING_STATION true //the mower can't cross over the station
 
 #define CONF_PC_SERIAL_SPEED     115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED      19200 // Speed bluetooth - Original Ardumower has 19200
@@ -212,6 +216,8 @@
 // CONFIG FOR RAINDANCER CHASSIS
 //======================================================================================================================
 #if RAINDANCER_CHASSIS == true
+#define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
+#define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
 
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			115200 // Speed bluetooth - Original Ardumower has 19200
