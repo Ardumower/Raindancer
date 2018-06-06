@@ -102,7 +102,8 @@ public:
 		}
 
 
-		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to send the inormation to the console for debugging
+		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
+		
 		bb.hist.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
 		bb.hist.distanceDriven = 0;
 		bb.hist.coilFirstOutside = CO_NONE;    // which coil was first outside jet
@@ -160,6 +161,7 @@ public:
 			break;
 
 		case DD_ROTATECW:
+		case DD_ROTATECW1:
 			distance = bb.motor.getAngleRotatedDistanceCM();
 			if (distance < 1.0f) { // Bumper wurde aktiviert, ohne dass gefahren wurde=> Bumper steckt fest. 
 				distance = 5.0f;
@@ -172,6 +174,7 @@ public:
 
 			break;
 		case DD_ROTATECC:
+		case DD_ROTATECC1:
 			distance = bb.motor.getAngleRotatedDistanceCM();
 			if (distance < 1.0f) { // Bumper wurde aktiviert, ohne dass gefahren wurde=> Bumper steckt fest. 
 				distance = 5.0f;
@@ -226,7 +229,9 @@ public:
 			break;
 		}
 
-
+		// Overwrite the bb.hist structure. 
+		// Here we now delete the restored history entry. But in TselEscapeAlgorithm we need the value bb.history[0].distanceDriven. 
+		// Therefore we need to save the deleted history item to bb.hist.
 		bb.hist = bb.history[0];
 		if (bb.driveDirection != DD_REVERSE_ESC_OBST) {
 			bb.deleteLastHistoryEntry();
@@ -416,14 +421,14 @@ public:
 		}
 
 
-		THistory h;
-		h.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
-		h.distanceDriven = 0;
-		h.coilFirstOutside = CO_NONE;    // which coil was first outside jet
-		h.rotAngleSoll = 0;
-		h.rotAngleIst = 0;
-		h.flagForceRotDirection = FRD_NONE;
-		h.restored = true;
+		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
+		bb.hist.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
+		bb.hist.distanceDriven = 0;
+		bb.hist.coilFirstOutside = CO_NONE;    // which coil was first outside jet
+		bb.hist.rotAngleSoll = 0;
+		bb.hist.rotAngleIst = 0;
+		bb.hist.flagForceRotDirection = FRD_NONE;
+		bb.hist.restored = true;
 
 
 		switch (bb.driveDirection) {
@@ -440,14 +445,14 @@ public:
 				errorHandler.setInfo(F("!03,TFreeBumper2 set distance=5.0\r\n"));
 			}
 			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
-			h.distanceDriven = distance;
-			h.flagForceRotDirection = FRD_CW;
+			bb.hist.distanceDriven = distance;
+			bb.hist.flagForceRotDirection = FRD_CW;
 			errorHandler.setInfo(F("!03,TFreeBumper2 escape from DD_ROTATECC\r\n"));
 			break;
 		case DD_FORWARD:
 		case DD_LINE_FOLLOW:
 			bb.motor.rotateCM(-CONF_BUMPER_REVERSE_CM, bb.cruiseSpeed);
-			h.distanceDriven = -CONF_BUMPER_REVERSE_CM;
+			bb.hist.distanceDriven = -CONF_BUMPER_REVERSE_CM;
 			errorHandler.setInfo(F("!03,TFreeBumper2 escape from DD_LINE_FOLLOW\r\n"));
 			break;
 
@@ -456,7 +461,10 @@ public:
 			break;
 		}
 
-
+		// Overwrite the bb.hist structure. 
+		// Here we now delete the restored history entry. But in TselEscapeAlgorithm we need the value bb.history[0].distanceDriven. 
+		// Therefore we need to save the deleted history item to bb.hist.
+		bb.hist = bb.history[0];
 		if (bb.driveDirection != DD_REVERSE_ESC_OBST) {
 			bb.deleteLastHistoryEntry();
 			//bb.addHistoryEntry(h.driveDirection, h.distanceDriven, h.rotAngleSoll, h.rotAngleIst, h.flagForceRotDirection, h.coilFirstOutside);
@@ -669,6 +677,18 @@ public:
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
+
+			case DD_ROTATECW1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_ROTATECC1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+
 			case DD_FEOROTATECW:
 				bb.flagEscabeObstacleConFlag = FEO_ROTCC1;
 				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
@@ -781,6 +801,16 @@ public:
 			case DD_ROTATECC:
 				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 				//bb.flagForceRotateDirection = FRD_CW;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_ROTATECW1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_ROTATECC1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;

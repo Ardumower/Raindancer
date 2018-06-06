@@ -149,6 +149,8 @@ MemSequence mseqPerimeterForwardInside;
 
 TSetArc90CW setArc90CW;
 TSetArc90CC setArc90CC;
+TSetArc90CW setArc90CW1;
+TSetArc90CC setArc90CC1;
 
 TSetArc20CW setArc20CW;
 TSetArc20CC setArc20CC;
@@ -530,6 +532,8 @@ void TBehaviour::setup()
 
     setArc90CW.nodeName = (char*)"setArc90CW";
     setArc90CC.nodeName = (char*)"setArc90CC";
+	setArc90CW1.nodeName = (char*)"setArc90CW1";
+	setArc90CC1.nodeName = (char*)"setArc90CC1";
     mseqPRRCO.nodeName = (char*)"mseqPRRCO";
     mseqPRLCO.nodeName = (char*)"mseqPRLCO";
     mselPerimeterReverse.nodeName = (char*)"mseqPRLCO";
@@ -588,8 +592,8 @@ void TBehaviour::setup()
 
     mseqPerimeterReverse.addChildren(&conWasDirectionReverseObstacle,&motorStop,&mselPerimeterReverse);
 
-	mseqPerimeterFeoRotCW.addChildren(&conWasDirectionFeoRotateCW, &motorStop, &rotateBackCC, &setArc90CC, &mseqRotatePer);
-	mseqPerimeterFeoRotCC.addChildren(&conWasDirectionFeoRotateCC, &motorStop, &rotateBackCW, &setArc90CW, &mseqRotatePer);
+	mseqPerimeterFeoRotCW.addChildren(&conWasDirectionFeoRotateCW, &motorStop, &rotateBackCC, &setArc90CC1, &mseqRotatePer);
+	mseqPerimeterFeoRotCC.addChildren(&conWasDirectionFeoRotateCC, &motorStop, &rotateBackCW, &setArc90CW1, &mseqRotatePer);
 
 	mseqPerimeterFeoRotCW1.addChildren(&conWasDirectionFeoRotateCW1, &motorStop, &rotateBackCC, &secondReverse2, &setArc90CC,&mseqRotatePer);
 	mseqPerimeterFeoRotCC1.addChildren(&conWasDirectionFeoRotateCC1, &motorStop, &rotateBackCW, & secondReverse2, &setArc90CW, &mseqRotatePer);
@@ -604,7 +608,7 @@ void TBehaviour::setup()
 //	mseqPerimeterForward.addChildren(&conWasDirectionForward, &overRun, &mselPerimeterForward, &seqRotatePer);
 
     mseqPerimeterForward.addChildren(&conWasDirectionForward,&overRun, &perDriveBack, &calcAngle,&mseqRotatePer);
-	mselPerimeterActive.addChildren(&mseqPerimeterForward, &mseqPerimeterFeoRotCW, &mseqPerimeterFeoRotCC, &mseqPerimeterFeoRotCW1, &mseqPerimeterFeoRotCC1, &mseqPerimeterRotCC,&mseqPerimeterRotCW,&mseqPerimeterReverse,&mseqPerimeterForwardInside, &mseqPerimeterOverrun, &mseqPerimeterRevInside,&conditionPerimeterNotFound);
+	mselPerimeterActive.addChildren(&mseqPerimeterForward, &mseqPerimeterFeoRotCC, &mseqPerimeterFeoRotCW, &mseqPerimeterFeoRotCW1, &mseqPerimeterFeoRotCC1, &mseqPerimeterRotCC,&mseqPerimeterRotCW,&mseqPerimeterReverse,&mseqPerimeterForwardInside, &mseqPerimeterOverrun, &mseqPerimeterRevInside,&conditionPerimeterNotFound);
     mseqPerimeterAvtive.addChildren(&conPerOutside,&setflagCoilFirstOutside, &mselPerimeterActive);
 
 

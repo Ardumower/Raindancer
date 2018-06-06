@@ -60,6 +60,8 @@ public:
 				break;
 			case DD_ROTATECW:
 			case DD_ROTATECC:
+			case DD_ROTATECC1:
+			case DD_ROTATECW1:
 			case DD_FEOROTATECW:
 			case DD_FEOROTATECC:
 				bb.motor.turnTo(-bb.history[0].rotAngleIst, bb.cruiseSpeed);
@@ -106,9 +108,12 @@ public:
 			}
 			break;
 		case DD_ROTATECC:
+		case DD_ROTATECW:
+    	case DD_ROTATECC1:
+		case DD_ROTATECW1:
 		case DD_FEOROTATECW:
 		case DD_FEOROTATECC:
-		case DD_ROTATECW:
+		
 			if (bb.motor.isPositionReached()) {
 				return BH_SUCCESS;
 			}

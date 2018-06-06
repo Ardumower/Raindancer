@@ -488,7 +488,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_ROTATECW) {
+		if (bb.driveDirection == DD_ROTATECW || bb.driveDirection == DD_ROTATECW1) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
@@ -508,7 +508,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_ROTATECC) {
+		if (bb.driveDirection == DD_ROTATECC || bb.driveDirection == DD_ROTATECC1) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }

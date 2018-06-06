@@ -913,8 +913,80 @@ public:
 
 
 
+class TSetArc90CW1 : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+public:
 
+	TSetArc90CW1() {}
 
+	virtual void onInitialize(Blackboard& bb) {
+
+		if (bb.perimeterSensoren.isRightOutside()) {
+			bb.flagForceRotateDirection = FRD_CC;
+			bb.driveDirection = DD_ROTATECC1;
+			bb.arcRotateXArc = myRandom(90, 135);
+			bb.flagDeactivateRotInside = false;
+
+			if (bb.flagShowRotateX) {
+				errorHandler.setInfo(F("!05,TSetArc90CW1->CC\r\n"));
+			}
+		}
+		else {
+			bb.flagForceRotateDirection = FRD_CW;
+			bb.driveDirection = DD_ROTATECW1;
+			bb.arcRotateXArc = myRandom(90, 135);
+			bb.flagDeactivateRotInside = false;
+
+			if (bb.flagShowRotateX) {
+				errorHandler.setInfo(F("!05,TSetArc90CW1\r\n"));
+			}
+		}
+
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		return BH_SUCCESS;
+	}
+
+};
+
+class TSetArc90CC1 : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+public:
+
+	TSetArc90CC1() {}
+
+	virtual void onInitialize(Blackboard& bb) {
+
+		if (bb.perimeterSensoren.isLeftOutside()) {
+			bb.flagForceRotateDirection = FRD_CW;
+			bb.driveDirection = DD_ROTATECW1;
+			bb.arcRotateXArc = myRandom(90, 135);
+			bb.flagDeactivateRotInside = false;
+			if (bb.flagShowRotateX) {
+				errorHandler.setInfo(F("!05,TSetArc90CC->CW1\r\n"));
+			}
+		}
+		else {
+			bb.flagForceRotateDirection = FRD_CC;
+			bb.driveDirection = DD_ROTATECC1;
+			bb.arcRotateXArc = myRandom(90, 135);
+			bb.flagDeactivateRotInside = false;
+			if (bb.flagShowRotateX) {
+				errorHandler.setInfo(F("!05,TSetArc90CC1\r\n"));
+			}
+		}
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		return BH_SUCCESS;
+	}
+
+};
 
 class TSetArc90CW : public Node    // Each task will be a class (derived from Node of course).
 {
