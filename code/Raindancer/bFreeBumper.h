@@ -102,33 +102,34 @@ public:
 		}
 
 
-		THistory h;
-		h.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
-		h.distanceDriven = 0;
-		h.coilFirstOutside = CO_NONE;    // which coil was first outside jet
-		h.rotAngleSoll = 0;
-		h.rotAngleIst = 0;
-		h.flagForceRotDirection = FRD_NONE;
-		h.restored = true;
-
+		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
+		
+		bb.hist.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
+		bb.hist.distanceDriven = 0;
+		bb.hist.coilFirstOutside = CO_NONE;    // which coil was first outside jet
+		bb.hist.rotAngleSoll = 0;
+		bb.hist.rotAngleIst = 0;
+		bb.hist.flagForceRotDirection = FRD_NONE;
+		bb.hist.restored = true;
 
 		switch (bb.driveDirection) {
 		case DD_FORWARD:
 		case DD_OVERRUN:
 
-			h.distanceDriven = abs(bb.history[0].distanceDriven);
-			if (h.distanceDriven < CONF_BUMPER_REVERSE_CM) {
-				if (h.distanceDriven < 5.0f) { // drive 5cm if distance is near 0
-					h.distanceDriven = -5.0f;
+
+			bb.hist.distanceDriven = abs(bb.history[0].distanceDriven);
+			if (bb.hist.distanceDriven < CONF_BUMPER_REVERSE_CM) {
+				if (bb.hist.distanceDriven < 5.0f) { // drive 5cm if distance is near 0
+					bb.hist.distanceDriven = -5.0f;
 				}
 				else {
-					h.distanceDriven = -h.distanceDriven;
+					bb.hist.distanceDriven = -bb.hist.distanceDriven;
 				}
-				bb.motor.rotateCM(h.distanceDriven, bb.cruiseSpeed);
+				bb.motor.rotateCM(bb.hist.distanceDriven, bb.cruiseSpeed);
 			}
 			else {
 				bb.motor.rotateCM(-CONF_BUMPER_REVERSE_CM, bb.cruiseSpeed);
-				h.distanceDriven -= CONF_BUMPER_REVERSE_CM;
+				bb.hist.distanceDriven = -CONF_BUMPER_REVERSE_CM;
 			}
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_FORWARD/OVERRUN\r\n"));
 			break;
@@ -136,21 +137,21 @@ public:
 			//case DD_FORWARD20:
 
 		case DD_REVERSE_INSIDE:  //NOT USED AT THE MOMENT
-			h.distanceDriven = -bb.history[0].distanceDriven;
+			bb.hist.distanceDriven = -bb.history[0].distanceDriven;
 
-			bb.motor.rotateCM(h.distanceDriven, bb.cruiseSpeed);
+			bb.motor.rotateCM(bb.hist.distanceDriven, bb.cruiseSpeed);
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_REVERSE_INSIDE\r\n"));
 			break;
 
 		case DD_FORWARD_INSIDE:
 			bb.motor.rotateCM(-5, bb.cruiseSpeed);
-			h.distanceDriven = -5;
+			bb.hist.distanceDriven = -5;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_FORWARD_INSIDE\r\n"));
 			break;
 
 		case DD_LINE_FOLLOW:
 			bb.motor.rotateCM(-CONF_BUMPER_REVERSE_CM, bb.cruiseSpeed);
-			h.distanceDriven = -CONF_BUMPER_REVERSE_CM;
+			bb.hist.distanceDriven = -CONF_BUMPER_REVERSE_CM;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_LINE_FOLLOW\r\n"));
 			break;
 
@@ -160,58 +161,66 @@ public:
 			break;
 
 		case DD_ROTATECW:
+		case DD_ROTATECW1:
 			distance = bb.motor.getAngleRotatedDistanceCM();
 			if (distance < 1.0f) { // Bumper wurde aktiviert, ohne dass gefahren wurde=> Bumper steckt fest. 
 				distance = 5.0f;
-				errorHandler.setInfo(F("!03,freeBumper set distance=5.0\r\n"));
+				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECW set distance=5.0\r\n"));
 			}
 			bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed);
-			h.distanceDriven = -distance;
-			h.flagForceRotDirection = FRD_CC;
+			bb.hist.distanceDriven = -distance;
+			bb.hist.flagForceRotDirection = FRD_CC;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECW\r\n"));
 
 			break;
 		case DD_ROTATECC:
+		case DD_ROTATECC1:
 			distance = bb.motor.getAngleRotatedDistanceCM();
 			if (distance < 1.0f) { // Bumper wurde aktiviert, ohne dass gefahren wurde=> Bumper steckt fest. 
 				distance = 5.0f;
-				errorHandler.setInfo(F("!03,freeBumper set distance=5.0\r\n"));
+				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECC set distance=5.0\r\n"));
 			}
 			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
-			h.distanceDriven = distance;
-			h.flagForceRotDirection = FRD_CW;
+			bb.hist.distanceDriven = distance;
+			bb.hist.flagForceRotDirection = FRD_CW;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECC\r\n"));
 			break;
 
 		case DD_FEOROTATECW:
+		case DD_FEOROTATECW1:
+		case DD_FEOROTATECW2:
 			distance = bb.motor.getAngleRotatedDistanceCM();
 			if (distance < 1.0f) { // Bumper wurde aktiviert, ohne dass gefahren wurde=> Bumper steckt fest. 
 				distance = 5.0f;
-				errorHandler.setInfo(F("!03,freeBumper set distance=5.0\r\n"));
+				errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECW,1,2 set distance=5.0\r\n"));
 			}
 			bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed);
-			h.distanceDriven = -distance;
-			h.flagForceRotDirection = FRD_CC;
-			errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECW\r\n"));
+			bb.hist.distanceDriven = -distance;
+			bb.hist.flagForceRotDirection = FRD_CC;
+			errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECW,1,2\r\n"));
 			break;
 
 		case DD_FEOROTATECC:
+		case DD_FEOROTATECC1:
+		case DD_FEOROTATECC2:
+
 			distance = bb.motor.getAngleRotatedDistanceCM();
 			if (distance < 1.0f) { // Bumper wurde aktiviert, ohne dass gefahren wurde=> Bumper steckt fest. 
 				distance = 5.0f;
-				errorHandler.setInfo(F("!03,freeBumper set distance=5.0\r\n"));
+				errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECC,1,2 set distance=5.0\r\n"));
 			}
 			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
-			h.distanceDriven = distance;
-			h.flagForceRotDirection = FRD_CW;
-			errorHandler.setInfo(F("!03,freeBumper 03,freeBumper escape from DD_FEOROTATECC\r\n"));
+			bb.hist.distanceDriven = distance;
+			bb.hist.flagForceRotDirection = FRD_CW;
+			errorHandler.setInfo(F("!03,freeBumper 03,freeBumper escape from DD_FEOROTATECC,1,2\r\n"));
 			break;
 
 		case DD_SPIRAL_CW:
 			bb.cruiseSpeed = bb.CRUISE_SPEED_MEDIUM;
 			bb.motor.L->setSpeed(-1 * bb.CRUISE_SPEED_MEDIUM);
 			bb.motor.R->setSpeed(-5);
-			h.distanceDriven -= CONF_BUMPER_REVERSE_CM; // Stimmt nicht aktuell
+			bb.hist.distanceDriven = -CONF_BUMPER_REVERSE_CM; // Stimmt nicht aktuell
+			errorHandler.setInfo(F("!03,freeBumper 03,freeBumper escape from DD_SPIRAL_CW\n"));
 			break;
 
 		default:
@@ -220,11 +229,16 @@ public:
 			break;
 		}
 
+		// Overwrite the bb.hist structure. 
+		// Here we now delete the restored history entry. But in TselEscapeAlgorithm we need the value bb.history[0].distanceDriven. 
+		// Therefore we need to save the deleted history item to bb.hist.
+		bb.hist = bb.history[0];
 		if (bb.driveDirection != DD_REVERSE_ESC_OBST) {
-			bb.markLastHistoryEntryAsRestored();
-			bb.addHistoryEntry(h.driveDirection, h.distanceDriven, h.rotAngleSoll, h.rotAngleIst, h.flagForceRotDirection, h.coilFirstOutside);
-			bb.markLastHistoryEntryAsRestored();
+			bb.deleteLastHistoryEntry();
+			//	bb.addHistoryEntry(h.driveDirection, h.distanceDriven, h.rotAngleSoll, h.rotAngleIst, h.flagForceRotDirection, h.coilFirstOutside);
+			//	bb.markLastHistoryEntryAsRestored();
 		}
+
 
 	}
 
@@ -292,12 +306,14 @@ public:
 
 
 		case DD_ROTATECW:
+		case DD_ROTATECW1:
 			if (bb.motor.isPositionReached()) {
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECW finished\r\n"));
 				return BH_SUCCESS;
 			}
 			break;
 		case DD_ROTATECC:
+		case DD_ROTATECC1:
 			if (bb.motor.isPositionReached()) {
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECC finished\r\n"));
 				return BH_SUCCESS;
@@ -305,12 +321,16 @@ public:
 			break;
 
 		case DD_FEOROTATECW:
+		case DD_FEOROTATECW1:
+		case DD_FEOROTATECW2:
 			if (bb.motor.isPositionReached()) {
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECW finished\r\n"));
 				return BH_SUCCESS;
 			}
 			break;
 		case DD_FEOROTATECC:
+		case DD_FEOROTATECC1:
+		case DD_FEOROTATECC2:
 			if (bb.motor.isPositionReached()) {
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECC finished\r\n"));
 				return BH_SUCCESS;
@@ -403,14 +423,14 @@ public:
 		}
 
 
-		THistory h;
-		h.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
-		h.distanceDriven = 0;
-		h.coilFirstOutside = CO_NONE;    // which coil was first outside jet
-		h.rotAngleSoll = 0;
-		h.rotAngleIst = 0;
-		h.flagForceRotDirection = FRD_NONE;
-		h.restored = true;
+		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
+		bb.hist.driveDirection = DD_FREEBUMPER;  // wird nur für History verwendet
+		bb.hist.distanceDriven = 0;
+		bb.hist.coilFirstOutside = CO_NONE;    // which coil was first outside jet
+		bb.hist.rotAngleSoll = 0;
+		bb.hist.rotAngleIst = 0;
+		bb.hist.flagForceRotDirection = FRD_NONE;
+		bb.hist.restored = true;
 
 
 		switch (bb.driveDirection) {
@@ -427,14 +447,14 @@ public:
 				errorHandler.setInfo(F("!03,TFreeBumper2 set distance=5.0\r\n"));
 			}
 			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
-			h.distanceDriven = distance;
-			h.flagForceRotDirection = FRD_CW;
+			bb.hist.distanceDriven = distance;
+			bb.hist.flagForceRotDirection = FRD_CW;
 			errorHandler.setInfo(F("!03,TFreeBumper2 escape from DD_ROTATECC\r\n"));
 			break;
 		case DD_FORWARD:
 		case DD_LINE_FOLLOW:
 			bb.motor.rotateCM(-CONF_BUMPER_REVERSE_CM, bb.cruiseSpeed);
-			h.distanceDriven = -CONF_BUMPER_REVERSE_CM;
+			bb.hist.distanceDriven = -CONF_BUMPER_REVERSE_CM;
 			errorHandler.setInfo(F("!03,TFreeBumper2 escape from DD_LINE_FOLLOW\r\n"));
 			break;
 
@@ -443,11 +463,16 @@ public:
 			break;
 		}
 
+		// Overwrite the bb.hist structure. 
+		// Here we now delete the restored history entry. But in TselEscapeAlgorithm we need the value bb.history[0].distanceDriven. 
+		// Therefore we need to save the deleted history item to bb.hist.
+		bb.hist = bb.history[0];
 		if (bb.driveDirection != DD_REVERSE_ESC_OBST) {
-			bb.markLastHistoryEntryAsRestored();
-			bb.addHistoryEntry(h.driveDirection, h.distanceDriven, h.rotAngleSoll, h.rotAngleIst, h.flagForceRotDirection, h.coilFirstOutside);
-			bb.markLastHistoryEntryAsRestored();
+			bb.deleteLastHistoryEntry();
+			//bb.addHistoryEntry(h.driveDirection, h.distanceDriven, h.rotAngleSoll, h.rotAngleIst, h.flagForceRotDirection, h.coilFirstOutside);
+			//bb.markLastHistoryEntryAsRestored();
 		}
+
 
 	}
 
@@ -563,6 +588,58 @@ public:
 		if (bb.flagBumperInsidePerActivated) {
 			switch (bb.driveDirection) {
 			case DD_FORWARD:
+				// Check first for sequences to determine if revese history should be executed
+				if (bb.hist.distanceDriven < 30) {
+					if ( //bb.history[0].driveDirection == DD_FORWARD && was deleted in the drive back above
+						(bb.history[0].driveDirection == DD_ROTATECC || bb.history[0].driveDirection == DD_ROTATECW) &&
+						bb.history[1].driveDirection == DD_REVERSE_ESC_OBST &&
+						bb.history[2].driveDirection == DD_OVERRUN &&
+						bb.history[3].driveDirection == DD_FORWARD
+						) {
+						errorHandler.setInfo(F("!03,TselEscapeAlgorithm DD_FORWARD sequence 1 found\r\n"));
+						if (bb.history[3].distanceDriven > 100) {
+							bb.history[3].distanceDriven = 100;
+						}
+
+						bb.flagEnableRestoreHistory = true;
+						bb.numberToRestoreHist = 4;
+						// in the next tick, restore hostiry is called.
+
+						// After restore history, mower should rotate.
+						// therefore use the following lines below will be called also after the if statment.
+						//bb.flagBumperInsidePerActivated = true;
+						//bb.flagEscabeObstacleConFlag = FEO_ROT;
+
+					}
+					else if ( //bb.history[0].driveDirection == DD_FORWARD && was deleted in the drive back above
+						(bb.history[0].driveDirection == DD_ROTATECC || bb.history[0].driveDirection == DD_ROTATECW) &&
+						bb.history[1].driveDirection == DD_OVERRUN &&
+						bb.history[2].driveDirection == DD_FORWARD
+						) {
+						errorHandler.setInfo(F("!03,TselEscapeAlgorithm DD_FORWARD sequence 2 found\r\n"));
+						if (bb.history[2].distanceDriven > 100) {
+							bb.history[2].distanceDriven = 100;
+						}
+
+						bb.flagEnableRestoreHistory = true;
+						bb.numberToRestoreHist = 3;
+						// in the next tick, restore hostiry is called.
+
+						// After restore history, mower should rotate.
+						// therefore use the following lines below will be called also after the if statment.
+						//bb.flagBumperInsidePerActivated = true;
+						//bb.flagEscabeObstacleConFlag = FEO_ROT;
+
+					}
+				 }
+				// Robbi ist nun 20cm zurückgefahren. DD_REVERSE_ESC_OBST wird gesetzt, falls rückwärts rausgefahren. Wird in mseqPerimeterActive bearbeitet
+				// ACHTUNG wenn coil immer noch draußen ist, wird mseqPRLCO/mseqPRRCO aufgerufen, welche den robbi wieder inside fahren.
+				// Dann ist aber immer noch bb.flagEscabeObstacleConFlag = FEO_BACK180 gesetzt, so dass danach in selEscabeObstacle1 gedreht wird.
+				bb.driveDirection = DD_REVERSE_ESC_OBST;
+				bb.flagEscabeObstacleConFlag = FEO_ROT;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
 			case DD_OVERRUN://Kann hier normal nicht auftreten
 			case DD_REVERSE_INSIDE:
 			case DD_SPIRAL_CW:
@@ -576,51 +653,126 @@ public:
 				errorHandler.setInfo();
 				break;
 			case DD_FORWARD_INSIDE: //Kann hier nicht auftreten
-				errorHandler.setError("!03,DD_FORWARD_INSIDE in Bumper innerhalb Perimeter aktiviert 1\r\n");
+				errorHandler.setError("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper innerhalb Perimeter aktiviert 1\r\n");
 				break;
 			case DD_ROTATECW:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCC;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC1;
 				//bb.flagForceRotateDirection = FRD_CC;
 				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
 				if (bb.flagPerimeterStateChanged == PSC_IO) {
-					bb.flagEscabeObstacleConFlag = FEO_ROTCW;
+					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
 			case DD_ROTATECC:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCW;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW1;
 				//bb.flagForceRotateDirection = FRD_CW;
 				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
 				if (bb.flagPerimeterStateChanged == PSC_IO) {
-					bb.flagEscabeObstacleConFlag = FEO_ROTCC;
+					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
+
+			case DD_ROTATECW1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_ROTATECC1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+
 			case DD_FEOROTATECW:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCC;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC1;
 				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
 				if (bb.flagPerimeterStateChanged == PSC_IO) {
-					//bb.flagEscabeObstacleConFlag = FEO_ROTCW;
+					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
 			case DD_FEOROTATECC:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCW;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW1;
 
 				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
 				if (bb.flagPerimeterStateChanged == PSC_IO) {
-					//bb.flagEscabeObstacleConFlag = FEO_ROTCC;
+					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
+				}
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+
+			case DD_FEOROTATECW1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
+				if (bb.flagPerimeterStateChanged == PSC_IO) {
+					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+					bb.flagBumperInsidePerActivated = false;
+					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
+				}
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_FEOROTATECC1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+
+				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
+				if (bb.flagPerimeterStateChanged == PSC_IO) {
+					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+					bb.flagBumperInsidePerActivated = false;
+					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
+				}
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+
+			case DD_FEOROTATECW2:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC1;
+				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
+				if (bb.flagPerimeterStateChanged == PSC_IO) {
+					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+					bb.flagBumperInsidePerActivated = false;
+					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
+				}
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_FEOROTATECC2:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW1;
+
+				// If  Bumper was inside activated and now coils are outside, simulate bumper outside activated, because we don't want to call mseqPerimeterActive
+				if (bb.flagPerimeterStateChanged == PSC_IO) {
+					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+					bb.flagBumperInsidePerActivated = false;
+					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -634,7 +786,7 @@ public:
 				// Wird in mseqPerimeterActive bearbeitetrn BH_SUCCESS;
 				break;
 			default:
-				sprintf(errorHandler.msg, "!03,TchangeDriveDirection driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				sprintf(errorHandler.msg, "!03,TselEscapeAlgorithm driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setError();
 				break;
 			}
@@ -655,30 +807,46 @@ public:
 				errorHandler.setInfo();
 				break;
 			case DD_FORWARD_INSIDE:
-				errorHandler.setError("!03,DD_FORWARD_INSIDE in Bumper außerhalb Perimeter aktiviert 1\r\n");
+				errorHandler.setError("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper außerhalb Perimeter aktiviert 1\r\n");
 				break;
 			case DD_ROTATECW:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCW;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 				//bb.flagForceRotateDirection = FRD_CC;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
 			case DD_ROTATECC:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCC;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 				//bb.flagForceRotateDirection = FRD_CW;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
+			case DD_ROTATECW1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
+			case DD_ROTATECC1:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				errorHandler.setInfo();
+				break;
 			case DD_FEOROTATECW:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCC;
+			case DD_FEOROTATECW1:
+			case DD_FEOROTATECW2:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
 			case DD_FEOROTATECC:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCW;
+			case DD_FEOROTATECC1:
+			case DD_FEOROTATECC2:
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
+
+
 			case DD_LINE_FOLLOW: // Aktuell nicht behandelt da voraussetung, kein Hinderniss auf Perimeter
 				bb.flagBumperOutsidePerActivated = false;
 				bb.flagBumperInsidePerActivated = false;
@@ -689,7 +857,7 @@ public:
 				//} 
 				break;
 			default:
-				sprintf(errorHandler.msg, "!03,TchangeDriveDirection driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				sprintf(errorHandler.msg, "!03,TselEscapeAlgorithm driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setError();
 				break;
 			}
