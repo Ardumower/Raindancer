@@ -28,29 +28,41 @@ const char* enuDriveDirectionString[] = { "DD_FORWARD",
 										"DD_REVERSE_INSIDE",
 										"DD_ROTATECW",
 										"DD_ROTATECC",
+										"DD_ROTATECW1",
+										"DD_ROTATECC1",
 										"DD_REVERSE_LINE_FOLLOW",
 										"DD_SPIRAL_CW",
 										"DD_FEOROTATECC",
 										"DD_FEOROTATECW",
+										"DD_FEOROTATECC1",
+										"DD_FEOROTATECW1",
+										"DD_FEOROTATECC2",
+										"DD_FEOROTATECW2",
 										"DD_FREEBUMPER", // only used for history
 										"DD_NONE",
-										//"DD_ROTATE90CW",
-										//"DD_ROTATE90CC",
-										"UNKNOWN4",
-										"UNKNOWN5",
-										"UNKNOWN6"
+	//"DD_ROTATE90CW",
+	//"DD_ROTATE90CC",
+	"UNKNOWN1", //Only for safety if one extends enum enuDriveDirection and forgot to extend the strings here. Never overwrite this. Append it always to enuDriveDirectionString.
+	"UNKNOWN2",
+	"UNKNOWN3",
+	"UNKNOWN4",
+	"UNKNOWN5",
+	"UNKNOWN6"
 };
 
 const char* enuFlagEscabeObstacleConFlagString[] = { "FEO_NONE",
-		"FEO_ROTCC",
-		"FEO_ROTCW",
+		"FEO_ROTCC1",
+		"FEO_ROTCW1",
+		"FEO_ROTCC2",
+		"FEO_ROTCW2",
 		"FEO_BACKINSIDE",
 		"FEO_ROT",
+		"UNKNOWN1",
+		"UNKNOWN2",
 		"UNKNOWN3",
 		"UNKNOWN4",
-		"UNKNOWN4",
-		"UNKNOWN4",
-		"UNKNOWN5"
+		"UNKNOWN5",
+		"UNKNOWN6"
 };
 
 
@@ -61,18 +73,21 @@ const char* enuFlagForceRotateDirectionString[] = { "FRD_NONE",
 	"UNKNOWN2",
 	"UNKNOWN3",
 	"UNKNOWN4",
-	"UNKNOWN5"
+	"UNKNOWN5",
+	"UNKNOWN6"
 };
 
 
 const char* enuFlagCoilsOutsideString[] = { "CO_NONE",
-"CO_RIGHT",
-"CO_LEFT",
-"CO_BOTH",
-"UNKNOWN2",
-"UNKNOWN3",
-"UNKNOWN4",
-"UNKNOWN5"
+	"CO_RIGHT",
+	"CO_LEFT",
+	"CO_BOTH",
+	"UNKNOWN1",
+	"UNKNOWN2",
+	"UNKNOWN3",
+	"UNKNOWN4",
+	"UNKNOWN5",
+	"UNKNOWN6"
 };
 
 
@@ -95,7 +110,7 @@ void Blackboard::setBehaviour(enuBehaviour b)
 		float ticks = (motor.L->myEncoder->getAbsTicksCounter() + motor.R->myEncoder->getAbsTicksCounter()) / 2.0f;
 		mowway += motor.getMForCounts(ticks);
 		eeprom.writeFloat(EEPADR_MOWDIRVENWAY, mowway);
-		
+
 		int32_t rotations = eeprom.read32t(EEPADR_ROTATIONCOUNT);
 		rotations = rotations + numberOfRotations;
 		eeprom.write32t(EEPADR_ROTATIONCOUNT, rotations);
@@ -108,7 +123,7 @@ void Blackboard::setBehaviour(enuBehaviour b)
 	flagEnableCharging = false;
 	flagEnableGotoAreaX = false;
 	flagEnableFindPerimeter = false;
-	flagEnableRestoreHistory = false;
+
 	motor.enableDefaultRamping();
 
 	switch (b) {
@@ -156,14 +171,6 @@ void Blackboard::setBehaviour(enuBehaviour b)
 		//motor.startDistanceMeasurement();
 		errorHandler.setInfo("!04,SET BEHAV -> BH_MOW\r\n");
 		break;
-	case BH_RESTOREHISTORY:
-		flagEnableRestoreHistory = true;
-		//rangeSensor.enabled = true;
-		chargeSystem.deactivateRelay();
-		//motor.resetEncoderCounter();
-		//motor.startDistanceMeasurement();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_RESTOREHISTORY\r\n");
-		break;
 	case BH_NONE:
 		// Don't reset BB here because if you change in manual mode, you will probaly check the BB variables like history or so.
 		//rangeSensor.enabled = false;
@@ -178,8 +185,8 @@ void Blackboard::setBehaviour(enuBehaviour b)
 
 //void Blackboard::addHistoryEntry(THistory &h) {
 
-void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _distanceDriven , float _rotAngleSoll, float _rotAngleIst, 
-	                             enuFlagForceRotateDirection _flagForceRotDirection, enuFlagCoilsOutside   _coilFirstOutside) {
+void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _distanceDriven, float _rotAngleSoll, float _rotAngleIst,
+	enuFlagForceRotateDirection _flagForceRotDirection, enuFlagCoilsOutside   _coilFirstOutside) {
 	//Shift History for new entry
 	for (int i = HISTROY_BUFSIZE - 1; i > 0; i--) {
 		history[i] = history[i - 1];
@@ -194,7 +201,9 @@ void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _dist
 
 	history[0].restored = false;
 	history[0].timeAdded = millis();
-	
+
+	errorHandler.setInfo(F("!03,add histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history[0].driveDirection]);
+
 	motor.startDistanceMeasurement();
 
 
@@ -231,13 +240,15 @@ void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _dist
 }
 
 
-void Blackboard::markLastHistoryEntryAsRestored() {
+void Blackboard::deleteLastHistoryEntry() {
 
-	history[0].restored = true;
-	/*
+	//history[0].restored = true;
+
+	errorHandler.setInfo(F("!03,delete histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history[0].driveDirection]);
+
 	//Delete History entry [0] while shifting to left
-	for (int i = 0 ; i < HISTROY_BUFSIZE-1; i++) {
-		history[i] = history[i+1];
+	for (int i = 0; i < HISTROY_BUFSIZE - 1; i++) {
+		history[i] = history[i + 1];
 	}
 
 	history[HISTROY_BUFSIZE - 1].distanceDriven = 300; // [0] Enthaelt die gerade gefahrene distanz von der letzten rotation bis jetzt. Jedes mal nachdem rotiert wurde, wird distanzmessung neu gestartet.
@@ -246,13 +257,13 @@ void Blackboard::markLastHistoryEntryAsRestored() {
 	history[HISTROY_BUFSIZE - 1].rotAngleSoll = 0; // [0] Sollwinkel der aktuellen Drehung
 	history[HISTROY_BUFSIZE - 1].rotAngleIst = 0;
 	history[HISTROY_BUFSIZE - 1].flagForceRotDirection = FRD_NONE;
-	*/
+
 }
 
 
 bool Blackboard::histGetTwoLastForwardDistances(float& a, float& b) {
-	
-	int i,j;
+
+	int i, j;
 	bool aFound, bFound;
 	j = HISTROY_BUFSIZE;
 	aFound = false;
@@ -297,6 +308,7 @@ void Blackboard::resetBB()
 	cruiseSpeed = 0;
 	timeCruiseSpeedSet = 0;
 
+	flagEnableRestoreHistory = false;
 	flagBumperInsidePerActivated = false;
 	flagBumperOutsidePerActivated = false;
 	flagCruiseSpiral = false;

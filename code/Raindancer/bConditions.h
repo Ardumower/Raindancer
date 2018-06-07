@@ -155,15 +155,16 @@ public:
 	}
 };
 
-class TConFEO_ROTCC : public Node    // Each task will be a class (derived from Node of course).
+
+class TConFEO_ROTCC1 : public Node    // Each task will be a class (derived from Node of course).
 {
 public:
 
-	TConFEO_ROTCC() {}
+	TConFEO_ROTCC1() {}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.flagEscabeObstacleConFlag == FEO_ROTCC) {
+		if (bb.flagEscabeObstacleConFlag == FEO_ROTCC1) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			//errorHandler.setInfo();
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
@@ -176,15 +177,56 @@ public:
 };
 
 
-class TConFEO_ROTCW : public Node    // Each task will be a class (derived from Node of course).
+class TConFEO_ROTCW1 : public Node    // Each task will be a class (derived from Node of course).
 {
 public:
 
-	TConFEO_ROTCW() {}
+	TConFEO_ROTCW1() {}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.flagEscabeObstacleConFlag == FEO_ROTCW) {
+		if (bb.flagEscabeObstacleConFlag == FEO_ROTCW1) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+			//errorHandler.setInfo();
+			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+			else { errorHandler.writeToLogOnly(); }
+			return BH_SUCCESS;
+		}
+
+		return BH_FAILURE;
+	}
+};
+
+class TConFEO_ROTCC2 : public Node    // Each task will be a class (derived from Node of course).
+{
+public:
+
+	TConFEO_ROTCC2() {}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		if (bb.flagEscabeObstacleConFlag == FEO_ROTCC2) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+			//errorHandler.setInfo();
+			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+			else { errorHandler.writeToLogOnly(); }
+			return BH_SUCCESS;
+		}
+
+		return BH_FAILURE;
+	}
+};
+
+
+class TConFEO_ROTCW2 : public Node    // Each task will be a class (derived from Node of course).
+{
+public:
+
+	TConFEO_ROTCW2() {}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		if (bb.flagEscabeObstacleConFlag == FEO_ROTCW2) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			//errorHandler.setInfo();
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
@@ -255,16 +297,17 @@ public:
 		return BH_FAILURE;
 	}
 };
+     
 
-class TConWasDirectionFEOROTATECC : public Node    // Each task will be a class (derived from Node of course).
+class TConWasDirectionFeoRotateCC : public Node    // Each task will be a class (derived from Node of course).
 {
 public:
 
-	TConWasDirectionFEOROTATECC() {}
+	TConWasDirectionFeoRotateCC() {}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_FEOROTATECC) {
+		if (bb.driveDirection == DD_FEOROTATECC ) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
@@ -276,15 +319,53 @@ public:
 };
 
 
-class TConWasDirectionFEOROTATECW : public Node    // Each task will be a class (derived from Node of course).
+class TConWasDirectionFeoRotateCW : public Node    // Each task will be a class (derived from Node of course).
 {
 public:
 
-	TConWasDirectionFEOROTATECW() {}
+	TConWasDirectionFeoRotateCW() {}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_FEOROTATECC) {
+		if (bb.driveDirection == DD_FEOROTATECW ) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+			else { errorHandler.writeToLogOnly(); }
+			return BH_SUCCESS;
+		}
+
+		return BH_FAILURE;
+	}
+};
+class TConWasDirectionFeoRotateCC1 : public Node    // Each task will be a class (derived from Node of course).
+{
+public:
+
+	TConWasDirectionFeoRotateCC1() {}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		if (bb.driveDirection == DD_FEOROTATECC1 || bb.driveDirection == DD_FEOROTATECC2) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+			else { errorHandler.writeToLogOnly(); }
+			return BH_SUCCESS;
+		}
+
+		return BH_FAILURE;
+	}
+};
+
+
+class TConWasDirectionFeoRotateCW1 : public Node    // Each task will be a class (derived from Node of course).
+{
+public:
+
+	TConWasDirectionFeoRotateCW1() {}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		if (bb.driveDirection == DD_FEOROTATECW1 || bb.driveDirection == DD_FEOROTATECW2) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
@@ -399,46 +480,6 @@ public:
 
 
 
-class TConWasDirectionFeoRotateCC : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionFeoRotateCC() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FEOROTATECC) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConWasDirectionFeoRotateCW : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionFeoRotateCW() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FEOROTATECW) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
 class TConWasDirectionRotateCW : public Node    // Each task will be a class (derived from Node of course).
 {
 public:
@@ -447,7 +488,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_ROTATECW) {
+		if (bb.driveDirection == DD_ROTATECW || bb.driveDirection == DD_ROTATECW1) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
@@ -467,7 +508,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_ROTATECC) {
+		if (bb.driveDirection == DD_ROTATECC || bb.driveDirection == DD_ROTATECC1) {
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }

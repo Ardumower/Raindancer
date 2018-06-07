@@ -15,8 +15,7 @@
 class TRestoreHistory : public Node
 {
 private:
-	uint8_t state;
-	uint8_t idx;
+
 	bool finished;
 	enuDriveDirection dd;
 public:
@@ -25,69 +24,69 @@ public:
 
 	virtual void onInitialize(Blackboard& bb) {
 
-
+		errorHandler.setInfo(F("TRestoreHistory CALLED numberToRestoreHist %d\r\n"), bb.numberToRestoreHist);
 		finished = false;
 
-		if (bb.numberToRestoreHist > HISTROY_BUFSIZE) {
-			errorHandler.setError(F("TRestoreHistory bb.numberToRestoreHist > HISTROY_BUFSIZE"));
+		if (bb.numberToRestoreHist > HISTROY_BUFSIZE - 1) {
+			errorHandler.setError(F("TRestoreHistory bb.numberToRestoreHist > HISTROY_BUFSIZE\r\n"));
 		}
 
-		for (idx = 0; idx < HISTROY_BUFSIZE; idx++ ) {
-			if (bb.history[idx].restored == false) {
-				break; //idx is the index to the struct to restore
-			}
-		}
-		
-		// First inserted Item on Position HISTROY_BUFSIZE-1 in the array will not be restored
-		if (idx >= (bb.numberToRestoreHist-1) || bb.history[idx].driveDirection == DD_NONE) {
+
+		if (bb.numberToRestoreHist <= 0 || bb.history[0].driveDirection == DD_NONE) {
 			finished = true;
 			return;
 		}
-
-		bb.history[idx].restored = true;
+		bb.numberToRestoreHist--;
 
 		bb.cruiseSpeed = bb.CRUISE_SPEED_OBSTACLE;
 
-		// save drive direction in dd tor update() because history[0] will be deletet with bb.deleteLastHistoryEntry(); later.
-		dd = bb.history[idx].driveDirection;
+		// save drive direction in dd for update() because history[0] will be deletet with bb.deleteLastHistoryEntry(); later.
+		dd = bb.history[0].driveDirection;
 
-		switch (dd) {
-		case DD_OVERRUN:
-		case DD_FORWARD:
-		case DD_REVERSE_INSIDE:
-		case DD_FORWARD_INSIDE:
-			bb.motor.rotateCM(-bb.history[idx].distanceDriven, bb.cruiseSpeed);
-			errorHandler.setInfo(F("!03,RestHist driveDirection: %s way: %f\r\n"), enuDriveDirectionString[dd], -bb.history[idx].distanceDriven);
-			break;
-		case DD_LINE_FOLLOW:
-			break;
-		case DD_REVERSE_ESC_OBST:
-			bb.motor.rotateCM(-bb.history[idx].distanceDriven, bb.cruiseSpeed);
-			errorHandler.setInfo(F("!03,RestHist driveDirection: %s way: %f\r\n"), enuDriveDirectionString[dd], -bb.history[idx].distanceDriven);
-			break;
-		case DD_ROTATECW:
-		case DD_ROTATECC:
-		case DD_FEOROTATECW:
-		case DD_FEOROTATECC:
-			bb.motor.turnTo(-bb.history[idx].rotAngleIst, bb.cruiseSpeed);
-			errorHandler.setInfo(F("!03,RestHist driveDirection: %s angle: %f\r\n"), enuDriveDirectionString[dd], -bb.history[idx].rotAngleIst);
-			break;
-		case DD_SPIRAL_CW:
-			break;
-		default:
-			sprintf(errorHandler.msg, "!03,TRestoreHistory driveDirection not found: %s", enuDriveDirectionString[dd]);
-			errorHandler.setError();
-			break;
+		if (!finished) {
+			switch (dd) {
+			case DD_OVERRUN:
+			case DD_FORWARD:
+			case DD_REVERSE_INSIDE:
+			case DD_FORWARD_INSIDE:
+				bb.motor.rotateCM(-bb.history[0].distanceDriven, bb.cruiseSpeed);
+				errorHandler.setInfo(F("!03,RestHist driveDirection: %s way: %f\r\n"), enuDriveDirectionString[dd], -bb.history[0].distanceDriven);
+				break;
+			case DD_LINE_FOLLOW:
+				break;
+			case DD_REVERSE_ESC_OBST:
+				bb.motor.rotateCM(-bb.history[0].distanceDriven, bb.cruiseSpeed);
+				errorHandler.setInfo(F("!03,RestHist driveDirection: %s way: %f\r\n"), enuDriveDirectionString[dd], -bb.history[0].distanceDriven);
+				break;
+			case DD_ROTATECW:
+			case DD_ROTATECC:
+			case DD_ROTATECC1:
+			case DD_ROTATECW1:
+			case DD_FEOROTATECW:
+			case DD_FEOROTATECC:
+				bb.motor.turnTo(-bb.history[0].rotAngleIst, bb.cruiseSpeed);
+				errorHandler.setInfo(F("!03,RestHist driveDirection: %s angle: %f\r\n"), enuDriveDirectionString[dd], -bb.history[0].rotAngleIst);
+				break;
+			case DD_SPIRAL_CW:
+				break;
+			default:
+				sprintf(errorHandler.msg, "!03,TRestoreHistory driveDirection not found: %s\r\n", enuDriveDirectionString[dd]);
+				errorHandler.setError();
+				break;
+			}
+
+			bb.deleteLastHistoryEntry();
 		}
-
 
 	}
 
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (finished) { // Warten bis motor gestoppt
-			bb.setBehaviour(BH_NONE);
+		// restore finished. Deactivate branch.
+		if (finished) { 
+			//bb.setBehaviour(BH_NONE);
+			bb.flagEnableRestoreHistory = false;
 			return BH_SUCCESS;
 		}
 
@@ -109,9 +108,12 @@ public:
 			}
 			break;
 		case DD_ROTATECC:
+		case DD_ROTATECW:
+    	case DD_ROTATECC1:
+		case DD_ROTATECW1:
 		case DD_FEOROTATECW:
 		case DD_FEOROTATECC:
-		case DD_ROTATECW:
+		
 			if (bb.motor.isPositionReached()) {
 				return BH_SUCCESS;
 			}
