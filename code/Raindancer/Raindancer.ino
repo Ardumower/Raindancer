@@ -54,6 +54,8 @@ Set to true only the correct CHASSIS
 #include "bt.h"
 #include "EEPROM.h"
 #include "motorSensor.h"
+//bber2
+#include "DHT.h"
 
 
 /*********************************************************************/
@@ -113,6 +115,16 @@ Trtc rtc;
 TEEPROM eeprom;
 // Buzzer
 BuzzerClass Buzzer;
+//bber2
+// DHT Temperature sensor
+#define DHTPIN 49 //here i don't know how to put this into hardware.cpp without issue
+#if CONF_DISABLE_DHT_SERVICE == false
+DHT dht(DHTPIN, DHTTYPE);
+#endif
+
+//-----------------------------------------------------
+
+
 // Instantiate a new ThreadController
 ThreadController controller = ThreadController(); // Thread die vor manuellen mode laufen müssen
 
@@ -222,7 +234,13 @@ void setup()
 	Buzzer.setup();
 	//Buzzer.setInterval(0); // will be controled by the class itselfe
 	Buzzer.enabled = false;  // will be controled by the class itselfe
+  //bber2--------
+#if CONF_DISABLE_DHT_SERVICE == false
+  dht.setup();
+#endif
 
+
+  //------------
 	// ACHTUNG: In TreadController.h die Anzahl der threads einstellen falls 25 überschritten wird
 	controller.add(&hal);
 

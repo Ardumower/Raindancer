@@ -42,6 +42,8 @@ Private-use only! (you need to ask for a commercial-use)
 #include "EEPROM.h"
 #include "motorSensor.h"
 #include "bGotoAreaX.h"
+//bber2
+#include "DHT.h"
 
 extern void executeLoop();
 
@@ -90,7 +92,10 @@ extern TErrorHandler errorHandler;
 
 extern Trtc rtc;
 extern TEEPROM eeprom;
-
+//bber2
+#if CONF_DISABLE_DHT_SERVICE == false
+extern DHT dht;
+#endif
 
 extern TmotorSensor motorSensorL;
 extern TmotorSensor motorSensorR;
@@ -296,6 +301,12 @@ void cmd_help(int arg_cnt, char **args)
 	errorHandler.setInfoNoLog(F("\r\n=== BATTERY SERVICE ===\r\n"));
 	errorHandler.setInfoNoLog(F("bat.config //show config\r\n"));
 	errorHandler.setInfoNoLog(F("bat.show   //show battery voltage\r\n"));
+
+//bber2--
+#if CONF_DISABLE_DHT_SERVICE == false
+  errorHandler.setInfoNoLog(F("\r\n=== TEMPERATURE SERVICE ===\r\n"));
+  errorHandler.setInfoNoLog(F("temp.show   //show temperature and humidity\r\n"));
+#endif
 
 	wait = millis();
 	while (millis() - wait < 100) executeLoop();
@@ -786,7 +797,18 @@ void cmd_showBattery(int arg_cnt, char **args)
 
 	//errorHandler.setInfoNoLog(F( "aiBATVOLT.getVoltage() %f\r\n"), aiBATVOLT.getVoltage());
 }
+//bber2
+void cmd_showTemperature(int arg_cnt, char **args)
+{
+#if CONF_DISABLE_DHT_SERVICE == false
+  errorHandler.setInfoNoLog(F("Temperature: %f\r\n"), dht.readTemperature());
+  errorHandler.setInfoNoLog(F("Humidity: %f\r\n"), dht.readHumidity());
 
+#endif
+
+
+}
+//----------
 void cmd_showMowSensor(int arg_cnt, char **args)
 {
 	mowMotorSensor.showValuesOnConsole = !mowMotorSensor.showValuesOnConsole;
@@ -1497,6 +1519,16 @@ void cmd_setup()
 	//------------------------------
 	cmdAdd((char *)"bat.config", cmd_bat_show_config);
 	cmdAdd((char *)"bat.show", cmd_showBattery);
+
+ //bber2
+  // Temperature services
+  //------------------------------
+#if CONF_DISABLE_DHT_SERVICE == false
+  cmdAdd((char *)"temp.show", cmd_showTemperature);
+#endif
+
+
+  //--------
 
 	// ADC manager
 	//------------------------------
