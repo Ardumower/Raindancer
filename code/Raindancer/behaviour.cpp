@@ -149,8 +149,8 @@ MemSequence mseqPerimeterForwardInside;
 
 TSetArc90CW setArc90CW;
 TSetArc90CC setArc90CC;
-TSetArc90CW setArc90CW1;
-TSetArc90CC setArc90CC1;
+TSetArc90CW1 setArc90CW1;
+TSetArc90CC1 setArc90CC1;
 
 TSetArc20CW setArc20CW;
 TSetArc20CC setArc20CC;

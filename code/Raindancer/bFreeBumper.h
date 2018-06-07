@@ -306,12 +306,14 @@ public:
 
 
 		case DD_ROTATECW:
+		case DD_ROTATECW1:
 			if (bb.motor.isPositionReached()) {
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECW finished\r\n"));
 				return BH_SUCCESS;
 			}
 			break;
 		case DD_ROTATECC:
+		case DD_ROTATECC1:
 			if (bb.motor.isPositionReached()) {
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECC finished\r\n"));
 				return BH_SUCCESS;
@@ -594,7 +596,7 @@ public:
 						bb.history[2].driveDirection == DD_OVERRUN &&
 						bb.history[3].driveDirection == DD_FORWARD
 						) {
-						errorHandler.setInfo(F("!03,freeBumper DD_FORWARD sequence 1 found\r\n"));
+						errorHandler.setInfo(F("!03,TselEscapeAlgorithm DD_FORWARD sequence 1 found\r\n"));
 						if (bb.history[3].distanceDriven > 50) {
 							bb.history[3].distanceDriven = 50;
 						}
@@ -614,7 +616,7 @@ public:
 						bb.history[1].driveDirection == DD_OVERRUN &&
 						bb.history[2].driveDirection == DD_FORWARD
 						) {
-						errorHandler.setInfo(F("!03,freeBumper DD_FORWARD sequence 2 found\r\n"));
+						errorHandler.setInfo(F("!03,TselEscapeAlgorithm DD_FORWARD sequence 2 found\r\n"));
 						if (bb.history[2].distanceDriven > 50) {
 							bb.history[2].distanceDriven = 50;
 						}
@@ -651,7 +653,7 @@ public:
 				errorHandler.setInfo();
 				break;
 			case DD_FORWARD_INSIDE: //Kann hier nicht auftreten
-				errorHandler.setError("!03,DD_FORWARD_INSIDE in Bumper innerhalb Perimeter aktiviert 1\r\n");
+				errorHandler.setError("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper innerhalb Perimeter aktiviert 1\r\n");
 				break;
 			case DD_ROTATECW:
 				bb.flagEscabeObstacleConFlag = FEO_ROTCC1;
@@ -661,6 +663,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -673,18 +677,19 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
 
 			case DD_ROTATECW1:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
 			case DD_ROTATECC1:
-				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
+				bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
 				break;
@@ -696,6 +701,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -708,6 +715,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -720,6 +729,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -732,6 +743,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -744,6 +757,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -756,6 +771,8 @@ public:
 					bb.flagEscabeObstacleConFlag = FEO_ROTCC2;
 					bb.flagBumperInsidePerActivated = false;
 					bb.flagBumperOutsidePerActivated = true;
+					errorHandler.setInfo(F("!03,TselEscapeAlgorithm changed: bb.flagBumperOutsidePerActivated = true;\r\n"));
+
 				}
 				sprintf(errorHandler.msg, text, enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setInfo();
@@ -769,7 +786,7 @@ public:
 				// Wird in mseqPerimeterActive bearbeitetrn BH_SUCCESS;
 				break;
 			default:
-				sprintf(errorHandler.msg, "!03,TchangeDriveDirection driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				sprintf(errorHandler.msg, "!03,TselEscapeAlgorithm driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setError();
 				break;
 			}
@@ -790,7 +807,7 @@ public:
 				errorHandler.setInfo();
 				break;
 			case DD_FORWARD_INSIDE:
-				errorHandler.setError("!03,DD_FORWARD_INSIDE in Bumper außerhalb Perimeter aktiviert 1\r\n");
+				errorHandler.setError("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper außerhalb Perimeter aktiviert 1\r\n");
 				break;
 			case DD_ROTATECW:
 				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;
@@ -840,7 +857,7 @@ public:
 				//} 
 				break;
 			default:
-				sprintf(errorHandler.msg, "!03,TchangeDriveDirection driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+				sprintf(errorHandler.msg, "!03,TselEscapeAlgorithm driveDirection not found: %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 				errorHandler.setError();
 				break;
 			}

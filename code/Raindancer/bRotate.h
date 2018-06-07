@@ -234,9 +234,13 @@ public:
 		else {
 			bb.motor.turnTo(bb.arcRotateXArc, bb.cruiseSpeed);
 		}
+
 		bb.flagForceRotateDirection = FRD_NONE;
 
 		bb.numberOfRotations++;
+
+		errorHandler.setInfo(F("!05,TRotateX: %s DD %s\r\n"), enuFlagForceRotateDirectionString[bb.flagForceRotateDirection], enuDriveDirectionString[bb.driveDirection]);
+
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {

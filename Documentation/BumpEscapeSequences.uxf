@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>7</zoom_level>
+  <zoom_level>6</zoom_level>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>238</y>
-      <w>21</w>
-      <h>77</h>
+      <x>366</x>
+      <y>204</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -15,10 +15,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>147</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>126</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -26,10 +26,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>539</x>
-      <y>231</y>
-      <w>21</w>
-      <h>77</h>
+      <x>474</x>
+      <y>198</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -37,10 +37,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>518</x>
-      <y>147</y>
-      <w>70</w>
-      <h>21</h>
+      <x>456</x>
+      <y>126</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -48,10 +48,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>147</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>126</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW</panel_attributes>
     <additional_attributes/>
@@ -59,10 +59,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>119</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>102</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -70,10 +70,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>644</x>
-      <y>252</y>
-      <w>63</w>
-      <h>21</h>
+      <x>564</x>
+      <y>216</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -81,10 +81,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>147</y>
-      <w>70</w>
-      <h>21</h>
+      <x>678</x>
+      <y>126</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Forward</panel_attributes>
     <additional_attributes/>
@@ -92,10 +92,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>798</x>
-      <y>238</y>
-      <w>21</w>
-      <h>77</h>
+      <x>696</x>
+      <y>204</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -103,10 +103,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>147</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>126</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -115,10 +115,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>105</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>90</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC</panel_attributes>
     <additional_attributes/>
@@ -126,10 +126,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>126</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>108</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>or</panel_attributes>
     <additional_attributes/>
@@ -137,10 +137,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
-      <y>504</y>
-      <w>21</w>
-      <h>77</h>
+      <x>384</x>
+      <y>432</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -148,10 +148,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>406</y>
-      <w>84</w>
-      <h>21</h>
+      <x>354</x>
+      <y>348</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -159,10 +159,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>546</x>
-      <y>504</y>
-      <w>21</w>
-      <h>70</h>
+      <x>480</x>
+      <y>432</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -170,10 +170,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>525</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>462</x>
+      <y>348</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -181,10 +181,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>564</x>
+      <y>348</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW</panel_attributes>
     <additional_attributes/>
@@ -192,10 +192,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>378</y>
-      <w>84</w>
-      <h>21</h>
+      <x>354</x>
+      <y>324</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -203,10 +203,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>665</x>
-      <y>518</y>
-      <w>63</w>
-      <h>21</h>
+      <x>582</x>
+      <y>444</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -214,10 +214,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>348</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -226,10 +226,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>658</x>
-      <y>378</y>
-      <w>84</w>
-      <h>21</h>
+      <x>576</x>
+      <y>324</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -237,10 +237,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>791</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>690</x>
+      <y>348</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -248,10 +248,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>791</x>
-      <y>518</y>
-      <w>70</w>
-      <h>21</h>
+      <x>690</x>
+      <y>444</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -259,10 +259,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>910</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>792</x>
+      <y>348</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC1</panel_attributes>
     <additional_attributes/>
@@ -270,10 +270,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1148</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>996</x>
+      <y>348</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW2</panel_attributes>
     <additional_attributes/>
@@ -281,10 +281,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>917</x>
-      <y>518</y>
-      <w>70</w>
-      <h>21</h>
+      <x>798</x>
+      <y>444</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -292,10 +292,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>378</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>324</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -303,10 +303,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1043</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>906</x>
+      <y>348</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -314,10 +314,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1043</x>
-      <y>518</y>
-      <w>63</w>
-      <h>21</h>
+      <x>906</x>
+      <y>444</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -325,10 +325,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1190</x>
-      <y>504</y>
-      <w>21</w>
-      <h>70</h>
+      <x>1032</x>
+      <y>432</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -336,10 +336,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1169</x>
-      <y>560</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1014</x>
+      <y>480</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -347,10 +347,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1155</x>
-      <y>378</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1002</x>
+      <y>324</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -358,10 +358,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1295</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>348</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -369,10 +369,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1295</x>
-      <y>518</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>444</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -380,10 +380,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1218</x>
+      <y>348</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC1</panel_attributes>
     <additional_attributes/>
@@ -391,10 +391,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1659</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1434</x>
+      <y>348</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW2</panel_attributes>
     <additional_attributes/>
@@ -402,10 +402,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1414</x>
-      <y>518</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1224</x>
+      <y>444</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -413,10 +413,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1414</x>
-      <y>378</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1224</x>
+      <y>324</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -424,10 +424,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1561</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1350</x>
+      <y>348</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -435,10 +435,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1561</x>
-      <y>518</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1350</x>
+      <y>444</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -446,10 +446,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1701</x>
-      <y>497</y>
-      <w>21</w>
-      <h>70</h>
+      <x>1470</x>
+      <y>426</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -457,10 +457,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1687</x>
-      <y>560</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1458</x>
+      <y>480</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -468,10 +468,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1666</x>
-      <y>378</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1440</x>
+      <y>324</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -479,10 +479,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1778</x>
-      <y>406</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1536</x>
+      <y>348</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>... and so on</panel_attributes>
     <additional_attributes/>
@@ -490,10 +490,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>763</y>
-      <w>21</w>
-      <h>77</h>
+      <x>366</x>
+      <y>654</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -501,10 +501,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>672</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>576</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -512,10 +512,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>532</x>
-      <y>763</y>
-      <w>21</w>
-      <h>70</h>
+      <x>468</x>
+      <y>654</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -523,10 +523,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>518</x>
-      <y>672</y>
-      <w>70</w>
-      <h>21</h>
+      <x>456</x>
+      <y>576</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -534,10 +534,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>672</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>576</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC</panel_attributes>
     <additional_attributes/>
@@ -545,10 +545,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>644</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>552</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -556,10 +556,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>665</x>
-      <y>777</y>
-      <w>63</w>
-      <h>21</h>
+      <x>582</x>
+      <y>666</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -567,10 +567,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>672</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>576</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -579,10 +579,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>651</x>
-      <y>644</y>
-      <w>84</w>
-      <h>21</h>
+      <x>570</x>
+      <y>552</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -590,10 +590,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>672</y>
-      <w>70</w>
-      <h>21</h>
+      <x>684</x>
+      <y>576</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -601,10 +601,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>777</x>
-      <y>777</y>
-      <w>70</w>
-      <h>21</h>
+      <x>678</x>
+      <y>666</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -612,10 +612,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>672</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>576</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW1</panel_attributes>
     <additional_attributes/>
@@ -623,10 +623,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1148</x>
-      <y>672</y>
-      <w>105</w>
-      <h>21</h>
+      <x>996</x>
+      <y>576</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC2</panel_attributes>
     <additional_attributes/>
@@ -634,10 +634,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>917</x>
-      <y>777</y>
-      <w>70</w>
-      <h>21</h>
+      <x>798</x>
+      <y>666</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -645,10 +645,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>644</y>
-      <w>84</w>
-      <h>21</h>
+      <x>786</x>
+      <y>552</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -656,10 +656,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1043</x>
-      <y>777</y>
-      <w>63</w>
-      <h>21</h>
+      <x>906</x>
+      <y>666</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -667,10 +667,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1197</x>
-      <y>756</y>
-      <w>21</w>
-      <h>70</h>
+      <x>1038</x>
+      <y>648</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -678,10 +678,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1176</x>
-      <y>819</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1020</x>
+      <y>702</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -689,10 +689,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1155</x>
-      <y>644</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1002</x>
+      <y>552</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -700,10 +700,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>672</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1218</x>
+      <y>576</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW1</panel_attributes>
     <additional_attributes/>
@@ -711,10 +711,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1428</x>
-      <y>777</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1236</x>
+      <y>666</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -722,10 +722,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1414</x>
-      <y>644</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1224</x>
+      <y>552</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -733,10 +733,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1701</x>
-      <y>756</y>
-      <w>21</w>
-      <h>70</h>
+      <x>1470</x>
+      <y>648</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -744,10 +744,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1680</x>
-      <y>819</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1452</x>
+      <y>702</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -755,10 +755,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1778</x>
-      <y>672</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1536</x>
+      <y>576</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>... and so on</panel_attributes>
     <additional_attributes/>
@@ -766,10 +766,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>119</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>102</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event
 bg=Orange</panel_attributes>
@@ -778,10 +778,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>378</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>324</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event
 bg=Orange</panel_attributes>
@@ -790,10 +790,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>644</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>552</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event
 bg=Orange</panel_attributes>
@@ -802,10 +802,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>245</x>
+      <x>222</x>
       <y>0</y>
-      <w>1267</w>
-      <h>21</h>
+      <w>1086</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bumper inside Perimetert activated. </panel_attributes>
     <additional_attributes/>
@@ -813,10 +813,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>259</y>
-      <w>112</w>
-      <h>21</h>
+      <x>234</x>
+      <y>222</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -825,10 +825,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>532</y>
-      <w>112</w>
-      <h>21</h>
+      <x>234</x>
+      <y>456</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -837,10 +837,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>791</y>
-      <w>112</w>
-      <h>21</h>
+      <x>234</x>
+      <y>678</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -849,10 +849,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>1071</y>
-      <w>21</w>
-      <h>77</h>
+      <x>366</x>
+      <y>918</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -860,10 +860,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>973</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>834</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -871,10 +871,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>973</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>834</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -882,10 +882,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>945</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>810</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -893,10 +893,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>518</x>
-      <y>1085</y>
-      <w>63</w>
-      <h>21</h>
+      <x>456</x>
+      <y>930</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -904,10 +904,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>973</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>834</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -916,10 +916,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>511</x>
-      <y>945</y>
-      <w>84</w>
-      <h>21</h>
+      <x>450</x>
+      <y>810</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -927,10 +927,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>973</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>834</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -938,10 +938,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>644</x>
-      <y>1085</y>
-      <w>70</w>
-      <h>21</h>
+      <x>564</x>
+      <y>930</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -949,10 +949,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>973</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>834</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -960,10 +960,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>945</y>
-      <w>84</w>
-      <h>21</h>
+      <x>696</x>
+      <y>810</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -971,10 +971,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1176</x>
-      <y>973</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1020</x>
+      <y>834</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>... and so on</panel_attributes>
     <additional_attributes/>
@@ -982,10 +982,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>945</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>810</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -994,10 +994,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>1099</y>
-      <w>112</w>
-      <h>21</h>
+      <x>234</x>
+      <y>942</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -1006,10 +1006,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>945</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>810</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -1017,10 +1017,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>966</x>
-      <y>28</y>
-      <w>350</w>
-      <h>42</h>
+      <x>840</x>
+      <y>24</y>
+      <w>300</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 BCI = Both Coils inside
@@ -1033,10 +1033,10 @@ PSC_IO = Perimeter state changed from inside to outisde in free  bumper
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>1029</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>882</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -1045,10 +1045,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>917</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>786</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -1057,10 +1057,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>917</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>786</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>PSC_IO</panel_attributes>
     <additional_attributes/>
@@ -1068,10 +1068,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>91</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>78</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Decorator active
 bg=Green</panel_attributes>
@@ -1080,10 +1080,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>1029</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>882</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -1092,10 +1092,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>798</x>
-      <y>1134</y>
-      <w>63</w>
-      <h>21</h>
+      <x>696</x>
+      <y>972</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -1103,10 +1103,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>819</x>
-      <y>1064</y>
-      <w>21</w>
-      <h>77</h>
+      <x>714</x>
+      <y>912</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -1114,10 +1114,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>1001</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>858</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -1126,10 +1126,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>490</x>
-      <y>1001</y>
-      <w>126</w>
-      <h>21</h>
+      <x>432</x>
+      <y>858</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -1138,10 +1138,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>1001</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>858</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -1150,10 +1150,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>1029</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>882</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -1162,10 +1162,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>252</x>
-      <y>938</y>
-      <w>21</w>
-      <h>119</h>
+      <x>228</x>
+      <y>804</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -1173,10 +1173,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>378</x>
-      <y>1029</y>
-      <w>105</w>
-      <h>21</h>
+      <x>336</x>
+      <y>882</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -1185,10 +1185,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>1001</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>858</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -1197,10 +1197,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>1029</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>882</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -1209,10 +1209,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>882</y>
-      <w>427</w>
-      <h>21</h>
+      <x>684</x>
+      <y>756</y>
+      <w>366</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TsetDD_FORWARD without further bump. Set drivedirection to DD_FORWARD  and drive forward</panel_attributes>
     <additional_attributes/>
@@ -1220,10 +1220,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>903</y>
-      <w>21</w>
-      <h>70</h>
+      <x>684</x>
+      <y>774</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -1231,10 +1231,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>973</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>834</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -1242,10 +1242,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>917</x>
-      <y>1085</y>
-      <w>70</w>
-      <h>21</h>
+      <x>798</x>
+      <y>930</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -1253,10 +1253,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>945</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>810</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -1264,10 +1264,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>917</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>786</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>PSC_IO</panel_attributes>
     <additional_attributes/>
@@ -1275,10 +1275,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>1001</y>
-      <w>105</w>
-      <h>21</h>
+      <x>786</x>
+      <y>858</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -1287,10 +1287,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>1029</y>
-      <w>105</w>
-      <h>21</h>
+      <x>786</x>
+      <y>882</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -1299,10 +1299,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>973</y>
-      <w>105</w>
-      <h>21</h>
+      <x>894</x>
+      <y>834</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -1310,10 +1310,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1050</x>
-      <y>945</y>
-      <w>84</w>
-      <h>21</h>
+      <x>912</x>
+      <y>810</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -1321,10 +1321,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>1029</y>
-      <w>105</w>
-      <h>21</h>
+      <x>894</x>
+      <y>882</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -1333,10 +1333,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1050</x>
-      <y>1134</y>
-      <w>63</w>
-      <h>21</h>
+      <x>912</x>
+      <y>972</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -1344,10 +1344,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1071</x>
-      <y>1064</y>
-      <w>21</w>
-      <h>77</h>
+      <x>930</x>
+      <y>912</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -1355,10 +1355,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>1001</y>
-      <w>105</w>
-      <h>21</h>
+      <x>894</x>
+      <y>858</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -1367,10 +1367,10 @@ bg=Green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>1372</y>
-      <w>21</w>
-      <h>77</h>
+      <x>366</x>
+      <y>1176</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -1378,10 +1378,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>1274</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>1092</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -1389,10 +1389,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>1274</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>1092</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECW</panel_attributes>
     <additional_attributes/>
@@ -1400,10 +1400,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>1246</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>1068</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Left Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -1411,10 +1411,10 @@ bg=Green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>651</x>
-      <y>1400</y>
-      <w>63</w>
-      <h>21</h>
+      <x>570</x>
+      <y>1200</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -1422,10 +1422,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>1274</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>1092</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -1434,10 +1434,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>511</x>
-      <y>1246</y>
-      <w>84</w>
-      <h>21</h>
+      <x>450</x>
+      <y>1068</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -1445,10 +1445,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>1274</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>1092</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -1456,10 +1456,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>518</x>
-      <y>1400</y>
-      <w>70</w>
-      <h>21</h>
+      <x>456</x>
+      <y>1200</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -1467,10 +1467,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>1274</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>1092</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECW</panel_attributes>
     <additional_attributes/>
@@ -1478,10 +1478,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>1246</y>
-      <w>84</w>
-      <h>21</h>
+      <x>696</x>
+      <y>1068</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -1489,10 +1489,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1162</x>
-      <y>1267</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1008</x>
+      <y>1086</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>... and so on</panel_attributes>
     <additional_attributes/>
@@ -1500,10 +1500,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>1246</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>1068</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -1512,10 +1512,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>1400</y>
-      <w>112</w>
-      <h>21</h>
+      <x>234</x>
+      <y>1200</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -1524,10 +1524,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>1246</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>1068</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Left Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -1535,10 +1535,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>1330</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>1140</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -1547,10 +1547,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>301</x>
-      <y>1218</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>1044</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -1559,10 +1559,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>1218</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>1044</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>PSC_IO</panel_attributes>
     <additional_attributes/>
@@ -1570,10 +1570,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>1330</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>1140</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -1582,10 +1582,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>819</x>
-      <y>1365</y>
-      <w>21</w>
-      <h>77</h>
+      <x>714</x>
+      <y>1170</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -1593,10 +1593,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>1302</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>1116</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -1605,10 +1605,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>490</x>
-      <y>1302</y>
-      <w>126</w>
-      <h>21</h>
+      <x>432</x>
+      <y>1116</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -1617,10 +1617,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>1302</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>1116</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCW2
 bg=Green</panel_attributes>
@@ -1629,10 +1629,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>1330</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>1140</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -1641,10 +1641,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>252</x>
-      <y>1239</y>
-      <w>21</w>
-      <h>119</h>
+      <x>228</x>
+      <y>1062</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -1652,10 +1652,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>378</x>
-      <y>1330</y>
-      <w>105</w>
-      <h>21</h>
+      <x>336</x>
+      <y>1140</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -1664,10 +1664,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>1302</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>1116</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -1676,10 +1676,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>1330</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>1140</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -1688,10 +1688,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>1183</y>
-      <w>427</w>
-      <h>21</h>
+      <x>684</x>
+      <y>1014</y>
+      <w>366</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TsetDD_FORWARD without further bump. Set drivedirection to DD_FORWARD  and drive forward</panel_attributes>
     <additional_attributes/>
@@ -1699,10 +1699,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>1204</y>
-      <w>21</w>
-      <h>70</h>
+      <x>684</x>
+      <y>1032</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -1710,10 +1710,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>1274</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>1092</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -1721,10 +1721,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>924</x>
-      <y>1400</y>
-      <w>70</w>
-      <h>21</h>
+      <x>804</x>
+      <y>1200</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -1732,10 +1732,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>1246</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>1068</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Left Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -1743,10 +1743,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>1218</y>
-      <w>84</w>
-      <h>21</h>
+      <x>798</x>
+      <y>1044</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>PSC_IO</panel_attributes>
     <additional_attributes/>
@@ -1754,10 +1754,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>1302</y>
-      <w>105</w>
-      <h>21</h>
+      <x>786</x>
+      <y>1116</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -1766,10 +1766,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>1330</y>
-      <w>105</w>
-      <h>21</h>
+      <x>786</x>
+      <y>1140</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -1778,10 +1778,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>1274</y>
-      <w>105</w>
-      <h>21</h>
+      <x>894</x>
+      <y>1092</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECW</panel_attributes>
     <additional_attributes/>
@@ -1789,10 +1789,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1050</x>
-      <y>1246</y>
-      <w>84</w>
-      <h>21</h>
+      <x>912</x>
+      <y>1068</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -1800,10 +1800,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>1330</y>
-      <w>105</w>
-      <h>21</h>
+      <x>894</x>
+      <y>1140</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -1812,10 +1812,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1071</x>
-      <y>1365</y>
-      <w>21</w>
-      <h>77</h>
+      <x>930</x>
+      <y>1170</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -1823,10 +1823,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>1302</y>
-      <w>105</w>
-      <h>21</h>
+      <x>894</x>
+      <y>1116</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCW2
 bg=Green</panel_attributes>
@@ -1835,10 +1835,10 @@ bg=Green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>798</x>
-      <y>1435</y>
-      <w>70</w>
-      <h>21</h>
+      <x>696</x>
+      <y>1230</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -1846,10 +1846,10 @@ bg=Green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1050</x>
-      <y>1442</y>
-      <w>70</w>
-      <h>21</h>
+      <x>912</x>
+      <y>1236</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -1857,10 +1857,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>728</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>624</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -1869,22 +1869,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>700</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>600</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -1893,10 +1893,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>conFEO_ROTCW1
 bg=Green</panel_attributes>
@@ -1905,10 +1905,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>378</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>336</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -1917,10 +1917,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROT
 bg=Green</panel_attributes>
@@ -1929,10 +1929,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
@@ -1941,22 +1941,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1148</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>996</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1148</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>996</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -1965,10 +1965,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -1977,10 +1977,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -1989,10 +1989,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>770</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2001,10 +2001,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>770</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2013,10 +2013,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1036</x>
-      <y>672</y>
-      <w>70</w>
-      <h>21</h>
+      <x>900</x>
+      <y>576</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -2024,10 +2024,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1022</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>888</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2036,10 +2036,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1022</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>888</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2048,10 +2048,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1288</x>
-      <y>672</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1116</x>
+      <y>576</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -2059,10 +2059,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1281</x>
-      <y>777</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1110</x>
+      <y>666</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -2070,10 +2070,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1274</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1104</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2082,10 +2082,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1274</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1104</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2094,22 +2094,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1218</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1218</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCW1
 bg=Green</panel_attributes>
@@ -2118,10 +2118,10 @@ bg=Green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1554</x>
-      <y>777</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1344</x>
+      <y>666</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -2129,10 +2129,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1547</x>
-      <y>672</y>
-      <w>70</w>
-      <h>21</h>
+      <x>1338</x>
+      <y>576</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -2140,10 +2140,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1533</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1326</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2152,10 +2152,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1533</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1326</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2164,10 +2164,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1659</x>
-      <y>672</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1434</x>
+      <y>576</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC2</panel_attributes>
     <additional_attributes/>
@@ -2175,10 +2175,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1666</x>
-      <y>644</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1440</x>
+      <y>552</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -2186,22 +2186,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1659</x>
-      <y>728</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1434</x>
+      <y>624</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1659</x>
-      <y>700</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1434</x>
+      <y>600</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -2210,10 +2210,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>462</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>396</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -2222,22 +2222,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>434</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>372</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -2246,10 +2246,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>conFEO_ROTCC1
 bg=Green</panel_attributes>
@@ -2258,10 +2258,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>378</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>336</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -2270,10 +2270,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROT
 bg=Green</panel_attributes>
@@ -2282,10 +2282,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
@@ -2294,22 +2294,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1148</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>996</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1148</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>996</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCW2
 bg=Green</panel_attributes>
@@ -2318,10 +2318,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2330,10 +2330,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2342,10 +2342,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>770</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2354,10 +2354,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>770</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2366,10 +2366,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1022</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>888</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2378,10 +2378,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1022</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>888</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2390,10 +2390,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1274</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1104</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2402,10 +2402,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1274</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1104</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2414,22 +2414,22 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1218</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
+    <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1218</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC1
 bg=Green</panel_attributes>
@@ -2438,10 +2438,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1533</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1326</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -2450,10 +2450,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1533</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1326</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -2462,139 +2462,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1659</x>
-      <y>462</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>TdnBumpPeriActivated
-bg=light_gray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1659</x>
-      <y>434</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>TconFEO_ROTCW2
-bg=Green</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>238</x>
-      <y>658</y>
-      <w>21</w>
-      <h>119</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>245</x>
-      <y>392</y>
-      <w>21</w>
-      <h>119</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>238</x>
-      <y>91</y>
-      <w>21</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>273</x>
-      <y>203</y>
-      <w>98</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>Branch active
-bg=light_gray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>273</x>
-      <y>175</y>
-      <w>98</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>Condition called
-bg=Green</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>378</x>
-      <y>203</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>seqCruise
-bg=light_gray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>497</x>
-      <y>203</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>mseqBumperActive
-bg=light_gray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>497</x>
-      <y>175</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>TConBumperActive
-bg=Green</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>637</x>
-      <y>175</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>TconFEO_ROT
-bg=Green</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>637</x>
-      <y>203</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1434</x>
+      <y>396</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
@@ -2603,10 +2474,79 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>756</x>
-      <y>203</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1434</x>
+      <y>372</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TconFEO_ROTCW2
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>216</x>
+      <y>564</y>
+      <w>18</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>222</x>
+      <y>336</y>
+      <w>18</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>216</x>
+      <y>78</y>
+      <w>18</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>246</x>
+      <y>174</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Branch active
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>246</x>
+      <y>150</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Condition called
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>174</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -2615,10 +2555,70 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>245</x>
-      <y>35</y>
-      <w>350</w>
-      <h>42</h>
+      <x>438</x>
+      <y>174</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqBumperActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>438</x>
+      <y>150</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConBumperActive
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>150</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TconFEO_ROT
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>174</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TdnBumperActivated
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>174</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>seqCruise
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>222</x>
+      <y>30</y>
+      <w>300</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -2629,10 +2629,10 @@ Easiest Bumperaction.Bump Forward, Drive Back 20cm (Free) and rotate.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>245</x>
-      <y>315</y>
-      <w>350</w>
-      <h>42</h>
+      <x>222</x>
+      <y>270</y>
+      <w>300</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -2645,10 +2645,10 @@ Then Drive Back and try to free again.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>224</x>
-      <y>595</y>
-      <w>350</w>
-      <h>42</h>
+      <x>204</x>
+      <y>510</y>
+      <w>300</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -2661,10 +2661,10 @@ Then Drive Back and try to free again.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>49</x>
-      <y>154</y>
-      <w>189</w>
-      <h>21</h>
+      <x>54</x>
+      <y>132</y>
+      <w>162</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Read from bottom to to top</panel_attributes>
     <additional_attributes/>
@@ -2672,10 +2672,10 @@ Then Drive Back and try to free again.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>259</y>
-      <w>238</w>
-      <h>21</h>
+      <x>12</x>
+      <y>222</y>
+      <w>204</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Read from top to bottom if more than oen arrow</panel_attributes>
     <additional_attributes/>
@@ -2683,10 +2683,10 @@ Then Drive Back and try to free again.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>224</x>
-      <y>861</y>
-      <w>560</w>
-      <h>42</h>
+      <x>204</x>
+      <y>738</y>
+      <w>480</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -2698,10 +2698,10 @@ this event occurs. Then restore rotation CC. Right coil is outisde again. Drive 
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>231</x>
-      <y>1162</y>
-      <w>553</w>
-      <h>42</h>
+      <x>210</x>
+      <y>996</y>
+      <w>474</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -2713,10 +2713,10 @@ event occurs. Then restore rotation CW. Left coil is outisde again. Drive back a
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>1680</y>
-      <w>21</w>
-      <h>77</h>
+      <x>372</x>
+      <y>1440</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -2724,10 +2724,10 @@ event occurs. Then restore rotation CW. Left coil is outisde again. Drive back a
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>1582</y>
-      <w>84</w>
-      <h>21</h>
+      <x>354</x>
+      <y>1356</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -2735,10 +2735,10 @@ event occurs. Then restore rotation CW. Left coil is outisde again. Drive back a
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>1582</y>
-      <w>105</w>
-      <h>21</h>
+      <x>444</x>
+      <y>1356</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -2746,10 +2746,10 @@ event occurs. Then restore rotation CW. Left coil is outisde again. Drive back a
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>1554</y>
-      <w>84</w>
-      <h>21</h>
+      <x>354</x>
+      <y>1332</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -2757,10 +2757,10 @@ event occurs. Then restore rotation CW. Left coil is outisde again. Drive back a
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>525</x>
-      <y>1694</y>
-      <w>63</w>
-      <h>21</h>
+      <x>462</x>
+      <y>1452</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -2768,10 +2768,10 @@ event occurs. Then restore rotation CW. Left coil is outisde again. Drive back a
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>308</x>
-      <y>1582</y>
-      <w>70</w>
-      <h>21</h>
+      <x>276</x>
+      <y>1356</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -2780,10 +2780,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>518</x>
-      <y>1554</y>
-      <w>84</w>
-      <h>21</h>
+      <x>456</x>
+      <y>1332</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -2791,10 +2791,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>651</x>
-      <y>1582</y>
-      <w>84</w>
-      <h>21</h>
+      <x>570</x>
+      <y>1356</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -2802,10 +2802,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>651</x>
-      <y>1694</y>
-      <w>70</w>
-      <h>21</h>
+      <x>570</x>
+      <y>1452</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -2813,10 +2813,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>1582</y>
-      <w>105</w>
-      <h>21</h>
+      <x>684</x>
+      <y>1356</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -2824,10 +2824,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>805</x>
-      <y>1554</y>
-      <w>84</w>
-      <h>21</h>
+      <x>702</x>
+      <y>1332</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -2835,10 +2835,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1183</x>
-      <y>1582</y>
-      <w>84</w>
-      <h>21</h>
+      <x>1026</x>
+      <y>1356</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>... and so on</panel_attributes>
     <additional_attributes/>
@@ -2846,10 +2846,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>308</x>
-      <y>1554</y>
-      <w>70</w>
-      <h>21</h>
+      <x>276</x>
+      <y>1332</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -2858,10 +2858,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>266</x>
-      <y>1708</y>
-      <w>112</w>
-      <h>21</h>
+      <x>240</x>
+      <y>1464</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -2870,10 +2870,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>651</x>
-      <y>1554</y>
-      <w>84</w>
-      <h>21</h>
+      <x>570</x>
+      <y>1332</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -2881,10 +2881,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>1638</y>
-      <w>98</w>
-      <h>21</h>
+      <x>252</x>
+      <y>1404</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -2893,10 +2893,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>308</x>
-      <y>1526</y>
-      <w>70</w>
-      <h>21</h>
+      <x>276</x>
+      <y>1308</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -2905,10 +2905,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>651</x>
-      <y>1526</y>
-      <w>84</w>
-      <h>21</h>
+      <x>570</x>
+      <y>1308</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>PSC_IO</panel_attributes>
     <additional_attributes/>
@@ -2916,10 +2916,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>1638</y>
-      <w>105</w>
-      <h>21</h>
+      <x>684</x>
+      <y>1404</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -2928,10 +2928,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>805</x>
-      <y>1743</y>
-      <w>63</w>
-      <h>21</h>
+      <x>702</x>
+      <y>1494</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -2939,10 +2939,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>826</x>
-      <y>1673</y>
-      <w>21</w>
-      <h>77</h>
+      <x>720</x>
+      <y>1434</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -2950,10 +2950,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>1610</y>
-      <w>98</w>
-      <h>21</h>
+      <x>252</x>
+      <y>1380</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -2962,10 +2962,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>1610</y>
-      <w>126</w>
-      <h>21</h>
+      <x>438</x>
+      <y>1380</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -2974,10 +2974,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>1610</y>
-      <w>105</w>
-      <h>21</h>
+      <x>684</x>
+      <y>1380</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -2986,10 +2986,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>1638</y>
-      <w>105</w>
-      <h>21</h>
+      <x>444</x>
+      <y>1404</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -2998,10 +2998,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>259</x>
-      <y>1547</y>
-      <w>21</w>
-      <h>119</h>
+      <x>234</x>
+      <y>1326</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -3009,10 +3009,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>385</x>
-      <y>1638</y>
-      <w>105</w>
-      <h>21</h>
+      <x>342</x>
+      <y>1404</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -3021,10 +3021,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>1610</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>1380</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -3033,10 +3033,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>637</x>
-      <y>1638</y>
-      <w>105</w>
-      <h>21</h>
+      <x>558</x>
+      <y>1404</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -3045,10 +3045,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>791</x>
-      <y>1491</y>
-      <w>427</w>
-      <h>21</h>
+      <x>690</x>
+      <y>1278</y>
+      <w>366</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TsetDD_FORWARD without further bump. Set drivedirection to DD_FORWARD  and drive forward</panel_attributes>
     <additional_attributes/>
@@ -3056,10 +3056,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>791</x>
-      <y>1512</y>
-      <w>21</w>
-      <h>70</h>
+      <x>690</x>
+      <y>1296</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -3067,10 +3067,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>924</x>
-      <y>1582</y>
-      <w>84</w>
-      <h>21</h>
+      <x>804</x>
+      <y>1356</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -3078,10 +3078,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>924</x>
-      <y>1694</y>
-      <w>70</w>
-      <h>21</h>
+      <x>804</x>
+      <y>1452</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -3089,10 +3089,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>924</x>
-      <y>1554</y>
-      <w>84</w>
-      <h>21</h>
+      <x>804</x>
+      <y>1332</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -3100,10 +3100,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>924</x>
-      <y>1526</y>
-      <w>84</w>
-      <h>21</h>
+      <x>804</x>
+      <y>1308</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>PSC_IO</panel_attributes>
     <additional_attributes/>
@@ -3111,10 +3111,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>910</x>
-      <y>1610</y>
-      <w>105</w>
-      <h>21</h>
+      <x>792</x>
+      <y>1380</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -3123,10 +3123,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>910</x>
-      <y>1638</y>
-      <w>105</w>
-      <h>21</h>
+      <x>792</x>
+      <y>1404</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -3135,10 +3135,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1036</x>
-      <y>1582</y>
-      <w>105</w>
-      <h>21</h>
+      <x>900</x>
+      <y>1356</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -3146,10 +3146,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1057</x>
-      <y>1554</y>
-      <w>84</w>
-      <h>21</h>
+      <x>918</x>
+      <y>1332</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -3157,10 +3157,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1036</x>
-      <y>1638</y>
-      <w>105</w>
-      <h>21</h>
+      <x>900</x>
+      <y>1404</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -3169,10 +3169,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1057</x>
-      <y>1743</y>
-      <w>63</w>
-      <h>21</h>
+      <x>918</x>
+      <y>1494</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -3180,10 +3180,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1078</x>
-      <y>1673</y>
-      <w>21</w>
-      <h>77</h>
+      <x>936</x>
+      <y>1434</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -3191,10 +3191,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1036</x>
-      <y>1610</y>
-      <w>105</w>
-      <h>21</h>
+      <x>900</x>
+      <y>1380</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -3203,10 +3203,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>231</x>
-      <y>1470</y>
-      <w>560</w>
-      <h>42</h>
+      <x>210</x>
+      <y>1260</y>
+      <w>480</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -3218,10 +3218,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>252</x>
-      <y>2457</y>
-      <w>1267</w>
-      <h>21</h>
+      <x>210</x>
+      <y>2670</y>
+      <w>1086</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bumper outside Perimetert activated. </panel_attributes>
     <additional_attributes/>
@@ -3229,10 +3229,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
-      <y>3010</y>
-      <w>21</w>
-      <h>77</h>
+      <x>360</x>
+      <y>3144</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -3240,10 +3240,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>406</x>
-      <y>2912</y>
-      <w>84</w>
-      <h>21</h>
+      <x>342</x>
+      <y>3060</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -3251,10 +3251,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>511</x>
-      <y>2912</y>
-      <w>105</w>
-      <h>21</h>
+      <x>432</x>
+      <y>3060</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECW</panel_attributes>
     <additional_attributes/>
@@ -3262,10 +3262,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>406</x>
-      <y>2884</y>
-      <w>84</w>
-      <h>21</h>
+      <x>342</x>
+      <y>3036</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Left Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -3273,10 +3273,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>665</x>
-      <y>3038</y>
-      <w>63</w>
-      <h>21</h>
+      <x>564</x>
+      <y>3168</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -3284,10 +3284,10 @@ Then restore rotation CC. Drive back and try to free again. And so on.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>2912</y>
-      <w>70</w>
-      <h>21</h>
+      <x>264</x>
+      <y>3060</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -3296,10 +3296,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>525</x>
-      <y>2884</y>
-      <w>84</w>
-      <h>21</h>
+      <x>444</x>
+      <y>3036</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump OCO</panel_attributes>
     <additional_attributes/>
@@ -3307,10 +3307,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>658</x>
-      <y>2912</y>
-      <w>84</w>
-      <h>21</h>
+      <x>558</x>
+      <y>3060</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -3318,10 +3318,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>532</x>
-      <y>3038</y>
-      <w>70</w>
-      <h>21</h>
+      <x>450</x>
+      <y>3168</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -3329,10 +3329,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>791</x>
-      <y>2912</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>3060</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECW</panel_attributes>
     <additional_attributes/>
@@ -3340,10 +3340,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>2884</y>
-      <w>70</w>
-      <h>21</h>
+      <x>264</x>
+      <y>3036</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -3352,10 +3352,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>3038</y>
-      <w>112</w>
-      <h>21</h>
+      <x>228</x>
+      <y>3168</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -3364,10 +3364,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>287</x>
-      <y>2968</y>
-      <w>98</w>
-      <h>21</h>
+      <x>240</x>
+      <y>3108</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -3376,10 +3376,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>2856</y>
-      <w>70</w>
-      <h>21</h>
+      <x>264</x>
+      <y>3012</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -3388,10 +3388,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>791</x>
-      <y>2968</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>3108</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -3400,10 +3400,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>833</x>
-      <y>3003</y>
-      <w>21</w>
-      <h>77</h>
+      <x>708</x>
+      <y>3138</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -3411,10 +3411,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>287</x>
-      <y>2940</y>
-      <w>98</w>
-      <h>21</h>
+      <x>240</x>
+      <y>3084</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -3423,10 +3423,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>2940</y>
-      <w>126</w>
-      <h>21</h>
+      <x>426</x>
+      <y>3084</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -3435,10 +3435,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>791</x>
-      <y>2940</y>
-      <w>105</w>
-      <h>21</h>
+      <x>672</x>
+      <y>3084</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCW2
 bg=Green</panel_attributes>
@@ -3447,10 +3447,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>511</x>
-      <y>2968</y>
-      <w>105</w>
-      <h>21</h>
+      <x>432</x>
+      <y>3108</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -3459,10 +3459,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>266</x>
-      <y>2877</y>
-      <w>21</w>
-      <h>119</h>
+      <x>222</x>
+      <y>3030</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -3470,10 +3470,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>2968</y>
-      <w>105</w>
-      <h>21</h>
+      <x>330</x>
+      <y>3108</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -3482,10 +3482,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2940</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>3084</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -3494,10 +3494,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2968</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>3108</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -3506,10 +3506,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>812</x>
-      <y>3073</y>
-      <w>70</w>
-      <h>21</h>
+      <x>690</x>
+      <y>3198</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -3517,10 +3517,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>245</x>
-      <y>2800</y>
-      <w>553</w>
-      <h>42</h>
+      <x>204</x>
+      <y>2964</y>
+      <w>474</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -3532,10 +3532,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>2611</y>
-      <w>84</w>
-      <h>21</h>
+      <x>336</x>
+      <y>2802</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -3543,10 +3543,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>546</x>
-      <y>2695</y>
-      <w>21</w>
-      <h>77</h>
+      <x>462</x>
+      <y>2874</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -3554,10 +3554,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>525</x>
-      <y>2611</y>
-      <w>70</w>
-      <h>21</h>
+      <x>444</x>
+      <y>2802</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -3565,10 +3565,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2611</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>2802</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW</panel_attributes>
     <additional_attributes/>
@@ -3576,10 +3576,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>2583</y>
-      <w>84</w>
-      <h>21</h>
+      <x>336</x>
+      <y>2778</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump</panel_attributes>
     <additional_attributes/>
@@ -3587,10 +3587,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>651</x>
-      <y>2716</y>
-      <w>63</w>
-      <h>21</h>
+      <x>552</x>
+      <y>2892</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -3598,10 +3598,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
-      <y>2611</y>
-      <w>70</w>
-      <h>21</h>
+      <x>666</x>
+      <y>2802</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Forward</panel_attributes>
     <additional_attributes/>
@@ -3609,10 +3609,10 @@ event occurs. Then restore rotation CW. Left coil is remained outisde.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>308</x>
-      <y>2611</y>
-      <w>70</w>
-      <h>21</h>
+      <x>258</x>
+      <y>2802</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -3621,10 +3621,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2569</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>2766</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC</panel_attributes>
     <additional_attributes/>
@@ -3632,10 +3632,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2590</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>2784</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>or</panel_attributes>
     <additional_attributes/>
@@ -3643,10 +3643,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>308</x>
-      <y>2583</y>
-      <w>70</w>
-      <h>21</h>
+      <x>258</x>
+      <y>2778</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event
 bg=Orange</panel_attributes>
@@ -3655,10 +3655,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>266</x>
-      <y>2723</y>
-      <w>112</w>
-      <h>21</h>
+      <x>222</x>
+      <y>2898</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -3667,10 +3667,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>2555</y>
-      <w>98</w>
-      <h>21</h>
+      <x>234</x>
+      <y>2754</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Decorator active
 bg=Green</panel_attributes>
@@ -3679,10 +3679,10 @@ bg=Green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>245</x>
-      <y>2555</y>
-      <w>21</w>
-      <h>140</h>
+      <x>204</x>
+      <y>2754</y>
+      <w>18</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
@@ -3690,10 +3690,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>2667</y>
-      <w>98</w>
-      <h>21</h>
+      <x>234</x>
+      <y>2850</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -3702,10 +3702,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>2639</y>
-      <w>98</w>
-      <h>21</h>
+      <x>234</x>
+      <y>2826</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -3714,10 +3714,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>385</x>
-      <y>2667</y>
-      <w>105</w>
-      <h>21</h>
+      <x>324</x>
+      <y>2850</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -3726,10 +3726,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>2667</y>
-      <w>105</w>
-      <h>21</h>
+      <x>426</x>
+      <y>2850</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -3738,10 +3738,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>2639</y>
-      <w>105</w>
-      <h>21</h>
+      <x>426</x>
+      <y>2826</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -3750,10 +3750,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2639</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>2826</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_BACKINSIDE
 bg=Green</panel_attributes>
@@ -3762,10 +3762,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>2667</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>2850</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -3774,10 +3774,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>763</x>
-      <y>2667</y>
-      <w>105</w>
-      <h>21</h>
+      <x>648</x>
+      <y>2850</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -3786,10 +3786,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>252</x>
-      <y>2499</y>
-      <w>350</w>
-      <h>42</h>
+      <x>210</x>
+      <y>2706</y>
+      <w>300</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -3801,10 +3801,10 @@ Drive Back 20cm (Free) and rotate.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>56</x>
-      <y>2618</y>
-      <w>189</w>
-      <h>21</h>
+      <x>42</x>
+      <y>2808</y>
+      <w>162</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Read from bottom to to top</panel_attributes>
     <additional_attributes/>
@@ -3812,10 +3812,10 @@ Drive Back 20cm (Free) and rotate.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>7</x>
-      <y>2723</y>
-      <w>238</w>
-      <h>21</h>
+      <x>0</x>
+      <y>2898</y>
+      <w>204</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Read from top to bottom if more than oen arrow</panel_attributes>
     <additional_attributes/>
@@ -3823,10 +3823,10 @@ Drive Back 20cm (Free) and rotate.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>931</x>
-      <y>2912</y>
-      <w>70</w>
-      <h>21</h>
+      <x>792</x>
+      <y>3060</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Forward</panel_attributes>
     <additional_attributes/>
@@ -3834,10 +3834,10 @@ Drive Back 20cm (Free) and rotate.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>2968</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>3108</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -3846,10 +3846,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
-      <y>3325</y>
-      <w>21</w>
-      <h>77</h>
+      <x>366</x>
+      <y>3414</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -3857,10 +3857,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>413</x>
-      <y>3227</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>3330</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -3868,10 +3868,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>518</x>
-      <y>3227</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>3330</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -3879,10 +3879,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>413</x>
-      <y>3199</y>
-      <w>84</w>
-      <h>21</h>
+      <x>348</x>
+      <y>3306</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -3890,10 +3890,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>539</x>
-      <y>3339</y>
-      <w>63</w>
-      <h>21</h>
+      <x>456</x>
+      <y>3426</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -3901,10 +3901,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>322</x>
-      <y>3227</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>3330</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -3913,10 +3913,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>532</x>
-      <y>3199</y>
-      <w>84</w>
-      <h>21</h>
+      <x>450</x>
+      <y>3306</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCO</panel_attributes>
     <additional_attributes/>
@@ -3924,10 +3924,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>665</x>
-      <y>3227</y>
-      <w>84</w>
-      <h>21</h>
+      <x>564</x>
+      <y>3330</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -3935,10 +3935,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>665</x>
-      <y>3339</y>
-      <w>70</w>
-      <h>21</h>
+      <x>564</x>
+      <y>3426</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -3946,10 +3946,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>3227</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>3330</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -3957,10 +3957,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>322</x>
-      <y>3199</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>3306</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -3969,10 +3969,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>3353</y>
-      <w>112</w>
-      <h>21</h>
+      <x>234</x>
+      <y>3438</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -3981,10 +3981,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>3283</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>3378</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -3993,10 +3993,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>322</x>
-      <y>3171</y>
-      <w>70</w>
-      <h>21</h>
+      <x>270</x>
+      <y>3282</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -4005,10 +4005,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>3283</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>3378</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumpPeriActivated
 bg=light_gray</panel_attributes>
@@ -4017,10 +4017,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>819</x>
-      <y>3388</y>
-      <w>63</w>
-      <h>21</h>
+      <x>696</x>
+      <y>3468</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -4028,10 +4028,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>840</x>
-      <y>3318</y>
-      <w>21</w>
-      <h>77</h>
+      <x>714</x>
+      <y>3408</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -4039,10 +4039,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>3255</y>
-      <w>98</w>
-      <h>21</h>
+      <x>246</x>
+      <y>3354</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -4051,10 +4051,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>511</x>
-      <y>3255</y>
-      <w>126</w>
-      <h>21</h>
+      <x>432</x>
+      <y>3354</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -4063,10 +4063,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>3255</y>
-      <w>105</w>
-      <h>21</h>
+      <x>678</x>
+      <y>3354</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROTCC2
 bg=Green</panel_attributes>
@@ -4075,10 +4075,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>518</x>
-      <y>3283</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>3378</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -4087,10 +4087,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>273</x>
-      <y>3192</y>
-      <w>21</w>
-      <h>119</h>
+      <x>228</x>
+      <y>3300</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -4098,10 +4098,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>3283</y>
-      <w>105</w>
-      <h>21</h>
+      <x>336</x>
+      <y>3378</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -4110,10 +4110,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>651</x>
-      <y>3255</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>3354</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -4122,10 +4122,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>651</x>
-      <y>3283</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>3378</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -4134,10 +4134,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>245</x>
-      <y>3115</y>
-      <w>560</w>
-      <h>42</h>
+      <x>204</x>
+      <y>3234</y>
+      <w>480</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -4149,10 +4149,10 @@ event occurs. Then restore rotation CC. Right coil is remained outside.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>931</x>
-      <y>3227</y>
-      <w>70</w>
-      <h>21</h>
+      <x>792</x>
+      <y>3330</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Forward</panel_attributes>
     <additional_attributes/>
@@ -4160,10 +4160,10 @@ event occurs. Then restore rotation CC. Right coil is remained outside.
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>917</x>
-      <y>3283</y>
-      <w>105</w>
-      <h>21</h>
+      <x>780</x>
+      <y>3378</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -4172,10 +4172,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>959</x>
-      <y>3010</y>
-      <w>21</w>
-      <h>77</h>
+      <x>816</x>
+      <y>3144</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4183,10 +4183,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>952</x>
-      <y>3318</y>
-      <w>21</w>
-      <h>77</h>
+      <x>810</x>
+      <y>3408</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4194,10 +4194,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>805</x>
-      <y>2695</y>
-      <w>21</w>
-      <h>77</h>
+      <x>684</x>
+      <y>2874</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4205,10 +4205,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>2695</y>
-      <w>21</w>
-      <h>77</h>
+      <x>354</x>
+      <y>2874</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4216,10 +4216,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>763</x>
-      <y>2247</y>
-      <w>105</w>
-      <h>21</h>
+      <x>666</x>
+      <y>1926</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECC</panel_attributes>
     <additional_attributes/>
@@ -4227,10 +4227,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>2359</y>
-      <w>63</w>
-      <h>21</h>
+      <x>684</x>
+      <y>2022</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -4238,10 +4238,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>2247</y>
-      <w>70</w>
-      <h>21</h>
+      <x>264</x>
+      <y>1926</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -4250,10 +4250,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>2219</y>
-      <w>84</w>
-      <h>21</h>
+      <x>786</x>
+      <y>1902</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -4261,10 +4261,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1141</x>
-      <y>2226</y>
-      <w>112</w>
-      <h>42</h>
+      <x>990</x>
+      <y>1908</y>
+      <w>96</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>revert all movements
 starting with
@@ -4274,10 +4274,10 @@ DD_ROTATECC</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1134</x>
-      <y>2359</y>
-      <w>70</w>
-      <h>21</h>
+      <x>984</x>
+      <y>2022</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -4285,10 +4285,10 @@ DD_ROTATECC</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>2219</y>
-      <w>70</w>
-      <h>21</h>
+      <x>264</x>
+      <y>1902</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -4297,10 +4297,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>252</x>
-      <y>2373</y>
-      <w>112</w>
-      <h>21</h>
+      <x>228</x>
+      <y>2034</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -4309,10 +4309,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>266</x>
-      <y>2303</y>
-      <w>98</w>
-      <h>21</h>
+      <x>240</x>
+      <y>1974</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -4321,10 +4321,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>2191</y>
-      <w>70</w>
-      <h>21</h>
+      <x>264</x>
+      <y>1878</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -4333,10 +4333,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>266</x>
-      <y>2275</y>
-      <w>98</w>
-      <h>21</h>
+      <x>240</x>
+      <y>1950</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -4345,10 +4345,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>756</x>
-      <y>2275</y>
-      <w>126</w>
-      <h>21</h>
+      <x>660</x>
+      <y>1950</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -4357,10 +4357,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>763</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>666</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -4369,10 +4369,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>245</x>
-      <y>2212</y>
-      <w>21</w>
-      <h>119</h>
+      <x>222</x>
+      <y>1896</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -4380,10 +4380,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1141</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>990</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnRestoreHistory
 bg=light_gray</panel_attributes>
@@ -4392,10 +4392,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>119</x>
-      <y>1435</y>
-      <w>56</w>
-      <h>14</h>
+      <x>348</x>
+      <y>1926</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -4403,10 +4403,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>112</x>
-      <y>1400</y>
-      <w>56</w>
-      <h>14</h>
+      <x>348</x>
+      <y>1902</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Right Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -4414,10 +4414,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>112</x>
-      <y>1456</y>
-      <w>70</w>
-      <h>14</h>
+      <x>336</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -4426,10 +4426,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>294</x>
-      <y>1484</y>
-      <w>21</w>
-      <h>77</h>
+      <x>366</x>
+      <y>2010</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4437,10 +4437,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>2247</y>
-      <w>84</w>
-      <h>21</h>
+      <x>786</x>
+      <y>1926</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -4448,21 +4448,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>2219</y>
-      <w>84</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>Right Coil Outside</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>378</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>774</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -4471,10 +4460,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>2345</y>
-      <w>21</w>
-      <h>77</h>
+      <x>816</x>
+      <y>2010</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4482,44 +4471,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>903</x>
-      <y>2247</y>
-      <w>84</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>DD_FORWARD</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>889</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>seqCruise
-bg=light_gray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>938</x>
-      <y>2345</y>
-      <w>21</w>
-      <h>77</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>231</x>
-      <y>2142</y>
-      <w>560</w>
-      <h>42</h>
+      <x>210</x>
+      <y>1836</y>
+      <w>480</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -4531,10 +4486,10 @@ Then restore the way forward and rotation. Drive back and try to free again. And
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>2247</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>1926</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_OVERRUN</panel_attributes>
     <additional_attributes/>
@@ -4542,10 +4497,10 @@ Then restore the way forward and rotation. Drive back and try to free again. And
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>532</x>
-      <y>2345</y>
-      <w>21</w>
-      <h>77</h>
+      <x>468</x>
+      <y>2010</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4553,10 +4508,10 @@ Then restore the way forward and rotation. Drive back and try to free again. And
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>490</x>
-      <y>2275</y>
-      <w>126</w>
-      <h>21</h>
+      <x>432</x>
+      <y>1950</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -4565,10 +4520,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>497</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>438</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -4577,10 +4532,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>616</x>
-      <y>2247</y>
-      <w>140</w>
-      <h>21</h>
+      <x>540</x>
+      <y>1926</y>
+      <w>120</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_REVERSE_ESC_OBST</panel_attributes>
     <additional_attributes/>
@@ -4588,10 +4543,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>679</x>
-      <y>2338</y>
-      <w>21</w>
-      <h>77</h>
+      <x>594</x>
+      <y>2004</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -4599,10 +4554,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>623</x>
-      <y>2275</y>
-      <w>126</w>
-      <h>21</h>
+      <x>546</x>
+      <y>1950</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -4611,10 +4566,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>552</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -4623,10 +4578,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1197</x>
-      <y>2338</y>
-      <w>21</w>
-      <h>77</h>
+      <x>1038</x>
+      <y>2004</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4634,10 +4589,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1225</x>
-      <y>2338</y>
-      <w>21</w>
-      <h>77</h>
+      <x>1062</x>
+      <y>2004</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -4645,10 +4600,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1043</x>
-      <y>2345</y>
-      <w>21</w>
-      <h>70</h>
+      <x>906</x>
+      <y>2010</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -4656,10 +4611,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1029</x>
-      <y>2247</y>
-      <w>70</w>
-      <h>21</h>
+      <x>894</x>
+      <y>1926</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -4667,10 +4622,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>2275</y>
-      <w>105</w>
-      <h>21</h>
+      <x>876</x>
+      <y>1950</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -4679,10 +4634,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>876</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -4691,10 +4646,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1246</x>
-      <y>2338</y>
-      <w>21</w>
-      <h>77</h>
+      <x>1080</x>
+      <y>2004</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -4702,10 +4657,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1295</x>
-      <y>2247</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>1926</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW</panel_attributes>
     <additional_attributes/>
@@ -4713,10 +4668,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1323</x>
-      <y>2352</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1146</x>
+      <y>2016</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -4724,10 +4679,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1295</x>
-      <y>2205</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>1890</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC</panel_attributes>
     <additional_attributes/>
@@ -4735,10 +4690,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1295</x>
-      <y>2226</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>1908</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>or</panel_attributes>
     <additional_attributes/>
@@ -4746,10 +4701,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1295</x>
-      <y>2275</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>1950</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROT
 bg=Green</panel_attributes>
@@ -4758,10 +4713,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1295</x>
-      <y>2303</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1122</x>
+      <y>1974</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
@@ -4770,10 +4725,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>756</x>
-      <y>1911</y>
-      <w>105</w>
-      <h>21</h>
+      <x>660</x>
+      <y>1638</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_ROTATECW</panel_attributes>
     <additional_attributes/>
@@ -4781,10 +4736,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>777</x>
-      <y>2023</y>
-      <w>77</w>
-      <h>21</h>
+      <x>678</x>
+      <y>1734</y>
+      <w>66</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
@@ -4792,10 +4747,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>287</x>
-      <y>1911</y>
-      <w>70</w>
-      <h>21</h>
+      <x>258</x>
+      <y>1638</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Drive Direction.
 bg=blue</panel_attributes>
@@ -4804,10 +4759,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>1883</y>
-      <w>84</w>
-      <h>21</h>
+      <x>780</x>
+      <y>1614</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Bump BCI</panel_attributes>
     <additional_attributes/>
@@ -4815,10 +4770,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1134</x>
-      <y>1890</y>
-      <w>112</w>
-      <h>42</h>
+      <x>984</x>
+      <y>1620</y>
+      <w>96</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>revert all movements
 starting with
@@ -4828,10 +4783,10 @@ DD_ROTATECW</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1127</x>
-      <y>2023</y>
-      <w>70</w>
-      <h>21</h>
+      <x>978</x>
+      <y>1734</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
@@ -4839,10 +4794,10 @@ DD_ROTATECW</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>287</x>
-      <y>1883</y>
-      <w>70</w>
-      <h>21</h>
+      <x>258</x>
+      <y>1614</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Event occurs
 bg=Orange</panel_attributes>
@@ -4851,10 +4806,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>245</x>
-      <y>2037</y>
-      <w>112</w>
-      <h>21</h>
+      <x>222</x>
+      <y>1746</y>
+      <w>96</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Movement of the robot
 bg=yellow</panel_attributes>
@@ -4863,10 +4818,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>1967</y>
-      <w>98</w>
-      <h>21</h>
+      <x>234</x>
+      <y>1686</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Branch active
 bg=light_gray</panel_attributes>
@@ -4875,10 +4830,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>287</x>
-      <y>1855</y>
-      <w>70</w>
-      <h>21</h>
+      <x>258</x>
+      <y>1590</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Flag
 bg=Orange</panel_attributes>
@@ -4887,10 +4842,10 @@ bg=Orange</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>259</x>
-      <y>1939</y>
-      <w>98</w>
-      <h>21</h>
+      <x>234</x>
+      <y>1662</y>
+      <w>84</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Condition called
 bg=Green</panel_attributes>
@@ -4899,10 +4854,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>749</x>
-      <y>1939</y>
-      <w>126</w>
-      <h>21</h>
+      <x>654</x>
+      <y>1662</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -4911,10 +4866,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>756</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>660</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -4923,10 +4878,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>238</x>
-      <y>1876</y>
-      <w>21</w>
-      <h>119</h>
+      <x>216</x>
+      <y>1608</y>
+      <w>18</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -4934,10 +4889,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1134</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>984</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnRestoreHistory
 bg=light_gray</panel_attributes>
@@ -4946,10 +4901,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>385</x>
-      <y>1911</y>
-      <w>84</w>
-      <h>21</h>
+      <x>342</x>
+      <y>1638</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -4957,10 +4912,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>385</x>
-      <y>1883</y>
-      <w>84</w>
-      <h>21</h>
+      <x>342</x>
+      <y>1614</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Left Coil Outside</panel_attributes>
     <additional_attributes/>
@@ -4968,10 +4923,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>371</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>330</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -4980,10 +4935,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>406</x>
-      <y>2009</y>
-      <w>21</w>
-      <h>77</h>
+      <x>360</x>
+      <y>1722</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -4991,10 +4946,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>896</x>
-      <y>1911</y>
-      <w>84</w>
-      <h>21</h>
+      <x>780</x>
+      <y>1638</y>
+      <w>72</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FORWARD</panel_attributes>
     <additional_attributes/>
@@ -5002,10 +4957,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>882</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>768</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>seqCruise
 bg=light_gray</panel_attributes>
@@ -5014,10 +4969,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>931</x>
-      <y>2009</y>
-      <w>21</w>
-      <h>77</h>
+      <x>810</x>
+      <y>1722</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -5025,10 +4980,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>224</x>
-      <y>1806</y>
-      <w>560</w>
-      <h>42</h>
+      <x>204</x>
+      <y>1548</y>
+      <w>480</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>halign=left
 bg=pink
@@ -5040,10 +4995,10 @@ Then restore the way forward and rotation. Drive back and try to free again. And
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>490</x>
-      <y>1911</y>
-      <w>105</w>
-      <h>21</h>
+      <x>432</x>
+      <y>1638</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_OVERRUN</panel_attributes>
     <additional_attributes/>
@@ -5051,10 +5006,10 @@ Then restore the way forward and rotation. Drive back and try to free again. And
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>525</x>
-      <y>2009</y>
-      <w>21</w>
-      <h>77</h>
+      <x>462</x>
+      <y>1722</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -5062,10 +5017,10 @@ Then restore the way forward and rotation. Drive back and try to free again. And
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>483</x>
-      <y>1939</y>
-      <w>126</w>
-      <h>21</h>
+      <x>426</x>
+      <y>1662</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -5074,10 +5029,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>490</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>432</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -5086,10 +5041,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>609</x>
-      <y>1911</y>
-      <w>140</w>
-      <h>21</h>
+      <x>534</x>
+      <y>1638</y>
+      <w>120</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_REVERSE_ESC_OBST</panel_attributes>
     <additional_attributes/>
@@ -5097,10 +5052,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>672</x>
-      <y>2002</y>
-      <w>21</w>
-      <h>77</h>
+      <x>588</x>
+      <y>1716</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -5108,10 +5063,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>616</x>
-      <y>1939</y>
-      <w>126</w>
-      <h>21</h>
+      <x>540</x>
+      <y>1662</y>
+      <w>108</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConWasDirectionForward
 bg=Green</panel_attributes>
@@ -5120,10 +5075,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>623</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>546</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqPerimeterActive
 bg=light_gray</panel_attributes>
@@ -5132,10 +5087,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1190</x>
-      <y>2002</y>
-      <w>21</w>
-      <h>77</h>
+      <x>1032</x>
+      <y>1716</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -5143,10 +5098,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1218</x>
-      <y>2002</y>
-      <w>21</w>
-      <h>77</h>
+      <x>1056</x>
+      <y>1716</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -5154,10 +5109,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1036</x>
-      <y>2009</y>
-      <w>21</w>
-      <h>70</h>
+      <x>900</x>
+      <y>1722</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -5165,10 +5120,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1022</x>
-      <y>1911</y>
-      <w>70</w>
-      <h>21</h>
+      <x>888</x>
+      <y>1638</y>
+      <w>60</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>Free</panel_attributes>
     <additional_attributes/>
@@ -5176,10 +5131,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1001</x>
-      <y>1939</y>
-      <w>105</w>
-      <h>21</h>
+      <x>870</x>
+      <y>1662</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TConBumperActive
 bg=Green</panel_attributes>
@@ -5188,10 +5143,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1001</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>870</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>mseqBumperActive
 bg=light_gray</panel_attributes>
@@ -5200,10 +5155,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1239</x>
-      <y>2002</y>
-      <w>21</w>
-      <h>77</h>
+      <x>1074</x>
+      <y>1716</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -5211,10 +5166,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1288</x>
-      <y>1911</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1116</x>
+      <y>1638</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECW</panel_attributes>
     <additional_attributes/>
@@ -5222,10 +5177,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1316</x>
-      <y>2016</y>
-      <w>63</w>
-      <h>21</h>
+      <x>1140</x>
+      <y>1728</y>
+      <w>54</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -5233,10 +5188,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1288</x>
-      <y>1869</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1116</x>
+      <y>1602</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>DD_FEOROTATECC</panel_attributes>
     <additional_attributes/>
@@ -5244,10 +5199,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1288</x>
-      <y>1890</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1116</x>
+      <y>1620</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>or</panel_attributes>
     <additional_attributes/>
@@ -5255,10 +5210,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1288</x>
-      <y>1939</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1116</x>
+      <y>1662</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TconFEO_ROT
 bg=Green</panel_attributes>
@@ -5267,10 +5222,10 @@ bg=Green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1288</x>
-      <y>1967</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1116</x>
+      <y>1686</y>
+      <w>90</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>TdnBumperActivated
 bg=light_gray</panel_attributes>
@@ -5279,10 +5234,10 @@ bg=light_gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>476</x>
-      <y>2079</y>
-      <w>119</w>
-      <h>35</h>
+      <x>420</x>
+      <y>1782</y>
+      <w>102</w>
+      <h>30</h>
     </coordinates>
     <panel_attributes>halign=left
 Optional depends of angle
@@ -5293,15 +5248,826 @@ hitting the perimeter
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>483</x>
-      <y>2415</y>
-      <w>119</w>
-      <h>35</h>
+      <x>426</x>
+      <y>2070</y>
+      <w>102</w>
+      <h>30</h>
     </coordinates>
     <panel_attributes>halign=left
 Optional depends of angle
 hitting the perimeter
 </panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>366</x>
+      <y>2280</y>
+      <w>18</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>2196</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_FORWARD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>462</x>
+      <y>2280</y>
+      <w>18</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>444</x>
+      <y>2196</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Free</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>546</x>
+      <y>2196</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_FEOROTATECW</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>2172</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Bump</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>564</x>
+      <y>2292</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>252</x>
+      <y>2196</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Drive Direction.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>2172</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Outside permimeter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>672</x>
+      <y>2196</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_ROTATECC1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>2196</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_FEOROTATECC2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>696</x>
+      <y>2292</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>678</x>
+      <y>2172</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Bump</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>2196</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Free</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>2292</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>966</x>
+      <y>2280</y>
+      <w>18</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>948</x>
+      <y>2328</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>936</x>
+      <y>2172</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Bump</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>252</x>
+      <y>2172</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Event
+bg=Orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>2304</y>
+      <w>96</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Movement of the robot
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>228</x>
+      <y>2244</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Branch active
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>2244</y>
+      <w>132</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqPerimeterActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>228</x>
+      <y>2220</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Condition called
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>2220</y>
+      <w>132</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConWasDirectionFeoRotateCW</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>318</x>
+      <y>2244</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>seqCruise
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>2220</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TconFEO_ROT
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>2244</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TdnBumperActivated
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>2244</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TdnBumperActivated
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>2220</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TconFEO_ROTCC2
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>420</x>
+      <y>2220</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConBumperActive
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>420</x>
+      <y>2244</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqBumperActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>822</x>
+      <y>2220</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConBumperActive
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>822</x>
+      <y>2244</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqBumperActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>204</x>
+      <y>2184</y>
+      <w>18</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>204</x>
+      <y>2118</y>
+      <w>492</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>halign=left
+bg=pink
+Bumper activated, free, rotate CW and hits perimeter.
+Then escape other direction. While escaping bumps again.
+Then Drive Back and try to free again.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>2448</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_FORWARD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>462</x>
+      <y>2532</y>
+      <w>18</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>444</x>
+      <y>2448</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Free</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>546</x>
+      <y>2448</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_FEOROTATECC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>2424</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Bump</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>558</x>
+      <y>2550</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>252</x>
+      <y>2448</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Drive Direction.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>2424</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Outside permimeter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>672</x>
+      <y>2448</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_ROTATECW1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>2448</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>DD_FEOROTATECW2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>696</x>
+      <y>2544</y>
+      <w>78</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>678</x>
+      <y>2424</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Bump</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>2448</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Free</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>834</x>
+      <y>2544</y>
+      <w>66</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>966</x>
+      <y>2532</y>
+      <w>18</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>936</x>
+      <y>2424</y>
+      <w>72</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Bump</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>252</x>
+      <y>2424</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Event
+bg=Orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>2556</y>
+      <w>96</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Movement of the robot
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>228</x>
+      <y>2496</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Branch active
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>2496</y>
+      <w>132</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqPerimeterActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>228</x>
+      <y>2472</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Condition called
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>2472</y>
+      <w>132</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConWasDirectionFeoRotateCC
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>318</x>
+      <y>2496</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>seqCruise
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>2472</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TconFEO_ROT
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>2496</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TdnBumperActivated
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>2496</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TdnBumperActivated
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>2472</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TconFEO_ROTCW2
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>420</x>
+      <y>2472</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConBumperActive
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>420</x>
+      <y>2496</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqBumperActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>822</x>
+      <y>2472</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>TConBumperActive
+bg=Green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>822</x>
+      <y>2496</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>mseqBumperActive
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>204</x>
+      <y>2436</y>
+      <w>18</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>204</x>
+      <y>2370</y>
+      <w>492</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>halign=left
+bg=pink
+Bumper activated, free, rotate CC and hits perimeter.
+Then escape other direction. While escaping bumps again.
+Then Drive Back and try to free again.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>948</x>
+      <y>2586</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>366</x>
+      <y>2520</y>
+      <w>18</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
 </diagram>

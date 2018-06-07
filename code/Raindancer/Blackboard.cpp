@@ -28,12 +28,12 @@ const char* enuDriveDirectionString[] = { "DD_FORWARD",
 										"DD_REVERSE_INSIDE",
 										"DD_ROTATECW",
 										"DD_ROTATECC",
+										"DD_ROTATECW1",
+										"DD_ROTATECC1",
 										"DD_REVERSE_LINE_FOLLOW",
 										"DD_SPIRAL_CW",
 										"DD_FEOROTATECC",
 										"DD_FEOROTATECW",
-										"DD_FEOROTATECC1",
-										"DD_FEOROTATECW1",
 										"DD_FEOROTATECC1",
 										"DD_FEOROTATECW1",
 										"DD_FEOROTATECC2",
@@ -202,6 +202,8 @@ void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _dist
 	history[0].restored = false;
 	history[0].timeAdded = millis();
 
+	errorHandler.setInfo(F("!03,add histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history[0].driveDirection]);
+
 	motor.startDistanceMeasurement();
 
 
@@ -242,7 +244,7 @@ void Blackboard::deleteLastHistoryEntry() {
 
 	//history[0].restored = true;
 
-	errorHandler.setInfo(F("!03,delete histEntry driveDirection: %s \r\n"), enuDriveDirectionString[0]);
+	errorHandler.setInfo(F("!03,delete histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history[0].driveDirection]);
 
 	//Delete History entry [0] while shifting to left
 	for (int i = 0; i < HISTROY_BUFSIZE - 1; i++) {
