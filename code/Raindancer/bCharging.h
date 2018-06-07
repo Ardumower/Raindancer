@@ -29,7 +29,9 @@ Private-use only! (you need to ask for a commercial-use)
 
 #include "BehaviourTree.h"
 #include "EEPROM.h"
-
+//bber1  add to know the kind of chassis and station type
+#include "config.h"
+//-----------
 
 
 class TchargeRelayOn : public Node
@@ -63,9 +65,13 @@ public:
 		{
 		case 0:
 			if (getTimeInNode() > 1000) { // wait 1 sec. until contacts set
-				bb.motor.rotateCM(4, bb.CRUISE_SPEED_LOW);
+      //bber1
+        if (CONF_PASS_THROUGH_CHARGING_STATION == true) {  //forward 4 cm 
+          bb.motor.rotateCM(4, bb.CRUISE_SPEED_LOW);
+          errorHandler.setInfo(F("TchargeRelayOn forward 4\r\n"));
+        }
+      //------------  
 				state = 1;
-				errorHandler.setInfo(F("TchargeRelayOn forward 3\r\n"));
 				setTimeInNode(millis());
 				connectAttempts++;
 			}
@@ -83,7 +89,10 @@ public:
 			break;
 		case 2:
 			if (bb.motor.isPositionReached()) {
-				bb.motor.rotateCM(2, bb.CRUISE_SPEED_LOW);
+        //bber1
+        if (CONF_HEAD_CHARGING_STATION == true) bb.motor.rotateCM(3, bb.CRUISE_SPEED_LOW); // back in station for stoping station
+        if (CONF_PASS_THROUGH_CHARGING_STATION == true) bb.motor.rotateCM(2, bb.CRUISE_SPEED_LOW);// normal forward for raindancer chassis
+        //--------------------------
 				state = 3;
 				setTimeInNode(millis());
 				errorHandler.setInfo(F("TchargeRelayOn forward 2\r\n"));

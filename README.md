@@ -10,7 +10,7 @@ http://www.ardumower.de
 
 http://wiki.ardumower.de
 
-Explanation of Raindancer configuration (German)
+# Wiki site Raindancer Firmware
 
 http://wiki.ardumower.de/index.php?title=Raindancer_Firmware_(English)
 http://wiki.ardumower.de/index.php?title=Raindancer_Firmware_(Deutsch)
