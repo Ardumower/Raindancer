@@ -167,6 +167,8 @@ MemSequence mseqPerimeterRotCC;
 MemSequence mseqPerimeterRotCW;
 
 TOverRun overRun;
+//bber2
+TCheckTemp CheckTemp;
 
 TPerDriveBack perDriveBack;
 TReverseFurtherInside reverseFurtherInside;
@@ -585,7 +587,10 @@ void TBehaviour::setup()
 //	mseqPerimeterForward.addChildren(&conWasDirectionForward, &motorStop, &mseqReverseInside, &reverseFurtherInside, &seqRotatePer);
 //	mseqPerimeterForward.addChildren(&conWasDirectionForward, &overRun, &mselPerimeterForward, &seqRotatePer);
 
-    mseqPerimeterForward.addChildren(&conWasDirectionForward,&overRun, &perDriveBack, &calcAngle,&mseqRotatePer);
+//bber2
+  mseqPerimeterForward.addChildren(&conWasDirectionForward,&overRun, &CheckTemp, &perDriveBack, &calcAngle, &mseqRotatePer);
+//end bber2
+    
 	mselPerimeterActive.addChildren(&mseqPerimeterForward, &mseqPerimeterFeoRotCW, &mseqPerimeterFeoRotCC, &mseqPerimeterRotCC,&mseqPerimeterRotCW,&mseqPerimeterReverse,&mseqPerimeterForwardInside, &mseqPerimeterOverrun, &mseqPerimeterRevInside );
     mseqPerimeterAvtive.addChildren(&conPerOutside,&setflagCoilFirstOutside, &mselPerimeterActive);
 

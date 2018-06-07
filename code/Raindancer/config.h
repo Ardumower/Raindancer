@@ -14,13 +14,17 @@
 // If you develop the software, you are responsible, that the changes compiles with all configurations.
 
 #define ARDUMOWER_CHASSIS  false
-#define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS true
+#define PARANELLO_CHASSIS  true
+#define RAINDANCER_CHASSIS false
 
 //======================================================================================================================
 // CONFIG FOR ARDUMOWER CHASSIS
 //======================================================================================================================
 #if ARDUMOWER_CHASSIS == true
+//bber2
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321      
+#define CONF_DISABLE_DHT_SERVICE true
+//-----
 #define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
 
@@ -119,6 +123,10 @@
 // CONFIG FOR PARANELLO CHASSIS
 //======================================================================================================================
 #if PARANELLO_CHASSIS == true
+//bber2
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321      
+#define CONF_DISABLE_DHT_SERVICE false
+//-----
 #define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION true //the mower can't cross over the station
 
@@ -216,6 +224,10 @@
 // CONFIG FOR RAINDANCER CHASSIS
 //======================================================================================================================
 #if RAINDANCER_CHASSIS == true
+//bber2
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321      
+#define CONF_DISABLE_DHT_SERVICE true
+//-----
 #define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
 

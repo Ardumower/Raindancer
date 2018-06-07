@@ -93,7 +93,10 @@ Private-use only! (you need to ask for a commercial-use)
 #define pinUserSwitch1 46          // user-defined switch 1
 #define pinUserSwitch2 47          // user-defined switch 2 -> diBumperSensor Own Bumper Duino
 #define pinUserSwitch3 48          // user-defined switch 3 -> diNearObsacleSensor Own Sonar Sensor connected to own Bumper Duino
-
+//bber2
+#define DHTPIN 49     
+//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321                 
+//-----
 #define pinRain 44                 // rain sensor
 
 
