@@ -597,8 +597,8 @@ public:
 						bb.history[3].driveDirection == DD_FORWARD
 						) {
 						errorHandler.setInfo(F("!03,TselEscapeAlgorithm DD_FORWARD sequence 1 found\r\n"));
-						if (bb.history[3].distanceDriven > 50) {
-							bb.history[3].distanceDriven = 50;
+						if (bb.history[3].distanceDriven > 100) {
+							bb.history[3].distanceDriven = 100;
 						}
 
 						bb.flagEnableRestoreHistory = true;
@@ -617,8 +617,8 @@ public:
 						bb.history[2].driveDirection == DD_FORWARD
 						) {
 						errorHandler.setInfo(F("!03,TselEscapeAlgorithm DD_FORWARD sequence 2 found\r\n"));
-						if (bb.history[2].distanceDriven > 50) {
-							bb.history[2].distanceDriven = 50;
+						if (bb.history[2].distanceDriven > 100) {
+							bb.history[2].distanceDriven = 100;
 						}
 
 						bb.flagEnableRestoreHistory = true;
