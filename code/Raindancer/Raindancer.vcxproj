@@ -97,6 +97,7 @@
     <ClCompile Include="cmd.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="CRotaryEncoder.cpp" />
+    <ClCompile Include="DHT.cpp" />
     <ClCompile Include="dsp.cpp" />
     <ClCompile Include="DueTimer.cpp" />
     <ClCompile Include="EEPROM.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="CRotaryEncoder.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="DHT.h" />
     <ClInclude Include="dsp.h" />
     <ClInclude Include="DueTimer.h" />
     <ClInclude Include="EEPROM.h">

@@ -235,6 +235,9 @@
       <Filter>Services\Buzzer</Filter>
     </ClInclude>
     <ClInclude Include="bRestoreHistory.h" />
+    <ClInclude Include="DHT.h">
+      <Filter>Services\Sensors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferSerial.cpp">
@@ -338,6 +341,9 @@
       <Filter>Services\Buzzer</Filter>
     </ClCompile>
     <ClCompile Include="bRestoreHistory.cpp" />
+    <ClCompile Include="DHT.cpp">
+      <Filter>Services\Sensors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Raindancer.ino" />
