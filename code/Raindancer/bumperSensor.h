@@ -39,9 +39,17 @@ public:
     void setup();
     virtual void run();
     bool isBumperActivated();
+     //bber  ----------------------------
+    bool isBumperActivatedLeft();
+    bool isBumperActivatedRight();
+    //----------------------------------
 	void showConfig();
 private:
     bool _bumperActivated;
+     //bber -----------------------
+    bool _bumperLeftActivated;
+    bool _bumperRightActivated;
+    //----------------------------
 	bool _bumperDuinoActivated;
 
 };

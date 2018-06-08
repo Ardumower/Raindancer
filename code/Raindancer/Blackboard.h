@@ -174,6 +174,10 @@ public:
 
 
 	bool flagEnableRestoreHistory;
+     //bber -------------------------------------------------------
+    bool flagBumperActivatedLeft; //flag to record the next rotate dir
+    bool flagBumperActivatedRight;  //flag to record the next rotate dir
+    // ----------------------------------------
     
     bool flagGotoAreaXFirstCall;
 
