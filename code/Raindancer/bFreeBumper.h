@@ -31,6 +31,49 @@ Private-use only! (you need to ask for a commercial-use)
 #include "config.h"
 
 
+
+class TSetflagBumperActivatedLR : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+
+public:
+
+	TSetflagBumperActivatedLR() {}
+
+	virtual void onInitialize(Blackboard& bb) {
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		// Latch which bumper was activated because we need it later in TSetArcFEO_ROT.
+		// When TSetArcFEO_ROT is called, the bumper is already freed.
+
+		if (bb.bumperSensor.isBumperActivatedLeft()) {
+			bb.flagBumperActivatedLeft = true;
+			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedLeft = true;\r\n");
+		}
+		else {
+			bb.flagBumperActivatedLeft = false;
+			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedLeft = false;\r\n");
+		}
+
+
+		if (bb.bumperSensor.isBumperActivatedRight()) {
+			bb.flagBumperActivatedRight = true;
+			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedRight = true;\r\n");
+		}
+		else {
+			bb.flagBumperActivatedRight = false;
+			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedRight = false;\r\n");
+		}
+
+		return BH_SUCCESS;
+	}
+
+
+};
+
+
 class THardstop : public Node
 {
 private:
@@ -101,24 +144,7 @@ public:
 			errorHandler.setInfo();
 		}
 
-		// Latch which bumper was activated because we need it later in TSetArcFEO_ROT.
-		// When TSetArcFEO_ROT is called, the bumper is already freed.
-		if (bb.bumperSensor.isBumperActivatedLeft()) {
-			bb.flagBumperActivatedLeft = true;
-			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedLeft = true;\r\n");
-		}
-		else{
-			bb.flagBumperActivatedLeft = false;
-			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedLeft = false;\r\n");
-		}
-		if (bb.bumperSensor.isBumperActivatedRight()) {
-			bb.flagBumperActivatedRight = true;
-			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedRight = true;\r\n");
-		}
-		else {
-			bb.flagBumperActivatedRight = false;
-			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedRight = false;\r\n");
-		}
+
 
 		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
 		

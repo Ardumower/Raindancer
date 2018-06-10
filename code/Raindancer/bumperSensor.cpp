@@ -27,7 +27,7 @@ extern TMotorInterface motor;
 
 void   TbumperSensor::setup()
 {
-
+	errorHandler.setInfo("TbumperSensor::setup()\r\n");
 	_bumperLeftActivated = false;
 	_bumperRightActivated = false;
 	_bumperDuinoActivated = false;
@@ -45,10 +45,12 @@ bool TbumperSensor::isBumperActivated()
 // and is only used in TFreeBumper to set the variables bb.flagBumperActivatedLeft and bb.flagBumperActivatedRight
 bool TbumperSensor::isBumperActivatedLeft()
 {
+	errorHandler.setInfo("TbumperSensor::isBumperActivatedLeft(); %d\r\n", _bumperLeftActivated);
 	return (_bumperLeftActivated); 
 }
 bool TbumperSensor::isBumperActivatedRight()
 {
+	errorHandler.setInfo("TbumperSensor::isBumperActivatedRight(); %d\r\n", _bumperRightActivated);
 	return (_bumperRightActivated); 
 }
 
@@ -100,6 +102,7 @@ void TbumperSensor::run()
 			errorHandler.setInfo("!03,Bumper Left deactivated\r\n");
 		}
 		_bumperLeftActivated = false;
+		errorHandler.setInfo("!bumperLeftActivated = false;\r\n");
 	}
 
 	if ((_checkBumperRight() == false) && _bumperRightActivated) {
@@ -107,6 +110,7 @@ void TbumperSensor::run()
 			errorHandler.setInfo("!03,Bumper Right deactivated\r\n");
 		}
 		_bumperRightActivated = false;
+		errorHandler.setInfo("!_bumperRightActivated = false;\r\n");
 	}
 
 	if ((_checkBumperLeft() == true) && !_bumperLeftActivated) {
@@ -116,7 +120,9 @@ void TbumperSensor::run()
 		//bb.flagForceRotateDirection = FRD_CC;
 		//bb.driveDirection = DD_FEOROTATECC;
 		_bumperLeftActivated = true;
+		errorHandler.setInfo("_bumperLeftActivated = true;\r\n");
 	}
+
 	if ((_checkBumperRight() == true) && !_bumperRightActivated) {
 		if (flagShowBumper) {
 			errorHandler.setInfo("!03,Bumper right activated\r\n");
@@ -124,6 +130,7 @@ void TbumperSensor::run()
 		//bb.flagForceRotateDirection = FRD_CW;
 		//bb.driveDirection = DD_FEOROTATECW;
 		_bumperRightActivated = true;
+		errorHandler.setInfo("_bumperRightActivated = true;\r\n");
 
 	}
 

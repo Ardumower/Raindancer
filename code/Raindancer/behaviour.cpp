@@ -124,6 +124,7 @@ MemSelector mselEscObstacleOutside;
 // Free Bumper Behaviour
 //*************************************
 
+TSetflagBumperActivatedLR setflagBumperActivatedLR;
 TselEscapeAlgorithm selEscapeAlgorithm;
 THardstop hardstop;
 TFreeBumper freeBumper;
@@ -505,6 +506,7 @@ void TBehaviour::setup()
 // Bumper Behaviour
 //*************************************
 
+	setflagBumperActivatedLR.nodeName = (char*)"setflagBumperActivatedLR";
     selEscapeAlgorithm.nodeName = (char*)"selEscapeAlgorithm";
     hardstop.nodeName = (char*)"hardstop";
 
@@ -512,7 +514,7 @@ void TBehaviour::setup()
     mseqBumperActive.nodeName = (char*)"mseqBumperActive";
 
     //mseqBumperActive.addChildren(&conBumperActive,&hardstop,&freeBumper,&selEscapeAlgorithm );
-	mseqBumperActive.addChildren(&conBumperActive, &MotorStopFast, &freeBumper, &selEscapeAlgorithm);
+	mseqBumperActive.addChildren(&conBumperActive, &setflagBumperActivatedLR, &MotorStopFast, &freeBumper, &selEscapeAlgorithm);
 
 
 // ************************************
