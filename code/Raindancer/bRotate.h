@@ -191,6 +191,8 @@ public:
 	TSetArcFEO_ROT() {}
 
 	virtual void onInitialize(Blackboard& bb) {
+
+		// select random angle first
 		int i = myRandom(0, 10000);
 		if (i < 5000) {
 			bb.flagForceRotateDirection = FRD_CC;
@@ -200,6 +202,32 @@ public:
 			bb.flagForceRotateDirection = FRD_CW;
 			bb.driveDirection = DD_FEOROTATECW;
 		}
+
+		// Overwrite random angle when usingn left and right bumper. If Bumperduino on userswitch is activated, left and right bumper may not be activated.
+		// Therefore the random direction is set first.
+		if (CONF_ESCAPEDIR_DEPENDING_ON_BUMPER) {
+			if (bb.flagBumperActivatedRight) {
+				bb.flagForceRotateDirection = FRD_CC;   //record the next rotate dir
+				bb.driveDirection = DD_FEOROTATECC;
+				if (bb.flagShowRotateX) {
+					errorHandler.setInfo(F("!05,TSetArcFEO_ROT:Right Bumper: %ld\r\n"), bb.arcRotateXArc);
+				}
+			}
+			if (bb.flagBumperActivatedLeft) {
+				bb.flagForceRotateDirection = FRD_CW;  //record the next rotate dir
+				bb.driveDirection = DD_FEOROTATECW;
+				if (bb.flagShowRotateX) {
+					errorHandler.setInfo(F("!05,TSetArcFEO_ROT:Left Bumper: %ld\r\n"), bb.arcRotateXArc);
+				}
+			}
+		}
+
+		// I put it in TFreeBumper. Have to test if this works
+		//reset the flag for the next bump maybe here is not the correct location inthe code ??
+		//bb.flagBumperActivatedLeft = false;
+		//bb.flagBumperActivatedRight = false;
+
+		//-----------------------------
 
 		bb.arcRotateXArc = myRandom(60, 135);
 		if (bb.flagShowRotateX) {

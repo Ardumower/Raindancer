@@ -313,6 +313,9 @@ void Blackboard::resetBB()
 	flagBumperOutsidePerActivated = false;
 	flagCruiseSpiral = false;
 
+	flagBumperActivatedLeft = false;  // rest variables of the blackboard here
+	flagBumperActivatedRight = false;
+
 	//errorHandler.setInfo(F("bht->reset disable flagCruiseSpiral\r\n"));
 
 	flagCoilFirstOutside = CO_NONE;

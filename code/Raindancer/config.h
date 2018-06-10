@@ -101,6 +101,13 @@
 #define CONF_BUMPER_REVERSE_CM          30.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
 #define CONF_BUMPER_SEC_REVERSE_CM      40.0f    // Driving back this cm in second reverse\reverse2 nodes.
 
+// configure bumper service
+#define CONF_USE_LEFT_BUMPER            true     // left bumper is used
+#define CONF_USE_RIGHT_BUMPER           true     // right bumper is used
+#define CONF_LEFT_BUMPER_LOW_ACTIVE     true     // left bumper is activated when pin is low
+#define CONF_RIGHT_BUMPER_LOW_ACTIVE    true     // right bumper is activated when pin is low
+#define CONF_ESCAPEDIR_DEPENDING_ON_BUMPER false  // if set to true, the robot rotates in the oposit direction of the activated buper. If false, the escape direction is random.
+												  // only set to true if you use a bumper for left and a bumper for right.
 
 #define CONF_NEAR_PER_UPPER_THRESHOLD   80.0L    // Threshold of one coil where Perimetersignal is detected as near perimeter
 #define CONF_NEAR_PER_LOWER_THRESHOLD   70.0L    // Threshold of the other coil where Perimetersignal is detected as near perimeter
@@ -203,6 +210,13 @@
 #define CONF_BUMPER_REVERSE_CM          30.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
 #define CONF_BUMPER_SEC_REVERSE_CM      40.0f    // Driving back this cm in second reverse\reverse2 nodes.
 
+// configure bumper service
+#define CONF_USE_LEFT_BUMPER            true     // left bumper is used
+#define CONF_USE_RIGHT_BUMPER           true     // right bumper is used
+#define CONF_LEFT_BUMPER_LOW_ACTIVE     true     // left bumper is activated when pin is low
+#define CONF_RIGHT_BUMPER_LOW_ACTIVE    true     // right bumper is activated when pin is low
+#define CONF_ESCAPEDIR_DEPENDING_ON_BUMPER true  // if set to true, the robot rotates in the oposit direction of the activated buper. If false, the escape direction is random.
+												 // only set to true if you use a bumper for left and a bumper for right.
 
 #define CONF_NEAR_PER_UPPER_THRESHOLD   80.0L    // Threshold of one coil where Perimetersignal is detected as near perimeter
 #define CONF_NEAR_PER_LOWER_THRESHOLD   70.0L    // Threshold of the other coil where Perimetersignal is detected as near perimeter
@@ -304,6 +318,13 @@
 #define CONF_BUMPER_REVERSE_CM          30.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
 #define CONF_BUMPER_SEC_REVERSE_CM      40.0f    // Driving back this cm in second reverse\reverse2 nodes.
 
+// configure bumper service
+#define CONF_USE_LEFT_BUMPER            false     // left bumper is used
+#define CONF_USE_RIGHT_BUMPER           true      // right bumper is used
+#define CONF_LEFT_BUMPER_LOW_ACTIVE     true      // left bumper is activated when pin is low
+#define CONF_RIGHT_BUMPER_LOW_ACTIVE    false     // right bumper is activated when pin is low
+#define CONF_ESCAPEDIR_DEPENDING_ON_BUMPER false  // if set to true, the robot rotates in the oposit direction of the activated buper. If false, the escape direction is random.
+                                                 // only set to true if you use a bumper for left and a bumper for right.
 
 #define CONF_NEAR_PER_UPPER_THRESHOLD   80.0L    // Threshold of one coil where Perimetersignal is detected as near perimeter
 #define CONF_NEAR_PER_LOWER_THRESHOLD   70.0L    // Threshold of the other coil where Perimetersignal is detected as near perimeter
