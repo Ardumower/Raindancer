@@ -28,7 +28,8 @@ extern TMotorInterface motor;
 void   TbumperSensor::setup()
 {
 
-	_bumperActivated = false;
+	_bumperLeftActivated = false;
+	_bumperRightActivated = false;
 	_bumperDuinoActivated = false;
 	flagShowBumper = false;
 
@@ -36,19 +37,55 @@ void   TbumperSensor::setup()
 
 bool TbumperSensor::isBumperActivated()
 {
-	return (_bumperActivated || _bumperDuinoActivated);
+	return (_bumperLeftActivated || _bumperRightActivated || _bumperDuinoActivated);
 }
-//bber -----------------------------------------------
+
+// Never use the following functions to check if a bumper is activated. Therefore the function isBumperActivated() is created.
+// isBumperActivatedLeft() isBumperActivatedRight only checks the left or right bumper but not the bumperduino 
+// and is only used in TFreeBumper to set the variables bb.flagBumperActivatedLeft and bb.flagBumperActivatedRight
 bool TbumperSensor::isBumperActivatedLeft()
 {
-  return (_bumperLeftActivated || _bumperDuinoActivated); // i leave the bumperduino but certainly not use
+	return (_bumperLeftActivated); 
 }
 bool TbumperSensor::isBumperActivatedRight()
 {
-  return (_bumperRightActivated || _bumperDuinoActivated); // i leave the bumperduino but certainly not use
+	return (_bumperRightActivated); 
 }
-//-----------------------------------------------------
 
+// Handle the different possibilities for the bumper usage low active, high active, enabled
+bool TbumperSensor::_checkBumperLeft()
+{
+	if (CONF_USE_LEFT_BUMPER) {
+		if (CONF_LEFT_BUMPER_LOW_ACTIVE) {
+			if (diBumperL == LOW) {
+				return true;
+			}
+		}
+		else {
+			if (diBumperL == HIGH) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool TbumperSensor::_checkBumperRight()
+{
+	if (CONF_USE_RIGHT_BUMPER) {
+		if (CONF_RIGHT_BUMPER_LOW_ACTIVE) {
+			if (diBumperR == LOW) {
+				return true;
+			}
+		}
+		else {
+			if (diBumperR == HIGH) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 void TbumperSensor::run()
 {
@@ -57,52 +94,40 @@ void TbumperSensor::run()
 	// Orignal Ardumower Bumper
 #if CONF_DISABLE_BUMPER_SERVICE == false
  //bber-----------------------------------------------------
-  if (!_bumperRightActivated && !_bumperLeftActivated && _bumperActivated) {
-    if (flagShowBumper) {
-      errorHandler.setInfo("!03,Bumper deactivated\r\n");
-    }
-    _bumperActivated = false;
-  }
 
-  if (( diBumperL == HIGH ) && _bumperLeftActivated) {
-    if (flagShowBumper) {
-      errorHandler.setInfo("!03,Bumper Left deactivated\r\n");
-    }
-    _bumperLeftActivated = false;
-  }
+	if ((_checkBumperLeft() == false) && _bumperLeftActivated) {
+		if (flagShowBumper) {
+			errorHandler.setInfo("!03,Bumper Left deactivated\r\n");
+		}
+		_bumperLeftActivated = false;
+	}
 
-  if (( diBumperR == HIGH ) && _bumperRightActivated) {
-    if (flagShowBumper) {
-      errorHandler.setInfo("!03,Bumper Right deactivated\r\n");
-    }
-    _bumperRightActivated = false;
-  }
+	if ((_checkBumperRight() == false) && _bumperRightActivated) {
+		if (flagShowBumper) {
+			errorHandler.setInfo("!03,Bumper Right deactivated\r\n");
+		}
+		_bumperRightActivated = false;
+	}
 
-  if ((diBumperL == LOW) && !_bumperLeftActivated) {
-    if (flagShowBumper) {
-      errorHandler.setInfo("!03,Bumper left activated\r\n");
-    }
-    //bb.flagForceRotateDirection = FRD_CC;
-    //bb.driveDirection = DD_FEOROTATECC;
-    _bumperLeftActivated = true;
-  }
-  if ((diBumperR == LOW) && !_bumperRightActivated) {
-    if (flagShowBumper) {
-      errorHandler.setInfo("!03,Bumper right activated\r\n");
-    }
-    //bb.flagForceRotateDirection = FRD_CW;
-    //bb.driveDirection = DD_FEOROTATECW;
-    _bumperRightActivated = true;
+	if ((_checkBumperLeft() == true) && !_bumperLeftActivated) {
+		if (flagShowBumper) {
+			errorHandler.setInfo("!03,Bumper left activated\r\n");
+		}
+		//bb.flagForceRotateDirection = FRD_CC;
+		//bb.driveDirection = DD_FEOROTATECC;
+		_bumperLeftActivated = true;
+	}
+	if ((_checkBumperRight() == true) && !_bumperRightActivated) {
+		if (flagShowBumper) {
+			errorHandler.setInfo("!03,Bumper right activated\r\n");
+		}
+		//bb.flagForceRotateDirection = FRD_CW;
+		//bb.driveDirection = DD_FEOROTATECW;
+		_bumperRightActivated = true;
 
-  }
+	}
 
-  if ((_bumperRightActivated || _bumperLeftActivated) && !_bumperActivated) {
-    _bumperActivated = true;
-    if (flagShowBumper) {
-      errorHandler.setInfo("!03,Bumper activated\r\n");
-    }
-  }
-  //----------------------------------------------
+	//----------------------------------------------
 #endif
 
 #if CONF_DISABLE_BUMPERDUINO_SERVICE == false 
@@ -131,7 +156,7 @@ void TbumperSensor::run()
 	}
 	*/
 #endif
-}
+		}
 
 
 void TbumperSensor::showConfig()

@@ -101,6 +101,20 @@ public:
 			errorHandler.setInfo();
 		}
 
+		// Latch which bumper was activated because we need it later in TSetArcFEO_ROT.
+		// When TSetArcFEO_ROT is called, the bumper is already freed.
+		if (bb.bumperSensor.isBumperActivatedLeft()) {
+			bb.flagBumperActivatedLeft = true;
+		}
+		else{
+			bb.flagBumperActivatedLeft = false;
+		}
+		if (bb.bumperSensor.isBumperActivatedRight()) {
+			bb.flagBumperActivatedRight = true;
+		}
+		else {
+			bb.flagBumperActivatedRight = false;
+		}
 
 		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
 		

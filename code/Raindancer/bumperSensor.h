@@ -45,12 +45,15 @@ public:
     //----------------------------------
 	void showConfig();
 private:
-    bool _bumperActivated;
+    //bool _bumperActivated; don't need this' because _bumperLeftActivated and _bumperRightActivated already has this information in
      //bber -----------------------
     bool _bumperLeftActivated;
     bool _bumperRightActivated;
     //----------------------------
 	bool _bumperDuinoActivated;
+
+	bool _checkBumperLeft();
+	bool _checkBumperRight();
 
 };
 

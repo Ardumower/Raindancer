@@ -565,14 +565,18 @@ public:
 		}
 
 		if (bb.bumperSensor.isBumperActivated()) {   //for bumper.  hard stop is activated by bumper sensor. Therfore I have to check this first before doing further steps
-			 //bber--------------------------------------------------
+	
+       /* NEVER set any variables or do any action in a condition
+       //bber--------------------------------------------------
       if (bb.bumperSensor.isBumperActivatedLeft()) {
           bb.flagBumperActivatedLeft=true;
         }
       if (bb.bumperSensor.isBumperActivatedRight()) {
           bb.flagBumperActivatedRight=true;
         }
-     //-----------------------------------------------------
+		//-----------------------------------------------------
+      */ 
+
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
