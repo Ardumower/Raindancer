@@ -105,15 +105,19 @@ public:
 		// When TSetArcFEO_ROT is called, the bumper is already freed.
 		if (bb.bumperSensor.isBumperActivatedLeft()) {
 			bb.flagBumperActivatedLeft = true;
+			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedLeft = true;\r\n");
 		}
 		else{
 			bb.flagBumperActivatedLeft = false;
+			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedLeft = false;\r\n");
 		}
 		if (bb.bumperSensor.isBumperActivatedRight()) {
 			bb.flagBumperActivatedRight = true;
+			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedRight = true;\r\n");
 		}
 		else {
 			bb.flagBumperActivatedRight = false;
+			errorHandler.setError("!03,TfreeBumper bb.flagBumperActivatedRight = false;\r\n");
 		}
 
 		// This is only filled here if it comes to problems. At the end of TFreeBumper you can write code to show the information to the console for debugging
