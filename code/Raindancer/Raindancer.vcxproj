@@ -113,6 +113,7 @@
     <ClCompile Include="pinman.cpp" />
     <ClCompile Include="positioncontrol.cpp" />
     <ClCompile Include="printSensordata.cpp" />
+    <ClCompile Include="rainSensor.cpp" />
     <ClCompile Include="rangeSensor.cpp" />
     <ClCompile Include="RingBufferChar.cpp" />
     <ClCompile Include="rtc.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="printSensordata.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="rainSensor.h" />
     <ClInclude Include="rangeSensor.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -283,7 +285,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM10" />
+      <UserProperties arduino.upload.port="COM7" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

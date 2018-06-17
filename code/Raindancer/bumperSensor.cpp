@@ -58,16 +58,7 @@ bool TbumperSensor::isBumperActivatedRight()
 bool TbumperSensor::_checkBumperLeft()
 {
 	if (CONF_USE_LEFT_BUMPER) {
-		if (CONF_LEFT_BUMPER_LOW_ACTIVE) {
-			if (diBumperL == LOW) {
-				return true;
-			}
-		}
-		else {
-			if (diBumperL == HIGH) {
-				return true;
-			}
-		}
+		return (CONF_LEFT_BUMPER_LOW_ACTIVE) ? (diBumperL == LOW) : (diBumperL == HIGH);
 	}
 	return false;
 }
@@ -75,16 +66,7 @@ bool TbumperSensor::_checkBumperLeft()
 bool TbumperSensor::_checkBumperRight()
 {
 	if (CONF_USE_RIGHT_BUMPER) {
-		if (CONF_RIGHT_BUMPER_LOW_ACTIVE) {
-			if (diBumperR == LOW) {
-				return true;
-			}
-		}
-		else {
-			if (diBumperR == HIGH) {
-				return true;
-			}
-		}
+		return (CONF_RIGHT_BUMPER_LOW_ACTIVE) ? (diBumperR == LOW) : (diBumperR == HIGH);
 	}
 	return false;
 }
@@ -96,41 +78,39 @@ void TbumperSensor::run()
 	// Orignal Ardumower Bumper
 #if CONF_DISABLE_BUMPER_SERVICE == false
  //bber-----------------------------------------------------
+	bool bl = _checkBumperLeft();
+	bool br = _checkBumperRight();
 
-	if ((_checkBumperLeft() == false) && _bumperLeftActivated) {
+	if ((bl == false) && _bumperLeftActivated) {
 		if (flagShowBumper) {
 			errorHandler.setInfo("!03,Bumper Left deactivated\r\n");
 		}
 		_bumperLeftActivated = false;
-		errorHandler.setInfo("!bumperLeftActivated = false;\r\n");
+		//errorHandler.setInfo("!bumperLeftActivated = false;\r\n");
 	}
 
-	if ((_checkBumperRight() == false) && _bumperRightActivated) {
+	if ((br == false) && _bumperRightActivated) {
 		if (flagShowBumper) {
 			errorHandler.setInfo("!03,Bumper Right deactivated\r\n");
 		}
 		_bumperRightActivated = false;
-		errorHandler.setInfo("!_bumperRightActivated = false;\r\n");
+		//errorHandler.setInfo("!_bumperRightActivated = false;\r\n");
 	}
 
-	if ((_checkBumperLeft() == true) && !_bumperLeftActivated) {
+	if ((bl == true) && !_bumperLeftActivated) {
 		if (flagShowBumper) {
 			errorHandler.setInfo("!03,Bumper left activated\r\n");
 		}
-		//bb.flagForceRotateDirection = FRD_CC;
-		//bb.driveDirection = DD_FEOROTATECC;
 		_bumperLeftActivated = true;
-		errorHandler.setInfo("_bumperLeftActivated = true;\r\n");
+		//errorHandler.setInfo("_bumperLeftActivated = true;\r\n");
 	}
 
-	if ((_checkBumperRight() == true) && !_bumperRightActivated) {
+	if ((br == true) && !_bumperRightActivated) {
 		if (flagShowBumper) {
 			errorHandler.setInfo("!03,Bumper right activated\r\n");
 		}
-		//bb.flagForceRotateDirection = FRD_CW;
-		//bb.driveDirection = DD_FEOROTATECW;
 		_bumperRightActivated = true;
-		errorHandler.setInfo("_bumperRightActivated = true;\r\n");
+		//errorHandler.setInfo("_bumperRightActivated = true;\r\n");
 
 	}
 

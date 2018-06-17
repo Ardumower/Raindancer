@@ -21,10 +21,8 @@
 // CONFIG FOR ARDUMOWER CHASSIS
 //======================================================================================================================
 #if ARDUMOWER_CHASSIS == true
-//bber2
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321      
-#define CONF_DISABLE_DHT_SERVICE true
-//-----
+
 #define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
 
@@ -68,6 +66,8 @@
 #define CONF_DISABLE_EEPROM_SERVICE		false   // Disables EEPROM requests
 #define CONF_DISABLE_BATTERY_SERVICE	false   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE		false   // Disables charge system service
+#define CONF_DISABLE_RAIN_SERVICE       true   // Disables rain sensor
+#define CONF_DISABLE_DHT_SERVICE        true // Disables temp sensor
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  false   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          false   // Disables the mow motor
@@ -130,10 +130,9 @@
 // CONFIG FOR PARANELLO CHASSIS
 //======================================================================================================================
 #if PARANELLO_CHASSIS == true
-//bber2
+
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321      
-#define CONF_DISABLE_DHT_SERVICE false
-//-----
+
 #define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION true //the mower can't cross over the station
 
@@ -177,6 +176,8 @@
 #define CONF_DISABLE_EEPROM_SERVICE   false   // Disables EEPROM requests
 #define CONF_DISABLE_BATTERY_SERVICE  false   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE   false   // Disables charge system service
+#define CONF_DISABLE_RAIN_SERVICE     true   // Disables rain sensor
+#define CONF_DISABLE_DHT_SERVICE      false // Disables temp sensor
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  false   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          false   // Disables the mow motor
@@ -238,10 +239,9 @@
 // CONFIG FOR RAINDANCER CHASSIS
 //======================================================================================================================
 #if RAINDANCER_CHASSIS == true
-//bber2
+
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321      
-#define CONF_DISABLE_DHT_SERVICE false
-//-----
+
 #define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
 
@@ -285,6 +285,8 @@
 #define CONF_DISABLE_EEPROM_SERVICE		false   // Disables EEPROM requests
 #define CONF_DISABLE_BATTERY_SERVICE	false   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE		false   // Disables charge system service
+#define CONF_DISABLE_RAIN_SERVICE       false   // Disables rain sensor
+#define CONF_DISABLE_DHT_SERVICE        false   // Disables temp sensor
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  false   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          false   // Disables the mow motor
@@ -323,7 +325,7 @@
 #define CONF_USE_RIGHT_BUMPER           true      // right bumper is used
 #define CONF_LEFT_BUMPER_LOW_ACTIVE     true      // left bumper is activated when pin is low
 #define CONF_RIGHT_BUMPER_LOW_ACTIVE    false     // right bumper is activated when pin is low
-#define CONF_ESCAPEDIR_DEPENDING_ON_BUMPER false  // if set to true, the robot rotates in the oposit direction of the activated buper. If false, the escape direction is random.
+#define CONF_ESCAPEDIR_DEPENDING_ON_BUMPER false  // if set to true, the robot rotates in the opposite direction of the activated buper. If false, the escape direction is random.
                                                  // only set to true if you use a bumper for left and a bumper for right.
 
 #define CONF_NEAR_PER_UPPER_THRESHOLD   80.0L    // Threshold of one coil where Perimetersignal is detected as near perimeter

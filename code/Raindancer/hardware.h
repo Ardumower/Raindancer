@@ -61,6 +61,8 @@ extern AnalogIn aiRandomIn;
 extern DigitalOut doBuzzer;
 extern DigitalOut doMyLED;
 
+extern DigitalIn diPinRain;
+
 extern DigitalIn diBumperL;
 extern DigitalIn diBumperR;
 extern AnalogIn aiBumper;

@@ -1274,4 +1274,16 @@ bg=white</panel_attributes>
 bg=white</panel_attributes>
     <additional_attributes/>
   </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1820</x>
+      <y>630</y>
+      <w>105</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>rainSensor
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
 </diagram>

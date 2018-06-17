@@ -42,6 +42,7 @@ Private-use only! (you need to ask for a commercial-use)
 #include "EEPROM.h"
 #include "motorSensor.h"
 #include "bGotoAreaX.h"
+#include "rainSensor.h"
 //bber2
 #include "DHT.h"
 
@@ -77,6 +78,8 @@ extern TrangeSensor rangeSensor;
 extern TbumperSensor bumperSensor;
 // Charge System
 extern TchargeSystem chargeSystem;
+// Rain Sensor
+extern TrainSensor rainSensor;
 
 extern TPreUpdateHistoryBump preUpdateHistoryBump;
 extern TPreUpdateHistory preUpdateHistory;
@@ -307,6 +310,10 @@ void cmd_help(int arg_cnt, char **args)
   errorHandler.setInfoNoLog(F("\r\n=== TEMPERATURE SERVICE ===\r\n"));
   errorHandler.setInfoNoLog(F("temp.show   //show temperature and humidity\r\n"));
 #endif
+
+    errorHandler.setInfoNoLog(F("\r\n=== RAIN SENSOR SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("rain.config //show config\r\n"));
+    errorHandler.setInfoNoLog(F("rain.show   //show sensor value\r\n"));
 
 	wait = millis();
 	while (millis() - wait < 100) executeLoop();
@@ -797,6 +804,13 @@ void cmd_showBattery(int arg_cnt, char **args)
 
 	//errorHandler.setInfoNoLog(F( "aiBATVOLT.getVoltage() %f\r\n"), aiBATVOLT.getVoltage());
 }
+
+void cmd_showRain(int arg_cnt, char **args)
+{
+	rainSensor.flagShowRainSensor = !rainSensor.flagShowRainSensor;
+
+}
+
 //bber2
 void cmd_showTemperature(int arg_cnt, char **args)
 {
@@ -1149,6 +1163,12 @@ void cmd_bat_show_config(int arg_cnt, char **args)
 	batterieSensor.showConfig();
 }
 
+
+void cmd_rain_show_config(int arg_cnt, char **args)
+{
+	rainSensor.showConfig();
+}
+
 void cmd_per_show_config(int arg_cnt, char **args)
 {
 	perimeterSensoren.showConfig();
@@ -1261,6 +1281,8 @@ void cmd_hideShowing(int arg_cnt, char **args)
 	bumperSensor.flagShowBumper = false;
 	chargeSystem.flagShowChargeSystem = false;
 	motor.flagShowDistance = false;
+
+	rainSensor.flagShowRainSensor = false;
 
 	ADCMan.showValuesOnConsole = false;
 	rtc.flagShowRTCRead = false;
@@ -1520,16 +1542,16 @@ void cmd_setup()
 	cmdAdd((char *)"bat.config", cmd_bat_show_config);
 	cmdAdd((char *)"bat.show", cmd_showBattery);
 
- //bber2
   // Temperature services
   //------------------------------
 #if CONF_DISABLE_DHT_SERVICE == false
   cmdAdd((char *)"temp.show", cmd_showTemperature);
 #endif
 
-
-  //--------
-
+  // rain sensor
+  cmdAdd((char *)"rain.config", cmd_rain_show_config);
+  cmdAdd((char *)"rain.show", cmd_showRain);
+ 
 	// ADC manager
 	//------------------------------
 	cmdAdd((char *)"adc.config", cmd_showADCPrint);

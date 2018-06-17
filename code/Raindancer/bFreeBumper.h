@@ -50,21 +50,29 @@ public:
 
 		if (bb.bumperSensor.isBumperActivatedLeft()) {
 			bb.flagBumperActivatedLeft = true;
-			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedLeft = true;\r\n");
+			if(bb.bumperSensor.flagShowBumper){
+				errorHandler.setInfo(F("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedLeft = true;\r\n"));
+			}
 		}
 		else {
 			bb.flagBumperActivatedLeft = false;
-			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedLeft = false;\r\n");
+			if (bb.bumperSensor.flagShowBumper) {
+				errorHandler.setInfo(F("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedLeft = false;\r\n"));
+			}
 		}
 
 
 		if (bb.bumperSensor.isBumperActivatedRight()) {
 			bb.flagBumperActivatedRight = true;
-			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedRight = true;\r\n");
+			if (bb.bumperSensor.flagShowBumper) {
+				errorHandler.setInfo(F("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedRight = true;\r\n"));
+			}
 		}
 		else {
 			bb.flagBumperActivatedRight = false;
-			errorHandler.setInfo("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedRight = false;\r\n");
+			if (bb.bumperSensor.flagShowBumper) {
+				errorHandler.setInfo(F("!03,TSetflagBumperActivatedLR bb.flagBumperActivatedRight = false;\r\n"));
+			}
 		}
 
 		return BH_SUCCESS;

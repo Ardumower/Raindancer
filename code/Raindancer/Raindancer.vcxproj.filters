@@ -238,6 +238,9 @@
     <ClInclude Include="DHT.h">
       <Filter>Services\Sensors</Filter>
     </ClInclude>
+    <ClInclude Include="rainSensor.h">
+      <Filter>Services\Sensors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferSerial.cpp">
@@ -342,6 +345,9 @@
     </ClCompile>
     <ClCompile Include="bRestoreHistory.cpp" />
     <ClCompile Include="DHT.cpp">
+      <Filter>Services\Sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="rainSensor.cpp">
       <Filter>Services\Sensors</Filter>
     </ClCompile>
   </ItemGroup>

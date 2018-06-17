@@ -203,7 +203,7 @@ public:
 			bb.driveDirection = DD_FEOROTATECW;
 		}
 
-		// Overwrite random angle when usingn left and right bumper. If Bumperduino on userswitch is activated, left and right bumper may not be activated.
+		// Overwrite random angle when usinng left and right bumper. If Bumperduino on userswitch is activated, left and right bumper may not be activated.
 		// Therefore the random direction is set first.
 		if (CONF_ESCAPEDIR_DEPENDING_ON_BUMPER) {
 			if (bb.flagBumperActivatedRight) {
@@ -222,12 +222,6 @@ public:
 			}
 		}
 
-		// I put it in TFreeBumper. Have to test if this works
-		//reset the flag for the next bump maybe here is not the correct location inthe code ??
-		//bb.flagBumperActivatedLeft = false;
-		//bb.flagBumperActivatedRight = false;
-
-		//-----------------------------
 
 		bb.arcRotateXArc = myRandom(60, 135);
 		if (bb.flagShowRotateX) {

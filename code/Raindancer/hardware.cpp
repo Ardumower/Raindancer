@@ -144,7 +144,7 @@ DigitalOut doBatteryOffSwitch(pinBatterySwitch);
 DigitalOut doBuzzer(pinBuzzer);
 DigitalOut doMyLED(pinLED);
 
-
+DigitalIn  diPinRain(pinRain, false);
 
 // left wheel motor
 DigitalOut doMotorEnable(pinMotorEnable);
@@ -272,6 +272,8 @@ void hardwareSetup() {
 
 	
 	doMyLED.setup();
+
+	diPinRain.setup();
 
 	diBumperL.setup();
 	diBumperR.setup();

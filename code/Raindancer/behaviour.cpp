@@ -75,6 +75,7 @@ TConPerOutside conPerOutside;
 //TconStopOvershootLeft conStopOvershootLeft;
 //TconStopOvershootRight conStopOvershootRight;
 TConBatLow conBatLow;
+TConRaining conRaining;
 
 TConRightCoilOutside conRightCoilOutside;
 TConLeftCoilOutside  conLeftCoilOutside;
@@ -326,11 +327,12 @@ TRotateX    rotateX;
 MemSequence mseqRotateBump;
 
 // ************************************
-// BatLow Behaviour
+// BatLow and raining Behaviour
 //*************************************
 
 TCruiseBatLow CruiseBatLow;
 Sequence seqMowBatLow;
+Sequence seqRaining;
 
 // ************************************
 // Check2 Behaviour
@@ -430,6 +432,7 @@ void TBehaviour::setup()
     //conStopOvershootLeft.nodeName = "conStopOvershootLeft";
     //conStopOvershootRight.nodeName = "conStopOvershootRight";
     conBatLow.nodeName= (char*)"conBatLow";
+	conRaining.nodeName = (char*)"conRaining";
 
     conRightCoilOutside.nodeName= (char*)"conRightCoilOutside";
     conLeftCoilOutside.nodeName= (char*)"conLeftCoilOutside";
@@ -803,13 +806,15 @@ void TBehaviour::setup()
 	mseqRotateBump.addChildren(&preUpdateHistoryBump,&rotateX);
 
     // ************************************
-    // BatLow Behaviour
+    // BatLow and Raining Behaviour
     //*************************************
 
     CruiseBatLow.nodeName= (char*)"cruiseBatLow";
     seqMowBatLow.nodeName= (char*)"seqMowBatLow";
-    seqMowBatLow.addChildren( &conBatLow, &CruiseBatLow);
+	seqRaining.nodeName = (char*)"seqRaining";
 
+    seqMowBatLow.addChildren( &conBatLow, &CruiseBatLow);
+	seqRaining.addChildren(&conRaining, &CruiseBatLow);
 
     // ************************************
     // Check2 Behaviour
@@ -856,7 +861,7 @@ void TBehaviour::setup()
 
     selMowing.nodeName = (char*)"selMowing";
 
-    selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &dnRestoreHistory, &mseqBumperActive, &dnBumpPeriActivated,  &mseqPerimeterAvtive,  &dnBumperActivated, &seqMowBatLow, &Check2AllCoilsOutside, &dnCruiseSpiral, &dnSetbbShortWayCounter);
+    selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &dnRestoreHistory, &mseqBumperActive, &dnBumpPeriActivated,  &mseqPerimeterAvtive,  &dnBumperActivated, &seqRaining, &seqMowBatLow, &Check2AllCoilsOutside, &dnCruiseSpiral, &dnSetbbShortWayCounter);
 
 	// ************************************
 	// Restore history

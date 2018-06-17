@@ -27,6 +27,7 @@ Set to true only the correct CHASSIS
 ****************************************************************************************************
 */
 
+#include "rainSensor.h"
 #include "bRestoreHistory.h"
 #include "buzzer.h"
 #include "DueTimer.h"
@@ -97,6 +98,8 @@ Thread cmd;
 TPerimeterThread perimeterSensoren;
 // Messung der Batteriespannung
 TbatterieSensor batterieSensor;
+// Rain sensor
+TrainSensor rainSensor;
 // Messung des Motorstroms
 TmotorSensor motorSensorL(aiMotorLeftCurrent, diMotorLeftFault, doMotorEnable, 'L');
 TmotorSensor motorSensorR(aiMotorRightCurrent, diMotorRightFault, doMotorEnable, 'R');
@@ -134,7 +137,7 @@ ThreadController controller = ThreadController(); // Thread die vor manuellen mo
 // Behaviour Objects die auf die Threads oben zugreifen
 /*********************************************************************/
 
-Blackboard myBlackboard(motor, perimeterSensoren, mowMotorSensor, rangeSensor, bumperSensor, batterieSensor, encoderL, encoderR, chargeSystem, eeprom);
+Blackboard myBlackboard(motor, perimeterSensoren, mowMotorSensor, rangeSensor, bumperSensor, batterieSensor, encoderL, encoderR, chargeSystem, eeprom, rainSensor);
 TBehaviour myBehaviour(myBlackboard);
 
 
@@ -202,6 +205,9 @@ void setup()
 	batterieSensor.setup();
 	batterieSensor.setInterval(1974);
 
+	rainSensor.setup();
+	rainSensor.setInterval(1773);
+
 
 	motorSensorL.setup();
 	motorSensorL.setInterval(77);
@@ -256,6 +262,7 @@ void setup()
 	controller.add(&perimeterSensoren);
 
 	controller.add(&batterieSensor);
+	controller.add(&rainSensor);
 
 	controller.add(&motorSensorL);
 	controller.add(&motorSensorR);

@@ -40,6 +40,7 @@ Private-use only! (you need to ask for a commercial-use)
 #include "mowmotorSensor.h"
 #include "chargeSystem.h"
 #include "EEPROM.h"
+#include "rainSensor.h"
 
 
 
@@ -108,18 +109,19 @@ class Node;
 class Blackboard
 {
 public:
-    Blackboard(TMotorInterface &_motor, TPerimeterThread &_perimeterSenoren, TMowMotorSensor& _mowMotorSensor, TrangeSensor &_rangeSensor,
-               TbumperSensor &_bumperSensor,  TbatterieSensor& _batterieSensor, CRotaryEncoder &_encoderL, CRotaryEncoder &_encoderR, TchargeSystem &_chargeSystem, TEEPROM &_eeprom):
-        motor(_motor),
-        perimeterSensoren(_perimeterSenoren),
-        rangeSensor(_rangeSensor),
-        bumperSensor(_bumperSensor),
-        mowMotorSensor(_mowMotorSensor),
-        batterieSensor(_batterieSensor),
-        encoderL(_encoderL),
-        encoderR(_encoderR),
-        chargeSystem(_chargeSystem),
-		eeprom(_eeprom)
+	Blackboard(TMotorInterface &_motor, TPerimeterThread &_perimeterSenoren, TMowMotorSensor& _mowMotorSensor, TrangeSensor &_rangeSensor,
+		TbumperSensor &_bumperSensor, TbatterieSensor& _batterieSensor, CRotaryEncoder &_encoderL, CRotaryEncoder &_encoderR, TchargeSystem &_chargeSystem, TEEPROM &_eeprom, TrainSensor &_rainSensor) :
+		motor(_motor),
+		perimeterSensoren(_perimeterSenoren),
+		rangeSensor(_rangeSensor),
+		bumperSensor(_bumperSensor),
+		mowMotorSensor(_mowMotorSensor),
+		batterieSensor(_batterieSensor),
+		encoderL(_encoderL),
+		encoderR(_encoderR),
+		chargeSystem(_chargeSystem),
+		eeprom(_eeprom),
+		rainSensor(_rainSensor)
     {  
 		flagEnableMowing = false;
 		flagEnablePerimetertracking = false;
@@ -215,6 +217,7 @@ public:
     CRotaryEncoder& encoderR;
     TchargeSystem& chargeSystem;
 	TEEPROM& eeprom;
+	TrainSensor& rainSensor;
 
     // Wird von BehaviourTree funktionen verwendet und muss immer vorhanden sein.
     Node* lastNodeLastRun;

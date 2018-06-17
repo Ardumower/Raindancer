@@ -39,7 +39,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && bb.driveDirection == DD_FORWARD) {
+		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
 			if (bb.batterieSensor.isVoltageLow() || bb.flagGoHome) {
 				sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
@@ -51,6 +51,27 @@ public:
 	}
 };
 
+class TConRaining : public Node    // Each task will be a class (derived from Node of course).
+{
+private:
+
+public:
+
+	TConRaining() {}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
+			if (bb.rainSensor.isRaining()) {
+				sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+				else { errorHandler.writeToLogOnly(); }
+				return BH_SUCCESS;
+			}
+		}
+		return BH_FAILURE;
+	}
+};
 
 /*
 class TConFEO_BACK180 : public Node    // Each task will be a class (derived from Node of course).
@@ -564,19 +585,8 @@ public:
 			return BH_FAILURE;
 		}
 
-		if (bb.bumperSensor.isBumperActivated()) {   //for bumper.  hard stop is activated by bumper sensor. Therfore I have to check this first before doing further steps
+		if (bb.bumperSensor.isBumperActivated()) {  
 	
-       /* NEVER set any variables or do any action in a condition
-       //bber--------------------------------------------------
-      if (bb.bumperSensor.isBumperActivatedLeft()) {
-          bb.flagBumperActivatedLeft=true;
-        }
-      if (bb.bumperSensor.isBumperActivatedRight()) {
-          bb.flagBumperActivatedRight=true;
-        }
-		//-----------------------------------------------------
-      */ 
-
 			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
