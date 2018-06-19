@@ -146,7 +146,7 @@
 #define CONF_ENCTICKSPERREVOLUTION    1010.0f // Count of positive AND negativ encoder flanks per one revolution at the DUE pin!!!
 #define CONF_RADUMFANG_CM       114.66f // Wheel circumfence in cm original ardumower: 78.54f 
 
-#define CONF_MAX_WHEEL_RPM        30.0f // max revolution per  minute the wheel reaches when speed is 100%. This is at pwm 255. 
+#define CONF_MAX_WHEEL_RPM        35.0f // max revolution per  minute the wheel reaches when speed is 100%. This is at pwm 255. 
 //#define CONF_MAX_ENCTICKS_PM            (CONF_MAX_WHEEL_RPM*CONF_ENCTICKSPERREVOLUTION) // max encoder ticks per minute when speed is 100%
 // 1060ticks/rev*30rev/minute=31800ticks/min
 
@@ -188,7 +188,7 @@
 
 #define CONF_DISABLE_FAST_RETURN        true    // Disables fast retrun 
 
-#define CONF_DISABLE_CHARGINGSTATION    true    // If set to true, robot don't drive to chargingstation if batttery is low. After bat low, robot drives to perimeter
+#define CONF_DISABLE_CHARGINGSTATION    false    // If set to true, robot don't drive to chargingstation if batttery is low. After bat low, robot drives to perimeter
 // and set error: "bat low". Then you should power of the robot, connect the charging contacts and power on the robot to charge.
 // If you have an open switch between battery and PCB1.3 then the DUE is powered through charging contacts only while battery is disconnnected.
 // To prevent this, remove diode D37. If not EF1 must be 5A minimum. 1.6A will be destroyed while connecting charing contacts with open battery switch.
