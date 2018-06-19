@@ -405,6 +405,10 @@ public:
 		long buffL, buffR;
 		float distance;
 
+		if (CONF_DISABLE_FAST_RETURN == true) {
+			return BH_RUNNING;
+		}
+
 		//============================================
 		// Calculate driven angle every 500ms.
 		//============================================
