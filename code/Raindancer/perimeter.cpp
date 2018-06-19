@@ -44,6 +44,8 @@ void TPerimeterThread::setup()
 
 	signalCounterL = 0;    // 2 outside >=  wert  >=-2 inside
 	signalCounterR = 0;
+	signalCounterLFast = 0;
+	signalCounterRFast = 0;
 
 	// Set ADC Sample Address
 	//coilL.showValues = true;
@@ -88,6 +90,7 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl)
 	// ** inside mag positive**
 	if (magl > 0) {
 
+		signalCounterLFast = min(signalCounterLFast + 1, 2);
 		signalCounterL = min(signalCounterL + 1, 3);
 		lastTimeSignalReceivedL = millis();
 
@@ -103,6 +106,7 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl)
 
 	// ** outside mag negative**
 	else if (magl < 0) {
+		signalCounterLFast = max(signalCounterLFast - 1, -2);
 		signalCounterL = max(signalCounterL - 1, -3);
 		lastTimeSignalReceivedL = millis();
 	}
@@ -138,6 +142,7 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
 
 	if (magr > 0) {
 
+		signalCounterRFast = min(signalCounterRFast + 1, 2);
 		signalCounterR = min(signalCounterR + 1, 3);
 		lastTimeSignalReceivedR = millis();
 
@@ -151,6 +156,7 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
 
 	}
 	else if (magr < 0) {
+		signalCounterRFast = max(signalCounterRFast - 1, -2);
 		signalCounterR = max(signalCounterR - 1, -3);
 		lastTimeSignalReceivedR = millis();
 
@@ -209,7 +215,7 @@ void TPerimeterThread::UpdateState(EPerReceiveState t)
 			if (showValuesOnConsole) {
 				//sprintf(errorHandler.msg, "!03,ML: %d MR: %d  CL:%d CR: %d\r\n", magnetudeL, magnetudeR, signalCounterL, signalCounterR);
 				//sprintf(errorHandler.msg, "!03,ML: %d MR: %d magMax:%d magMedL: %d magMedR: %d\r\n", magnetudeL, magnetudeR, magMax, (int)curMaxL,  (int)curMaxR);
-				sprintf(errorHandler.msg, "!03,ML: %d/%d MR: %d/%d magMax:%d magMedL%%: %d magMedR%%: %d\r\n", magnetudeL, signalCounterL, magnetudeR, signalCounterR, magMax, (int)curMaxL*100/ magMax, (int)curMaxR * 100 / magMax );
+				sprintf(errorHandler.msg, "!03,ML: %d/%d/%d MR: %d/%d/%d magMax:%d magMedL%%: %d magMedR%%: %d\r\n", magnetudeL, signalCounterL, signalCounterLFast, magnetudeR, signalCounterR, signalCounterRFast, magMax, (int)curMaxL*100/ magMax, (int)curMaxR * 100 / magMax );
 				errorHandler.setInfoNoLog();
 			}
 		}
@@ -287,7 +293,8 @@ bool TPerimeterThread::isLeftInside()
 	if (abs(magnetudeL) > CONF_PER_USE_COUNTER_THRESHOLD) {
 		// Large signal, the in/out detection is reliable.
 		// Using mag yields very fast in/out transition reporting.
-		return (magnetudeL > 0);
+		//return (magnetudeL > 0);
+		return (signalCounterLFast > 0);
 	}
 	else {
 		// Low signal, use filtered value for increased reliability
@@ -309,7 +316,8 @@ bool TPerimeterThread::isRightInside()
 	if (abs(magnetudeR) > CONF_PER_USE_COUNTER_THRESHOLD) {
 		// Large signal, the in/out detection is reliable.
 		// Using mag yields very fast in/out transition reporting.
-		return (magnetudeR > 0);
+		//return (magnetudeR > 0);
+		return (signalCounterRFast > 0);
 	}
 	else {
 		// Low signal, use filtered value for increased reliability
@@ -323,7 +331,8 @@ bool TPerimeterThread::isLeftOutside()
 	if (abs(magnetudeL) > CONF_PER_USE_COUNTER_THRESHOLD) {
 		// Large signal, the in/out detection is reliable.
 		// Using mag yields very fast in/out transition reporting.
-		return (magnetudeL <= 0);
+		//return (magnetudeL <= 0);
+		return (signalCounterLFast <= 0);
 	}
 	else {
 		// Low signal, use filtered value for increased reliability
@@ -337,7 +346,8 @@ bool TPerimeterThread::isRightOutside()
 	if (abs(magnetudeR) > CONF_PER_USE_COUNTER_THRESHOLD) {
 		// Large signal, the in/out detection is reliable.
 		// Using mag yields very fast in/out transition reporting.
-		return (magnetudeR <= 0);
+		//return (magnetudeR <= 0);
+		return (signalCounterRFast <= 0);
 	}
 	else {
 		// Low signal, use filtered value for increased reliability
