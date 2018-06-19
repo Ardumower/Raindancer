@@ -96,8 +96,10 @@ public:
 
 	int16_t signalCounterL;    // 2 outside >=  wert  >=-2 inside
 	int16_t signalCounterR;
-
-    unsigned long lastTimeSignalReceivedL;
+	int16_t signalCounterLFast;    // 2 outside >=  wert  >=-2 inside
+	int16_t signalCounterRFast;
+    
+	unsigned long lastTimeSignalReceivedL;
     unsigned long lastTimeSignalReceivedR;
     
     int count;
