@@ -107,13 +107,14 @@ byte AT24CX_ADDRESS = B1010000;
 
 // Serial
 BufferSerial pc(Serial, 1);
+BufferSerial wan(Serial1,1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
 BufferSerial bt(Serial2, 1);
-BufferSerial per(Serial1, 1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
+BufferSerial serialGPS(Serial3, 1);
 BufferSerial nativeUSB(SerialUSB, 1); //communication with raspberry pi
 
 BufferSerial *debug = &pc;
 //BufferSerial *debug = &bt;
-BufferSerial &perRX = per;
+//BufferSerial &perRX = per;
 //BufferSerial &sabertoothTX = per;
 
 TErrorHandler errorHandler;
@@ -220,10 +221,10 @@ void hardwareSetup() {
 	doBuzzer.setup();
 
 	pc.begin(CONF_PC_SERIAL_SPEED);
+	wan.begin(CONF_WAN_SERIAL_SPEED);
 	bt.begin(CONF_BT_SERIAL_SPEED);
+	serialGPS.begin(CONF_GPS_SERIAL_SPEED);
 	nativeUSB.begin(CONF_NATIVE_USB_SPEED);
-
-	per.begin(19200);
 
 	// From her on errorHandler is working
 
@@ -237,10 +238,20 @@ void hardwareSetup() {
 	}
 	pc.flush();
 
-	while (perRX.available()) {
-		perRX.getChar();
+	while (wan.available()) {
+		wan.getChar();
 	}
-	perRX.flush();
+	wan.flush();
+
+	while (bt.available()) {
+		bt.getChar();
+	}
+	bt.flush();
+
+	while (serialGPS.available()) {
+		serialGPS.getChar();
+	}
+	serialGPS.flush();
 
 	while (nativeUSB.available()) {
 		nativeUSB.getChar();

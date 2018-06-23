@@ -198,28 +198,35 @@ void cmdPoll()
 {
 	if (pc.available()) {
 		debug = &pc;
+		while (pc.available())
+		{
+			cmd_handler();
+		}
 	}
-	if (bt.available()) {
+
+	else if (wan.available() && !CONF_DISABLE_WAN) {
+		debug = &wan;
+		while (wan.available())
+		{
+			cmd_handler();
+		}
+	}
+
+	else if (bt.available() && !CONF_DISABLE_BT) {
 		debug = &bt;
+		while (bt.available())
+		{
+			cmd_handler();
+		}
 	}
-	if (nativeUSB.available()) {
+	else if (nativeUSB.available() && !CONF_DISABLE_NATIVE_USB) {
 		debug = &nativeUSB;
+		while (nativeUSB.available())
+		{
+			cmd_handler();
+		}
 	}
 
-	while (pc.available())
-	{
-		cmd_handler();
-	}
-
-	while (bt.available())
-	{
-		cmd_handler();
-	}
-
-	while (nativeUSB.available())
-	{
-		cmd_handler();
-	}
 }
 
 /**************************************************************************/
