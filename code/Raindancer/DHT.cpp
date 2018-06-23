@@ -228,14 +228,16 @@ boolean TDHT::read(bool force) {
 
 	// Sensor pulled low already. Check for the low signal and wait until it gets high 
     if (expectPulse(LOW) == 0) {
-      errorHandler.setInfo(F("!03,TDHT Timeout waiting for start signal low pulse.\r\n"));
+	  lock.unlock(); // Turn on interrupts
       _lastresult = false;
+	  errorHandler.setInfo(F("!03,TDHT Timeout waiting for start signal low pulse.\r\n"));
       return _lastresult;
     }
 	// Sensor pulled high. Check for the high signal and wait until it gets low 
     if (expectPulse(HIGH) == 0) {
-		errorHandler.setInfo(F("!03,TDHT Timeout waiting for start signal high pulse.\r\n"));
+      lock.unlock(); // Turn on interrupts
       _lastresult = false;
+	  errorHandler.setInfo(F("!03,TDHT Timeout waiting for start signal high pulse.\r\n"));
       return _lastresult;
     }
 

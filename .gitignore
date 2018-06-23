@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+*.vcxproj
 
 #Folders
 Release/

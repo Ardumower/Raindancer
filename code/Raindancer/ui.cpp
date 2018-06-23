@@ -818,8 +818,10 @@ void cmd_showTemperature(int arg_cnt, char **args)
 	}
 
 	if (checkManualMode()) {
-		errorHandler.setInfoNoLog(F("Current Temperature: %f\r\n"), dht.readTemperature());
-		errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
+		float temp;
+		temp = dht.readTemperature();
+		errorHandler.setInfoNoLog(F("Current Temperature: %f\r\n"), temp);
+		//errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
 		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
 	}
 	else {
