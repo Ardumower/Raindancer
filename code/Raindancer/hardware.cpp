@@ -109,6 +109,7 @@ byte AT24CX_ADDRESS = B1010000;
 BufferSerial pc(Serial, 1);
 BufferSerial bt(Serial2, 1);
 BufferSerial per(Serial1, 1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
+BufferSerial nativeUSB(SerialUSB, 1); //communication with raspberry pi
 
 BufferSerial *debug = &pc;
 //BufferSerial *debug = &bt;
@@ -218,10 +219,11 @@ void hardwareSetup() {
 	
 	doBuzzer.setup();
 
-	pc.serial.begin(CONF_PC_SERIAL_SPEED);
-	bt.serial.begin(CONF_BT_SERIAL_SPEED);
+	pc.begin(CONF_PC_SERIAL_SPEED);
+	bt.begin(CONF_BT_SERIAL_SPEED);
+	nativeUSB.begin(CONF_NATIVE_USB_SPEED);
 
-	per.serial.begin(19200);
+	per.begin(19200);
 
 	// From her on errorHandler is working
 
@@ -233,12 +235,12 @@ void hardwareSetup() {
 	while (debug->readable()) {
 		debug->getChar();
 	}
-	debug->serial.flush();
+	debug->flush();
 
 	while (perRX.readable()) {
 		perRX.getChar();
 	}
-	perRX.serial.flush();
+	perRX.flush();
 
     
 	errorHandler.setInfo(F("I2c reset started\r\n"));

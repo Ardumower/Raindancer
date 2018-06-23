@@ -40,6 +40,7 @@ Private-use only! (you need to ask for a commercial-use)
 
 extern BufferSerial pc;
 extern BufferSerial bt;
+extern BufferSerial nativeUSB;
 
 extern BufferSerial *debug;
 extern BufferSerial &perRX;
