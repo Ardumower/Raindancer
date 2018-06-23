@@ -60,12 +60,12 @@ BluetoothConfig::BluetoothConfig() {
 void BluetoothConfig::readBT() {
 
 	btResult = "";
-	if (bt.serial.available()) {
-		pc.serial.print(F("  received: "));
-		while (bt.readable()) {
+	if (bt.available()) {
+		pc.print(F("  received: "));
+		while (bt.available()) {
 			btData = bt.getChar();
 			btResult += char(btData);
-			pc.serial.print(btData);
+			pc.print(btData);
 		}
 	}
 
@@ -75,8 +75,8 @@ void BluetoothConfig::readBT() {
 }
 
 void BluetoothConfig::writeBT(String s) {
-	pc.serial.print("send: " + s);
-	bt.serial.print(s);
+	pc.print("send: " + s);
+	bt.print(s);
 }
 
 
@@ -93,16 +93,16 @@ void BluetoothConfig::writeReadBT(String s) {
 
 		counter++;
 	}
-	pc.serial.println();
+	pc.println();
 }
 
 
 void BluetoothConfig::setName(String name) {
 	boolean res = false;
-	pc.serial.println();
-	pc.serial.print(F("setting name "));
-	pc.serial.print(name);
-	pc.serial.println("...");
+	pc.println();
+	pc.print(F("setting name "));
+	pc.print(name);
+	pc.println("...");
 	switch (btType) {
 	case BT_LINVOR_HC06:
 		writeReadBT("AT+NAME" + name);
@@ -117,17 +117,17 @@ void BluetoothConfig::setName(String name) {
 		res = (btResult.indexOf(F("OK")) != -1);
 		break;
 	}
-	if (res) pc.serial.println(F("=>success"));
-	else pc.serial.println(F("=>error setting name"));
+	if (res) pc.println(F("=>success"));
+	else pc.println(F("=>error setting name"));
 }
 
 
 void BluetoothConfig::setPin(int pin) {
 	boolean res = false;
-	pc.serial.println();
-	pc.serial.print(F("setting pin "));
-	pc.serial.print(pin);
-	pc.serial.println(F("..."));
+	pc.println();
+	pc.print(F("setting pin "));
+	pc.print(pin);
+	pc.println(F("..."));
 	switch (btType) {
 	case BT_LINVOR_HC06:
 		writeReadBT("AT+PIN" + String(pin));
@@ -142,16 +142,16 @@ void BluetoothConfig::setPin(int pin) {
 		res = (btResult.indexOf(F("OK")) != -1);
 		break;
 	}
-	if (res) pc.serial.println(F("=>success"));
-	else pc.serial.println(F("=>error setting pin"));
+	if (res) pc.println(F("=>success"));
+	else pc.println(F("=>error setting pin"));
 }
 
 
 void BluetoothConfig::setBaudrate(long rate) {
-	pc.serial.println();
-	pc.serial.print(F("setting baudrate "));
-	pc.serial.print(rate);
-	pc.serial.println(F("..."));
+	pc.println();
+	pc.print(F("setting baudrate "));
+	pc.print(rate);
+	pc.println(F("..."));
 	String n = "4";
 	boolean res = false;
 	switch (btType) {
@@ -199,10 +199,10 @@ void BluetoothConfig::setBaudrate(long rate) {
 	}
 	if (res) {
 		btRate = rate;
-		pc.serial.println(F("=>success"));
+		pc.println(F("=>success"));
 	}
 	else {
-		pc.serial.println(F("=>error setting baudrate"));
+		pc.println(F("=>error setting baudrate"));
 	}
 }
 
@@ -210,7 +210,7 @@ void BluetoothConfig::checkHC5() {
 	byte btData;
 	Serial2.begin(38400);
 	delay(2000);
-	pc.serial.println("Send \r\n");
+	pc.println("Send \r\n");
 	Serial2.write("\r\n");
 	Serial2.flush();
 	delay(500);
@@ -220,7 +220,7 @@ void BluetoothConfig::checkHC5() {
 		//state = 1;
 	}
 
-	pc.serial.println("Send AT ...\r\n");
+	pc.println("Send AT ...\r\n");
 	int state = 0;
 	Serial.println("Send AT ...");
 	Serial2.write("AT\r\n");
@@ -252,8 +252,8 @@ void BluetoothConfig::checkHC5() {
 }
 
 boolean BluetoothConfig::detectBaudrate(boolean quickBaudScan) {
-	pc.serial.println();
-	pc.serial.println(F("detecting baudrate..."));
+	pc.println();
+	pc.println(F("detecting baudrate..."));
 	for (int i = 0; i < 8; i++) {
 		switch (i) {
 		case 0: btRate = 9600; break;
@@ -267,28 +267,28 @@ boolean BluetoothConfig::detectBaudrate(boolean quickBaudScan) {
 		}
 		for (unsigned int j = 0; j < sizeof btTestConfig; j++) {
 			btConfig = btTestConfig[j];
-			pc.serial.print(F("trying baudrate "));
-			pc.serial.print(btRate);
-			pc.serial.print(F(" config "));
-			pc.serial.println(j);
-			pc.serial.println(F("..."));
+			pc.print(F("trying baudrate "));
+			pc.print(btRate);
+			pc.print(F(" config "));
+			pc.println(j);
+			pc.println(F("..."));
 #ifdef __AVR__
 			bt.serial.begin(btRate, btConfig);
 #else
-			bt.serial.begin(btRate);
+			bt.begin(btRate);
 #endif
 
 
 			writeReadBT(F("AT"));  // linvor/HC06 does not want a terminator!    
 			if (btResult.startsWith(F("OK"))) {
-				pc.serial.println(F("=>success"));
+				pc.println(F("=>success"));
 				return true;
 			}
 
 
 			writeReadBT(F("AT\r\n"));  // HC05 wants a terminator!          
 			if (btResult.startsWith(F("OK"))) {
-				pc.serial.println(F("=>success"));
+				pc.println(F("=>success"));
 				return true;
 			}
 			if (quickBaudScan) break;
@@ -297,36 +297,36 @@ boolean BluetoothConfig::detectBaudrate(boolean quickBaudScan) {
 		//writeReadBT("ATZ0\n"); // BTM factory    
 		//writeReadBT("ATC0\r\nATQ1\r\nATI1\r\n"); // BTM    
 	}
-	pc.serial.println(F("=>error detecting baudrate"));
+	pc.println(F("=>error detecting baudrate"));
 	return false;
 }
 
 void BluetoothConfig::detectModuleType() {
-	pc.serial.println();
-	pc.serial.println(F("detecting BT type..."));
+	pc.println();
+	pc.println(F("detecting BT type..."));
 	writeReadBT(F("AT+VERSION"));
 	if ((btResult.startsWith("OKlinvor")) || (btResult.startsWith("hc01"))) {
-		pc.serial.println(F("=>it's a linvor/HC06"));
+		pc.println(F("=>it's a linvor/HC06"));
 		btType = BT_LINVOR_HC06;
 		return;
 	}
 	writeReadBT(F("AT+VERSION?\r\n"));
 	if (btResult.indexOf(F("OK")) != -1) {
-		pc.serial.println(F("=>must be a HC03/04/05 ?"));
+		pc.println(F("=>must be a HC03/04/05 ?"));
 		btType = BT_HC05;
 	}
 	writeReadBT(F("AT+VERSION\r\n"));
 	if (btResult.indexOf(F("ModiaTek")) != -1) {
-		pc.serial.println(F("=>it's a FBT06/MBTV4"));
+		pc.println(F("=>it's a FBT06/MBTV4"));
 		btType = BT_FBT06_MBTV4;
 	}
 }
 
 void BluetoothConfig::printInfo() {
-	pc.serial.println(F("\r\n\r\nHC-03/04/05/06/linvor/ModiaTek Bluetooth config programmer"));
-	pc.serial.println(F("NOTE for HC05: Connect KEY pin to 3.3V! Or power on module while pressing button for 2sec!"));
-	pc.serial.println(F("NOTE for HC06/linvor: Do NOT pair/connect (LED must be blinking)"));
-	pc.serial.println(F("NOTE for FBT06/MBTV4: First you have to solder the PIO11 pin to VCC (PIN 12) which is 3.3 Volts using a thin wire."));
+	pc.println(F("\r\n\r\nHC-03/04/05/06/linvor/ModiaTek Bluetooth config programmer"));
+	pc.println(F("NOTE for HC05: Connect KEY pin to 3.3V! Or power on module while pressing button for 2sec!"));
+	pc.println(F("NOTE for HC06/linvor: Do NOT pair/connect (LED must be blinking)"));
+	pc.println(F("NOTE for FBT06/MBTV4: First you have to solder the PIO11 pin to VCC (PIN 12) which is 3.3 Volts using a thin wire."));
 }
 
 void BluetoothConfig::setParams(String name, int pin, long baudrate, boolean quickBaudScan) {
@@ -339,11 +339,11 @@ void BluetoothConfig::setParams(String name, int pin, long baudrate, boolean qui
 			setName(name);
 			setPin(pin);
 			setBaudrate(baudrate);
-			pc.serial.println(F("You may restart BT module now!"));
+			pc.println(F("You may restart BT module now!"));
 		}
-		else pc.serial.println(F("ERROR: Bluetooth module version not recognized"));
+		else pc.println(F("ERROR: Bluetooth module version not recognized"));
 	}
-	else pc.serial.println(F("ERROR: Bluetooth module not found"));
+	else pc.println(F("ERROR: Bluetooth module not found"));
 }
 
 
@@ -355,9 +355,9 @@ void BluetoothConfig::checkModule(boolean quickBaudScan) {
 	if (detectBaudrate(quickBaudScan)) {
 		detectModuleType();
 		if (btType == BT_UNKNOWN)
-			pc.serial.println(F("ERROR: Bluetooth module version not recognized"));
+			pc.println(F("ERROR: Bluetooth module version not recognized"));
 	}
-	else pc.serial.println(F("ERROR: Bluetooth module not found"));
+	else pc.println(F("ERROR: Bluetooth module not found"));
 }
 
 

@@ -39,10 +39,13 @@ Private-use only! (you need to ask for a commercial-use)
 
 
 extern BufferSerial pc;
+extern BufferSerial wan;
 extern BufferSerial bt;
+extern BufferSerial serialGPS;
+extern BufferSerial nativeUSB;
 
 extern BufferSerial *debug;
-extern BufferSerial &perRX;
+//extern BufferSerial &perRX;
 //extern BufferSerial &sabertoothTX;
 
 //extern SRF08 rangeMod1;

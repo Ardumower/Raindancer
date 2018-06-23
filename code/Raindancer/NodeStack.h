@@ -48,7 +48,7 @@ public:
 
     Node* Top() { 
         if (size == 0) {
-            errorHandler.setError("!03,Error: stack empty\r\n");
+            errorHandler.setError(F("!03,Error: stack empty\r\n"));
             return NULL;
         }
         return data[size-1];
@@ -61,7 +61,7 @@ public:
 
     Node* Get(int i) {
         if (i >= size) {
-            errorHandler.setError("!03,Error: stack index greater than size\r\n");
+            errorHandler.setError(F("!03,Error: stack index greater than size\r\n"));
             return NULL;
         }
         return data[i];
@@ -71,12 +71,12 @@ public:
         if (size < NODE_STACK_MAX)
             data[size++] = d;
         else
-            errorHandler.setError("!03,Error: stack full\r\n");
+            errorHandler.setError(F("!03,Error: stack full\r\n"));
     }
 
     void Pop() {
         if (size == 0)
-            errorHandler.setError("!03,Error: stack empty\r\n");
+            errorHandler.setError(F("!03,Error: stack empty\r\n"));
         else
             size--;
     }

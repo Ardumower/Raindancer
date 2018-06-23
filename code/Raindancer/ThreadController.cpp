@@ -68,7 +68,7 @@ bool ThreadController::add(Thread* _thread) {
 	}
 
 	// Array is full
-	errorHandler.setError("!03,ThreadController::add Array is full\r\n");
+	errorHandler.setError(F("!03,ThreadController::add Array is full\r\n"));
 	return false;
 }
 

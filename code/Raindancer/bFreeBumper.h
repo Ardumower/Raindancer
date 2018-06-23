@@ -136,7 +136,7 @@ public:
 		}
 
 		if (counter1 > 5) {
-			errorHandler.setError("!03,freeBumper counter1 > 5\r\n");
+			errorHandler.setError(F("!03,freeBumper counter1 > 5\r\n"));
 		}
 
 		if (bb.perimeterSensoren.isLeftOutside() || bb.perimeterSensoren.isRightOutside()) {
@@ -299,7 +299,7 @@ public:
 		int buffer;
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,freeBumper too long in state\r\n");
+			errorHandler.setError(F("!03,freeBumper too long in state\r\n"));
 		}
 
 		if (getTimeInNode() > 3000) { // Nach 3 sek sollte bumper frei sein
@@ -315,7 +315,7 @@ public:
 				}
 			}
 			if (counter >= 3) {
-				errorHandler.setError("!03,freeBumper  counter >= 3\r\n");
+				errorHandler.setError(F("!03,freeBumper  counter >= 3\r\n"));
 			}
 		}
 
@@ -458,7 +458,7 @@ public:
 		}
 
 		if (counter1 > 5) {
-			errorHandler.setError("!03,freeBumper counter1 > 5\r\n");
+			errorHandler.setError(F("!03,freeBumper counter1 > 5\r\n"));
 		}
 
 		if (bb.perimeterSensoren.isLeftOutside() /*&& bb.perimeterSensoren.isRightOutside()*/) {
@@ -548,7 +548,7 @@ public:
 				}
 			}
 			if (counter >= 3) {
-				errorHandler.setError("!03,TFreeBumper2  counter >= 3\r\n");
+				errorHandler.setError(F("!03,TFreeBumper2  counter >= 3\r\n"));
 			}
 		}
 
@@ -705,7 +705,7 @@ public:
 				errorHandler.setInfo();
 				break;
 			case DD_FORWARD_INSIDE: //Kann hier nicht auftreten
-				errorHandler.setError("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper innerhalb Perimeter aktiviert 1\r\n");
+				errorHandler.setError(F("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper innerhalb Perimeter aktiviert 1\r\n"));
 				break;
 			case DD_ROTATECW:
 				bb.flagEscabeObstacleConFlag = FEO_ROTCC1;
@@ -859,7 +859,7 @@ public:
 				errorHandler.setInfo();
 				break;
 			case DD_FORWARD_INSIDE:
-				errorHandler.setError("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper außerhalb Perimeter aktiviert 1\r\n");
+				errorHandler.setError(F("!03,TselEscapeAlgorithm DD_FORWARD_INSIDE in Bumper außerhalb Perimeter aktiviert 1\r\n"));
 				break;
 			case DD_ROTATECW:
 				bb.flagEscabeObstacleConFlag = FEO_ROTCW2;

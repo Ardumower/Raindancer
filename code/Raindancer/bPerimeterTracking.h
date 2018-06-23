@@ -112,7 +112,7 @@ public:
 		bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
 
 		if (getTimeInNode() > 60000) { // drive no longer than 60 seconds for searching the perimeter (for security)
-			errorHandler.setError("!03,TdriveCurve too long in state\r\n");
+			errorHandler.setError(F("!03,TdriveCurve too long in state\r\n"));
 			return BH_SUCCESS;
 		}
 
@@ -332,7 +332,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,TFLRotateCC105 too long in state\r\n");
+			errorHandler.setError(F("!03,TFLRotateCC105 too long in state\r\n"));
 		}
 
 		if (bb.motor.isPositionReached()) {
@@ -556,7 +556,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,motorStop too long in state\r\n");
+			errorHandler.setError(F("!03,motorStop too long in state\r\n"));
 		}
 
 		if (bb.motor.isCLCStopped()) {

@@ -85,7 +85,7 @@ public:
 
 			if (dt > 60000ul) {
 				// Set error in case of hardware swicht overrides switch off voltage
-				errorHandler.setError("set doBatteryOffSwitch = LOW;\r\n");
+				errorHandler.setError(F("set doBatteryOffSwitch = LOW;\r\n"));
 				doBatteryOffSwitch = LOW;
 			}
 		}

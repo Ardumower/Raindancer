@@ -300,7 +300,7 @@ public:
 			if (state == 2) {
 
 				if (getTimeInNode() > 10000) {
-					errorHandler.setError("!03,TCheck2CoilSignalAreaX  too long in state\r\n");
+					errorHandler.setError(F("!03,TCheck2CoilSignalAreaX  too long in state\r\n"));
 				}
 
 				if (bb.motor.isPositionReached()) {

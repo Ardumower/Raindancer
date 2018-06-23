@@ -95,7 +95,7 @@ void cmd_parse(char *cmd)
 	char buf[50];
 	cmd_t *cmd_entry;
 
-	debug->serial.flush();
+	debug->flush();
 	//fflush(stdout);
 
 	// parse the command line statement and break it up into space-delimited
@@ -124,7 +124,7 @@ void cmd_parse(char *cmd)
 
 	// command not recognized. print message and re-generate prompt.
 	strcpy_P(buf, cmd_unrecog);
-	debug->serial.println(buf);
+	debug->println(buf);
 
 	cmd_display();
 }
@@ -147,7 +147,7 @@ void cmd_handler()
 		// terminate the msg and reset the msg ptr. then send
 		// it to the handler for processing.
 		if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK) {
-			debug->serial.print("\r\n");
+			debug->print("\r\n");
 		}
 		*msg_ptr = '\0';
 		cmd_parse((char *)msg);
@@ -157,7 +157,7 @@ void cmd_handler()
 	case '\b':
 		// backspace
 		if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK) {
-			debug->serial.print(c);
+			debug->print(c);
 		}
 
 		if (msg_ptr > msg)
@@ -181,7 +181,7 @@ void cmd_handler()
 	default:
 		// normal character entered. add it to the buffer
 		if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK) {
-			debug->serial.print(c);
+			debug->print(c);
 		}
 		*msg_ptr++ = c;
 		break;
@@ -196,22 +196,37 @@ constantly to check if there is any available input at the command prompt.
 /**************************************************************************/
 void cmdPoll()
 {
-	if (pc.readable()) {
+	if (pc.available()) {
 		debug = &pc;
+		while (pc.available())
+		{
+			cmd_handler();
+		}
 	}
-	if (bt.readable()) {
+
+	else if (wan.available() && !CONF_DISABLE_WAN) {
+		debug = &wan;
+		while (wan.available())
+		{
+			cmd_handler();
+		}
+	}
+
+	else if (bt.available() && !CONF_DISABLE_BT) {
 		debug = &bt;
+		while (bt.available())
+		{
+			cmd_handler();
+		}
+	}
+	else if (nativeUSB.available() && !CONF_DISABLE_NATIVE_USB) {
+		debug = &nativeUSB;
+		while (nativeUSB.available())
+		{
+			cmd_handler();
+		}
 	}
 
-	while (pc.readable())
-	{
-		cmd_handler();
-	}
-
-	while (bt.readable())
-	{
-		cmd_handler();
-	}
 }
 
 /**************************************************************************/

@@ -25,9 +25,9 @@
 #define _BUFFERSERIAL_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+#include "arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 //#define ARDBUFFER 16
@@ -35,12 +35,17 @@
 #include <stdarg.h>
 #include <stdio.h>  
 
-class BufferSerial 
+
+
+
+class BufferSerial
 {
 private:
-	
+	bool isUSB;
+	HardwareSerial &serial;
+	Serial_        &usbserial;
 protected:
-	/*	
+	/*
 	int _size;
 	int _present;
 	volatile int _last;
@@ -52,14 +57,42 @@ protected:
 
 public:
 	BufferSerial(HardwareSerial& s, const int& bufferSize);
+	BufferSerial(Serial_& s, const int& bufferSize);
 
-	HardwareSerial &serial;
-	virtual ~BufferSerial();
-//	void run(void);
+	int available();
+	void begin(unsigned long);
+	void flush();
 	char getChar(void);
-	int unreadable(void);
-	int readable(void);
-	//int printf(char *str, ...);
+
+	size_t print(const __FlashStringHelper *);
+	size_t print(const String &);
+	size_t print(const char[]);
+	size_t print(char);
+	size_t print(unsigned char, int = DEC);
+	size_t print(int, int = DEC);
+	size_t print(unsigned int, int = DEC);
+	size_t print(long, int = DEC);
+	size_t print(unsigned long, int = DEC);
+	size_t print(double, int = 2);
+	size_t print(const Printable&);
+
+	size_t println(const __FlashStringHelper *);
+	size_t println(const String &s);
+	size_t println(const char[]);
+	size_t println(char);
+	size_t println(unsigned char, int = DEC);
+	size_t println(int, int = DEC);
+	size_t println(unsigned int, int = DEC);
+	size_t println(long, int = DEC);
+	size_t println(unsigned long, int = DEC);
+	size_t println(double, int = 2);
+	size_t println(const Printable&);
+	size_t println(void);
+
+	virtual ~BufferSerial();
+	//	void run(void);
+
+
 };
 
 

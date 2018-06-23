@@ -34,7 +34,7 @@ TErrorHandler::TErrorHandler()
 	msg[0] = '\0';
 }
 
-
+/*
 void TErrorHandler::setError(String e)
 {
 	if (errorAvtive)
@@ -42,7 +42,7 @@ void TErrorHandler::setError(String e)
 	error = e;
 	errorAvtive = true;
 }
-
+*/
 
 
 void TErrorHandler::setError()
@@ -63,7 +63,7 @@ void TErrorHandler::setInfo()
 {
 	//r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
 	r.putString(msg);
-	debug->serial.print((char*)msg);
+	debug->print((char*)msg);
 }
 
 void TErrorHandler::writeToLogOnly()
@@ -75,20 +75,20 @@ void TErrorHandler::writeToLogOnly()
 
 void TErrorHandler::setInfoNoLog()
 {
-	debug->serial.print((char*)msg);
+	debug->print((char*)msg);
 }
 
 /*
 void TErrorHandler::setInfo(const char* i) {
 	//r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
 	r.putString(i);
-	debug.serial.print((char*)i);
+	debug.print((char*)i);
 }
 
 void TErrorHandler::setInfo(const __FlashStringHelper *ifshi) {
 	//r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
 	r.putString(ifshi);
-	debug.serial.print(ifshi);
+	debug.print(ifshi);
 }
 */
 
@@ -102,11 +102,11 @@ void TErrorHandler::print()
 void TErrorHandler::printError()
 {
 	if (errorAvtive) {
-		debug->serial.print(errorTxt);
-		debug->serial.println(error.c_str());
+		debug->print(errorTxt);
+		debug->println(error.c_str());
 	}
 	else {
-		debug->serial.println(noErrorTxt);
+		debug->println(noErrorTxt);
 	}
 }
 
@@ -137,6 +137,7 @@ void TErrorHandler::setInfo(char *fmt, ...) {
 }
 */
 
+/*
 void TErrorHandler::setInfo(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
@@ -144,6 +145,7 @@ void TErrorHandler::setInfo(const char *fmt, ...) {
 	va_end(args);
 	setInfo();
 }
+*/
 
 void TErrorHandler::setInfo(const __FlashStringHelper *fmt, ...) {
 	va_list args;
@@ -166,10 +168,10 @@ void TErrorHandler::setInfoNoLog(const __FlashStringHelper *fmt, ...) {
 	vsnprintf(msg, EH_MEASSAGE_SIZE, (const char *)fmt, args); // for the rest of the world
 #endif
 	va_end(args);
-	debug->serial.print((char*)msg);
+	debug->print((char*)msg);
 }
 
-
+/*
 void TErrorHandler::setError(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
@@ -177,7 +179,7 @@ void TErrorHandler::setError(const char *fmt, ...) {
 	va_end(args);
 	setError();
 }
-
+*/
 /*void TErrorHandler::setError(char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);

@@ -27,7 +27,7 @@ extern TMotorInterface motor;
 
 void   TbumperSensor::setup()
 {
-	errorHandler.setInfo("TbumperSensor::setup()\r\n");
+	errorHandler.setInfo(F("TbumperSensor::setup()\r\n"));
 	_bumperLeftActivated = false;
 	_bumperRightActivated = false;
 	_bumperDuinoActivated = false;
@@ -45,12 +45,12 @@ bool TbumperSensor::isBumperActivated()
 // and is only used in TFreeBumper to set the variables bb.flagBumperActivatedLeft and bb.flagBumperActivatedRight
 bool TbumperSensor::isBumperActivatedLeft()
 {
-	errorHandler.setInfo("TbumperSensor::isBumperActivatedLeft(); %d\r\n", _bumperLeftActivated);
+	errorHandler.setInfo(F("TbumperSensor::isBumperActivatedLeft(); %d\r\n"), _bumperLeftActivated);
 	return (_bumperLeftActivated); 
 }
 bool TbumperSensor::isBumperActivatedRight()
 {
-	errorHandler.setInfo("TbumperSensor::isBumperActivatedRight(); %d\r\n", _bumperRightActivated);
+	errorHandler.setInfo(F("TbumperSensor::isBumperActivatedRight(); %d\r\n"), _bumperRightActivated);
 	return (_bumperRightActivated); 
 }
 
@@ -83,7 +83,7 @@ void TbumperSensor::run()
 
 	if ((bl == false) && _bumperLeftActivated) {
 		if (flagShowBumper) {
-			errorHandler.setInfo("!03,Bumper Left deactivated\r\n");
+			errorHandler.setInfo(F("!03,Bumper Left deactivated\r\n"));
 		}
 		_bumperLeftActivated = false;
 		//errorHandler.setInfo("!bumperLeftActivated = false;\r\n");
@@ -91,7 +91,7 @@ void TbumperSensor::run()
 
 	if ((br == false) && _bumperRightActivated) {
 		if (flagShowBumper) {
-			errorHandler.setInfo("!03,Bumper Right deactivated\r\n");
+			errorHandler.setInfo(F("!03,Bumper Right deactivated\r\n"));
 		}
 		_bumperRightActivated = false;
 		//errorHandler.setInfo("!_bumperRightActivated = false;\r\n");
@@ -99,7 +99,7 @@ void TbumperSensor::run()
 
 	if ((bl == true) && !_bumperLeftActivated) {
 		if (flagShowBumper) {
-			errorHandler.setInfo("!03,Bumper left activated\r\n");
+			errorHandler.setInfo(F("!03,Bumper left activated\r\n"));
 		}
 		_bumperLeftActivated = true;
 		//errorHandler.setInfo("_bumperLeftActivated = true;\r\n");
@@ -107,7 +107,7 @@ void TbumperSensor::run()
 
 	if ((br == true) && !_bumperRightActivated) {
 		if (flagShowBumper) {
-			errorHandler.setInfo("!03,Bumper right activated\r\n");
+			errorHandler.setInfo(F("!03,Bumper right activated\r\n"));
 		}
 		_bumperRightActivated = true;
 		//errorHandler.setInfo("_bumperRightActivated = true;\r\n");
@@ -124,14 +124,14 @@ void TbumperSensor::run()
 			// Low active
 	if (diBumperSensor == HIGH && _bumperDuinoActivated) {
 		if (flagShowBumper) {
-			errorHandler.setInfo("!03,BumperDuino deactivated\r\n");
+			errorHandler.setInfo(F("!03,BumperDuino deactivated\r\n"));
 		}
 		_bumperDuinoActivated = false;
 	}
 
 	if (diBumperSensor == LOW && !_bumperDuinoActivated) {
 		if (flagShowBumper) {
-			errorHandler.setInfo("!03,BumperDuino activated\r\n");
+			errorHandler.setInfo(F("!03,BumperDuino activated\r\n"));
 		}
 		_bumperDuinoActivated = true;
 		//motor.hardStop();
