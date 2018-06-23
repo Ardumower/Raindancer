@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-*.vcxproj
+
 
 #Folders
 Release/
@@ -38,3 +38,4 @@ Debug/
 __vm/
 .vs/
 
+*.vcxproj
