@@ -39,3 +39,7 @@ __vm/
 .vs/
 
 *.vcxproj
+code/Raindancer/Raindancer.vcxproj
+code/Raindancer/Raindancer.sln
+code/Raindancer/Raindancer.vcxproj.filters
+code/Raindancer/Raindancer.vcxproj.user
