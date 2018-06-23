@@ -62,6 +62,8 @@ public:
 	int available();
 	void begin(unsigned long);
 	void flush();
+	char getChar(void);
+
 	size_t print(const __FlashStringHelper *);
 	size_t print(const String &);
 	size_t print(const char[]);
@@ -87,15 +89,10 @@ public:
 	size_t println(const Printable&);
 	size_t println(void);
 
-
-
-
 	virtual ~BufferSerial();
 	//	void run(void);
-	char getChar(void);
-	int unreadable(void);
-	int readable(void);
-	//int printf(char *str, ...);
+
+
 };
 
 

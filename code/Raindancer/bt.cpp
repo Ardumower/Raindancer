@@ -62,7 +62,7 @@ void BluetoothConfig::readBT() {
 	btResult = "";
 	if (bt.available()) {
 		pc.print(F("  received: "));
-		while (bt.readable()) {
+		while (bt.available()) {
 			btData = bt.getChar();
 			btResult += char(btData);
 			pc.print(btData);

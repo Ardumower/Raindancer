@@ -3,14 +3,14 @@
 
 
 
-BufferSerial::BufferSerial(HardwareSerial& s, const int& bufferSize) : serial(s), usbserial(SerialUSB)
+BufferSerial::BufferSerial(HardwareSerial& s, const int& bufferSize) : serial(s), usbserial(SerialUSB) // set SerialUSB as default for usbserial that the reference has a value, which is not used because this is a serial buffer
 {
 	//_setup(bufferSize);
 	isUSB = false;
 
 }
 
-BufferSerial::BufferSerial(Serial_& s, const int& bufferSize) : serial(Serial), usbserial(s)
+BufferSerial::BufferSerial(Serial_& s, const int& bufferSize) : serial(Serial), usbserial(s) // set Serial as default for serial that teh reference has a value, which is not used because this is a usbserial buffer
 {
 	//_setup(bufferSize);
 	isUSB = true;
@@ -60,25 +60,6 @@ _last = n;
 }
 */
 
-int BufferSerial::unreadable(void)
-{
-	return !readable();
-	//return (serial.available() == 0);
-	//return (_present == _last);
-}
-
-int BufferSerial::readable(void)
-{
-	//return !unreadable();
-	if (isUSB) {
-		return	(usbserial.available() > 0);
-
-	}
-	else {
-		return	(serial.available() > 0);
-	}
-
-}
 
 int BufferSerial::available() {
 	return (isUSB ? usbserial.available() : serial.available());
@@ -90,38 +71,13 @@ void BufferSerial::begin(unsigned long x) {
 }
 
 void BufferSerial::flush() {
-	 (isUSB ? usbserial.flush() : serial.flush());
+	 isUSB ? usbserial.flush() : serial.flush();
 }
 
 char BufferSerial::getChar(void)
 {
-	if (isUSB) {
-		return	(char)usbserial.read();
-
-	}
-	else {
-		return	(char)serial.read();
-	}
-
-	/*
-	if (unreadable()) {
-	return -1;
-	}
-	else {
-	_present = _getShift(_present);
-	return (char)_buf[_present];
-	}
-	*/
+	return static_cast<char>(isUSB ? usbserial.read() : serial.read());
 }
-
-/*
-int BufferSerial::printf(char *str, ...)
-{
-return 1;
-
-}
-*/
-
 
 size_t BufferSerial::print(const __FlashStringHelper *ifsh)
 {

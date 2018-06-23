@@ -227,20 +227,25 @@ void hardwareSetup() {
 
 	// From her on errorHandler is working
 
-	delay(2000); // wait for motordriver and SRF08 ready
+	delay(2000); // wait for motordriver, serial and SRF08 ready
 
 	errorHandler.setInfo(F("HardwareSetup started\r\n"));
 
 	//Delete Serial Line Data
-	while (debug->readable()) {
-		debug->getChar();
+	while (pc.available()) {
+		pc.getChar();
 	}
-	debug->flush();
+	pc.flush();
 
-	while (perRX.readable()) {
+	while (perRX.available()) {
 		perRX.getChar();
 	}
 	perRX.flush();
+
+	while (nativeUSB.available()) {
+		nativeUSB.getChar();
+	}
+	nativeUSB.flush();
 
     
 	errorHandler.setInfo(F("I2c reset started\r\n"));

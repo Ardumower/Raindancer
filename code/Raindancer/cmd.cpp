@@ -196,27 +196,27 @@ constantly to check if there is any available input at the command prompt.
 /**************************************************************************/
 void cmdPoll()
 {
-	if (pc.readable()) {
+	if (pc.available()) {
 		debug = &pc;
 	}
-	if (bt.readable()) {
+	if (bt.available()) {
 		debug = &bt;
 	}
-	if (nativeUSB.readable()) {
+	if (nativeUSB.available()) {
 		debug = &nativeUSB;
 	}
 
-	while (pc.readable())
+	while (pc.available())
 	{
 		cmd_handler();
 	}
 
-	while (bt.readable())
+	while (bt.available())
 	{
 		cmd_handler();
 	}
 
-	while (nativeUSB.readable())
+	while (nativeUSB.available())
 	{
 		cmd_handler();
 	}
