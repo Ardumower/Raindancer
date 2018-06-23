@@ -268,7 +268,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,TRotateX  too long in state\r\n");
+			errorHandler.setError(F("!03,TRotateX  too long in state\r\n"));
 		}
 
 		bb.history[0].rotAngleIst = bb.motor.getAngleRotatedAngleDeg();
@@ -314,8 +314,8 @@ public:
 
 		if (bb.flagForceSmallRotAngle > 0) {
 			bb.arcRotateXArc = myRandom(10, 30);
-			errorHandler.setInfo("!05,HistBump flagForceSmallRotAngle to %d\r\n", bb.flagForceSmallRotAngle);
-			errorHandler.setInfo("!05,HistBump set ForceSmallRotAngle to %d\r\n", bb.arcRotateXArc);
+			errorHandler.setInfo(F("!05,HistBump flagForceSmallRotAngle to %d\r\n"), bb.flagForceSmallRotAngle);
+			errorHandler.setInfo(F("!05,HistBump set ForceSmallRotAngle to %d\r\n"), bb.arcRotateXArc);
 			bb.flagForceSmallRotAngle--;
 		}
 
@@ -342,8 +342,8 @@ public:
 
 		if (bb.flagForceSmallRotAngle > 0) {
 			bb.arcRotateXArc = myRandom(10, 30);
-			errorHandler.setInfo("!05,HistPer flagForceSmallRotAngle to %d\r\n", bb.flagForceSmallRotAngle);
-			errorHandler.setInfo("!05,HistPer ForceSmallRotAngle to %d\r\n", bb.arcRotateXArc);
+			errorHandler.setInfo(F("!05,HistPer flagForceSmallRotAngle to %d\r\n"), bb.flagForceSmallRotAngle);
+			errorHandler.setInfo(F("!05,HistPer ForceSmallRotAngle to %d\r\n"), bb.arcRotateXArc);
 			bb.flagForceSmallRotAngle--;
 		}
 
@@ -595,7 +595,7 @@ public:
 		}
 
 		if (bb.motor.isPositionReached()) {
-			errorHandler.setError("!03,TRotateBothCoilsInside not able to rotate both coils to inside\r\n");
+			errorHandler.setError(F("!03,TRotateBothCoilsInside not able to rotate both coils to inside\r\n"));
 		}
 
 		return BH_RUNNING;

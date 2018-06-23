@@ -604,7 +604,7 @@ NodeStatus Inverter::onUpdate(Blackboard& bb)
 {
 
     if (m_pChild == NULL) {
-        errorHandler.setError("!03,Inverter child == NULL\r\n");
+        errorHandler.setError(F("!03,Inverter child == NULL\r\n"));
         return BH_FAILURE;
     }
 
@@ -627,7 +627,7 @@ NodeStatus Succeeder::onUpdate(Blackboard& bb)
 {
 
     if (m_pChild == NULL) {
-        errorHandler.setError("!03,Succeeder child == NULL\r\n");
+        errorHandler.setError(F("!03,Succeeder child == NULL\r\n"));
         return BH_FAILURE;
     }
 
@@ -651,7 +651,7 @@ NodeStatus Failer::onUpdate(Blackboard& bb)
 {
 
     if (m_pChild == NULL) {
-        errorHandler.setError("!03,Failer child == NULL\r\n");
+        errorHandler.setError(F("!03,Failer child == NULL\r\n"));
         return BH_FAILURE;
     }
 

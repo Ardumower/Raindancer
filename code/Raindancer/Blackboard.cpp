@@ -97,7 +97,7 @@ void Blackboard::setBehaviour(enuBehaviour b)
 	// save statistic
 #if CONF_DISABLE_EEPROM_SERVICE == false
 	if (flagEnableMowing == true) { //only save if in mowing mode
-		errorHandler.setInfo("!04,Write Stats to EEPROM\r\n");
+		errorHandler.setInfo(F("!04,Write Stats to EEPROM\r\n"));
 
 		float mowtime = eeprom.readFloat(EEPADR_MOWTIME);
 		unsigned long time = millis() - timeInMowBehaviour;
@@ -136,27 +136,27 @@ void Blackboard::setBehaviour(enuBehaviour b)
 		//motor.mowMotStop(); // Will be started in BH_MOW behaviour tree.
 		motor.stopAllMotors(); // Nur zur Sicherheit, falls diese gerade laufen.
 		motor.startDistanceMeasurementAreax();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_GOTOAREA\r\n");
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_GOTOAREA\r\n"));
 		break;
 	case BH_CHARGING:
 		flagEnableCharging = true;
 		//rangeSensor.enabled = false;
 		motor.mowMotStop();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_CHARGING\r\n");
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_CHARGING\r\n"));
 		break;
 	case BH_PERITRACK:
 		flagEnablePerimetertracking = true;
 		//rangeSensor.enabled = false;
 		chargeSystem.deactivateRelay();
 		//motor.mowMotStop();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_PERITRACK\r\n");
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_PERITRACK\r\n"));
 		break;
 	case BH_FINDPERIMETER:
 		flagEnableFindPerimeter = true;
 		//rangeSensor.enabled = true;
 		chargeSystem.deactivateRelay();
 		//motor.mowMotStop();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_FINDPERIMETER\r\n");
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_FINDPERIMETER\r\n"));
 		break;
 	case BH_MOW:
 		resetBB(); //Reset BB because here starts a new mow sequence
@@ -169,17 +169,17 @@ void Blackboard::setBehaviour(enuBehaviour b)
 		numberOfRotations = 0;
 		timeInMowBehaviour = millis();
 		//motor.startDistanceMeasurement();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_MOW\r\n");
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_MOW\r\n"));
 		break;
 	case BH_NONE:
 		// Don't reset BB here because if you change in manual mode, you will probaly check the BB variables like history or so.
 		//rangeSensor.enabled = false;
 		chargeSystem.deactivateRelay();
 		motor.mowMotStop();
-		errorHandler.setInfo("!04,SET BEHAV -> BH_NONE\r\n");
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_NONE\r\n"));
 		break;
 	default:
-		errorHandler.setError("!04,setBehaviour unbekanntes Behaviour\r\n");
+		errorHandler.setError(F("!04,setBehaviour unbekanntes Behaviour\r\n"));
 	}
 }
 

@@ -206,7 +206,7 @@ public:
 
 		bb.motor.changeSpeedPC(bb.cruiseSpeed);
 		if (bb.motor.isPositionReached()) {
-			errorHandler.setError("!03,TCruiseToPerimeter Position reached\r\n");
+			errorHandler.setError(F("!03,TCruiseToPerimeter Position reached\r\n"));
 		}
 		return BH_RUNNING;
 	}
@@ -299,7 +299,7 @@ public:
 		}
 
 		if (bb.motor.isPositionReached()) {
-			errorHandler.setError("!03,TCruiseRotCW line not found\r\n");
+			errorHandler.setError(F("!03,TCruiseRotCW line not found\r\n"));
 			return BH_FAILURE;
 		}
 
@@ -337,7 +337,7 @@ public:
 		bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
 
 		if (bb.motor.isPositionReached()) {
-			errorHandler.setError("!03,TCruiseSpeedToMotor Position reached\r\n");
+			errorHandler.setError(F("!03,TCruiseSpeedToMotor Position reached\r\n"));
 		}
 		return BH_RUNNING;
 	}

@@ -160,7 +160,7 @@ public:
 		if (bb.driveDirection == DD_FORWARD) {
 			return BH_SUCCESS;
 		}
-		errorHandler.setError("!03,TConditionPerimeterNotFound not found %s\r\n", enuDriveDirectionString[bb.driveDirection]);
+		errorHandler.setError(F("!03,TConditionPerimeterNotFound not found %s\r\n"), enuDriveDirectionString[bb.driveDirection]);
 		return BH_SUCCESS;
 	}
 
@@ -189,7 +189,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,Runover too long in node\r\n");
+			errorHandler.setError(F("!03,Runover too long in node\r\n"));
 		}
 
 
@@ -257,7 +257,7 @@ class TCheckTemp : public Node    // Each task will be a class (derived from Nod
     virtual NodeStatus onUpdate(Blackboard& bb) {
 
       if (getTimeInNode() > 1500) {//the reading of DHT take 250 ms in one shot so normaly never call
-        errorHandler.setError("!03,Runover too long in node checktemp\r\n");
+        errorHandler.setError(F("!03,Runover too long in node checktemp\r\n"));
       }
       if (CONF_DISABLE_DHT_SERVICE == false) {
 
@@ -398,7 +398,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 		if (getTimeInNode() > 5000) {
-			errorHandler.setError("!03,reverseFurtherInside too long in state\r\n");
+			errorHandler.setError(F("!03,reverseFurtherInside too long in state\r\n"));
 		}
 
 		if (bb.motor.isPositionReached()) {
@@ -468,7 +468,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 		if (getTimeInNode() > 8000) {
-			errorHandler.setError("!03,TPerDriveBack too long in state\r\n");
+			errorHandler.setError(F("!03,TPerDriveBack too long in state\r\n"));
 		}
 
 		//bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
@@ -516,7 +516,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,motorStop too long in state\r\n");
+			errorHandler.setError(F("!03,motorStop too long in state\r\n"));
 		}
 
 		if (bb.motor.isPositionReached()) {
@@ -562,7 +562,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,TRotateBackCW too long in state\r\n");
+			errorHandler.setError(F("!03,TRotateBackCW too long in state\r\n"));
 		}
 
 		bb.history[0].rotAngleIst = bb.motor.getAngleRotatedAngleDeg();
@@ -614,7 +614,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,TRotateBackCC too long in state\r\n");
+			errorHandler.setError(F("!03,TRotateBackCC too long in state\r\n"));
 		}
 
 		bb.history[0].rotAngleIst = bb.motor.getAngleRotatedAngleDeg();
@@ -842,7 +842,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		errorHandler.setError("!03,TForwardInsideError  was called\r\n");
+		errorHandler.setError(F("!03,TForwardInsideError  was called\r\n"));
 
 		return BH_SUCCESS;
 	}
@@ -867,7 +867,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		errorHandler.setError("!03,TDirectionOverrunError  was called\r\n");
+		errorHandler.setError(F("!03,TDirectionOverrunError  was called\r\n"));
 
 		return BH_SUCCESS;
 	}
@@ -891,7 +891,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		errorHandler.setError("!03,TReverseInsideError  was called\r\n");
+		errorHandler.setError(F("!03,TReverseInsideError  was called\r\n"));
 
 		return BH_SUCCESS;
 	}
@@ -931,7 +931,7 @@ public:
 
 		// Wenn zeit in state > 10 Sek dann fehler oder anhalten undnochmal checken.
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,TForwardInside  too long in state\r\n");
+			errorHandler.setError(F("!03,TForwardInside  too long in state\r\n"));
 		}
 
 		bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
@@ -942,7 +942,7 @@ public:
 				return BH_SUCCESS;
 			}
 			else {
-				errorHandler.setError("!03,TForwardInside not able to drive inside\r\n");
+				errorHandler.setError(F("!03,TForwardInside not able to drive inside\r\n"));
 			}
 
 		}

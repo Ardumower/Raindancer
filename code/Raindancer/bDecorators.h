@@ -223,7 +223,7 @@ public:
     virtual NodeStatus onUpdate(Blackboard& bb) {
 
         if (m_pChild == NULL) {
-            errorHandler.setInfo("!03,dnSetbbShortWayCounter child == NULL\r\n");
+            errorHandler.setInfo(F("!03,dnSetbbShortWayCounter child == NULL\r\n"));
             return BH_FAILURE;
         }
 

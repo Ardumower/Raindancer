@@ -57,14 +57,14 @@ void TrangeSensor::run()
 	if (diNearObsacleSensor == HIGH && _rangeActivated == true) {
 		_rangeActivated = false;
 		if (flagShowRange) {
-			errorHandler.setInfo("!03,Range deactivated\r\n");
+			errorHandler.setInfo(F("!03,Range deactivated\r\n"));
 		}
 	}
 
 	if (diNearObsacleSensor == LOW && _rangeActivated == false) {
 		_rangeActivated = true;
 		if (flagShowRange) {
-			errorHandler.setInfo("!03,Range activated\r\n");
+			errorHandler.setInfo(F("!03,Range activated\r\n"));
 		}
 	}
 

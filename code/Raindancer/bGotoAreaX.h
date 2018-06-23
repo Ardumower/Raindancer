@@ -67,7 +67,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,TARrotate90CC too long in state\r\n");
+			errorHandler.setError(F("!03,TARrotate90CC too long in state\r\n"));
 		}
 
 		if (bb.motor.isPositionReached()) {
@@ -216,7 +216,7 @@ public:
 		}
 
 		if ((millis() - lastTransitionTime) > 12000) {
-			errorHandler.setError("!03,TlineFollow line crossing > 12000\r\n");
+			errorHandler.setError(F("!03,TlineFollow line crossing > 12000\r\n"));
 		}
 		return BH_RUNNING;
 	}
