@@ -202,7 +202,7 @@ public:
 
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
-			errorHandler.setError("!03,TConditionFEONotFound not found %s\r\n", enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
+			errorHandler.setError(F("!03,TConditionFEONotFound not found %s\r\n"), enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
 			return BH_SUCCESS;
 	}
 
@@ -263,7 +263,7 @@ public:
 		}
 		else {
 			arcEscRotate = myRandom(60, 135);
-			errorHandler.setInfo("!03,CC arcEscRotate =  myRandom(60, 135);\r\n");
+			errorHandler.setInfo(F("!03,CC arcEscRotate =  myRandom(60, 135);\r\n"));
 		}
 
 		if (bb.flagForceSmallRotAngle > 0) {
@@ -282,7 +282,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,EscRotateCC  too long in state\r\n");
+			errorHandler.setError(F("!03,EscRotateCC  too long in state\r\n"));
 		}
 
 
@@ -315,7 +315,7 @@ public:
 		}
 		else {
 			arcEscRotate = myRandom(60, 135);
-			errorHandler.setInfo("!03,CW arcEscRotate=myRandom(60, 135)\r\n");
+			errorHandler.setInfo(F("!03,CW arcEscRotate=myRandom(60, 135)\r\n"));
 		}
 
 
@@ -334,7 +334,7 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		if (getTimeInNode() > 10000) {
-			errorHandler.setError("!03,EscRotateCW  too long in state\r\n");
+			errorHandler.setError(F("!03,EscRotateCW  too long in state\r\n"));
 		}
 
 

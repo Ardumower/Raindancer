@@ -99,7 +99,7 @@ void RingBufferChar::print()
 
 	while (readable()) {
 		get(character);
-		debug->serial.print(char(character));
+		debug->print(char(character));
 		delay(1);
 #if  CONF_ENABLEWATCHDOG ==  true
 		watchdogReset();

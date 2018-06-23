@@ -72,18 +72,18 @@ public:
 
 	void setInfo();
 	void setInfoNoLog();
+	void writeToLogOnly();
 	//void setInfo(const char* i);
 	//void setInfo(const __FlashStringHelper *ifshi);
 	//void setInfo(char *fmt, ...);  //printf like
-	void setInfo(const char *fmt, ...);  //printf like
+	//void setInfo(const char *fmt, ...);  //printf like
 	void setInfo(const __FlashStringHelper *fmt, ...); //printf like
 	void setInfoNoLog(const __FlashStringHelper *fmt, ...); //printf like
-	void writeToLogOnly();
 
-	void setError();
-	void setError(String e);
+	//void setError(String e);
 	//void setError(char *fmt, ...);  //printf like
-	void setError(const char *fmt, ...);  //printf like
+	//void setError(const char *fmt, ...);  //printf like
+	void setError();
 	void setError(const __FlashStringHelper *fmt, ...); //printf like
 	void resetError();
 	bool isErrorActive();

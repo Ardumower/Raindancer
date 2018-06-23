@@ -27,7 +27,15 @@
 #define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
 
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
-#define CONF_BT_SERIAL_SPEED			19200 // Speed bluetooth - Original Ardumower has 19200
+#define CONF_BT_SERIAL_SPEED			 19200 // Speed bluetooth - Original Ardumower has 19200
+#define CONF_WAN_SERIAL_SPEED           115200 // Speed for serial wan network
+#define CONF_GPS_SERIAL_SPEED		 	  9600 // Serial GPS Speed
+#define CONF_NATIVE_USB_SPEED          2000000 // Speed for native USB port
+
+#define CONF_DISABLE_BT                 false
+#define CONF_DISABLE_WAN                true
+//#define CONF_DISABLE_GPS              true   // Disabled through service
+#define CONF_DISABLE_NATIVE_USB         true
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
 
@@ -140,6 +148,14 @@
 
 #define CONF_PC_SERIAL_SPEED     115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED      19200 // Speed bluetooth - Original Ardumower has 19200
+#define CONF_WAN_SERIAL_SPEED    115200 // Speed for serial wan network
+#define CONF_GPS_SERIAL_SPEED	   9600 // Serial GPS Speed
+#define CONF_NATIVE_USB_SPEED   2000000 // Speed for native USB port
+
+#define CONF_DISABLE_BT                 false
+#define CONF_DISABLE_WAN                true
+//#define CONF_DISABLE_GPS              true   // Disabled through service
+#define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
 
@@ -251,6 +267,14 @@
 
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			115200 // Speed bluetooth - Original Ardumower has 19200
+#define CONF_WAN_SERIAL_SPEED           115200 // Speed for serial wan network
+#define CONF_GPS_SERIAL_SPEED		 	  9600 // Serial GPS Speed
+#define CONF_NATIVE_USB_SPEED          2000000 // Speed for native USB port
+
+#define CONF_DISABLE_BT                 false
+#define CONF_DISABLE_WAN                true
+//#define CONF_DISABLE_GPS              true   // Disabled through service
+#define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
 

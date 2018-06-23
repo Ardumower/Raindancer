@@ -107,12 +107,14 @@ byte AT24CX_ADDRESS = B1010000;
 
 // Serial
 BufferSerial pc(Serial, 1);
+BufferSerial wan(Serial1,1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
 BufferSerial bt(Serial2, 1);
-BufferSerial per(Serial1, 1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
+BufferSerial serialGPS(Serial3, 1);
+BufferSerial nativeUSB(SerialUSB, 1); //communication with raspberry pi
 
 BufferSerial *debug = &pc;
 //BufferSerial *debug = &bt;
-BufferSerial &perRX = per;
+//BufferSerial &perRX = per;
 //BufferSerial &sabertoothTX = per;
 
 TErrorHandler errorHandler;
@@ -218,27 +220,43 @@ void hardwareSetup() {
 	
 	doBuzzer.setup();
 
-	pc.serial.begin(CONF_PC_SERIAL_SPEED);
-	bt.serial.begin(CONF_BT_SERIAL_SPEED);
-
-	per.serial.begin(19200);
+	pc.begin(CONF_PC_SERIAL_SPEED);
+	wan.begin(CONF_WAN_SERIAL_SPEED);
+	bt.begin(CONF_BT_SERIAL_SPEED);
+	serialGPS.begin(CONF_GPS_SERIAL_SPEED);
+	nativeUSB.begin(CONF_NATIVE_USB_SPEED);
 
 	// From her on errorHandler is working
 
-	delay(2000); // wait for motordriver and SRF08 ready
+	delay(2000); // wait for motordriver, serial and SRF08 ready
 
 	errorHandler.setInfo(F("HardwareSetup started\r\n"));
 
 	//Delete Serial Line Data
-	while (debug->readable()) {
-		debug->getChar();
+	while (pc.available()) {
+		pc.getChar();
 	}
-	debug->serial.flush();
+	pc.flush();
 
-	while (perRX.readable()) {
-		perRX.getChar();
+	while (wan.available()) {
+		wan.getChar();
 	}
-	perRX.serial.flush();
+	wan.flush();
+
+	while (bt.available()) {
+		bt.getChar();
+	}
+	bt.flush();
+
+	while (serialGPS.available()) {
+		serialGPS.getChar();
+	}
+	serialGPS.flush();
+
+	while (nativeUSB.available()) {
+		nativeUSB.getChar();
+	}
+	nativeUSB.flush();
 
     
 	errorHandler.setInfo(F("I2c reset started\r\n"));
