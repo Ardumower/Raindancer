@@ -29,6 +29,7 @@ Private-use only! (you need to ask for a commercial-use)
 #include "BehaviourTree.h"
 
 
+
 class TCheck2LeftCoilSignal: public Node
 {
 private:

@@ -175,8 +175,8 @@ MemSequence mseqPerimeterRotCC;
 MemSequence mseqPerimeterRotCW;
 
 TOverRun overRun;
-//bber2
-TCheckTemp CheckTemp;
+
+TRunTempService runTempService;
 
 TPerDriveBack perDriveBack;
 TReverseFurtherInside reverseFurtherInside;
@@ -524,6 +524,8 @@ void TBehaviour::setup()
 // Free Perimeter Behaviour
 //*************************************
 
+	runTempService.nodeName = (char*)"runTempService";
+
 	conditionPerimeterNotFound.nodeName = (char*)"conditionPerimeterNotFound";
 
 	rotateBackCW.nodeName = (char*)"rotateBackCW";
@@ -615,7 +617,7 @@ void TBehaviour::setup()
 //	mseqPerimeterForward.addChildren(&conWasDirectionForward, &overRun, &mselPerimeterForward, &seqRotatePer);
 
 
-  mseqPerimeterForward.addChildren(&conWasDirectionForward,&overRun,  &CheckTemp, &perDriveBack, &calcAngle,&mseqRotatePer);
+  mseqPerimeterForward.addChildren(&conWasDirectionForward,&overRun,  &runTempService, &perDriveBack, &calcAngle,&mseqRotatePer);
 	mselPerimeterActive.addChildren(&mseqPerimeterForward, &mseqPerimeterFeoRotCC, &mseqPerimeterFeoRotCW, &mseqPerimeterFeoRotCW1, &mseqPerimeterFeoRotCC1, &mseqPerimeterRotCC,&mseqPerimeterRotCW,&mseqPerimeterReverse,&mseqPerimeterForwardInside, &mseqPerimeterOverrun, &mseqPerimeterRevInside,&conditionPerimeterNotFound);
 
   mseqPerimeterAvtive.addChildren(&conPerOutside,&setflagCoilFirstOutside, &mselPerimeterActive);

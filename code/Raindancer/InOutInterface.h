@@ -286,6 +286,80 @@ protected:
 	uint8_t myPin;
 };
 
+
+
+
+
+class DigitalInOut {
+
+public:
+	/** Create a DigitalIn connected to the specified pin
+	*
+	*  @param pin DigitalIn pin to connect to
+	*/
+	DigitalInOut(const uint8_t pin, uint32_t mode) : myPin(pin), myMode(mode) {
+
+	}
+
+	void setup() {
+		setPinMode(myMode);
+	}
+
+
+	void setPinMode(uint32_t mode) {
+
+		myMode = mode;
+
+		if (myMode == INPUT) {
+			pinMode(myPin, INPUT);
+		}
+		else if (myMode == INPUT_PULLUP) {
+			pinMode(myPin, INPUT_PULLUP);
+
+		}
+		else {
+			pinMode(myPin, OUTPUT);
+		}
+	}
+
+	/** Read the input, represented as 0 or 1 (int)
+	*
+	*  @returns
+	*    An integer representing the state of the input pin,
+	*    0 for logical 0, 1 for logical 1
+	*/
+	int read() {
+		return digitalRead(myPin);
+	}
+
+	int readDirect() {
+		return digitalReadDirect(myPin);
+	}
+
+	void write(int value) {
+		digitalWrite(myPin, value);
+	}
+
+	void writeDirect(int value) {
+		digitalWriteDirect(myPin, value);
+	}
+
+	/** An operator shorthand for read()
+	* \sa DigitalIn::read()
+	*/
+	operator int() {
+		return read();
+	}
+
+	uint8_t pin() {
+		return myPin;
+	}
+
+protected:
+	uint8_t myPin;
+	uint32_t myMode;
+};
+
 /** \addtogroup drivers */
 
 /** An analog input, used for reading the voltage on a pin

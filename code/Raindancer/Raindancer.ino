@@ -27,11 +27,11 @@ Set to true only the correct CHASSIS
 ****************************************************************************************************
 */
 
+#include "config.h"
 #include "rainSensor.h"
 #include "bRestoreHistory.h"
 #include "buzzer.h"
 #include "DueTimer.h"
-#include "config.h"
 #include "rtc.h"
 #include "adcman.h"
 #include "hardware.h"
@@ -55,7 +55,6 @@ Set to true only the correct CHASSIS
 #include "bt.h"
 #include "EEPROM.h"
 #include "motorSensor.h"
-//bber2
 #include "DHT.h"
 
 
@@ -118,12 +117,9 @@ Trtc rtc;
 TEEPROM eeprom;
 // Buzzer
 BuzzerClass Buzzer;
-//bber2
+
 // DHT Temperature sensor
-#define DHTPIN 49 //here i don't know how to put this into hardware.cpp without issue
-#if CONF_DISABLE_DHT_SERVICE == false
-DHT dht(DHTPIN, DHTTYPE);
-#endif
+TDHT dht( DHTTYPE);
 
 //-----------------------------------------------------
 
@@ -137,7 +133,7 @@ ThreadController controller = ThreadController(); // Thread die vor manuellen mo
 // Behaviour Objects die auf die Threads oben zugreifen
 /*********************************************************************/
 
-Blackboard myBlackboard(motor, perimeterSensoren, mowMotorSensor, rangeSensor, bumperSensor, batterieSensor, encoderL, encoderR, chargeSystem, eeprom, rainSensor);
+Blackboard myBlackboard(motor, perimeterSensoren, mowMotorSensor, rangeSensor, bumperSensor, batterieSensor, encoderL, encoderR, chargeSystem, eeprom, rainSensor, dht);
 TBehaviour myBehaviour(myBlackboard);
 
 
@@ -240,10 +236,9 @@ void setup()
 	Buzzer.setup();
 	//Buzzer.setInterval(0); // will be controled by the class itselfe
 	Buzzer.enabled = false;  // will be controled by the class itselfe
-  //bber2--------
-#if CONF_DISABLE_DHT_SERVICE == false
-  dht.setup();
-#endif
+	//---------------------------------
+	dht.setup();
+	dht.setInterval(20013);
 
 
   //------------

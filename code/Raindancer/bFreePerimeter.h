@@ -30,9 +30,6 @@ Private-use only! (you need to ask for a commercial-use)
 #include "Blackboard.h"
 #include "BehaviourTree.h"
 
-//bber2
-#include "DHT.h"
-extern DHT dht; //here it's strange because i pass the dht() whithout arg ??
 
 
 class TSetflagCoilFirstOutsideLatched : public Node    // Each task will be a class (derived from Node of course).
@@ -240,46 +237,27 @@ public:
 };
 
 
-//bber2----------------------------------------------------------------------------------------------------------
-class TCheckTemp : public Node    // Each task will be a class (derived from Node of course).
+class TRunTempService : public Node    // Each task will be a class (derived from Node of course).
 {
   private:
-    unsigned long nextTimeReadTemp;
-    float dhtTempActual;
+
   public:
 
-    TCheckTemp() {}
+	  TRunTempService() {}
 
     virtual void onInitialize(Blackboard& bb) {  // executed each time the node is call
-      //here don't need anything i think ???
+     
     }
 
     virtual NodeStatus onUpdate(Blackboard& bb) {
 
-      if (getTimeInNode() > 1500) {//the reading of DHT take 250 ms in one shot so normaly never call
-        errorHandler.setError(F("!03,Runover too long in node checktemp\r\n"));
-      }
-      if (CONF_DISABLE_DHT_SERVICE == false) {
-
-        if (nextTimeReadTemp < millis()) {
-          nextTimeReadTemp = millis() + 20000;//check the temp only each 20 sec or more
-          dhtTempActual = dht.readTemperature();
-          if (dhtTempActual >= 10.0) {
-            //here need to stop the mow bht and put the board OFF by using a flag into bb
-            //Only an info message for the moment
-            errorHandler.setInfoNoLog(F("!03,Temperature: %f\r\n"), dhtTempActual);
-          }
-        }
-        
-      }
+	    bb.dht.run();
       return BH_SUCCESS;
-      //return BH_RUNNING;
+
     }
 };
 
 
-
-//-------------------------------------------------------------------------------------------------------------------------------
 
 
 class TReverseInside : public Node    // Each task will be a class (derived from Node of course).

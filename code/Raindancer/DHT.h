@@ -12,7 +12,8 @@ written by Adafruit Industries
  #include "WProgram.h"
 #endif
 
-#include "hardware.h"
+
+#include "Thread.h"
 
 // Uncomment to enable printing out nice debug messages.
 //#define DHT_DEBUG
@@ -33,11 +34,16 @@ written by Adafruit Industries
 #define DHT21 21
 #define AM2301 21
 
+#define OVERTEMPCOUNTLIMIT 2
 
-class DHT {
+class TDHT : public Thread 
+{
   public:
-   DHT(uint8_t pin, uint8_t type, uint8_t count=6);
+   TDHT(uint8_t type);
    void setup(void);
+   virtual void run();
+
+   float getLastReadTemperature();
    float readTemperature(bool S=false, bool force=false);
    float convertCtoF(float);
    float convertFtoC(float);
@@ -47,28 +53,18 @@ class DHT {
 
  private:
   uint8_t data[5];
-  uint8_t _pin, _type;
-  #ifdef __AVR
-    // Use direct GPIO access on an 8-bit AVR so keep track of the port and bitmask
-    // for the digital pin connected to the DHT.  Other platforms will use digitalRead.
-    uint8_t _bit, _port;
-  #endif
+  uint8_t _type;
+  uint8_t overTempCounter;
+
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
 
   uint32_t expectPulse(bool level);
 
-};
-
-class InterruptLock {
-  public:
-   InterruptLock() {
-    noInterrupts();
-   }
-   ~InterruptLock() {
-    interrupts();
-   }
+  float dhtTempActual;
 
 };
+
+
 
 #endif
