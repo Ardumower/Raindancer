@@ -27,7 +27,7 @@ void loop()
 {
 State = digitalRead(PIN);
 if (State == 1)
-{ Sum = (Sum > LIMIT)? Sum + 1 : LIMIT; }
+{ Sum = (Sum < LIMIT)? Sum + 1 : LIMIT; }
 else
 { Sum = (Sum > 0)? Sum - 1 : 0; }
 State = (Sum > 0);

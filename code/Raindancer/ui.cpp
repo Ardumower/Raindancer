@@ -95,10 +95,8 @@ extern TErrorHandler errorHandler;
 
 extern Trtc rtc;
 extern TEEPROM eeprom;
-//bber2
-#if CONF_DISABLE_DHT_SERVICE == false
-extern DHT dht;
-#endif
+extern TDHT dht;
+
 
 extern TmotorSensor motorSensorL;
 extern TmotorSensor motorSensorR;
@@ -305,11 +303,10 @@ void cmd_help(int arg_cnt, char **args)
 	errorHandler.setInfoNoLog(F("bat.config //show config\r\n"));
 	errorHandler.setInfoNoLog(F("bat.show   //show battery voltage\r\n"));
 
-//bber2--
-#if CONF_DISABLE_DHT_SERVICE == false
-  errorHandler.setInfoNoLog(F("\r\n=== TEMPERATURE SERVICE ===\r\n"));
-  errorHandler.setInfoNoLog(F("temp.show   //show temperature and humidity\r\n"));
-#endif
+
+    errorHandler.setInfoNoLog(F("\r\n=== TEMPERATURE SERVICE ===\r\n"));
+    errorHandler.setInfoNoLog(F("temp.show   //show temperature and humidity\r\n"));
+
 
     errorHandler.setInfoNoLog(F("\r\n=== RAIN SENSOR SERVICE ===\r\n"));
 	errorHandler.setInfoNoLog(F("rain.config //show config\r\n"));
@@ -814,12 +811,20 @@ void cmd_showRain(int arg_cnt, char **args)
 //bber2
 void cmd_showTemperature(int arg_cnt, char **args)
 {
-#if CONF_DISABLE_DHT_SERVICE == false
-  errorHandler.setInfoNoLog(F("Temperature: %f\r\n"), dht.readTemperature());
-  errorHandler.setInfoNoLog(F("Humidity: %f\r\n"), dht.readHumidity());
 
-#endif
+	if (CONF_DISABLE_DHT_SERVICE == true) {
+		errorHandler.setInfoNoLog(F("Temperature service deactivated\r\n"));
+		return;
+	}
 
+	if (checkManualMode()) {
+		errorHandler.setInfoNoLog(F("Current Temperature: %f\r\n"), dht.readTemperature());
+		errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
+		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
+	}
+	else {
+		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
+	}
 
 }
 //----------
@@ -1544,9 +1549,7 @@ void cmd_setup()
 
   // Temperature services
   //------------------------------
-#if CONF_DISABLE_DHT_SERVICE == false
   cmdAdd((char *)"temp.show", cmd_showTemperature);
-#endif
 
   // rain sensor
   cmdAdd((char *)"rain.config", cmd_rain_show_config);

@@ -61,6 +61,7 @@ extern AnalogIn aiRandomIn;
 extern DigitalOut doBuzzer;
 extern DigitalOut doMyLED;
 
+extern DigitalInOut dioDHT;
 extern DigitalIn diPinRain;
 
 extern DigitalIn diBumperL;
@@ -118,6 +119,26 @@ extern i2cInOut i2cEEPROM;
 
 extern void hardwareRun();
 extern void hardwareSetup();
+
+
+#define  MICROSECONDS_TO_CLOCK_CYCLES(x)  (microsecondsToClockCycles(x))
+
+
+class InterruptLock {
+public:
+	InterruptLock() {
+		noInterrupts();
+	}
+
+	void unlock() {
+		interrupts();
+	}
+
+	~InterruptLock() {
+		
+	}
+
+};
 
 #endif
 
