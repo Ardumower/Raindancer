@@ -146,7 +146,7 @@ DigitalOut doBatteryOffSwitch(pinBatterySwitch);
 DigitalOut doBuzzer(pinBuzzer);
 DigitalOut doMyLED(pinLED);
 
-DigitalInOut dioDHT(pinDHT, OUTPUT);
+DigitalInOut dioDHT(pinDHT, INPUT);
 
 DigitalIn  diPinRain(pinRain, false);
 

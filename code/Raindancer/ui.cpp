@@ -821,12 +821,29 @@ void cmd_showTemperature(int arg_cnt, char **args)
 		float temp;
 		temp = dht.readTemperature();
 		errorHandler.setInfoNoLog(F("Current Temperature: %f\r\n"), temp);
-		//errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
+		errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
 		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
 	}
 	else {
 		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
 	}
+
+}
+
+void cmd_showTemp(int arg_cnt, char **args)
+{
+	if (CONF_DISABLE_DHT_SERVICE == true) {
+		return;
+	}
+
+	int i = atoi(args[1]);
+
+	if (i == 0) {
+		dht.hide();
+	} else {
+		dht.show();
+	}
+	
 
 }
 //----------
@@ -1632,6 +1649,9 @@ void cmd_setup()
 	// error handling
 	cmdAdd((char *)"error", cmd_printError);
 	cmdAdd((char *)"reset", cmd_resetError);
+
+
+	cmdAdd((char *)"$T", cmd_showTemp);  //enable: $T,1 disable: $T,0
 }
 
 

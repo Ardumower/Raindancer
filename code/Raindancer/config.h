@@ -22,7 +22,7 @@
 //======================================================================================================================
 #if ARDUMOWER_CHASSIS == true
 #define DHTTYPE DHT22   // DHT 22  Check out DHT.h for  define types of temperature sensors.    
-#define CONF_OVERHEATING_TEMP  50.0f   // if this temperature it measured, robot shuts down the complete power for security
+#define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
 
 #define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
@@ -144,7 +144,7 @@
 #if PARANELLO_CHASSIS == true
 
 #define DHTTYPE DHT22   // DHT 22  Check out DHT.h for  define types of temperature sensors.     
-#define CONF_OVERHEATING_TEMP  50.0f   // if this temperature it measured, robot shuts down the complete power for security
+#define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
 
 #define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can cross over the station
@@ -265,7 +265,7 @@
 #if RAINDANCER_CHASSIS == true
 
 #define DHTTYPE DHT22          // DHT 22  Check out DHT.h for  define types of temperature sensors.     
-#define CONF_OVERHEATING_TEMP  50.0f   // if this temperature it measured, robot shuts down the complete power for security
+#define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
 #define CONF_PASS_THROUGH_CHARGING_STATION true  //the mower can cross over the station
 #define CONF_HEAD_CHARGING_STATION         false //the mower can't cross over the station
