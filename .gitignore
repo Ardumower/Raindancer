@@ -38,7 +38,7 @@ Debug/
 __vm/
 .vs/
 Build/
-.vscode
+.vscode/
 
 *.vcxproj
 code/Raindancer/Raindancer.vcxproj
