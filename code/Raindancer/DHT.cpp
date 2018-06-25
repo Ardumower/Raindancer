@@ -79,7 +79,9 @@ void TDHT::run() {
 
 	if (isnan(dhtTempActual)) {
 		errorCounter = (errorCounter < 65000) ? errorCounter+1 : errorCounter;
-		errorHandler.setInfo(F("#T,TDHT Temperatur read error\r\n"));
+		if (flagShowTemp) {
+			showData();
+		}
 		return;
 	}
 
