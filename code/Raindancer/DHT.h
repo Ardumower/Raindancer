@@ -39,6 +39,11 @@ written by Adafruit Industries
 class TDHT : public Thread 
 {
   public:
+ 
+   void show();
+   void hide();
+   
+
    TDHT(uint8_t type);
    void setup(void);
    virtual void run();
@@ -52,6 +57,9 @@ class TDHT : public Thread
    boolean read(bool force=false);
 
  private:
+  bool flagShowTemp;
+  uint16_t errorCounter;
+
   uint8_t data[5];
   uint8_t _type;
   uint8_t overTempCounter;
@@ -59,9 +67,12 @@ class TDHT : public Thread
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
 
-  uint32_t expectPulse(bool level);
+  uint32_t countPulse(bool level);
+  uint32_t waitForPulse(bool level);
 
   float dhtTempActual;
+
+  void showData();
 
 };
 

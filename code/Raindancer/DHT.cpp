@@ -26,10 +26,11 @@ TDHT::TDHT( uint8_t type) {
 void TDHT::setup(void) {
   // set up the pins!
   //pinMode(_pin, INPUT_PULLUP); -- normally bus is high:
-	dioDHT.setPinMode(OUTPUT);
-	dioDHT.write(HIGH);
+	dioDHT.setPinMode(INPUT);
 
+	flagShowTemp = false;
 	overTempCounter = 0;
+	errorCounter = 0;
   // Using this value makes sure that millis() - lastreadtime will be
   // >= MIN_INTERVAL right away. Note that this assignment wraps around,
   // but so will the subtraction.
@@ -45,6 +46,18 @@ void TDHT::setup(void) {
    
 }
 
+void TDHT::showData() {
+	errorHandler.setInfo(F("$T,%.1f,%d\r\n"), dhtTempActual, errorCounter);
+}
+
+void TDHT::show() {
+	flagShowTemp = true;
+	showData();
+}
+
+void TDHT::hide() {
+	flagShowTemp = false;
+}
 
 void TDHT::run() {
 
@@ -64,6 +77,18 @@ void TDHT::run() {
 	// This is a blocking call. Returns first, if the data is read from the sensor. Needs round about 5ms and blocks interrupts
 	dhtTempActual = readTemperature();
 
+	if (isnan(dhtTempActual)) {
+		errorCounter = (errorCounter < 65000) ? errorCounter+1 : errorCounter;
+		if (flagShowTemp) {
+			showData();
+		}
+		return;
+	}
+
+	if (flagShowTemp) {
+		showData();
+	}
+
 	// two times overtemp must be measured before CONF_OVERHEATING_TEMP is reached 
 	if (dhtTempActual >= CONF_OVERHEATING_TEMP)
 	{
@@ -76,7 +101,7 @@ void TDHT::run() {
 
 	// shut down power if overtemp is reached in two measurements
 	if (overTempCounter == OVERTEMPCOUNTLIMIT) {
-		errorHandler.setError(F("!03,TDHT: CONF_OVERHEATING_TEMP reached: %f\r\n"), dhtTempActual);
+		errorHandler.setError(F("#T,TDHT CONF_OVERHEATING_TEMP reached: %f\r\n"), dhtTempActual);
 		doChargeEnable = LOW;
 		delay(20);
 		doBatteryOffSwitch = LOW;
@@ -194,14 +219,9 @@ boolean TDHT::read(bool force) {
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
 
-  // Go into high impedence state to let pull-up raise data line level and
-  // start the reading process.
-  //dioDHT.write(HIGH);
-  //delay(250);
-
   // First set data line low for 20 milliseconds.
   // Send start signal and  prepare sensor for reading
-  //dioDHT.setPinMode(OUTPUT); // already set to output
+  dioDHT.setPinMode(OUTPUT); 
   dioDHT.write(LOW);
   delay(20);
 
@@ -211,33 +231,33 @@ boolean TDHT::read(bool force) {
     // and we don't want any interruptions.
     InterruptLock lock;
 
-    // End the start signal by setting data line high for 40 microseconds.
-	// Host pulls up 
-	dioDHT.write(HIGH);
-    delayMicroseconds(40);
+    // End the start signal by setting data line to input. External pull-up will pull the line HIGH.
+	dioDHT.setPinMode(INPUT); 
+    delayMicroseconds(15); //wait that line has been settled
 
-	// and wait now for sensor's response.
-    // Now start reading the data line to get the value from the DHT sensor.
-	dioDHT.setPinMode(INPUT);
-    delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
-
-	// here now the sensor has already pulled down the line. If not, then soemthing got wrong.
+	// Wait for sensor pulls line low after 20-40uS the positive flank was send
+	int count = waitForPulse(LOW);
+	if (count == 0) {
+		lock.unlock(); // Turn on interrupts
+		_lastresult = false;
+		errorHandler.setInfo(F("#T,TDHT Timeout waiting for start signal go to low\r\n"));
+		return _lastresult;
+	}
 
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
-
-	// Sensor pulled low already. Check for the low signal and wait until it gets high 
-    if (expectPulse(LOW) == 0) {
+	// Sensor pulled low already. Count the duration for the low signal and wait until it gets high 
+    if (countPulse(LOW) == 0) {
 	  lock.unlock(); // Turn on interrupts
       _lastresult = false;
-	  errorHandler.setInfo(F("!03,TDHT Timeout waiting for start signal low pulse.\r\n"));
+	  errorHandler.setInfo(F("#T,TDHT Timeout counting low pulse.\r\n"));
       return _lastresult;
     }
-	// Sensor pulled high. Check for the high signal and wait until it gets low 
-    if (expectPulse(HIGH) == 0) {
+	// Sensor pulled high. Count the duration for the high signal and wait until it gets low 
+    if (countPulse(HIGH) == 0) {
       lock.unlock(); // Turn on interrupts
       _lastresult = false;
-	  errorHandler.setInfo(F("!03,TDHT Timeout waiting for start signal high pulse.\r\n"));
+	  errorHandler.setInfo(F("#T,TDHT Timeout countingl high pulse.\r\n"));
       return _lastresult;
     }
 
@@ -250,15 +270,13 @@ boolean TDHT::read(bool force) {
     // 1 (high state cycle count > low state cycle count). Note that for speed all
     // the pulses are read into a array and then examined in a later step.
     for (int i=0; i<80; i+=2) {
-      cycles[i]   = expectPulse(LOW);  // Wait until start transmit signal ends. The input goes from low to high.
-      cycles[i+1] = expectPulse(HIGH); // measure the high signal how long it stays high 
+      cycles[i]   = countPulse(LOW);  // Wait until start transmit signal ends. The input goes from low to high.
+      cycles[i+1] = countPulse(HIGH); // measure the high signal how long it stays high 
     }
 
 	lock.unlock(); // Turn on interrupts
   } // Timing critical code is now complete.
 
-  dioDHT.setPinMode(OUTPUT);
-  dioDHT.write(HIGH);
 
   // Inspect pulses and determine which ones are 0 (high state cycle count < low
   // state cycle count), or 1 (high state cycle count > low state cycle count).
@@ -266,7 +284,7 @@ boolean TDHT::read(bool force) {
     uint32_t lowCycles  = cycles[2*i];
     uint32_t highCycles = cycles[2*i+1];
     if ((lowCycles == 0) || (highCycles == 0)) {
-      errorHandler.setInfo(F("!03,TDHT Timeout waiting for pulse\r\n"));
+      errorHandler.setInfo(F("#T,TDHT Timeout waiting for pulse i=%d\r\n"),i);
       _lastresult = false;
       return _lastresult;
     }
@@ -295,10 +313,25 @@ boolean TDHT::read(bool force) {
     return _lastresult;
   }
   else {
-	  errorHandler.setInfo(F("!03,TDHT Checksum failure!"));
+	  errorHandler.setInfo(F("#T,TDHT Checksum failure!"));
     _lastresult = false;
     return _lastresult;
   }
+}
+
+
+// Wait for a level change in the signal
+// Retruns 0 if timed out
+// Returns 1 if we haven't to wait for the level. 
+uint32_t TDHT::waitForPulse(bool level) {
+	uint32_t count = 1;
+
+	while (dioDHT.read() != level) {
+		if (count++ >= _maxcycles) {
+			return 0; // Exceeded timeout, fail.
+		}
+	}
+	return count;
 }
 
 // Expect the signal line to be at the specified level for a period of time and
@@ -308,7 +341,7 @@ boolean TDHT::read(bool force) {
 // This is adapted from Arduino's pulseInLong function (which is only available
 // in the very latest IDE versions):
 //   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
-uint32_t TDHT::expectPulse(bool level) {
+uint32_t TDHT::countPulse(bool level) {
   uint32_t count = 0;
 
     while (dioDHT.read() == level) {

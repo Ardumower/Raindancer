@@ -388,7 +388,7 @@ void loop()
 		// Auswerten ob user manuellen mode gesetzt hat und kommando ausführen
 		// Auszuwertende variablen sind in Klasse TSerialEventThread definiert
 		if (_controlManuel) {
-
+			dht.run(); // run dht here, because in auto it runs from BHT and not from controller
 		}
 		else {
 			myBehaviour.loop();

@@ -112,8 +112,8 @@ void cmd_parse(char *cmd)
 	// parse the command table for valid command. used argv[0] which is the
 	// actual command name typed in at the prompt
 	for (cmd_entry = cmd_tbl; cmd_entry != NULL; cmd_entry = cmd_entry->next)
-	{
-		//debug.println(argv[0]);
+	{ 
+		//debug.print(argv[0]); debug.print(" "); debug->println(cmd_entry->cmd);
 		if (!strcmp(argv[0], cmd_entry->cmd))
 		{
 			cmd_entry->func(argc, argv);

@@ -351,6 +351,24 @@ public:
 		return read();
 	}
 
+
+	/** A shorthand for write()
+	* \sa DigitalOut::write()
+	*/
+	DigitalInOut& operator= (int value) {
+		write(value);
+		return *this;
+	}
+
+
+	/** A shorthand for write()
+	* \sa DigitalOut::write()
+	*/
+	DigitalInOut& operator= (DigitalInOut& rhs) {
+		write(rhs.read());
+		return *this;
+	}
+
 	uint8_t pin() {
 		return myPin;
 	}
