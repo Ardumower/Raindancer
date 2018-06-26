@@ -47,7 +47,7 @@ void TDHT::setup(void) {
 }
 
 void TDHT::showData() {
-	errorHandler.setInfo(F("$T,%f,%d\r\n"), dhtTempActual, errorCounter);
+	errorHandler.setInfo(F("$T,%.1f,%d\r\n"), dhtTempActual, errorCounter);
 }
 
 void TDHT::show() {
