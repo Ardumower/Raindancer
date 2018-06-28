@@ -38,7 +38,7 @@
 
 #define CONF_DISABLE_BT                 false
 #define CONF_DISABLE_WAN                true
-//#define CONF_DISABLE_GPS              true   // Disabled through service
+#define CONF_DISABLE_GPS                true   
 #define CONF_DISABLE_NATIVE_USB         true
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
@@ -162,7 +162,7 @@
 
 #define CONF_DISABLE_BT                 false
 #define CONF_DISABLE_WAN                true
-//#define CONF_DISABLE_GPS              true   // Disabled through service
+#define CONF_DISABLE_GPS                true   
 #define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
@@ -285,7 +285,7 @@
 
 #define CONF_DISABLE_BT                 false
 #define CONF_DISABLE_WAN                true
-//#define CONF_DISABLE_GPS              true   // Disabled through service
+#define CONF_DISABLE_GPS                true   // Disabled through service
 #define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
