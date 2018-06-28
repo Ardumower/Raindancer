@@ -31,6 +31,7 @@ Private-use only! (you need to ask for a commercial-use)
 #include "bCheck2.h"
 #include "bEscapeOOP.h"
 #include "bRestoreHistory.h"
+#include "bHeadStation.h"
 
 
 // ************************************
@@ -104,9 +105,12 @@ TdnFindPerimeter dnFindPerimeter;
 
 TdnRestoreHistory dnRestoreHistory;
 
+TdnLeaveHeadChargingStation dnLeaveHeadChargingStation;
 
 WaitDecorator dnWaitDockingStation;
 WaitDecorator dnWaitGotoArea;
+
+
 
 // ************************************
 // Escape Obstacle Outside Perimeter
@@ -382,6 +386,14 @@ Selector selMowing;
 Selector selRestoreHist;
 TRestoreHistory restoreHistory;
 
+// ************************************
+// Leave Head Charging Station Behaviour
+//*************************************
+Selector selLeaveHeadCS;
+MemSequence mseqLeaveHeadCS;
+TdriveBackXCS driveBackXCS;
+TdriveForwardXCS driveForwardXCS;
+TSetArcHeadStation_ROT setArcHeadStation_ROT;
 
 
 void TBehaviour::reset()
@@ -483,6 +495,8 @@ void TBehaviour::setup()
     dnWaitGotoArea.setChild(&lineFollow);
     dnWaitGotoArea.setWaitMillis(2000);
 
+	dnLeaveHeadChargingStation.nodeName = (char*)"dnLeaveHeadChargingStation";
+	dnLeaveHeadChargingStation.setChild(&selLeaveHeadCS);
 
 // ************************************
 // Escape Obstacle Outside Perimeter
@@ -872,12 +886,25 @@ void TBehaviour::setup()
 	restoreHistory.nodeName = (char*)"restoreHistory";
 	selRestoreHist.addChildren(&restoreHistory);
 
+
+	// ************************************
+	// Leave Head Charging Station Behaviour
+	//*************************************
+	selLeaveHeadCS.nodeName = (char*)"selLeaveHeadCS";
+	mseqLeaveHeadCS.nodeName = (char*)"mseqLeaveHeadCS";
+	driveBackXCS.nodeName = (char*)"driveBackXCS";
+	driveForwardXCS.nodeName = (char*)"driveForwardXCS";
+	setArcHeadStation_ROT.nodeName = (char*)"setArcHeadStation_ROT";
+
+	mseqLeaveHeadCS.addChildren(&driveBackXCS, &arRotate90CC, &driveForwardXCS, &setArcHeadStation_ROT, &mseqRotateBump, &setMowBehaviour);
+	selLeaveHeadCS.addChildren(&mseqLeaveHeadCS);
+	
     // ************************************
     // Root
     //*************************************
 
     selRoot.nodeName = (char*)"rootSel";
-	selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing);
+	selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing, &dnLeaveHeadChargingStation);
 
 	//selRoot.addChildren(&dnCharging,&selCheck2,&dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing);
 

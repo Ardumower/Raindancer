@@ -27,6 +27,7 @@ Set to true only the correct CHASSIS
 ****************************************************************************************************
 */
 
+#include "bHeadStation.h"
 #include "config.h"
 #include "rainSensor.h"
 #include "bRestoreHistory.h"

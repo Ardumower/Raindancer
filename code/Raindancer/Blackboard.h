@@ -85,7 +85,7 @@ extern const char* enuFlagForceRotateDirectionString[]; //in Blackboard.cpp defi
 enum enuFlagEscabeObstacleConFlag  {FEO_NONE, FEO_ROTCC1, FEO_ROTCW1, FEO_ROTCC2, FEO_ROTCW2, FEO_BACKINSIDE, FEO_ROT}; // Condition which algortihm will be used by mselEscabeObstacle
 extern const char* enuFlagEscabeObstacleConFlagString[]; //in Blackboard.cpp definiert
 
-enum enuBehaviour  {BH_NONE, BH_MOW, BH_PERITRACK, BH_CHARGING, BH_GOTOAREA, BH_FINDPERIMETER};
+enum enuBehaviour  {BH_NONE, BH_MOW, BH_PERITRACK, BH_CHARGING, BH_GOTOAREA, BH_FINDPERIMETER, BH_LEAVE_HEAD_CS};
 
 
 //Structure for history and current rotation data
@@ -129,6 +129,7 @@ public:
 		flagEnableCharging = false;
 		flagEnableGotoAreaX = false;
 		flagEnableFindPerimeter = false;
+		flagEnableLeaveHeadChargingStation = false;
 		
 	}
 
@@ -174,6 +175,7 @@ public:
     bool flagEnableCharging;
     bool flagEnableGotoAreaX;
     bool flagEnableFindPerimeter;
+	bool flagEnableLeaveHeadChargingStation;
 
 
 	bool flagEnableRestoreHistory;

@@ -123,6 +123,7 @@ void Blackboard::setBehaviour(enuBehaviour b)
 	flagEnableCharging = false;
 	flagEnableGotoAreaX = false;
 	flagEnableFindPerimeter = false;
+	flagEnableLeaveHeadChargingStation = false;
 
 	motor.enableDefaultRamping();
 
@@ -170,6 +171,15 @@ void Blackboard::setBehaviour(enuBehaviour b)
 		timeInMowBehaviour = millis();
 		//motor.startDistanceMeasurement();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_MOW\r\n"));
+		break;
+	case BH_LEAVE_HEAD_CS:
+		resetBB();  //Reset BB because here starts a new mow sequence
+		flagEnableLeaveHeadChargingStation = true;
+		//rangeSensor.enabled = false;
+		chargeSystem.deactivateRelay();  
+		motor.stopAllMotors(); // Nur zur Sicherheit, falls diese gerade laufen.
+		//motor.startDistanceMeasurementAreax();
+		errorHandler.setInfo(F("!04,SET BEHAV -> BH_LEAVE_HEAD_CS\r\n"));
 		break;
 	case BH_NONE:
 		// Don't reset BB here because if you change in manual mode, you will probaly check the BB variables like history or so.
