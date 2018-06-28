@@ -25,8 +25,10 @@
 #define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
 
-#define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can cross over the station
-#define CONF_HEAD_CHARGING_STATION false //the mower can't cross over the station
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
 
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			 19200 // Speed bluetooth - Original Ardumower has 19200
@@ -147,8 +149,10 @@
 #define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
 
-#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can cross over the station
-#define CONF_HEAD_CHARGING_STATION true //the mower can't cross over the station
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
 
 #define CONF_PC_SERIAL_SPEED     115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED      19200 // Speed bluetooth - Original Ardumower has 19200
