@@ -216,6 +216,26 @@ public:
 
 };
 
+
+
+
+
+class TdnLeaveHeadChargingStation : public DecoratorNode
+{
+public:
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		if (bb.flagEnableLeaveHeadChargingStation) {
+			NodeStatus s = m_pChild->tick(bb);
+			return s;
+		}
+
+		return BH_FAILURE;
+	}
+
+};
+
 class TdnSetbbShortWayCounter : public DecoratorNode
 {
 public:

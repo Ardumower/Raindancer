@@ -771,7 +771,12 @@ void cmd_cntrGotoAreaX(int arg_cnt, char **args)
 {
 	myBehaviour.reset();
 	long distance = cmdStr2Num(args[1], 10);
-	myBlackboard.setBehaviour(BH_GOTOAREA);
+	if (CONF_PASS_THROUGH_CHARGING_STATION) {
+		myBlackboard.setBehaviour(BH_GOTOAREA);
+	} else{
+		myBlackboard.setBehaviour(BH_LEAVE_HEAD_CS);
+	}
+
 	_controlManuel = false;
     //must set after set behaviour, because behaviour resets the BB
 	myBlackboard.areaTargetDistanceInMeter = distance;
