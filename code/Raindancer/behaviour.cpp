@@ -904,8 +904,8 @@ void TBehaviour::setup()
     //*************************************
 
     selRoot.nodeName = (char*)"rootSel";
-	selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing, &dnLeaveHeadChargingStation);
-
+	//selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing, &dnLeaveHeadChargingStation);
+    selRoot.addChildren(&dnCharging, &dnLeaveHeadChargingStation, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing );
 	//selRoot.addChildren(&dnCharging,&selCheck2,&dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing);
 
     behaviorTree.setRootNode (&selRoot);
