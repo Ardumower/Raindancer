@@ -32,16 +32,21 @@ Private-use only! (you need to ask for a commercial-use)
 #include "hardware.h"
 #include "errorhandler.h"
 #include "config.h"
+//xdes1
+#include "shutdown.h"
 
 #define BATTERYFACTOR_BS 11.0f // Normally: (100+10) / 10; Voltagedivider. 10.9 determined by measuring
 #define DIODEDROPVOLTAGE_BS 0.4f
 
-
+//xdes1
+extern TShutdown shutdown;
 
 class TbatterieSensor : public Thread
 {
 private:
 	unsigned long time;
+    bool flagShowVoltage;
+    int8_t count=10;
 public:
 
     float sensorValue;
@@ -53,7 +58,19 @@ public:
 		sensorValue = aiBATVOLT.getVoltage();
 		time = millis();
     }
-
+//xdes1
+    void showData() {
+        errorHandler.setInfoNoLog(F("$batV,%f\r\n"),voltage);
+        }
+//xdes1
+    void show() {
+        flagShowVoltage = true;
+        showData();
+        }
+//xdes1
+    void hide() {
+        flagShowVoltage = false;
+        }
 
     virtual void run() {
         // Wird alle 1000ms aufgerufen
@@ -70,6 +87,13 @@ public:
 
         const float accel = 0.1f;
 
+        if (flagShowVoltage) {
+            count++;
+            if(count>3) { // show value not every time the service is called
+                showData();
+                count = 0;
+                }
+            }
 
 		if (abs(voltage - readVolt)>5){
               voltage = readVolt;
@@ -81,12 +105,11 @@ public:
 
         if (voltage < CONF_VOLTAGE_SWITCHOFF_BS) {
 			unsigned long dt = millis() - time;
-			errorHandler.setInfo(F("!03,switch off voltage reached time: %lu dt: %lu\r\n"), time , dt);
+			errorHandler.setInfo(F("!03,Switch off voltage reached. Time: %lu dt: %lu\r\n"), time , dt);
 
+            // Wait 60sec before switch off.
 			if (dt > 60000ul) {
-				// Set error in case of hardware swicht overrides switch off voltage
-				errorHandler.setError(F("set doBatteryOffSwitch = LOW;\r\n"));
-				doBatteryOffSwitch = LOW;
+                shutdown.enabled = true;
 			}
 		}
 		else {

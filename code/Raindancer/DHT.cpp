@@ -11,8 +11,13 @@ Adapted for Raindacer by Kai Wuertz
 #include "hardware.h"
 #include "errorhandler.h"
 #include "config.h"
+//xdes1
+#include "shutdown.h"
 
 #define MIN_INTERVAL 2000
+
+//xdes1
+extern TShutdown shutdown;
 
 TDHT::TDHT( uint8_t type) {
    _type = type;
@@ -47,7 +52,8 @@ void TDHT::setup(void) {
 }
 
 void TDHT::showData() {
-	errorHandler.setInfo(F("$T,%.1f,%d\r\n"), dhtTempActual, errorCounter);
+//xdes1
+	errorHandler.setInfoNoLog(F("$temp,%.1f,%d\r\n"), dhtTempActual, errorCounter);
 }
 
 void TDHT::show() {
@@ -103,8 +109,8 @@ void TDHT::run() {
 	if (overTempCounter == OVERTEMPCOUNTLIMIT) {
 		errorHandler.setError(F("#T,TDHT CONF_OVERHEATING_TEMP reached: %f\r\n"), dhtTempActual);
 		doChargeEnable = LOW;
-		delay(20);
-		doBatteryOffSwitch = LOW;
+//xdes1
+        shutdown.enabled=true;
 	}
 
 }

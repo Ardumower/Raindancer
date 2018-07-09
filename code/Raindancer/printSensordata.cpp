@@ -82,20 +82,18 @@ void printSensordata()
 {
 
     if(_printProcessingData) {
-        unsigned long loopsPerSec;
-        loopsPerSec = loopCounter;
-        loopCounter = 0;
-
-		errorHandler.setInfoNoLog(F("!01,%lu,%lu, %lu,%.2f,%.2f,%.2f,"),millis(),loopsPerSec, maxLoopTime, clcL.getCurrentSpeedInRPM(),clcR.getCurrentSpeedInRPM(),mowMotorSensor.watt);
-		errorHandler.setInfoNoLog(F("%d,%d,"),perimeterSensoren.magnetudeL , perimeterSensoren.magnetudeR);
-		errorHandler.setInfoNoLog(F("%.2f,"),batterieSensor.voltage);
-		errorHandler.setInfoNoLog(F("%.2f,"),chargeSystem.chargeVoltage*chargeSystem.chargeCurrent);
-       
-		errorHandler.setInfoNoLog(F("\r\n"));
+        //errorHandler.setInfoNoLog(F("!01,%lu,%lu, %lu,%.2f,%.2f,%.2f,"),millis(),loopsPerSec, maxLoopTime, clcL.getCurrentSpeedInRPM(),clcR.getCurrentSpeedInRPM(),mowMotorSensor.watt);
+        //errorHandler.setInfoNoLog(F("%d,%d,"),perimeterSensoren.magnetudeL , perimeterSensoren.magnetudeR);
+        //errorHandler.setInfoNoLog(F("%.2f,"),batterieSensor.voltage);
+        //errorHandler.setInfoNoLog(F("%.2f,"),chargeSystem.chargeVoltage*chargeSystem.chargeCurrent);
+        //errorHandler.setInfoNoLog(F("\r\n"));
+//xdes1
+        errorHandler.setInfoNoLog(F("$loop,%lu, %lu\r\n"), loopCounter, maxLoopTime);
 
 		//must reset here, not to include the output above in the calculation
 		startLoopTime = micros();
 		maxLoopTime = 0;
+        loopCounter = 0;
      }
 
 }

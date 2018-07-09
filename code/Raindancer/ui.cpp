@@ -43,8 +43,10 @@ Private-use only! (you need to ask for a commercial-use)
 #include "motorSensor.h"
 #include "bGotoAreaX.h"
 #include "rainSensor.h"
-//bber2
 #include "DHT.h"
+//xdes1
+#include "shutdown.h"
+
 
 extern void executeLoop();
 
@@ -103,6 +105,8 @@ extern TmotorSensor motorSensorR;
 
 extern void FreeMem(void);
 
+//xdes1
+extern TShutdown shutdown;
 
 bool checkManualMode() {
 	if (_controlManuel != true) {
@@ -136,11 +140,15 @@ void cmd_help(int arg_cnt, char **args)
 	while (millis() - wait < 100) executeLoop();
 
 	errorHandler.setInfoNoLog(F("\r\n=== MODE SELECTION ===\r\n"));
-	errorHandler.setInfoNoLog(F("A       //automatic control over actuators\r\n"));
-	errorHandler.setInfoNoLog(F("M       //manual control over actuators\r\n"));
-	errorHandler.setInfoNoLog(F("area,12 //drive 12m at perimeter and begin mowing\r\n"));
-	errorHandler.setInfoNoLog(F("gohome  //drive to docking station. Call again to deactivate\r\n"));
-	errorHandler.setInfoNoLog(F("tpt     //test perimeter tracking to dock. Mower stands on perimeter\r\n"));
+	errorHandler.setInfoNoLog(F("A        //automatic control over actuators\r\n"));
+	errorHandler.setInfoNoLog(F("M        //manual control over actuators\r\n"));
+	errorHandler.setInfoNoLog(F("area,12  //drive 12m at perimeter and begin mowing\r\n"));
+	errorHandler.setInfoNoLog(F("gohome   //drive to docking station. Call again to deactivate\r\n"));
+    errorHandler.setInfoNoLog(F("tpt      //test perimeter tracking to dock. Mower stands on perimeter\r\n"));
+ //xdes1
+   errorHandler.setInfoNoLog(F("poweroff  //shutdown the sytem\r\n"));
+
+
 	//errorHandler.setInfoNoLog(F("rh,3    //restores 3 drive directions of the history\r\n"));
 
 	wait = millis();
@@ -249,7 +257,8 @@ void cmd_help(int arg_cnt, char **args)
 	errorHandler.setInfoNoLog(F("pc.a,60,30        //rotate wheel 60 degrees with speed 30\r\n"));
 	wait = millis();
 	while (millis() - wait < 100) executeLoop();
-	errorHandler.setInfoNoLog(F("pc.cm,60,30       //drives 60 cm with speed 30\r\n"));
+//xdes1
+    errorHandler.setInfoNoLog(F("pc.cm,60,30,50    //drives 60 cm with speed left 30 and right 50\r\n"));
 	errorHandler.setInfoNoLog(F("                  //negative cm drives backward\r\n"));
 	errorHandler.setInfoNoLog(F("pc.s              //stop Positioning\r\n"));
 	errorHandler.setInfoNoLog(F("pc.sp             //stop Positioning at perimeter\r\n"));
@@ -380,9 +389,11 @@ void cmd_help(int arg_cnt, char **args)
 	wait = millis();
 	while (millis() - wait < 100) executeLoop();
 
-	errorHandler.setInfoNoLog(F("\r\n=== PROCESSING ===\r\n"));
-	errorHandler.setInfoNoLog(F("set.proc,1/0  //turn output for processing on/off\r\n"));
+//xdes1
+	errorHandler.setInfoNoLog(F("\r\n=== Control Center ===\r\n"));
+    errorHandler.setInfoNoLog(F("set.cco,1/0  //turn output for Control Center on/off\r\n"));
 
+    
 }
 
 
@@ -695,8 +706,10 @@ void cmd_driveCM(int arg_cnt, char **args)
 {
 	if (checkManualMode()) {
 		float cm = cmdStr2Float(args[1]);
-		float speed = cmdStr2Float(args[2]);
-		motor.rotateCM(cm, speed);
+//xdes1
+        float speedL = cmdStr2Float(args[2]);
+        float speedR = cmdStr2Float(args[3]);
+		motor.rotateCM(cm, speedL, speedR);
 	}
 }
 
@@ -801,16 +814,15 @@ void cmd_cntrRestoreHistory(int arg_cnt, char **args)
 
 void cmd_showBattery(int arg_cnt, char **args)
 {
+//xdes1
 	errorHandler.setInfoNoLog(F("Battery Voltage: %f sensorValue: %f "), batterieSensor.voltage, batterieSensor.sensorValue);
 	errorHandler.setInfoNoLog(F("aiBATVOLT.read_int32() %d\r\n"), aiBATVOLT.read_int32());
-
-	//errorHandler.setInfoNoLog(F( "aiBATVOLT.getVoltage() %f\r\n"), aiBATVOLT.getVoltage());
+    //errorHandler.setInfoNoLog(F("$batV,%f,%f,%d\r\n"), batterieSensor.voltage, batterieSensor.sensorValue);
 }
 
 void cmd_showRain(int arg_cnt, char **args)
 {
 	rainSensor.flagShowRainSensor = !rainSensor.flagShowRainSensor;
-
 }
 
 //bber2
@@ -821,36 +833,44 @@ void cmd_showTemperature(int arg_cnt, char **args)
 		errorHandler.setInfoNoLog(F("Temperature service deactivated\r\n"));
 		return;
 	}
-
+//xdes1
 	if (checkManualMode()) {
 		float temp;
 		temp = dht.readTemperature();
 		errorHandler.setInfoNoLog(F("Current Temperature: %f\r\n"), temp);
 		errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
-		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
+		errorHandler.setInfoNoLog(F("Temperature stored in service: %f,%d\r\n"), dht.getLastReadTemperature(),dht.errorCounter);
+        //errorHandler.setInfoNoLog(F("$temp, %.1f,%d\r\n"), dht.getLastReadTemperature(), dht.errorCounter);
 	}
 	else {
-		errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
+        errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
+        //errorHandler.setInfoNoLog(F("$temp, %.1f,%d\r\n"), dht.getLastReadTemperature(), dht.errorCounter);
 	}
 
 }
 
-void cmd_showTemp(int arg_cnt, char **args)
-{
-	if (CONF_DISABLE_DHT_SERVICE == true) {
-		return;
-	}
+void cmd_activateControlCenterOutput(int arg_cnt, char **args) {
 
-	int i = atoi(args[1]);
+    int i = atoi(args[1]);
+//xdes1
+    if (i == 0) {
+        dht.hide();
+        batterieSensor.hide();
+        _printProcessingData = false;
+        errorHandler.setInfoNoLog(F("Control Center Output Off\r\n"), i);
+        }
+    else {
+        if (CONF_DISABLE_DHT_SERVICE == false) {
+            dht.show();
+            }
+        if (CONF_DISABLE_BATTERY_SERVICE == false) {
+            batterieSensor.show();
+            }
+        _printProcessingData = true;
+        errorHandler.setInfoNoLog(F("Control Center Output On\r\n"), i);
+        }
+    }//ENDFUNC
 
-	if (i == 0) {
-		dht.hide();
-	} else {
-		dht.show();
-	}
-	
-
-}
 //----------
 void cmd_showMowSensor(int arg_cnt, char **args)
 {
@@ -1407,21 +1427,10 @@ void cmd_setCruiseSpiral(int arg_cnt, char **args)
 }
 
 
-void cmd_setProcessingConnected(int arg_cnt, char **args)
-{
-	int i = cmdStr2Num(args[1], 10);
-
-	if (i == 0) {
-		_printProcessingData = false;
-		errorHandler.setInfoNoLog(F("Processing Disconnected\r\n"), i);
-	}
-	else {
-		_printProcessingData = true;
-		errorHandler.setInfoNoLog(F("Processing Connected\r\n"), i);
-	}
-}
-
-
+//xdes1
+void cmd_PowerOff(int arg_cnt, char **args){
+    shutdown.enabled = true;
+    }
 
 // Print "hello world" when called from the command line.
 //
@@ -1469,7 +1478,8 @@ void cmd_setup()
 	cmdAdd((char *)"args", cmd_arg_display);
 	cmdAdd((char *)"H", cmd_help);
 
-
+ //xdes1
+    cmdAdd((char *)"poweroff", cmd_PowerOff);
 
 
 	// Mode Selection
@@ -1609,7 +1619,7 @@ void cmd_setup()
 
 	cmdAdd((char *)"set.lfki", cmd_setLineFollowerKi);
 
-	cmdAdd((char *)"set.proc", cmd_setProcessingConnected);
+
 	cmdAdd((char *)"set.spiral", cmd_setCruiseSpiral);
 
 	cmdAdd((char *)"turnto", cmd_turnTo);
@@ -1655,8 +1665,8 @@ void cmd_setup()
 	cmdAdd((char *)"error", cmd_printError);
 	cmdAdd((char *)"reset", cmd_resetError);
 
-
-	cmdAdd((char *)"$T", cmd_showTemp);  //enable: $T,1 disable: $T,0
+//xdes1
+	cmdAdd((char *)"set.cco", cmd_activateControlCenterOutput);  //enable: $T,1 disable: $T,0
 }
 
 

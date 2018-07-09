@@ -57,6 +57,7 @@ Set to true only the correct CHASSIS
 #include "EEPROM.h"
 #include "motorSensor.h"
 #include "DHT.h"
+#include "shutdown.h"
 
 
 /*********************************************************************/
@@ -65,18 +66,15 @@ Set to true only the correct CHASSIS
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;
 unsigned long startLoopTime = 0;
-
-
-
+bool _controlManuel = true;
 
 /* Private function prototypes -----------------------------------------------*/
 void loop();
 
-
 /*********************************************************************/
-// Controller Threads die in bestimmten intervallen aufgerufen werden
-// Oder Services die nicht in in de Threadcontroller integriert werden
-// ACHTUNG: In TreadController.h die Anzahl der threads einstellen falls 15 überschritten wird
+// Controller threads that are called at certain intervals
+// Or services that are not integrated into the thread controller
+// ATTENTION: In TreadController.h set the number of threads if 15 is exceeded
 /*********************************************************************/
 // Hardware abstaraction layer run function
 Thread hal;
@@ -118,17 +116,15 @@ Trtc rtc;
 TEEPROM eeprom;
 // Buzzer
 BuzzerClass Buzzer;
-
+// Shutdown service
+//xdes1
+TShutdown shutdown;
 // DHT Temperature sensor
 TDHT dht( DHTTYPE);
-
 //-----------------------------------------------------
-
 
 // Instantiate a new ThreadController
 ThreadController controller = ThreadController(); // Thread die vor manuellen mode laufen müssen
-
-
 
 /*********************************************************************/
 // Behaviour Objects die auf die Threads oben zugreifen
@@ -143,7 +139,6 @@ TBehaviour myBehaviour(myBlackboard);
 /*********************************************************************/
 
 unsigned long lastTimeShowError = 0;
-bool _controlManuel = true;
 bool _diableErrorhandling = false;
 
 
@@ -163,9 +158,9 @@ void setup()
 
 
 	//---------------------------------
-	// Threads konfigurieren
-	// Motor-/Positionthreads laufen in 20ms bzw 100ms Takt.
-	// Alle andern in anderen Intervallen.
+	// Threads configuration
+	// Motor-/Positionthreads runs every 33ms and 100ms.
+	// The other services should not run in the same intervalls or a a multiple of that.
 	//---------------------------------
 
 	hal.setInterval(0);
@@ -226,7 +221,7 @@ void setup()
 	chargeSystem.setInterval(53);
 	//---------------------------------
 	processingSensorData.onRun(printSensordata);
-	processingSensorData.setInterval(1007);
+	processingSensorData.setInterval(1001);
 	//---------------------------------
 	rtc.setup();
 	rtc.setInterval(10017);
@@ -237,13 +232,18 @@ void setup()
 	Buzzer.setup();
 	//Buzzer.setInterval(0); // will be controled by the class itselfe
 	Buzzer.enabled = false;  // will be controled by the class itselfe
-	//---------------------------------
+    //---------------------------------
+ //xdes1
+    shutdown.setup();
+    shutdown.setInterval(1000);
+    shutdown.enabled = false;  // when activated, service initiate shutdown
+    //---------------------------------
 	dht.setup();
 	dht.setInterval(20013);
+    
 
-
-  //------------
-	// ACHTUNG: In TreadController.h die Anzahl der threads einstellen falls 25 überschritten wird
+    //------------
+	// Important: In TreadController.h the number of threads must be configured if services are more than 25
 	controller.add(&hal);
 
 	controller.add(&clcM);
@@ -274,6 +274,8 @@ void setup()
 	controller.add(&rtc);
 
 	controller.add(&Buzzer);
+//xdes1
+    controller.add(&shutdown);
 
 	//---------------------------------
 	// Behaviour Objects konfigurieren
