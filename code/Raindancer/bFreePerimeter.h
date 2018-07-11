@@ -523,7 +523,7 @@ public:
 		distance = bb.motor.getAngleRotatedDistanceCM();
 		bb.driveDirection = DD_REVERSE_ESC_OBST;
 		bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
-		bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
+		bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed, bb.cruiseSpeed);
 		if (bb.flagShowRotateX) {
 			errorHandler.setInfo(F("!03,TRotateBackCW escape to DD_ROTATECC\r\n"));
 		}
@@ -574,7 +574,7 @@ public:
 		distance = bb.motor.getAngleRotatedDistanceCM();
 		bb.driveDirection = DD_REVERSE_ESC_OBST;
 		bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
-		bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed);
+		bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed, bb.cruiseSpeed);
 		if (bb.flagShowRotateX) {
 			errorHandler.setInfo(F("!03,TRotateBackCC escape to DD_ROTATECC\r\n"));
 		}

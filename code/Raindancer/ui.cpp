@@ -709,7 +709,7 @@ void cmd_driveCM(int arg_cnt, char **args)
 //xdes1
         float speedL = cmdStr2Float(args[2]);
         float speedR = cmdStr2Float(args[3]);
-		motor.rotateCM(cm, speedL, speedR);
+		motor.rotateCM(cm, cm, speedL, speedR);
 	}
 }
 

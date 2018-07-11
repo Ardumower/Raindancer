@@ -189,10 +189,10 @@ void TMotorInterface::rotateCM(float _cm, long _speed)
 	pcR->rotateCM(_cm, _speed);
 }
 
-void TMotorInterface::rotateCM(float _cmL, float _cmR, long _speed)
+void TMotorInterface::rotateCM(float _cmL, float _cmR, long _speedL, long _speedR )
 {
-	pcL->rotateCM(_cmL, _speed);
-	pcR->rotateCM(_cmR, _speed);
+	pcL->rotateCM(_cmL, _speedL);
+	pcR->rotateCM(_cmR, _speedR);
 }
 
 void TMotorInterface::turnTo(float _angle, long _speed)
