@@ -71,12 +71,17 @@ public:
                 break;
             case 3:
                 doBatteryOffSwitch = LOW;
+                startTime = millis();
                 state = 4;
             case 4:
-                // In case of the shutdown is bridged on PCB1.3 deactivate service
-                enabled  = false;
-                state = 0;
-                errorHandler.setInfoNoLog(F("!03,Looks like power off is bridged on PCB\r\n"));
+                time = millis();
+                delta = time - startTime;
+                if (delta > 3000) {
+                    // In case of the shutdown is bridged on PCB1.3 deactivate service
+                    enabled = false;
+                    state = 0;
+                    errorHandler.setInfoNoLog(F("!03,Looks like power off is bridged on PCB\r\n"));
+                    }
                 break;
 
             }//ENDSWITCH
