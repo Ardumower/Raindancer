@@ -24,7 +24,9 @@ public:
     void setup() {
         state = 0;
         }
-
+    // When the mower is running, this service is disabled. 
+    // The mower can be power off by the temp service, bat service or over the UI interface.
+    // When the mower should shutdown, the service will be enabled and begin the power off sequece.
     virtual void run() {
         unsigned long time;
         unsigned long delta;
@@ -90,7 +92,7 @@ public:
 
 
     void showConfig() {
-        errorHandler.setInfoNoLog(F("!03,Shurdown Config\r\n"));
+        errorHandler.setInfoNoLog(F("!03,Shutdown Config\r\n"));
         errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
         errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
         }
