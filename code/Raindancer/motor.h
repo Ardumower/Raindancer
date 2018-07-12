@@ -101,7 +101,7 @@ public:
 	// positioning routines
 	void rotateAngle(float angle, long _speed);
 	void rotateCM(float _cm, long _speed);
-	void rotateCM(float _cmL, float _cmR, long _speed);
+	void rotateCM(float _cmL, float _cmR, long _speedL, long _speedR);
 	void turnTo(float angle, long _speed);
 	//void stopPositioning(); // query isPositionReached() to determine if motors are stopped!!!
 	bool isPositionReached();

@@ -124,7 +124,9 @@ public:
 	}
 
 	void showImmediately() {
-		errorHandler.setInfoNoLog(F("RTC time=%d:%d dayOfWeek=%d  date=%d.%d.%d\r\n"), hour, minute, dayOfWeek, day, month, year);
+        //errorHandler.setInfoNoLog(F("RTC time=%d:%d dayOfWeek=%d  date=%d.%d.%d\r\n"), hour, minute, dayOfWeek, day, month, year);
+//xdes1
+        errorHandler.setInfoNoLog(F("$time,%d,%d,%d,%d,%d,%d\r\n"), hour, minute, dayOfWeek, day, month, year);
 	}
 
 	void show() {

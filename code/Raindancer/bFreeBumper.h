@@ -219,7 +219,7 @@ public:
 				distance = 5.0f;
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECW set distance=5.0\r\n"));
 			}
-			bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed);
+			bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed, bb.cruiseSpeed);
 			bb.hist.distanceDriven = -distance;
 			bb.hist.flagForceRotDirection = FRD_CC;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECW\r\n"));
@@ -232,7 +232,7 @@ public:
 				distance = 5.0f;
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECC set distance=5.0\r\n"));
 			}
-			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
+			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed, bb.cruiseSpeed);
 			bb.hist.distanceDriven = distance;
 			bb.hist.flagForceRotDirection = FRD_CW;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_ROTATECC\r\n"));
@@ -246,7 +246,7 @@ public:
 				distance = 5.0f;
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECW,1,2 set distance=5.0\r\n"));
 			}
-			bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed);
+			bb.motor.rotateCM(-distance, distance, bb.cruiseSpeed, bb.cruiseSpeed);
 			bb.hist.distanceDriven = -distance;
 			bb.hist.flagForceRotDirection = FRD_CC;
 			errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECW,1,2\r\n"));
@@ -261,7 +261,7 @@ public:
 				distance = 5.0f;
 				errorHandler.setInfo(F("!03,freeBumper escape from DD_FEOROTATECC,1,2 set distance=5.0\r\n"));
 			}
-			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
+			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed, bb.cruiseSpeed);
 			bb.hist.distanceDriven = distance;
 			bb.hist.flagForceRotDirection = FRD_CW;
 			errorHandler.setInfo(F("!03,freeBumper 03,freeBumper escape from DD_FEOROTATECC,1,2\r\n"));
@@ -498,7 +498,7 @@ public:
 				distance = 5.0f;
 				errorHandler.setInfo(F("!03,TFreeBumper2 set distance=5.0\r\n"));
 			}
-			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed);
+			bb.motor.rotateCM(distance, -distance, bb.cruiseSpeed, bb.cruiseSpeed);
 			bb.hist.distanceDriven = distance;
 			bb.hist.flagForceRotDirection = FRD_CW;
 			errorHandler.setInfo(F("!03,TFreeBumper2 escape from DD_ROTATECC\r\n"));

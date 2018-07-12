@@ -39,6 +39,7 @@ written by Adafruit Industries
 class TDHT : public Thread 
 {
   public:
+   uint16_t errorCounter;
  
    void show();
    void hide();
@@ -58,7 +59,7 @@ class TDHT : public Thread
 
  private:
   bool flagShowTemp;
-  uint16_t errorCounter;
+  
 
   uint8_t data[5];
   uint8_t _type;
