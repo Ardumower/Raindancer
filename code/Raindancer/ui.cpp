@@ -258,7 +258,7 @@ void cmd_help(int arg_cnt, char **args)
 	wait = millis();
 	while (millis() - wait < 100) executeLoop();
 //xdes1
-    errorHandler.setInfoNoLog(F("pc.cm,60,30,50    //drives 60 cm with speed left 30 and right 50\r\n"));
+    errorHandler.setInfoNoLog(F("pc.cm,40,60,30,50    //drives left wheel 40cm at 30% speed and right 60cm at 50% speed\r\n"));
 	errorHandler.setInfoNoLog(F("                  //negative cm drives backward\r\n"));
 	errorHandler.setInfoNoLog(F("pc.s              //stop Positioning\r\n"));
 	errorHandler.setInfoNoLog(F("pc.sp             //stop Positioning at perimeter\r\n"));
@@ -705,11 +705,12 @@ void cmd_driveAngle(int arg_cnt, char **args)
 void cmd_driveCM(int arg_cnt, char **args)
 {
 	if (checkManualMode()) {
-		float cm = cmdStr2Float(args[1]);
+		float cmL = cmdStr2Float(args[1]);
+    float cmR = cmdStr2Float(args[2]);
 //xdes1
-        float speedL = cmdStr2Float(args[2]);
-        float speedR = cmdStr2Float(args[3]);
-		motor.rotateCM(cm, cm, speedL, speedR);
+        float speedL = cmdStr2Float(args[3]);
+        float speedR = cmdStr2Float(args[4]);
+		motor.rotateCM(cmL, cmR, speedL, speedR);
 	}
 }
 

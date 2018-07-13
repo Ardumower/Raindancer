@@ -156,7 +156,7 @@
 
 #define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
 #define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
-#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   120   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   180   //when the mower leaving the head charging station, how far it should drive back
 #define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
 
 #define CONF_PC_SERIAL_SPEED     115200 // Speed serial consol
