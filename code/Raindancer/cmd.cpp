@@ -227,15 +227,6 @@ void cmdPoll()
 		}
 	}
 
-	else if (CONF_DISABLE_GPS == false) {
-		if (serialGPS.available()) {
-			while (serialGPS.available())
-			{
-				char c = debug->getChar();
-				debug->print(c);
-			}
-		}
-	}
 
 }
 
