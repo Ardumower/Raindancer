@@ -1265,7 +1265,14 @@ void cmd_gps_show_config(int arg_cnt, char **args)
 
 void cmd_showGPS(int arg_cnt, char **args)
     {
-    gps.flagShowGPS = !gps.flagShowGPS;
+    if (CONF_DEACTIVATE_GPS_CALCULATION)
+        {
+        errorHandler.setInfoNoLog(F("GPS calculation deactivated\r\n"));
+        }
+    else
+        {
+        gps.flagShowGPS = !gps.flagShowGPS;
+        }
     }
 
 void cmd_bumper_show_config(int arg_cnt, char **args)

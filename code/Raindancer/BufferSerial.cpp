@@ -194,3 +194,8 @@ size_t BufferSerial::println(const Printable& x)
 	return (isUSB ? usbserial.println(x) : serial.println(x));
 }
 
+size_t BufferSerial::write(const uint8_t x)
+    {
+    return (isUSB ? usbserial.write(x) : serial.write(x));
+    }
+

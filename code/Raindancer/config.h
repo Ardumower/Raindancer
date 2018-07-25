@@ -20,7 +20,7 @@ Private-use only! (you need to ask for a commercial-use)
 
 
 /************************************************************************************************************************
-* Following belongs to const char UBLOX_INIT[] PROGMEM  and  the code, wich sends data to the gps module in gps.cpp
+* Following belongs to cint Tgps::pnpoly(int nvert, float *vertx, float *verty, float testx, float testy)  and  the code, wich sends data to the gps module in gps.cpp
 ************************************************************************************************************************/
 /*
 https://www.youtube.com/watch?v=ylxwOg2pXrc
@@ -174,9 +174,24 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 //#define CONF_USE64BIT_PER_SIGNAL          1
 //#define CONF_USE32BIT_PER_SIGNAL        1
 
-#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
-// when the firmware is starting            
+//
+// GPS CONFIGURATION
+//
+#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+// If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
+// and send it to the control console, when control consol output is activated with set.cco,1.
 
+#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
+//#define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
+#define CONF_N_GPGGA_STR            "$GPGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
+
+
+#define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
+
+#define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+// when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
+
+// https://www.youtube.com/watch?v=ylxwOg2pXrc
 const char UBLOX_INIT[] PROGMEM =
     {
     // Disable NMEA not use sentence
@@ -332,9 +347,24 @@ const char UBLOX_INIT[] PROGMEM =
 //#define CONF_USE64BIT_PER_SIGNAL          1
 //#define CONF_USE32BIT_PER_SIGNAL        1
 
-#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
-// when the firmware is starting            
+//
+// GPS CONFIGURATION
+//
+#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+// If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
+// and send it to the control console, when control consol output is activated with set.cco,1.
 
+#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
+//#define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
+#define CONF_N_GPGGA_STR            "$GPGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
+
+
+#define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
+
+#define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+// when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
+
+// https://www.youtube.com/watch?v=ylxwOg2pXrc
 const char UBLOX_INIT[] PROGMEM =
     {
     // Disable NMEA not use sentence
@@ -491,9 +521,25 @@ const char UBLOX_INIT[] PROGMEM =
 //#define CONF_USE64BIT_PER_SIGNAL          1
 //#define CONF_USE32BIT_PER_SIGNAL        1
 
-#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
-// when the firmware is starting            
 
+//
+// GPS CONFIGURATION
+//
+#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+// If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
+// and send it to the control console, when control consol output is activated with set.cco,1.
+
+#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
+//#define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
+#define CONF_N_GPGGA_STR            "$GPGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
+
+
+#define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
+
+#define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+// when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
+
+// https://www.youtube.com/watch?v=ylxwOg2pXrc
 const char UBLOX_INIT[] PROGMEM =
     {
     // Disable NMEA not use sentence
@@ -648,14 +694,30 @@ const char UBLOX_INIT[] PROGMEM =
 //#define CONF_USE32BIT_PER_SIGNAL        1
 
 
-#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
-                                                // when the firmware is starting            
+//
+// GPS CONFIGURATION
+//
+#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+                                                // If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
+                                                // and send it to the control console, when control consol output is activated with set.cco,1.
 
+#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
+//#define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
+#define CONF_N_GPGGA_STR            "$GPGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
+
+
+#define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
+
+#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+                                                // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
+                                                // You can configure what you want to get in UBLOX_INIT
+
+// https://www.youtube.com/watch?v=ylxwOg2pXrc
 const char UBLOX_INIT[] PROGMEM =               // initial configuration for nema 6/8 modules when CONF_INIT_GPS_WITH_UBLOX is set to true
     {
     // Disable NMEA not use sentence
     0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x24, // GxGGA off
-    //0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28,  // GxGGA on
+    //0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28,  // GxGGA on used for quality and number of satellites and altitude
     0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x2B, // GxGLL off
     0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x32, // GxGSA off
     0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03, 0x39, // GxGSV off

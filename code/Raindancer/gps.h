@@ -26,9 +26,6 @@
 #define N_CHECKSUM_ERR 0x80
 #define N_MESSAGE_ERR 0xC0
 
-#define N_GPRMC_STR "$GPRMC"
-#define N_GPGGA_STR "$GPGGA"
-
 #define GPSINSTRINGLENGTH 120
 
 //#define GRABCHARLENGTH 20
@@ -124,6 +121,9 @@ class Tgps : public Thread
         void gps_date2str(long int date, char *datestr);
         // Convert time(saved as double, format: hhmmss.sss) to string(without decimal places of seconds)
         void gps_time2str(double time, char *timestr);
+        
+        // is point inside polygon
+        int pnpoly(int nvert, float *vertx, float *verty, float testx, float testy);
 
     public:
         bool flagShowGPS;  // show calculated gps data 

@@ -1,5 +1,58 @@
-// 
-// 
+/*
+Robotic Lawn Mower
+Copyright (c) 2017 by Kai Wuertz
+
+Private-use only! (you need to ask for a commercial-use)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Private-use only! (you need to ask for a commercial-use)
+*/
+
+
+/************************************************************************************************************************
+* Following belongs to cint Tgps::pnpoly(int nvert, float *vertx, float *verty, float testx, float testy)  and  the code, wich sends data to the gps module in gps.cpp
+************************************************************************************************************************/
+/*
+https://www.youtube.com/watch?v=ylxwOg2pXrc
+
+This is the Arduino code Ublox NEO-6M GPS module
+this code extracts the GPS latitude and longitude so it can be used for other purposes
+
+Written by Ahmad Nejrabi for Robojax Video
+Date: Jan. 24, 2017, in Ajax, Ontario, Canada
+Permission granted to share this code given that this
+note is kept with the code.
+Disclaimer: this code is "AS IS" and for educational purpose only.
+*/
+
+/************************************************************************************************************************
+* Following belongs to cint Tgps::pnpoly(int nvert, float *vertx, float *verty, float testx, float testy) which caluclates the point in a poloygon
+************************************************************************************************************************/
+/*
+https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
+
+Copyright(c) 1970 - 2003, Wm.Randolph Franklin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions :
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimers.
+Redistributions in binary form must reproduce the above copyright notice in the documentation and / or other materials provided with the distribution.
+The name of W.Randolph Franklin may not be used to endorse or promote products derived from this Software without specific prior written permission.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+//https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
+
 // 
 #include <stdio.h>
 #include <stdlib.h>
@@ -152,7 +205,7 @@ int8_t Tgps::nmea_get_message_type(char *message)
     //debug->println(message);
     //debug->print("C: ");
     //debug->println(r);
-    if (nmea_strcmp(N_GPGGA_STR, message) == '\0')
+    if (nmea_strcmp(CONF_N_GPGGA_STR, message) == '\0')
         {
         if ((checksum = nmea_valid_checksum(message)) != N_EMPTY)
             {
@@ -161,7 +214,7 @@ int8_t Tgps::nmea_get_message_type(char *message)
         return N_GPGGA;
         }
 
-    if (nmea_strcmp(N_GPRMC_STR, message) == '\0')
+    if (nmea_strcmp(CONF_N_GPRMC_STR, message) == '\0')
         {
         if ((checksum = nmea_valid_checksum(message)) != N_EMPTY)
             {
@@ -260,8 +313,52 @@ void Tgps::setup()
     idxInString = 0;
     flagShowGPS = false;
     gpsInString[0] = '\0';
+    m_gpsData.altitude = 0;
+    m_gpsData.course = 0;
+    m_gpsData.day = 0;
+    m_gpsData.dayOfWeek = 0;
+    m_gpsData.hour = 0;
+    m_gpsData.lat = '\?';
+    m_gpsData.latitude = 0;
+    m_gpsData.lon = '\?';
+    m_gpsData.longitude = 0;
+    m_gpsData.minute = 0;
+    m_gpsData.month = 0;
+    m_gpsData.quality = '\?';
+    m_gpsData.satellites = '\?';
+    m_gpsData.speed = 0;
+    m_gpsData.year = 0;
+    m_gpsData.second = 0;
+
+    // send configuration data in UBX protocol
+    if (CONF_INIT_GPS_WITH_UBLOX && !CONF_DISABLE_GPS)
+        {
+        errorHandler.setInfo(F("Programming GPS Module\r\n"));
+        for (unsigned int i = 0; i < sizeof(UBLOX_INIT); i++)
+            {
+            serialGPS.write(pgm_read_byte(UBLOX_INIT + i));
+            delay(5); // simulating a 38400baud pace (or less), otherwise commands are not accepted by the device.
+            }
+        }
+    errorHandler.setInfo(F("Programming GPS Module finished\r\n"));
     }
 
+
+// https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
+// nvert	Number of vertices in the polygon.Whether to repeat the first vertex at the end is discussed below.
+// vertx, verty	Arrays containing the x - and y - coordinates of the polygon's vertices.
+// testx, testy	X - and y - coordinate of the test point.
+int Tgps::pnpoly(int nvert, float *vertx, float *verty, float testx, float testy)
+    {
+    int i, j, c = 0;
+    for (i = 0, j = nvert - 1; i < nvert; j = i++)
+        {
+        if (((verty[i]>testy) != (verty[j]>testy)) &&
+            (testx < (vertx[j] - vertx[i]) * (testy - verty[i]) / (verty[j] - verty[i]) + vertx[i]))
+            c = !c;
+        }
+    return c;
+    }
 
 /*
 * I use here a state machine not to loose too much time in calculations and block other services
@@ -318,13 +415,29 @@ void Tgps::run()
                 }
             break;
 
-        case 1: // determine record type and parse gps string to structure
+        case 1: // pass ALL receivec data to control center if CONF_GPS_PASS_THROUGH == true
+            state = 2;
+            if (CONF_GPS_PASS_THROUGH)
+                {
+                if (flagSendToCC)
+                    {
+                    errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
+                    }
+                }
+            if (CONF_DEACTIVATE_GPS_CALCULATION) // no calcualtion of GPS Data should be done on the DUE. Therefore start state 0 again.
+                {
+                state = 0;
+                }
+            break;
+
+        case 2: // determine record type and parse gps string to structure
+                // then switch to the next state for the received message type
             //time = micros();
+            state = 0;  // This must stand here, to go to state 0 if case N_GPGGA: is called and  flagShowGPS is false
             sentence_type = nmea_get_message_type(gpsInString);
             switch (sentence_type)
                 {
                 case N_GPGGA: // only show satelites, when user wants to see this
-                    state = 0;
                     if (flagShowGPS)
                         {
                         nmea_parse_gpgga(gpsInString, &m_gpgga);
@@ -354,7 +467,7 @@ void Tgps::run()
             ***********************************************/
         case 20:
             // send data to controlcenter if needed
-            //if (flagSendToCC)
+            //if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
             //    {
             //    errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
             //    }
@@ -380,16 +493,16 @@ void Tgps::run()
             ***********************************************/
 
         case 30:
-            // send data to controlcenter if needed
-            if (flagSendToCC)
+            // send data to controlcenter if needed but not if CONF_GPS_PASS_THROUGH == true
+            if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
                 {
                 errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
                 }
             state = 31;
             break;
         case 31:
-            // send encoder data to controlcenter if needed
-            if (flagSendToCC)
+            // send encoder data to controlcenter if needed but not if CONF_GPS_PASS_THROUGH == true
+            if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
                 {
                 errorHandler.setInfoNoLog(F("$GPENC,%ld,%ld\r\n"), encoderL.getTickCounter(), encoderR.getTickCounter());
                 }
@@ -432,9 +545,9 @@ void Tgps::run()
             if (flagShowGPS)
                 {
                 errorHandler.setInfoNoLog(F("!03,%s\r\n"), gpsInString);
-                errorHandler.setInfoNoLog(F("!03,GPRMC speed: %f course:%f\r\n"), m_gpsData.speed, m_gpsData.course);
-                errorHandler.setInfoNoLog(F("!03,GPRMC lat: %.8f,%c lon: %.8f,%c\r\n"), m_gpsData.latitude, m_gpsData.lat, m_gpsData.longitude, m_gpsData.lon);
-                errorHandler.setInfoNoLog(F("!03,GPRMC date: %d.%d.%d time: %d:%d:%d\r\n"), m_gpsData.day, m_gpsData.month, m_gpsData.year, m_gpsData.hour, m_gpsData.minute, m_gpsData.second);
+                errorHandler.setInfoNoLog(F("!03,%s speed: %f course:%f\r\n"), CONF_N_GPRMC_STR, m_gpsData.speed, m_gpsData.course);
+                errorHandler.setInfoNoLog(F("!03,%s lat: %.8f,%c lon: %.8f,%c\r\n"), CONF_N_GPRMC_STR, m_gpsData.latitude, m_gpsData.lat, m_gpsData.longitude, m_gpsData.lon);
+                errorHandler.setInfoNoLog(F("!03,%s date: %d.%d.%d time: %d:%d:%d\r\n"), CONF_N_GPRMC_STR, m_gpsData.day, m_gpsData.month, m_gpsData.year, m_gpsData.hour, m_gpsData.minute, m_gpsData.second);
                 }
 
             state = 0;
@@ -454,4 +567,13 @@ void Tgps::showConfig()
     errorHandler.setInfoNoLog(F("!03,GPS Service\r\n"));
     errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
     errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
+
+    errorHandler.setInfoNoLog(F("!03,flagShowGPS %d\r\n"), flagShowGPS);
+    errorHandler.setInfoNoLog(F("!03,flagSendToCC %d\r\n"), flagSendToCC);
+
+    errorHandler.setInfoNoLog(F("!03,CONF_INIT_GPS_WITH_UBLOX %d\r\n"), CONF_INIT_GPS_WITH_UBLOX);
+    errorHandler.setInfoNoLog(F("!03,CONF_GPS_PASS_THROUGH %d\r\n"), CONF_GPS_PASS_THROUGH);
+    errorHandler.setInfoNoLog(F("!03,CONF_N_GPRMC_STR %s\r\n"), CONF_N_GPRMC_STR);
+    errorHandler.setInfoNoLog(F("!03,CONF_N_GPGGA_STR %s\r\n"), CONF_N_GPGGA_STR);
+    errorHandler.setInfoNoLog(F("!03,CONF_DEACTIVATE_GPS_CALCULATION %d\r\n"), CONF_DEACTIVATE_GPS_CALCULATION);
     }
