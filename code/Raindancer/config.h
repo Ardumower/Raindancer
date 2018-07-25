@@ -242,12 +242,12 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_PC_SERIAL_SPEED     115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED      19200 // Speed bluetooth - Original Ardumower has 19200
 #define CONF_WAN_SERIAL_SPEED    115200 // Speed for serial wan network
-#define CONF_GPS_SERIAL_SPEED	   9600 // Serial GPS Speed
+#define CONF_GPS_SERIAL_SPEED	   38400 // Serial GPS Speed
 #define CONF_NATIVE_USB_SPEED   250000 // Speed for native USB port
 
 #define CONF_DISABLE_BT                 false
 #define CONF_DISABLE_WAN                true
-#define CONF_DISABLE_GPS                true   
+#define CONF_DISABLE_GPS                false   
 #define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
@@ -268,7 +268,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_START_SPIRAL_RADIUS_CM   27.0f
 #define CONF_SPIRAL_SEGMENTS      16.0f
 
-#define CONF_DISTANCE_BETWEEN_COILS_CM  13.0  // used for calculatin the angle while crossing the perimeter. Used in getDistanceAngleCoilOut()
+#define CONF_DISTANCE_BETWEEN_COILS_CM  30.0  // used for calculatin the angle while crossing the perimeter. Used in getDistanceAngleCoilOut()
 
 #define CONF_LEFT_ENCODER_INVERSE   false
 #define CONF_RIGHT_ENCODER_INVERSE    false
@@ -350,16 +350,16 @@ const char UBLOX_INIT[] PROGMEM =
 //
 // GPS CONFIGURATION
 //
-#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+#define CONF_GPS_PASS_THROUGH           true    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
 // If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
 // and send it to the control console, when control consol output is activated with set.cco,1.
 
-#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
-//#define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
+//#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
+#define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
 #define CONF_N_GPGGA_STR            "$GPGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
 
 
-#define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
+#define CONF_DEACTIVATE_GPS_CALCULATION true   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
 
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
