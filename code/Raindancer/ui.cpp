@@ -173,7 +173,7 @@ void cmd_help(int arg_cnt, char **args)
 
     errorHandler.setInfoNoLog(F("\r\n=== I2C/RTC//EEPROM SERVICE ===\r\n"));
     errorHandler.setInfoNoLog(F("i2c.scan          //i2c scanner\r\n"));
-    errorHandler.setInfoNoLog(F("rtc.show          //show rtc values every rtc read (10sec)\r\n"));
+    errorHandler.setInfoNoLog(F("rtc.show          //show rtc read values  \r\n"));
     errorHandler.setInfoNoLog(F("rtc.config        //show rtc service config\r\n"));
     errorHandler.setInfoNoLog(F("rtc.find          //tries to find RTC and show result\r\n"));
     errorHandler.setInfoNoLog(F("rtc.set,8,17,3,25,01,2017 //set rtc time=8:17 dayOfWeek=3 date=25.01.2017\r\n"));
@@ -1087,19 +1087,20 @@ void cmd_showFFTR(int arg_cnt, char **args)
 
 void cmd_showRTC(int arg_cnt, char **args)
     {
-    rtc.flagShowRTCRead = !rtc.flagShowRTCRead;
+    //bber11  
+    //rtc.flagShowRTCRead = !rtc.flagShowRTCRead;
 
-    if (rtc.flagShowRTCRead)
-        {
+    //if (rtc.flagShowRTCRead)
+        //{
         errorHandler.setInfoNoLog(F("millis():   %lu\r\n"), millis());
 
-        errorHandler.setInfoNoLog(F("Current RTC:\r\n"));
-        rtc.showImmediately();
+        //errorHandler.setInfoNoLog(F("Current RTC:\r\n"));  //here i suppose it's the time in the due and not updated by the rtc
+        //rtc.showImmediately();
 
         errorHandler.setInfoNoLog(F("Read from RTC:\r\n"));
         rtc.readDS1307();
         rtc.showImmediately();
-        }
+        //}
     //errorHandler.setInfoNoLog(F( "micros():   %lu\r\n",micros());
     //errorHandler.setInfoNoLog(F( "micros64(): %llu\r\n",micros64());
     //errorHandler.setInfoNoLog(F( "millis64(): %llu\r\n",millis64());
