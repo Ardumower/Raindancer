@@ -200,7 +200,7 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 // think it is inside the perimeter.
 const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
 const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
-const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
@@ -387,7 +387,7 @@ const char UBLOX_INIT[] PROGMEM =
 // think it is inside the perimeter.
 const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
 const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
-const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
@@ -577,7 +577,7 @@ const char UBLOX_INIT[] PROGMEM =
 // think it is inside the perimeter.
 const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
 const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
-const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5; // The number of the ploygon points
 
 
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
@@ -764,7 +764,7 @@ const char UBLOX_INIT[] PROGMEM =
 // think it is inside the perimeter.
 const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
 const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
-const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 
 #define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
