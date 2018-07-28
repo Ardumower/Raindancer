@@ -330,6 +330,8 @@ void Tgps::setup()
     m_gpsData.year = 0;
     m_gpsData.second = 0;
 
+    flagInsidePolygon = false;
+
     // send configuration data in UBX protocol
     if (CONF_INIT_GPS_WITH_UBLOX && !CONF_DISABLE_GPS)
         {
@@ -348,12 +350,12 @@ void Tgps::setup()
 // nvert	Number of vertices in the polygon.Whether to repeat the first vertex at the end is discussed below.
 // vertx, verty	Arrays containing the x - and y - coordinates of the polygon's vertices.
 // testx, testy	X - and y - coordinate of the test point.
-int Tgps::pnpoly(int nvert, float *vertx, float *verty, float testx, float testy)
+int Tgps::pnpoly(const int nvert, const float *vertx, const float *verty, float testx, float testy)
     {
     int i, j, c = 0;
     for (i = 0, j = nvert - 1; i < nvert; j = i++)
         {
-        if (((verty[i]>testy) != (verty[j]>testy)) &&
+        if (((verty[i] > testy) != (verty[j] > testy)) &&
             (testx < (vertx[j] - vertx[i]) * (testy - verty[i]) / (verty[j] - verty[i]) + vertx[i]))
             c = !c;
         }
@@ -368,6 +370,7 @@ void Tgps::run()
     {
     //unsigned long time;
     long int ttt;
+    int result;
 
     // Will be called every 0ms if service is activated
     runned();
@@ -549,6 +552,35 @@ void Tgps::run()
                 errorHandler.setInfoNoLog(F("!03,%s lat: %.8f,%c lon: %.8f,%c\r\n"), CONF_N_GPRMC_STR, m_gpsData.latitude, m_gpsData.lat, m_gpsData.longitude, m_gpsData.lon);
                 errorHandler.setInfoNoLog(F("!03,%s date: %d.%d.%d time: %d:%d:%d\r\n"), CONF_N_GPRMC_STR, m_gpsData.day, m_gpsData.month, m_gpsData.year, m_gpsData.hour, m_gpsData.minute, m_gpsData.second);
                 }
+
+            if (CONF_USE_GPS_POLYGON)
+                {
+                state = 35;
+                }
+            else
+                {
+                state = 0;
+                }
+
+            break;
+
+        case 35: // chek if coordiante is on polygone
+            //time = micros();
+            result = pnpoly(CONF_NUMBER_OF_POLYGON_POINTS, CONF_LON_POLYGON_X, CONF_LAT_POLYGON_Y, m_gpsData.longitude, m_gpsData.latitude);
+            //time = micros() - time;
+            //debug->print("time polygon 35: ");
+            //debug->println(time);
+            if (result == 0)
+                {
+                errorHandler.setInfoNoLog(F("!03,Outside gps polygon: %d\r\n"), result);
+                flagInsidePolygon = false;
+                }
+            else
+                {
+                flagInsidePolygon = true;
+                errorHandler.setInfoNoLog(F("!03,Inside gps polygon: %d\r\n"), result);
+                }
+
 
             state = 0;
             break;

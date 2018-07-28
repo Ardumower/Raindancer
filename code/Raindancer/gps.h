@@ -123,9 +123,10 @@ class Tgps : public Thread
         void gps_time2str(double time, char *timestr);
         
         // is point inside polygon
-        int pnpoly(int nvert, float *vertx, float *verty, float testx, float testy);
+        int pnpoly(int nvert, const float *vertx, const float *verty, float testx, float testy);
 
     public:
+        bool flagInsidePolygon;
         bool flagShowGPS;  // show calculated gps data 
         bool flagSendToCC; // send data to control center
         gpsData m_gpsData; // pgs date determined

@@ -188,6 +188,20 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
 
+
+#define CONF_USE_GPS_POLYGON            false    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
+// independent if the received signal is valid or not and the amplitude of the perimeter is smaller than CONF_PER_THRESHOLD_IGNORE_GPS.
+#define CONF_PER_THRESHOLD_IGNORE_GPS   300    // If a perimeter signal is received higher this amplitude, the perimeter signal overwrites then the gps signal.
+
+// You have to think about that the gps sgnal is not really  precisely. You can have a deviation from +-10m. This means, if the polygon is specified to near to the perimeter, and the perimeter signal
+// is broken, the gps will overwrite this and the robot can driver over the perimeter.
+// configure here a polygon of gps coordinates. You can use 3 to x points.
+// if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
+// think it is inside the perimeter.
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
 
@@ -360,6 +374,21 @@ const char UBLOX_INIT[] PROGMEM =
 
 
 #define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
+
+
+#define CONF_USE_GPS_POLYGON            false    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
+                                                 // independent if the received signal is valid or not and the amplitude of the perimeter is smaller than CONF_PER_THRESHOLD_IGNORE_GPS.
+#define CONF_PER_THRESHOLD_IGNORE_GPS   300      // If a perimeter signal is received higher this amplitude, the perimeter signal overwrites then the gps signal.
+
+// You have to think about that the gps sgnal is not really  precisely. You can have a deviation from +-10m. This means, if the polygon is specified to near to the perimeter, and the perimeter signal
+// is broken, the gps will overwrite this and the robot can driver over the perimeter.
+// configure here a polygon of gps coordinates. You can use 3 to x points.
+// if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
+// think it is inside the perimeter.
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+
 
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
@@ -536,6 +565,21 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
 
+
+#define CONF_USE_GPS_POLYGON            false    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
+                                                 // independent if the received signal is valid or not and the amplitude of the perimeter is smaller than CONF_PER_THRESHOLD_IGNORE_GPS.
+#define CONF_PER_THRESHOLD_IGNORE_GPS   300     // If a perimeter signal is received higher this amplitude, the perimeter signal overwrites then the gps signal.
+
+// You have to think about that the gps sgnal is not really  precisely. You can have a deviation from +-10m. This means, if the polygon is specified to near to the perimeter, and the perimeter signal
+// is broken, the gps will overwrite this and the robot can driver over the perimeter.
+// configure here a polygon of gps coordinates. You can use 3 to x points.
+// if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
+// think it is inside the perimeter.
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+
+
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
 
@@ -708,9 +752,27 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
 
+
+#define CONF_USE_GPS_POLYGON            false    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
+                                                // independent if the received signal is valid or not and the amplitude of the perimeter is smaller than CONF_PER_THRESHOLD_IGNORE_GPS.
+#define CONF_PER_THRESHOLD_IGNORE_GPS   300     // If a perimeter signal is received higher this amplitude, the perimeter signal overwrites then the gps signal.
+
+// You have to think about that the gps sgnal is not really  precisely. You can have a deviation from +-10m. This means, if the polygon is specified to near to the perimeter, and the perimeter signal
+// is broken, the gps will overwrite this and the robot can driver over the perimeter.
+// configure here a polygon of gps coordinates. You can use 3 to x points.
+// if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
+// think it is inside the perimeter.
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;
+
+
 #define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
-                                                // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
-                                                // You can configure what you want to get in UBLOX_INIT
+// when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
+// You can configure what you want to get in UBLOX_INIT
+
+
+
 
 // https://www.youtube.com/watch?v=ylxwOg2pXrc
 const char UBLOX_INIT[] PROGMEM =               // initial configuration for nema 6/8 modules when CONF_INIT_GPS_WITH_UBLOX is set to true
