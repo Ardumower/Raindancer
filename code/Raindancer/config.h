@@ -60,12 +60,6 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 #define DHTTYPE DHT22   // DHT 22  Check out DHT.h for  define types of temperature sensors.    
 #define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
-
-#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
-#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
-#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
-#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
-
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			 19200 // Speed bluetooth - Original Ardumower has 19200
 #define CONF_WAN_SERIAL_SPEED           115200 // Speed for serial wan network
@@ -128,6 +122,11 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 // and set error: "bat low". Then you should power of the robot, connect the charging contacts and power on the robot to charge.
 // If you have an open switch between battery and PCB1.3 then the DUE is powered through charging contacts only while battery is disconnnected.
 // To prevent this, remove diode D37. If not EF1 must be 5A minimum. 1.6A will be destroyed while connecting charing contacts with open battery switch.
+
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
 
 #define CONF_USE_ZONE_RECOGNITION        false
 
@@ -247,12 +246,6 @@ const char UBLOX_INIT[] PROGMEM =
 #define DHTTYPE DHT22   // DHT 22  Check out DHT.h for  define types of temperature sensors.     
 #define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
-
-#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
-#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
-#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   120   //when the mower leaving the head charging station, how far it should drive back
-#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
-
 #define CONF_PC_SERIAL_SPEED     115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED      19200 // Speed bluetooth - Original Ardumower has 19200
 #define CONF_WAN_SERIAL_SPEED    115200 // Speed for serial wan network
@@ -315,6 +308,11 @@ const char UBLOX_INIT[] PROGMEM =
 // and set error: "bat low". Then you should power of the robot, connect the charging contacts and power on the robot to charge.
 // If you have an open switch between battery and PCB1.3 then the DUE is powered through charging contacts only while battery is disconnnected.
 // To prevent this, remove diode D37. If not EF1 must be 5A minimum. 1.6A will be destroyed while connecting charing contacts with open battery switch.
+
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   120   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
 
 #define CONF_USE_ZONE_RECOGNITION        false
 
@@ -436,12 +434,6 @@ const char UBLOX_INIT[] PROGMEM =
 #define DHTTYPE DHT22          // DHT 22  Check out DHT.h for  define types of temperature sensors.     
 #define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
-#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
-#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
-#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
-#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
-
-
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			115200 // Speed bluetooth - Original Ardumower has 19200
 #define CONF_WAN_SERIAL_SPEED           115200 // Speed for serial wan network
@@ -504,6 +496,11 @@ const char UBLOX_INIT[] PROGMEM =
                                                  // and set error: "bat low". Then you should power of the robot, connect the charging contacts and power on the robot to charge.
                                                  // If you have an open switch between battery and PCB1.3 then the DUE is powered through charging contacts only while battery is disconnnected.
                                                  // To prevent this, remove diode D37. If not EF1 must be 5A minimum. 1.6A will be destroyed while connecting charing contacts with open battery switch.
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
+
 
 #define CONF_USE_ZONE_RECOGNITION        false
 
@@ -623,12 +620,6 @@ const char UBLOX_INIT[] PROGMEM =
 #define DHTTYPE DHT22          // DHT 22  Check out DHT.h for  define types of temperature sensors.     
 #define CONF_OVERHEATING_TEMP  50.0f   // if this temperature is measured, robot shuts down the complete power for security
 
-#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
-#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
-#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
-#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
-
-
 #define CONF_PC_SERIAL_SPEED			115200 // Speed serial consol
 #define CONF_BT_SERIAL_SPEED			115200 // Speed bluetooth - Original Ardumower has 19200
 #define CONF_WAN_SERIAL_SPEED           115200 // Speed for serial wan network
@@ -691,6 +682,11 @@ const char UBLOX_INIT[] PROGMEM =
 // and set error: "bat low". Then you should power of the robot, connect the charging contacts and power on the robot to charge.
 // If you have an open switch between battery and PCB1.3 then the DUE is powered through charging contacts only while battery is disconnnected.
 // To prevent this, remove diode D37. If not EF1 must be 5A minimum. 1.6A will be destroyed while connecting charing contacts with open battery switch.
+#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
+#define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
+
 
 #define CONF_USE_ZONE_RECOGNITION        false
 
@@ -741,7 +737,7 @@ const char UBLOX_INIT[] PROGMEM =
 //
 // GPS CONFIGURATION
 //
-#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+#define CONF_GPS_PASS_THROUGH           true    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
                                                 // If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
                                                 // and send it to the control console, when control consol output is activated with set.cco,1.
 
@@ -753,7 +749,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
 
 
-#define CONF_USE_GPS_POLYGON            false    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
+#define CONF_USE_GPS_POLYGON            true    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
                                                 // independent if the received signal is valid or not and the amplitude of the perimeter is smaller than CONF_PER_THRESHOLD_IGNORE_GPS.
 #define CONF_PER_THRESHOLD_IGNORE_GPS   300     // If a perimeter signal is received higher this amplitude, the perimeter signal overwrites then the gps signal.
 
@@ -763,7 +759,7 @@ const char UBLOX_INIT[] PROGMEM =
 // if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
 // think it is inside the perimeter.
 const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
-const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const float CONF_LON_POLYGON_X[] = { 10.448400f,10.448500,10.448400f,10.448700f,10.448800f }; // Longitudinal polygon points
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 

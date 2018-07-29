@@ -332,6 +332,11 @@ void Tgps::setup()
 
     flagInsidePolygon = false;
 
+    if (CONF_DISABLE_GPS)
+        {
+        return;
+        }
+
     // send configuration data in UBX protocol
     if (CONF_INIT_GPS_WITH_UBLOX && !CONF_DISABLE_GPS)
         {
@@ -497,18 +502,18 @@ void Tgps::run()
 
         case 30:
             // send data to controlcenter if needed but not if CONF_GPS_PASS_THROUGH == true
-            if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
-                {
-                errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
-                }
+            //if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
+            //    {
+            //    errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
+            //    }
             state = 31;
             break;
         case 31:
             // send encoder data to controlcenter if needed but not if CONF_GPS_PASS_THROUGH == true
-            if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
-                {
-                errorHandler.setInfoNoLog(F("$GPENC,%ld,%ld\r\n"), encoderL.getTickCounter(), encoderR.getTickCounter());
-                }
+            //if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
+            //    {
+            //    errorHandler.setInfoNoLog(F("$GPENC,%ld,%ld\r\n"), encoderL.getTickCounter(), encoderR.getTickCounter());
+            //    }
             state = 32;
             break;
         case 32: // calculate decimal degrees latitude 
