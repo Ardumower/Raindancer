@@ -197,8 +197,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 // configure here a polygon of gps coordinates. You can use 3 to x points.
 // if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
 // think it is inside the perimeter.
-const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
-const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740f, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500f,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 #define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
@@ -383,8 +383,8 @@ const char UBLOX_INIT[] PROGMEM =
 // configure here a polygon of gps coordinates. You can use 3 to x points.
 // if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
 // think it is inside the perimeter.
-const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
-const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740f, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500f,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 
@@ -572,8 +572,8 @@ const char UBLOX_INIT[] PROGMEM =
 // configure here a polygon of gps coordinates. You can use 3 to x points.
 // if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
 // think it is inside the perimeter.
-const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
-const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740f, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500f,7.448400f,7.448700f,7.448800f }; // Longitudinal polygon points
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5; // The number of the ploygon points
 
 
@@ -758,8 +758,8 @@ const char UBLOX_INIT[] PROGMEM =
 // configure here a polygon of gps coordinates. You can use 3 to x points.
 // if the robot measure a gps signal inside the polygon, it will override the perimetersignal and
 // think it is inside the perimeter.
-const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
-const float CONF_LON_POLYGON_X[] = { 10.448400f,10.448500,10.448400f,10.448700f,10.448800f }; // Longitudinal polygon points
+const float CONF_LAT_POLYGON_Y[] = { 54.08728f,54.08740f, 54.08760f,54.08750f,54.08720f }; // Latitude polygon points
+const float CONF_LON_POLYGON_X[] = { 10.448400f,10.448500f,10.448400f,10.448700f,10.448800f }; // Longitudinal polygon points
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 
