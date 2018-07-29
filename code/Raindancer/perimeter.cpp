@@ -193,7 +193,7 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
     // Overwrite values when inside GPS polygon
     if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
         {
-        if (gps.flagInsidePolygon && abs(magnetudeL) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+        if (gps.flagInsidePolygon && abs(magnetudeR) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
             {
             signalCounterRFast = 2;
             signalCounterR = 3;
