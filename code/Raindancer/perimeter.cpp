@@ -80,7 +80,6 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl)
     if (magl == 0)
         {
         magnetudeL0 = magl;   //needed for TlineFollow
-        return;
         }
     else
         {
@@ -89,7 +88,7 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl)
         }
 
     //----------------------------------------
-    // Auswerten Links
+    // Evaluate left
     //----------------------------------------
 
     // ** inside mag positive**
@@ -124,12 +123,23 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl)
         {
         //signalCounterL = max(signalCounterL - 1, -3);
         }
+
+    // Overwrite values when inside GPS polygon
+    if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
+        {
+        if (gps.flagInsidePolygon && abs(magnetudeL) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+            {
+            signalCounterLFast = 2;
+            signalCounterL = 3;
+            lastTimeSignalReceivedL = millis();
+            }
+        }
     }
 
 void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
     {
     //----------------------------------------
-    // Auswerten Rechts
+    // Evaluate right
     //----------------------------------------
 
     int32_t average = 0;
@@ -143,7 +153,6 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
     if (magr == 0)
         {
         magnetudeR0 = magr;
-        return;
         }
     else
         {
@@ -181,6 +190,16 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
         //signalCounterR = max(signalCounterR - 1, -3);
         }
 
+    // Overwrite values when inside GPS polygon
+    if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
+        {
+        if (gps.flagInsidePolygon && abs(magnetudeL) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+            {
+            signalCounterRFast = 2;
+            signalCounterR = 3;
+            lastTimeSignalReceivedR = millis();
+            }
+        }
 
     }
 
@@ -323,17 +342,7 @@ bool TPerimeterThread::isNearPerimeter()
 bool TPerimeterThread::isLeftInside()
     {
 
-    int mag = abs(magnetudeL);
-
-    if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside dthe defiend gps polygon.
-        {
-        if (gps.flagInsidePolygon && mag < CONF_PER_THRESHOLD_IGNORE_GPS)
-            {
-            return 2;
-            }
-        }
-
-    if (mag > CONF_PER_USE_COUNTER_THRESHOLD)
+    if (abs(magnetudeL) > CONF_PER_USE_COUNTER_THRESHOLD)
         {
         // Large signal, the in/out detection is reliable.
         // Using mag yields very fast in/out transition reporting.
@@ -359,17 +368,7 @@ bool TPerimeterThread::isRightInsideMag()
 bool TPerimeterThread::isRightInside()
     {
 
-    int mag = abs(magnetudeR);
-
-    if (CONF_USE_GPS_POLYGON)
-        {
-        if (gps.flagInsidePolygon && mag < CONF_PER_THRESHOLD_IGNORE_GPS)
-            {
-            return 2;
-            }
-        }
-
-    if (mag > CONF_PER_USE_COUNTER_THRESHOLD)
+    if (abs(magnetudeR) > CONF_PER_USE_COUNTER_THRESHOLD)
         {
         // Large signal, the in/out detection is reliable.
         // Using mag yields very fast in/out transition reporting.
@@ -387,17 +386,7 @@ bool TPerimeterThread::isRightInside()
 bool TPerimeterThread::isLeftOutside()
     {
 
-    int mag = abs(magnetudeL);
-
-    if (CONF_USE_GPS_POLYGON)
-        {
-        if (gps.flagInsidePolygon && mag < CONF_PER_THRESHOLD_IGNORE_GPS)
-            {
-            return false;
-            }
-        }
-
-    if (mag > CONF_PER_USE_COUNTER_THRESHOLD)
+    if (abs(magnetudeL) > CONF_PER_USE_COUNTER_THRESHOLD)
         {
         // Large signal, the in/out detection is reliable.
         // Using mag yields very fast in/out transition reporting.
@@ -414,16 +403,6 @@ bool TPerimeterThread::isLeftOutside()
 
 bool TPerimeterThread::isRightOutside()
     {
-
-    int mag = abs(magnetudeR);
-
-    if (CONF_USE_GPS_POLYGON)
-        {
-        if (gps.flagInsidePolygon && mag < CONF_PER_THRESHOLD_IGNORE_GPS)
-            {
-            return false;
-            }
-        }
 
     if (abs(magnetudeR) > CONF_PER_USE_COUNTER_THRESHOLD)
         {
