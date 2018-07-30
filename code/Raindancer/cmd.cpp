@@ -67,19 +67,19 @@ Generate the main command prompt
 */
 /**************************************************************************/
 void cmd_display()
-{
-	/*
-	char buf[50];
+    {
+    /*
+    char buf[50];
 
-	debug.println();
+    debug.println();
 
-	strcpy_P(buf, cmd_banner);
-	debug.println(buf);
+    strcpy_P(buf, cmd_banner);
+    debug.println(buf);
 
-	strcpy_P(buf, cmd_prompt);
-	debug.print(buf);
-	*/
-}
+    strcpy_P(buf, cmd_prompt);
+    debug.print(buf);
+    */
+    }
 
 /**************************************************************************/
 /*!
@@ -89,45 +89,45 @@ it will jump to the corresponding function.
 */
 /**************************************************************************/
 void cmd_parse(char *cmd)
-{
-	uint8_t argc, i = 0;
-	char *argv[30];
-	char buf[50];
-	cmd_t *cmd_entry;
+    {
+    uint8_t argc, i = 0;
+    char *argv[30];
+    char buf[50];
+    cmd_t *cmd_entry;
 
-	debug->flush();
-	//fflush(stdout);
+    debug->flush();
+    //fflush(stdout);
 
-	// parse the command line statement and break it up into space-delimited
-	// strings. the array of strings will be saved in the argv array.
-	argv[i] = strtok(cmd, ",");
-	do
-	{
-		argv[++i] = strtok(NULL, ",");
-	} while ((i < 30) && (argv[i] != NULL));
+    // parse the command line statement and break it up into space-delimited
+    // strings. the array of strings will be saved in the argv array.
+    argv[i] = strtok(cmd, ",");
+    do
+        {
+        argv[++i] = strtok(NULL, ",");
+        } while ((i < 30) && (argv[i] != NULL));
 
-	// save off the number of arguments for the particular command.
-	argc = i;
+        // save off the number of arguments for the particular command.
+        argc = i;
 
-	// parse the command table for valid command. used argv[0] which is the
-	// actual command name typed in at the prompt
-	for (cmd_entry = cmd_tbl; cmd_entry != NULL; cmd_entry = cmd_entry->next)
-	{ 
-		//debug.print(argv[0]); debug.print(" "); debug->println(cmd_entry->cmd);
-		if (!strcmp(argv[0], cmd_entry->cmd))
-		{
-			cmd_entry->func(argc, argv);
-			cmd_display();
-			return;
-		}
-	}
+        // parse the command table for valid command. used argv[0] which is the
+        // actual command name typed in at the prompt
+        for (cmd_entry = cmd_tbl; cmd_entry != NULL; cmd_entry = cmd_entry->next)
+            {
+            //debug.print(argv[0]); debug.print(" "); debug->println(cmd_entry->cmd);
+            if (!strcmp(argv[0], cmd_entry->cmd))
+                {
+                cmd_entry->func(argc, argv);
+                cmd_display();
+                return;
+                }
+            }
 
-	// command not recognized. print message and re-generate prompt.
-	strcpy_P(buf, cmd_unrecog);
-	debug->println(buf);
+        // command not recognized. print message and re-generate prompt.
+        strcpy_P(buf, cmd_unrecog);
+        debug->println(buf);
 
-	cmd_display();
-}
+        cmd_display();
+    }
 
 /**************************************************************************/
 /*!
@@ -137,56 +137,59 @@ or "enter" key.
 */
 /**************************************************************************/
 void cmd_handler()
-{
-	char c = debug->getChar();
+    {
+    char c = debug->getChar();
 
 
-	switch (c)
-	{
-	case '\r':
-		// terminate the msg and reset the msg ptr. then send
-		// it to the handler for processing.
-		if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK) {
-			debug->print("\r\n");
-		}
-		*msg_ptr = '\0';
-		cmd_parse((char *)msg);
-		msg_ptr = msg;
-		break;
+    switch (c)
+        {
+        case '\r':
+            // terminate the msg and reset the msg ptr. then send
+            // it to the handler for processing.
+            if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK)
+                {
+                debug->print("\r\n");
+                }
+            *msg_ptr = '\0';
+            cmd_parse((char *)msg);
+            msg_ptr = msg;
+            break;
 
-	case '\b':
-		// backspace
-		if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK) {
-			debug->print(c);
-		}
+        case '\b':
+            // backspace
+            if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK)
+                {
+                debug->print(c);
+                }
 
-		if (msg_ptr > msg)
-		{
-			msg_ptr--;
-		}
-		break;
-	case 0x3: // End of text ueberlesen
-			  //debug.print("0x3\r\n");
-		break;
-	case 0x20: // Space ueberlesen
-			   //debug.print("0x20\r\n");
-		break;
-	case '\n':  // Linefeed ueberlesen da nur auf \r reagiert wird
-		break;
+            if (msg_ptr > msg)
+                {
+                msg_ptr--;
+                }
+            break;
+        case 0x3: // End of text ueberlesen
+                  //debug.print("0x3\r\n");
+            break;
+        case 0x20: // Space ueberlesen
+                   //debug.print("0x20\r\n");
+            break;
+        case '\n':  // Linefeed ueberlesen da nur auf \r reagiert wird
+            break;
 
 
-	case '\0':  // Terminal.exe sends by connect two times \0. This I delete here
-		break;
+        case '\0':  // Terminal.exe sends by connect two times \0. This I delete here
+            break;
 
-	default:
-		// normal character entered. add it to the buffer
-		if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK) {
-			debug->print(c);
-		}
-		*msg_ptr++ = c;
-		break;
-	}
-}
+        default:
+            // normal character entered. add it to the buffer
+            if (CONF_CMD_ENABLE_CONSOLE_FEEDBACK)
+                {
+                debug->print(c);
+                }
+            *msg_ptr++ = c;
+            break;
+        }
+    }
 
 /**************************************************************************/
 /*!
@@ -195,40 +198,64 @@ constantly to check if there is any available input at the command prompt.
 */
 /**************************************************************************/
 void cmdPoll()
-{
-	if (pc.available()) {
-		debug = &pc;
-		while (pc.available())
-		{
-			cmd_handler();
-		}
-	}
+    {
+    int readNoOfChars = 0;
+   
+    if (pc.available())
+        {
+        debug = &pc;
+        while (pc.available())
+            {
+            cmd_handler();
 
-	else if (wan.available() && !CONF_DISABLE_WAN) {
-		debug = &wan;
-		while (wan.available())
-		{
-			cmd_handler();
-		}
-	}
+            readNoOfChars++;
+            if (readNoOfChars > 30)
+                {
+                break; // exit while
+                }
+            }
+        }
+    else if (wan.available() && !CONF_DISABLE_WAN)
+        {
+        debug = &wan;
+        while (wan.available())
+            {
+            cmd_handler();
+            readNoOfChars++;
+            if (readNoOfChars > 30)
+                {
+                break; // exit while
+                }
+            }
+        }
 
-	else if (bt.available() && !CONF_DISABLE_BT) {
-		debug = &bt;
-		while (bt.available())
-		{
-			cmd_handler();
-		}
-	}
-	else if (nativeUSB.available() && !CONF_DISABLE_NATIVE_USB) {
-		debug = &nativeUSB;
-		while (nativeUSB.available())
-		{
-			cmd_handler();
-		}
-	}
-
-
-}
+    else if (bt.available() && !CONF_DISABLE_BT)
+        {
+        debug = &bt;
+        while (bt.available())
+            {
+            cmd_handler();
+            readNoOfChars++;
+            if (readNoOfChars > 30)
+                {
+                break; // exit while
+                }
+            }
+        }
+    else if (nativeUSB.available() && !CONF_DISABLE_NATIVE_USB)
+        {
+        debug = &nativeUSB;
+        while (nativeUSB.available())
+            {
+            cmd_handler();
+            readNoOfChars++;
+            if (readNoOfChars > 30)
+                {
+                break; // exit while
+                }
+            }
+        }
+    }
 
 /**************************************************************************/
 /*!
@@ -237,13 +264,13 @@ and initializes things.
 */
 /**************************************************************************/
 void cmdInit()
-{
-	// init the msg ptr
-	msg_ptr = msg;
+    {
+    // init the msg ptr
+    msg_ptr = msg;
 
-	// init the command table
-	cmd_tbl_list = NULL;
-}
+    // init the command table
+    cmd_tbl_list = NULL;
+    }
 
 /**************************************************************************/
 /*!
@@ -252,35 +279,37 @@ at the setup() portion of the sketch.
 */
 /**************************************************************************/
 void cmdAdd(char *name, void(*func)(int argc, char **argv))
-{
+    {
 
-	// alloc memory for command struct
-	cmd_tbl = (cmd_t *)malloc(sizeof(cmd_t));
+    // alloc memory for command struct
+    cmd_tbl = (cmd_t *)malloc(sizeof(cmd_t));
 
-	if (cmd_tbl == NULL) {
-		errorHandler.setError(F("cmdAdd 0 malloc could not allocate memory\r\n"));
-	}
-	// alloc memory for command name
-	char *cmd_name = (char *)malloc(strlen(name) + 1);
+    if (cmd_tbl == NULL)
+        {
+        errorHandler.setError(F("cmdAdd 0 malloc could not allocate memory\r\n"));
+        }
+    // alloc memory for command name
+    char *cmd_name = (char *)malloc(strlen(name) + 1);
 
-	if (cmd_name == NULL) {
-		errorHandler.setError(F("cmdAdd 1 malloc could not allocate memory\r\n"));
-	}
-	// copy command name
-	strcpy(cmd_name, name);
+    if (cmd_name == NULL)
+        {
+        errorHandler.setError(F("cmdAdd 1 malloc could not allocate memory\r\n"));
+        }
+    // copy command name
+    strcpy(cmd_name, name);
 
-	// terminate the command name
-	cmd_name[strlen(name)] = '\0';
+    // terminate the command name
+    cmd_name[strlen(name)] = '\0';
 
-	//debug.serial.println(cmd_name);
+    //debug.serial.println(cmd_name);
 
-	// fill out structure
-	cmd_tbl->cmd = cmd_name;
-	cmd_tbl->func = func;
-	cmd_tbl->next = cmd_tbl_list;
-	cmd_tbl_list = cmd_tbl;
+    // fill out structure
+    cmd_tbl->cmd = cmd_name;
+    cmd_tbl->func = func;
+    cmd_tbl->next = cmd_tbl_list;
+    cmd_tbl_list = cmd_tbl;
 
-}
+    }
 
 /**************************************************************************/
 /*!
@@ -289,14 +318,14 @@ different value in base 10 (decimal) and base 16 (hexadecimal).
 */
 /**************************************************************************/
 long cmdStr2Num(char *str, uint8_t base)
-{
-	return strtol(str, NULL, base);
-}
+    {
+    return strtol(str, NULL, base);
+    }
 
 float cmdStr2Float(char *str)
-{
-	return  atof(str);
-}
+    {
+    return  atof(str);
+    }
 
 
 
