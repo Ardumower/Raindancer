@@ -20,7 +20,7 @@ Private-use only! (you need to ask for a commercial-use)
 
 
 /************************************************************************************************************************
-* Following belongs to cint Tgps::pnpoly(int nvert, float *vertx, float *verty, float testx, float testy)  and  the code, wich sends data to the gps module in gps.cpp
+* Following belongs to programming the GPS Module in setup
 ************************************************************************************************************************/
 /*
 https://www.youtube.com/watch?v=ylxwOg2pXrc
@@ -341,6 +341,7 @@ void Tgps::setup()
     if (CONF_INIT_GPS_WITH_UBLOX && !CONF_DISABLE_GPS)
         {
         errorHandler.setInfo(F("Programming GPS Module\r\n"));
+        // https://www.youtube.com/watch?v=ylxwOg2pXrc
         for (unsigned int i = 0; i < sizeof(UBLOX_INIT); i++)
             {
             serialGPS.write(pgm_read_byte(UBLOX_INIT + i));
@@ -376,6 +377,7 @@ void Tgps::run()
     //unsigned long time;
     long int ttt;
     int result;
+    int readNoOfChars;
 
     // Will be called every 0ms if service is activated
     runned();
@@ -394,30 +396,45 @@ void Tgps::run()
             // and will read the next byte/bytes when be called again. 
             // This prevents from blocking the main loop while receiving too much bytes at 
             // the same time.
+            readNoOfChars = 0;
             while (serialGPS.available())
                 {
+                // read only 20 chars and then go back to the loop to do other tasks. This is needed, if the gps sends a burst of data
+                // and the while loop would block the whole program. If you send date with more than 9600baud, data could be lost.
+                readNoOfChars++;
+                if (readNoOfChars > 20)
+                    {
+                    break; // exit while
+                    }
                 // get the new byte:
                 char newChar = (char)serialGPS.getChar();
+
                 if (newChar == '$')
                     {
                     idxInString = 0;
                     }
                 if (newChar == '\n')
                     {
+                    if (idxInString > GPSINSTRINGLENGTH) // gpsInString size = GPSINSTRINGLENGTH+3
+                        {
+                        idxInString = GPSINSTRINGLENGTH;
+                        errorHandler.setInfo(F("!03,Tgps buffer overflow%s\r\n"), gpsInString);
+                        }
                     gpsInString[idxInString] = '\0';
                     idxInString = 0;
                     state = 1;
+                    break; // exit while
                     }
                 else if (newChar != '\r')
                     {
                     gpsInString[idxInString] = newChar;
                     idxInString++;
-                    if (idxInString >= GPSINSTRINGLENGTH)
+                    if (idxInString > GPSINSTRINGLENGTH) // gpsInString size = GPSINSTRINGLENGTH+3
                         {
-                        // I can put in here 0 because the gpsInString has the size GPSINSTRINGLENGTH+3
+                        idxInString = GPSINSTRINGLENGTH;
                         gpsInString[idxInString] = '\0';
-                        idxInString = GPSINSTRINGLENGTH - 1;
-                        errorHandler.setError(F("!03,Tgps buffer overflow%s\r\n"), gpsInString);
+                        errorHandler.setInfo(F("!03,Tgps buffer overflow%s\r\n"), gpsInString);
+                        break; // exit while and return with a flase string
                         }
                     }
                 }
