@@ -149,173 +149,172 @@ void cmd_help(int arg_cnt, char **args)
     errorHandler.setInfoNoLog(F("area,12  //drive 12m at perimeter and begin mowing\r\n"));
     errorHandler.setInfoNoLog(F("gohome   //drive to docking station. Call again to deactivate\r\n"));
     errorHandler.setInfoNoLog(F("tpt      //test perimeter tracking to dock. Mower stands on perimeter\r\n"));
-    //xdes1
-    errorHandler.setInfoNoLog(F("poweroff  //shutdown the sytem\r\n"));
+
+   errorHandler.setInfoNoLog(F("poweroff  //shutdown the sytem\r\n"));
 
 
-    //errorHandler.setInfoNoLog(F("rh,3    //restores 3 drive directions of the history\r\n"));
+	//errorHandler.setInfoNoLog(F("rh,3    //restores 3 drive directions of the history\r\n"));
 
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
-    errorHandler.setInfoNoLog(F("\r\n=== ERROR HANDLING ===\r\n"));
-    errorHandler.setInfoNoLog(F("error //show errormessage\r\n"));
-    errorHandler.setInfoNoLog(F("reset //reset error and motor faults\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-
-    errorHandler.setInfoNoLog(F("\r\n=== BLUETOOTH ===\r\n"));
-    errorHandler.setInfoNoLog(F("bt.show //try to detect BT module\r\n"));
-    errorHandler.setInfoNoLog(F("bt.set  //configure BT module\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-    errorHandler.setInfoNoLog(F("\r\n=== I2C/RTC//EEPROM SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("i2c.scan          //i2c scanner\r\n"));
-    errorHandler.setInfoNoLog(F("rtc.show          //show rtc read values  \r\n"));
-    errorHandler.setInfoNoLog(F("rtc.config        //show rtc service config\r\n"));
-    errorHandler.setInfoNoLog(F("rtc.find          //tries to find RTC and show result\r\n"));
-    errorHandler.setInfoNoLog(F("rtc.set,8,17,3,25,01,2017 //set rtc time=8:17 dayOfWeek=3 date=25.01.2017\r\n"));
-
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-    errorHandler.setInfoNoLog(F("eep.config        //show EEPROM service config\r\n"));
-    errorHandler.setInfoNoLog(F("eep.u8t,10        //show uint8_t at address 10\r\n"));
-    errorHandler.setInfoNoLog(F("eep.s32t,10       //show int32_t at address 10\r\n"));
-    errorHandler.setInfoNoLog(F("eep.f,10          //show float at address 10\r\n"));
-
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-    errorHandler.setInfoNoLog(F("eep.set.u8t,10,7     //write value uint8_t=7 to address=10 \r\n"));
-    errorHandler.setInfoNoLog(F("eep.set.s32t,10,1234 //write value int32_t=1234 to address=10 \r\n"));
-    errorHandler.setInfoNoLog(F("eep.set.f,10,7.3     //write value float=7.3 to address=10 \r\n"));
-    errorHandler.setInfoNoLog(F("eep.erase            //erase the eeprom\r\n"));
+	errorHandler.setInfoNoLog(F("\r\n=== ERROR HANDLING ===\r\n"));
+	errorHandler.setInfoNoLog(F("error //show errormessage\r\n"));
+	errorHandler.setInfoNoLog(F("reset //reset error and motor faults\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
 
+	errorHandler.setInfoNoLog(F("\r\n=== BLUETOOTH ===\r\n"));
+	errorHandler.setInfoNoLog(F("bt.show //try to detect BT module\r\n"));
+	errorHandler.setInfoNoLog(F("bt.set  //configure BT module\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("\r\n=== I2C/RTC//EEPROM SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("i2c.scan          //i2c scanner\r\n"));
+	errorHandler.setInfoNoLog(F("rtc.show          //show rtc values every rtc read (10sec)\r\n"));
+	errorHandler.setInfoNoLog(F("rtc.config        //show rtc service config\r\n"));
+	errorHandler.setInfoNoLog(F("rtc.find          //tries to find RTC and show result\r\n"));
+	errorHandler.setInfoNoLog(F("rtc.set,8,17,3,25,01,2017 //set rtc time=8:17 dayOfWeek=3 date=25.01.2017\r\n"));
 
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+		
+	errorHandler.setInfoNoLog(F("eep.config        //show EEPROM service config\r\n"));
+	errorHandler.setInfoNoLog(F("eep.u8t,10        //show uint8_t at address 10\r\n"));
+	errorHandler.setInfoNoLog(F("eep.s32t,10       //show int32_t at address 10\r\n"));
+	errorHandler.setInfoNoLog(F("eep.f,10          //show float at address 10\r\n"));
 
-    errorHandler.setInfoNoLog(F("\r\n=== DRIVE MOTOR CLOSED LOOP CONTROL SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("clc.config      //show clcL/R config\r\n"));
-    errorHandler.setInfoNoLog(F("clc.enc         //show encoder values \r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-    errorHandler.setInfoNoLog(F("clc.scl         //show setpoint, currentspeed left\r\n"));
-    errorHandler.setInfoNoLog(F("clc.scr         //show setpoint, currentspeed right\r\n"));
-    errorHandler.setInfoNoLog(F("clc.speedl      //show speed left\r\n"));
-    errorHandler.setInfoNoLog(F("clc.speedr      //show speed right\r\n"));
-    errorHandler.setInfoNoLog(F("clc.ser         //show call of enableXXXRamping functions\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("clc.v,30        //drives both motors in closed loop with speed of 30%\r\n"));
-    errorHandler.setInfoNoLog(F("                //value: -100%% to 100%%\r\n"));
-    errorHandler.setInfoNoLog(F("clc.s           //stop drive motors\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("clc.p,123.34    //sets drive motors proportional term\r\n"));
-    errorHandler.setInfoNoLog(F("clc.i,123.34    //sets drive motors integral term\r\n"));
-
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("clc.ag,3.0,1.0  //sets agility setOutputZeroAtRPm=3.0 stopReachedThresholdAtRpm=1.0 in RPM\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("clc.mt,1,150    //direct motor test. run motor=1 with speed=150\r\n"));
-    errorHandler.setInfoNoLog(F("                //motor: 1=L, 2=R  speed= -255 to 255\r\n"));
-    errorHandler.setInfoNoLog(F("                //deactivates closed loop control\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-    errorHandler.setInfoNoLog(F("                //end test with: clc.mt,0,0\r\n"));
-    errorHandler.setInfoNoLog(F("                //value < 100 will to start the motor\r\n"));
-
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-
-    errorHandler.setInfoNoLog(F("\r\n=== MOW MOTOR CLOSED LOOP CONTROL SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("clcm.config       //show clcM config\r\n"));
-    errorHandler.setInfoNoLog(F("clcm.speed        //show speed 0-255 \r\n"));
-    errorHandler.setInfoNoLog(F("clcm.accel,2000   //set ramp factor 2000. The higher the slower the acc.\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("clcm.limit,200    //set speedLimit to 200  Values: 0-255\r\n"));
-    errorHandler.setInfoNoLog(F("z                 //mow motor start\r\n"));
-    errorHandler.setInfoNoLog(F("t                 //mow motor stop\r\n"));
-
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("\r\n=== POSITION CONTROL SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("pc.config         //show pcL/R config\r\n"));
-    errorHandler.setInfoNoLog(F("pc.L              //show result after pos reached\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("pc.R              //show result after pos reached\r\n"));
-    errorHandler.setInfoNoLog(F("pc.tuneup,2.0,1.85   //stopCmBeforeTarget,addCmToTargetPosition\r\n"));
-    errorHandler.setInfoNoLog(F("pc.a,60,30        //rotate wheel 60 degrees with speed 30\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    //xdes1
-    errorHandler.setInfoNoLog(F("pc.cm,60,30,50    //drives 60 cm with speed left 30 and right 50\r\n"));
-    errorHandler.setInfoNoLog(F("                  //negative cm drives backward\r\n"));
-    errorHandler.setInfoNoLog(F("pc.s              //stop Positioning\r\n"));
-    errorHandler.setInfoNoLog(F("pc.sp             //stop Positioning at perimeter\r\n"));
-
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("eep.set.u8t,10,7     //write value uint8_t=7 to address=10 \r\n"));
+	errorHandler.setInfoNoLog(F("eep.set.s32t,10,1234 //write value int32_t=1234 to address=10 \r\n"));
+	errorHandler.setInfoNoLog(F("eep.set.f,10,7.3     //write value float=7.3 to address=10 \r\n"));
+	errorHandler.setInfoNoLog(F("eep.erase            //erase the eeprom\r\n"));
 
 
-    errorHandler.setInfoNoLog(F("\r\n=== MOTOR INTERFACE SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("turnto,60,30         //turn 60 degrees right (-60=>left) with speed 30\r\n"));
-    errorHandler.setInfoNoLog(F("mot.mfb,40,80        //drive motors from 40%% to 80%% \r\n"));
-    errorHandler.setInfoNoLog(F("                     //end test with: mot.mfb,0,0\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("mot.mfsp,-60,80      //drive motors from -60%% to 80%%\r\n"));
-    errorHandler.setInfoNoLog(F("                     //stops first before run to next speed\r\n"));
-    errorHandler.setInfoNoLog(F("                     //end test with: mot.mfsp,0,0\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
 
-    errorHandler.setInfoNoLog(F("mot.mpfsb,360,80     //rotate both drive motor to 360° and then -360° with 80%% speed \r\n"));
-    errorHandler.setInfoNoLog(F("                     //stops first before run to next speed\r\n"));
-    errorHandler.setInfoNoLog(F("                     //end test with: mot.pfsb,0,0\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
-    errorHandler.setInfoNoLog(F("mot.ort,20           //overrun test. drives robot until perimeter outside reached with 20%% speed\r\n"));
-    errorHandler.setInfoNoLog(F("                     //needed to determin the FF values in TOverRun class\r\n"));
 
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("\r\n=== DRIVE MOTOR CLOSED LOOP CONTROL SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("clc.config      //show clcL/R config\r\n"));
+	errorHandler.setInfoNoLog(F("clc.enc         //show encoder values \r\n"));
 
-    errorHandler.setInfoNoLog(F("\r\n=== MOTOR L/R/M CURRENT SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("mot.config        //show config\r\n"));
-    errorHandler.setInfoNoLog(F("mot.cur           //show drive motor current\r\n"));
-    errorHandler.setInfoNoLog(F("mot.curm          //show mow motor current\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
-    errorHandler.setInfoNoLog(F("mot.scalel,1.2,1.4 //calculate scalefactor motor L for measured A of 1.2. Current shown with mot.cur = 1.4\r\n"));
-    errorHandler.setInfoNoLog(F("mot.scaler,1.2,1.4 //calculate scalefactor motor R for measured A of 1.2. Current shown with mot.cur = 1.4\r\n"));
-    errorHandler.setInfoNoLog(F("mot.scalem,1.2,1.4 //calculate scalefactor motor M for measured A of 1.2. Current shown with mot.curm = 1.4\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
-    errorHandler.setInfoNoLog(F("\r\n=== CHARGE SYSTEM SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("charge.config     //show config\r\n"));
-    errorHandler.setInfoNoLog(F("charge.show       //show charge sensors\r\n"));
-    errorHandler.setInfoNoLog(F("charge.relay,1/0  //turn relay on/off\r\n"));
-    wait = millis();
-    while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("clc.scl         //show setpoint, currentspeed left\r\n"));
+	errorHandler.setInfoNoLog(F("clc.scr         //show setpoint, currentspeed right\r\n"));
+	errorHandler.setInfoNoLog(F("clc.speedl      //show speed left\r\n"));
+	errorHandler.setInfoNoLog(F("clc.speedr      //show speed right\r\n"));
+	errorHandler.setInfoNoLog(F("clc.ser         //show call of enableXXXRamping functions\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("clc.v,30        //drives both motors in closed loop with speed of 30%\r\n"));
+	errorHandler.setInfoNoLog(F("                //value: -100%% to 100%%\r\n"));
+	errorHandler.setInfoNoLog(F("clc.s           //stop drive motors\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("clc.p,123.34    //sets drive motors proportional term\r\n"));
+	errorHandler.setInfoNoLog(F("clc.i,123.34    //sets drive motors integral term\r\n"));
 
-    errorHandler.setInfoNoLog(F("\r\n=== BATTERY SERVICE ===\r\n"));
-    errorHandler.setInfoNoLog(F("bat.config //show config\r\n"));
-    errorHandler.setInfoNoLog(F("bat.show   //show battery voltage\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("clc.ag,3.0,1.0  //sets agility setOutputZeroAtRPm=3.0 stopReachedThresholdAtRpm=1.0 in RPM\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("clc.mt,1,150    //direct motor test. run motor=1 with speed=150\r\n"));
+	errorHandler.setInfoNoLog(F("                //motor: 1=L, 2=R  speed= -255 to 255\r\n"));
+	errorHandler.setInfoNoLog(F("                //deactivates closed loop control\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
 
+	errorHandler.setInfoNoLog(F("                //end test with: clc.mt,0,0\r\n"));
+	errorHandler.setInfoNoLog(F("                //value < 100 will to start the motor\r\n"));
+
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+
+	errorHandler.setInfoNoLog(F("\r\n=== MOW MOTOR CLOSED LOOP CONTROL SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("clcm.config       //show clcM config\r\n"));
+	errorHandler.setInfoNoLog(F("clcm.speed        //show speed 0-255 \r\n"));
+	errorHandler.setInfoNoLog(F("clcm.accel,2000   //set ramp factor 2000. The higher the slower the acc.\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("clcm.limit,200    //set speedLimit to 200  Values: 0-255\r\n"));
+	errorHandler.setInfoNoLog(F("z                 //mow motor start\r\n"));
+	errorHandler.setInfoNoLog(F("t                 //mow motor stop\r\n"));
+
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("\r\n=== POSITION CONTROL SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("pc.config         //show pcL/R config\r\n"));
+	errorHandler.setInfoNoLog(F("pc.L              //show result after pos reached\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("pc.R              //show result after pos reached\r\n"));
+	errorHandler.setInfoNoLog(F("pc.tuneup,2.0,1.85   //stopCmBeforeTarget,addCmToTargetPosition\r\n"));
+	errorHandler.setInfoNoLog(F("pc.a,60,30        //rotate wheel 60 degrees with speed 30\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+//xdes1
+    errorHandler.setInfoNoLog(F("pc.cm,40,60,30,50    //drives left wheel 40cm at 30% speed and right 60cm at 50% speed\r\n"));
+	errorHandler.setInfoNoLog(F("                  //negative cm drives backward\r\n"));
+	errorHandler.setInfoNoLog(F("pc.s              //stop Positioning\r\n"));
+	errorHandler.setInfoNoLog(F("pc.sp             //stop Positioning at perimeter\r\n"));
+
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+
+
+	errorHandler.setInfoNoLog(F("\r\n=== MOTOR INTERFACE SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("turnto,60,30         //turn 60 degrees right (-60=>left) with speed 30\r\n"));
+	errorHandler.setInfoNoLog(F("mot.mfb,40,80        //drive motors from 40%% to 80%% \r\n"));
+	errorHandler.setInfoNoLog(F("                     //end test with: mot.mfb,0,0\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("mot.mfsp,-60,80      //drive motors from -60%% to 80%%\r\n"));
+	errorHandler.setInfoNoLog(F("                     //stops first before run to next speed\r\n"));
+	errorHandler.setInfoNoLog(F("                     //end test with: mot.mfsp,0,0\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+
+	errorHandler.setInfoNoLog(F("mot.mpfsb,360,80     //rotate both drive motor to 360° and then -360° with 80%% speed \r\n"));
+	errorHandler.setInfoNoLog(F("                     //stops first before run to next speed\r\n"));
+	errorHandler.setInfoNoLog(F("                     //end test with: mot.pfsb,0,0\r\n"));
+
+	errorHandler.setInfoNoLog(F("mot.ort,20           //overrun test. drives robot until perimeter outside reached with 20%% speed\r\n"));
+	errorHandler.setInfoNoLog(F("                     //needed to determin the FF values in TOverRun class\r\n"));
+	
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+
+	errorHandler.setInfoNoLog(F("\r\n=== MOTOR L/R/M CURRENT SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("mot.config        //show config\r\n"));
+	errorHandler.setInfoNoLog(F("mot.cur           //show drive motor current\r\n"));
+	errorHandler.setInfoNoLog(F("mot.curm          //show mow motor current\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+	errorHandler.setInfoNoLog(F("mot.scalel,1.2,1.4 //calculate scalefactor motor L for measured A of 1.2. Current shown with mot.cur = 1.4\r\n"));
+	errorHandler.setInfoNoLog(F("mot.scaler,1.2,1.4 //calculate scalefactor motor R for measured A of 1.2. Current shown with mot.cur = 1.4\r\n"));
+	errorHandler.setInfoNoLog(F("mot.scalem,1.2,1.4 //calculate scalefactor motor M for measured A of 1.2. Current shown with mot.curm = 1.4\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+
+	errorHandler.setInfoNoLog(F("\r\n=== CHARGE SYSTEM SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("charge.config     //show config\r\n"));
+	errorHandler.setInfoNoLog(F("charge.show       //show charge sensors\r\n"));
+	errorHandler.setInfoNoLog(F("charge.relay,1/0  //turn relay on/off\r\n"));
+	wait = millis();
+	while (millis() - wait < 100) executeLoop();
+
+	errorHandler.setInfoNoLog(F("\r\n=== BATTERY SERVICE ===\r\n"));
+	errorHandler.setInfoNoLog(F("bat.config //show config\r\n"));
+	errorHandler.setInfoNoLog(F("bat.show   //show battery voltage\r\n"));
 
     errorHandler.setInfoNoLog(F("\r\n=== TEMPERATURE SERVICE ===\r\n"));
     errorHandler.setInfoNoLog(F("temp.show   //show temperature and humidity\r\n"));
@@ -740,15 +739,15 @@ void cmd_driveAngle(int arg_cnt, char **args)
 
 void cmd_driveCM(int arg_cnt, char **args)
     {
-    if (checkManualMode())
+	  if (checkManualMode()) 
         {
-        float cm = cmdStr2Float(args[1]);
-        //xdes1
-        float speedL = cmdStr2Float(args[2]);
-        float speedR = cmdStr2Float(args[3]);
-        motor.rotateCM(cm, cm, speedL, speedR);
-        }
-    }
+		    float cmL = cmdStr2Float(args[1]);
+        float cmR = cmdStr2Float(args[2]);
+        float speedL = cmdStr2Float(args[3]);
+        float speedR = cmdStr2Float(args[4]);
+		    motor.rotateCM(cmL, cmR, speedL, speedR);
+	      }
+     }
 
 void cmd_turnTo(int arg_cnt, char **args)
     {
