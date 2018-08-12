@@ -20,6 +20,13 @@ Private-use only! (you need to ask for a commercial-use)
 
 
 /************************************************************************************************************************
+* Code used from
+************************************************************************************************************************/
+//http://www.netzmafia.de/skripten/hardware/RasPi/Projekt-GPS/index.html
+//http://www.netzmafia.de/skripten/hardware/RasPi/Projekt-GPS/nmea.h
+//http://www.netzmafia.de/skripten/hardware/RasPi/Projekt-GPS/nmea.c
+
+/************************************************************************************************************************
 * Following belongs to programming the GPS Module in setup
 ************************************************************************************************************************/
 /*
@@ -209,7 +216,8 @@ int8_t Tgps::nmea_get_message_type(char *message)
         {
         if ((checksum = nmea_valid_checksum(message)) != N_EMPTY)
             {
-            return checksum;
+            //return checksum;
+            return N_UNKNOWN;
             }
         return N_GPGGA;
         }
@@ -218,7 +226,8 @@ int8_t Tgps::nmea_get_message_type(char *message)
         {
         if ((checksum = nmea_valid_checksum(message)) != N_EMPTY)
             {
-            return checksum;
+            //return checksum;
+            return N_UNKNOWN;
             }
         return N_GPRMC;
         }
@@ -413,13 +422,10 @@ void Tgps::run()
                     {
                     idxInString = 0;
                     }
+
+                // write char to gpsInString 
                 if (newChar == '\n')
                     {
-                    if (idxInString > GPSINSTRINGLENGTH) // gpsInString size = GPSINSTRINGLENGTH+3
-                        {
-                        idxInString = GPSINSTRINGLENGTH;
-                        errorHandler.setInfo(F("!03,Tgps buffer overflow%s\r\n"), gpsInString);
-                        }
                     gpsInString[idxInString] = '\0';
                     idxInString = 0;
                     state = 1;
@@ -429,12 +435,11 @@ void Tgps::run()
                     {
                     gpsInString[idxInString] = newChar;
                     idxInString++;
-                    if (idxInString > GPSINSTRINGLENGTH) // gpsInString size = GPSINSTRINGLENGTH+3
+                    if (idxInString > GPSINSTRINGLENGTH-1) // gpsInString size = GPSINSTRINGLENGTH+3
                         {
-                        idxInString = GPSINSTRINGLENGTH;
+                        errorHandler.setInfo(F("!03,Tgps buffer overflow\r\n"));
+                        idxInString = 0;
                         gpsInString[idxInString] = '\0';
-                        errorHandler.setInfo(F("!03,Tgps buffer overflow%s\r\n"), gpsInString);
-                        break; // exit while and return with a flase string
                         }
                     }
                 }
