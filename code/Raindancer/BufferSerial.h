@@ -88,6 +88,7 @@ public:
 	size_t println(double, int = 2);
 	size_t println(const Printable&);
 	size_t println(void);
+    size_t write(const uint8_t x);
 
 	virtual ~BufferSerial();
 	//	void run(void);

@@ -44,8 +44,6 @@ public:
 
 	bool flagShowRTCRead;
 
-
-
 	byte hour = 0;
 	byte minute = 0;
 	byte dayOfWeek = 0;

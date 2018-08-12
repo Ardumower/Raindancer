@@ -58,6 +58,7 @@ Set to true only the correct CHASSIS
 #include "motorSensor.h"
 #include "DHT.h"
 #include "shutdown.h"
+#include "gps.h"
 
 
 /*********************************************************************/
@@ -117,10 +118,11 @@ TEEPROM eeprom;
 // Buzzer
 BuzzerClass Buzzer;
 // Shutdown service
-//xdes1
 TShutdown shutdown;
 // DHT Temperature sensor
 TDHT dht( DHTTYPE);
+//GPS Service
+Tgps gps;
 //-----------------------------------------------------
 
 // Instantiate a new ThreadController
@@ -233,13 +235,15 @@ void setup()
 	//Buzzer.setInterval(0); // will be controled by the class itselfe
 	Buzzer.enabled = false;  // will be controled by the class itselfe
     //---------------------------------
- //xdes1
     shutdown.setup();
     shutdown.setInterval(1000);
     shutdown.enabled = false;  // when activated, service initiate shutdown
     //---------------------------------
 	dht.setup();
 	dht.setInterval(20013);
+    //---------------------------------
+    gps.setup();
+    gps.setInterval(0);
     
 
     //------------
@@ -274,9 +278,9 @@ void setup()
 	controller.add(&rtc);
 
 	controller.add(&Buzzer);
-//xdes1
-    controller.add(&shutdown);
 
+    controller.add(&shutdown);
+    controller.add(&gps);
 	//---------------------------------
 	// Behaviour Objects konfigurieren
 	//---------------------------------
