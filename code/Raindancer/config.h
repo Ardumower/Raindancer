@@ -50,8 +50,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define ARDUMOWER_CHASSIS  false
 #define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS false
-#define TEST_ON_DUE_ONLY   true
+#define RAINDANCER_CHASSIS true
+#define TEST_ON_DUE_ONLY   false
 
 //======================================================================================================================
 // CONFIG FOR ARDUMOWER CHASSIS
@@ -442,7 +442,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DISABLE_BT                 false
 #define CONF_DISABLE_WAN                true
-#define CONF_DISABLE_GPS                true   // Disabled through service
+#define CONF_DISABLE_GPS                false   // Disabled through service
 #define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
@@ -496,8 +496,8 @@ const char UBLOX_INIT[] PROGMEM =
                                                  // and set error: "bat low". Then you should power of the robot, connect the charging contacts and power on the robot to charge.
                                                  // If you have an open switch between battery and PCB1.3 then the DUE is powered through charging contacts only while battery is disconnnected.
                                                  // To prevent this, remove diode D37. If not EF1 must be 5A minimum. 1.6A will be destroyed while connecting charing contacts with open battery switch.
-#define CONF_PASS_THROUGH_CHARGING_STATION false //the mower can go through the station
-#define CONF_HEAD_CHARGING_STATION         true  //the mower can't go through the station
+#define CONF_PASS_THROUGH_CHARGING_STATION true //the mower can go through the station
+#define CONF_HEAD_CHARGING_STATION         false  //the mower can't go through the station
 #define CONF_HEAD_CHARGING_DRIVE_BACK_CM   100   //when the mower leaving the head charging station, how far it should drive back
 #define CONF_HEAD_CHARGING_DRIVE_FORW_CM    50   //when the mower drove back and then rotates 90 degree, how far it should run forward that both coils securely inside
 
@@ -551,7 +551,7 @@ const char UBLOX_INIT[] PROGMEM =
 //
 // GPS CONFIGURATION
 //
-#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+#define CONF_GPS_PASS_THROUGH           true    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
 // If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
 // and send it to the control console, when control consol output is activated with set.cco,1.
 
@@ -563,7 +563,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DEACTIVATE_GPS_CALCULATION false   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
 
 
-#define CONF_USE_GPS_POLYGON            false    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
+#define CONF_USE_GPS_POLYGON            true    // When true, the received GPS signal is checked if the  position is in the defined polygon. If yes, then the robot  is accepted to be in the perimeterwire
                                                  // independent if the received signal is valid or not and the amplitude of the perimeter is smaller than CONF_PER_THRESHOLD_IGNORE_GPS.
 #define CONF_PER_THRESHOLD_IGNORE_GPS   300     // If a perimeter signal is received higher this amplitude, the perimeter signal overwrites then the gps signal.
 
@@ -577,7 +577,7 @@ const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500f,7.448400f,7.448700f,7.4
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5; // The number of the ploygon points
 
 
-#define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
 
 // https://www.youtube.com/watch?v=ylxwOg2pXrc
