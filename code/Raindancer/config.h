@@ -49,8 +49,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 // If you develop the software, you are responsible, that the changes compiles with all configurations.
 
 #define ARDUMOWER_CHASSIS  false
-#define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS true
+#define PARANELLO_CHASSIS  true
+#define RAINDANCER_CHASSIS false
 #define TEST_ON_DUE_ONLY   false
 
 //======================================================================================================================
@@ -275,7 +275,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_START_SPIRAL_RADIUS_CM   27.0f
 #define CONF_SPIRAL_SEGMENTS      16.0f
 
-#define CONF_DISTANCE_BETWEEN_COILS_CM  30.0  // used for calculatin the angle while crossing the perimeter. Used in getDistanceAngleCoilOut()
+#define CONF_DISTANCE_BETWEEN_COILS_CM  13.0  // used for calculatin the angle while crossing the perimeter. Used in getDistanceAngleCoilOut()
 
 #define CONF_LEFT_ENCODER_INVERSE   false
 #define CONF_RIGHT_ENCODER_INVERSE    false
@@ -290,7 +290,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 
 #define CONF_DISABLE_PERIMETER_SERVICE  false   // Disables perimeter sensor
-#define CONF_DISABLE_RTC_SERVICE    true    // Disables rtc sensor
+#define CONF_DISABLE_RTC_SERVICE    false    // Disables rtc sensor
 #define CONF_DISABLE_EEPROM_SERVICE   false   // Disables EEPROM requests
 #define CONF_DISABLE_BATTERY_SERVICE  false   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE   false   // Disables charge system service
@@ -368,7 +368,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 //#define CONF_N_GPRMC_STR            "$GPRMC"    // GPS messagetype begin for $GPRMC for NEO-6M
 #define CONF_N_GPRMC_STR          "$GNRMC"    // GPS messagetype begin for $GPRMC for NEO-M8N
-#define CONF_N_GPGGA_STR            "$GPGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
+#define CONF_N_GPGGA_STR            "$GNGGA"    // GPS messagetype begin for $GPGGA. The $GPGGA record is only shown with the command gps.show
 
 
 #define CONF_DEACTIVATE_GPS_CALCULATION true   // if this is true, no GPS data will be calculated on the due. You need then to set CONF_GPS_PASS_THROUGH = true, that data is sent to the control console
@@ -388,7 +388,7 @@ const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500f,7.448400f,7.448700f,7.4
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 
-#define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
 
 // https://www.youtube.com/watch?v=ylxwOg2pXrc
