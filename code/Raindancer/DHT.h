@@ -1,15 +1,15 @@
 /* DHT library
 
-MIT license
-written by Adafruit Industries
+  MIT license
+  written by Adafruit Industries
 */
 #ifndef DHT_H
 #define DHT_H
 
 #if ARDUINO >= 100
- #include "Arduino.h"
+#include "Arduino.h"
 #else
- #include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 
@@ -21,11 +21,11 @@ written by Adafruit Industries
 
 // Setup debug printing macros.
 #ifdef DHT_DEBUG
-  #define DEBUG_PRINT(...) { DEBUG_PRINTER.print(__VA_ARGS__); }
-  #define DEBUG_PRINTLN(...) { DEBUG_PRINTER.println(__VA_ARGS__); }
+#define DEBUG_PRINT(...) { DEBUG_PRINTER.print(__VA_ARGS__); }
+#define DEBUG_PRINTLN(...) { DEBUG_PRINTER.println(__VA_ARGS__); }
 #else
-  #define DEBUG_PRINT(...) {}
-  #define DEBUG_PRINTLN(...) {}
+#define DEBUG_PRINT(...) {}
+#define DEBUG_PRINTLN(...) {}
 #endif
 
 // Define types of sensors.
@@ -36,44 +36,44 @@ written by Adafruit Industries
 
 #define OVERTEMPCOUNTLIMIT 2
 
-class TDHT : public Thread 
+class TDHT : public Thread
 {
   public:
-   uint16_t errorCounter;
- 
-   void show();
-   void hide();
-   
+    uint16_t errorCounter;
 
-   TDHT(uint8_t type);
-   void setup(void);
-   virtual void run();
+    void show();
+    void hide();
 
-   float getLastReadTemperature();
-   float readTemperature(bool S=false, bool force=false);
-   float convertCtoF(float);
-   float convertFtoC(float);
-   float computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit=true);
-   float readHumidity(bool force=false);
-   boolean read(bool force=false);
 
- private:
-  bool flagShowTemp;
-  
+    TDHT(uint8_t type);
+    void setup(void);
+    virtual void run();
 
-  uint8_t data[5];
-  uint8_t _type;
-  uint8_t overTempCounter;
+    float getLastReadTemperature();
+    float readTemperature(bool S = false, bool force = false);
+    float convertCtoF(float);
+    float convertFtoC(float);
+    float computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit = true);
+    float readHumidity(bool force = false);
+    boolean read(bool force = false);
 
-  uint32_t _lastreadtime, _maxcycles;
-  bool _lastresult;
+  private:
+    bool flagShowTemp;
 
-  uint32_t countPulse(bool level);
-  uint32_t waitForPulse(bool level);
 
-  float dhtTempActual;
+    uint8_t data[5];
+    uint8_t _type;
+    uint8_t overTempCounter;
 
-  void showData();
+    uint32_t _lastreadtime, _maxcycles;
+    bool _lastresult;
+
+    uint32_t countPulse(bool level);
+    uint32_t waitForPulse(bool level);
+
+    float dhtTempActual;
+
+    void showData();
 
 };
 

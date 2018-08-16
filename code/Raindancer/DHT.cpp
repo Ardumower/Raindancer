@@ -1,9 +1,9 @@
 /* DHT library
 
-MIT license
-written by Adafruit Industries
+  MIT license
+  written by Adafruit Industries
 
-Adapted for Raindacer by Kai Wuertz
+  Adapted for Raindacer by Kai Wuertz
 */
 
 #include "DHT.h"
@@ -20,10 +20,10 @@ Adapted for Raindacer by Kai Wuertz
 extern TShutdown shutdown;
 
 TDHT::TDHT( uint8_t type) {
-   _type = type;
+  _type = type;
 
   _maxcycles = MICROSECONDS_TO_CLOCK_CYCLES(1000);  // 1 millisecond timeout for
-                                                 // reading pulses from DHT sensor.
+  // reading pulses from DHT sensor.
   // Note that count is now ignored as the DHT reading algorithm adjusts itself
   // based on the speed of the processor.
 }
@@ -31,11 +31,11 @@ TDHT::TDHT( uint8_t type) {
 void TDHT::setup(void) {
   // set up the pins!
   //pinMode(_pin, INPUT_PULLUP); -- normally bus is high:
-	dioDHT.setPinMode(INPUT);
+  dioDHT.setPinMode(INPUT);
 
-	flagShowTemp = false;
-	overTempCounter = 0;
-	errorCounter = 0;
+  flagShowTemp = false;
+  overTempCounter = 0;
+  errorCounter = 0;
   // Using this value makes sure that millis() - lastreadtime will be
   // >= MIN_INTERVAL right away. Note that this assignment wraps around,
   // but so will the subtraction.
@@ -48,77 +48,77 @@ void TDHT::setup(void) {
   DEBUG_PRINTLN(_pin);
 
   dhtTempActual = 20.0f;
-   
+
 }
 
 void TDHT::showData() {
-//xdes1
-	errorHandler.setInfoNoLog(F("$temp,%.1f,%d\r\n"), dhtTempActual, errorCounter);
+  //xdes1
+  errorHandler.setInfoNoLog(F("$temp,%.1f,%d\r\n"), dhtTempActual, errorCounter);
 }
 
 void TDHT::show() {
-	flagShowTemp = true;
-	showData();
+  flagShowTemp = true;
+  showData();
 }
 
 void TDHT::hide() {
-	flagShowTemp = false;
+  flagShowTemp = false;
 }
 
 void TDHT::run() {
 
-	// check if thread should run
-	unsigned long time = millis();
-	if (!shouldRun(time)) {
-		return;
-	}
+  // check if thread should run
+  unsigned long time = millis();
+  if (!shouldRun(time)) {
+    return;
+  }
 
-	// called every 20013ms by TRunTempService - only if TRunTempService is executed!
-	runned(time);
+  // called every 20013ms by TRunTempService - only if TRunTempService is executed!
+  runned(time);
 
-	if (CONF_DISABLE_DHT_SERVICE) {
-		return;
-	}
-	
-	// This is a blocking call. Returns first, if the data is read from the sensor. Needs round about 5ms and blocks interrupts
-	dhtTempActual = readTemperature();
+  if (CONF_DISABLE_DHT_SERVICE) {
+    return;
+  }
 
-	if (isnan(dhtTempActual)) {
-		errorCounter = (errorCounter < 65000) ? errorCounter+1 : errorCounter;
-		if (flagShowTemp) {
-			showData();
-		}
-		return;
-	}
+  // This is a blocking call. Returns first, if the data is read from the sensor. Needs round about 5ms and blocks interrupts
+  dhtTempActual = readTemperature();
 
-	if (flagShowTemp) {
-		showData();
-	}
+  if (isnan(dhtTempActual)) {
+    errorCounter = (errorCounter < 65000) ? errorCounter + 1 : errorCounter;
+    if (flagShowTemp) {
+      showData();
+    }
+    return;
+  }
 
-	// two times overtemp must be measured before CONF_OVERHEATING_TEMP is reached 
-	if (dhtTempActual >= CONF_OVERHEATING_TEMP)
-	{
-		overTempCounter = (overTempCounter < OVERTEMPCOUNTLIMIT) ? overTempCounter + 1 : OVERTEMPCOUNTLIMIT;
-	}
-	else
-	{
-		overTempCounter = (overTempCounter > 0) ? overTempCounter - 1 : 0;
-	}
+  if (flagShowTemp) {
+    showData();
+  }
 
-	// shut down power if overtemp is reached in two measurements
-	if (overTempCounter == OVERTEMPCOUNTLIMIT) {
-		errorHandler.setError(F("#T,TDHT CONF_OVERHEATING_TEMP reached: %f\r\n"), dhtTempActual);
-		doChargeEnable = LOW;
-//xdes1
-        shutdown.enabled=true;
-	}
+  // two times overtemp must be measured before CONF_OVERHEATING_TEMP is reached
+  if (dhtTempActual >= CONF_OVERHEATING_TEMP)
+  {
+    overTempCounter = (overTempCounter < OVERTEMPCOUNTLIMIT) ? overTempCounter + 1 : OVERTEMPCOUNTLIMIT;
+  }
+  else
+  {
+    overTempCounter = (overTempCounter > 0) ? overTempCounter - 1 : 0;
+  }
+
+  // shut down power if overtemp is reached in two measurements
+  if (overTempCounter == OVERTEMPCOUNTLIMIT) {
+    errorHandler.setError(F("#T,TDHT CONF_OVERHEATING_TEMP reached: %f\r\n"), dhtTempActual);
+    doChargeEnable = LOW;
+    //xdes1
+    shutdown.enabled = true;
+  }
 
 }
 
 
 
 float TDHT::getLastReadTemperature() {
-	return dhtTempActual;
+  return dhtTempActual;
 }
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
@@ -127,25 +127,25 @@ float TDHT::readTemperature(bool S, bool force) {
 
   if (read(force)) {
     switch (_type) {
-    case DHT11:
-      f = data[2];
-      if(S) {
-        f = convertCtoF(f);
-      }
-      break;
-    case DHT22:
-    case DHT21:
-      f = data[2] & 0x7F;
-      f *= 256;
-      f += data[3];
-      f *= 0.1;
-      if (data[2] & 0x80) {
-        f *= -1;
-      }
-      if(S) {
-        f = convertCtoF(f);
-      }
-      break;
+      case DHT11:
+        f = data[2];
+        if (S) {
+          f = convertCtoF(f);
+        }
+        break;
+      case DHT22:
+      case DHT21:
+        f = data[2] & 0x7F;
+        f *= 256;
+        f += data[3];
+        f *= 0.1;
+        if (data[2] & 0x80) {
+          f *= -1;
+        }
+        if (S) {
+          f = convertCtoF(f);
+        }
+        break;
     }
   }
   return f;
@@ -163,16 +163,16 @@ float TDHT::readHumidity(bool force) {
   float f = NAN;
   if (read()) {
     switch (_type) {
-    case DHT11:
-      f = data[0];
-      break;
-    case DHT22:
-    case DHT21:
-      f = data[0];
-      f *= 256;
-      f += data[1];
-      f *= 0.1;
-      break;
+      case DHT11:
+        f = data[0];
+        break;
+      case DHT22:
+      case DHT21:
+        f = data[0];
+        f *= 256;
+        f += data[1];
+        f *= 0.1;
+        break;
     }
   }
   return f;
@@ -191,19 +191,19 @@ float TDHT::computeHeatIndex(float temperature, float percentHumidity, bool isFa
 
   if (hi > 79) {
     hi = -42.379 +
-             2.04901523 * temperature +
-            10.14333127 * percentHumidity +
-            -0.22475541 * temperature*percentHumidity +
-            -0.00683783 * pow(temperature, 2) +
-            -0.05481717 * pow(percentHumidity, 2) +
-             0.00122874 * pow(temperature, 2) * percentHumidity +
-             0.00085282 * temperature*pow(percentHumidity, 2) +
-            -0.00000199 * pow(temperature, 2) * pow(percentHumidity, 2);
+         2.04901523 * temperature +
+         10.14333127 * percentHumidity +
+         -0.22475541 * temperature * percentHumidity +
+         -0.00683783 * pow(temperature, 2) +
+         -0.05481717 * pow(percentHumidity, 2) +
+         0.00122874 * pow(temperature, 2) * percentHumidity +
+         0.00085282 * temperature * pow(percentHumidity, 2) +
+         -0.00000199 * pow(temperature, 2) * pow(percentHumidity, 2);
 
-    if((percentHumidity < 13) && (temperature >= 80.0) && (temperature <= 112.0))
+    if ((percentHumidity < 13) && (temperature >= 80.0) && (temperature <= 112.0))
       hi -= ((13.0 - percentHumidity) * 0.25) * sqrt((17.0 - abs(temperature - 95.0)) * 0.05882);
 
-    else if((percentHumidity > 85.0) && (temperature >= 80.0) && (temperature <= 87.0))
+    else if ((percentHumidity > 85.0) && (temperature >= 80.0) && (temperature <= 87.0))
       hi += ((percentHumidity - 85.0) * 0.1) * ((87.0 - temperature) * 0.2);
   }
 
@@ -227,7 +227,7 @@ boolean TDHT::read(bool force) {
 
   // First set data line low for 20 milliseconds.
   // Send start signal and  prepare sensor for reading
-  dioDHT.setPinMode(OUTPUT); 
+  dioDHT.setPinMode(OUTPUT);
   dioDHT.write(LOW);
   delay(20);
 
@@ -238,32 +238,32 @@ boolean TDHT::read(bool force) {
     InterruptLock lock;
 
     // End the start signal by setting data line to input. External pull-up will pull the line HIGH.
-	dioDHT.setPinMode(INPUT); 
+    dioDHT.setPinMode(INPUT);
     delayMicroseconds(15); //wait that line has been settled
 
-	// Wait for sensor pulls line low after 20-40uS the positive flank was send
-	int count = waitForPulse(LOW);
-	if (count == 0) {
-		lock.unlock(); // Turn on interrupts
-		_lastresult = false;
-		errorHandler.setInfo(F("#T,TDHT Timeout waiting for start signal go to low\r\n"));
-		return _lastresult;
-	}
+    // Wait for sensor pulls line low after 20-40uS the positive flank was send
+    int count = waitForPulse(LOW);
+    if (count == 0) {
+      lock.unlock(); // Turn on interrupts
+      _lastresult = false;
+      errorHandler.setInfo(F("#T,TDHT Timeout waiting for start signal go to low\r\n"));
+      return _lastresult;
+    }
 
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
-	// Sensor pulled low already. Count the duration for the low signal and wait until it gets high 
+    // Sensor pulled low already. Count the duration for the low signal and wait until it gets high
     if (countPulse(LOW) == 0) {
-	  lock.unlock(); // Turn on interrupts
+      lock.unlock(); // Turn on interrupts
       _lastresult = false;
-	  errorHandler.setInfo(F("#T,TDHT Timeout counting low pulse.\r\n"));
+      errorHandler.setInfo(F("#T,TDHT Timeout counting low pulse.\r\n"));
       return _lastresult;
     }
-	// Sensor pulled high. Count the duration for the high signal and wait until it gets low 
+    // Sensor pulled high. Count the duration for the high signal and wait until it gets low
     if (countPulse(HIGH) == 0) {
       lock.unlock(); // Turn on interrupts
       _lastresult = false;
-	  errorHandler.setInfo(F("#T,TDHT Timeout countingl high pulse.\r\n"));
+      errorHandler.setInfo(F("#T,TDHT Timeout countingl high pulse.\r\n"));
       return _lastresult;
     }
 
@@ -275,30 +275,30 @@ boolean TDHT::read(bool force) {
     // if the bit is a 0 (high state cycle count < low state cycle count), or a
     // 1 (high state cycle count > low state cycle count). Note that for speed all
     // the pulses are read into a array and then examined in a later step.
-    for (int i=0; i<80; i+=2) {
+    for (int i = 0; i < 80; i += 2) {
       cycles[i]   = countPulse(LOW);  // Wait until start transmit signal ends. The input goes from low to high.
-      cycles[i+1] = countPulse(HIGH); // measure the high signal how long it stays high 
+      cycles[i + 1] = countPulse(HIGH); // measure the high signal how long it stays high
     }
 
-	lock.unlock(); // Turn on interrupts
+    lock.unlock(); // Turn on interrupts
   } // Timing critical code is now complete.
 
 
   // Inspect pulses and determine which ones are 0 (high state cycle count < low
   // state cycle count), or 1 (high state cycle count > low state cycle count).
-  for (int i=0; i<40; ++i) {
-    uint32_t lowCycles  = cycles[2*i];
-    uint32_t highCycles = cycles[2*i+1];
+  for (int i = 0; i < 40; ++i) {
+    uint32_t lowCycles  = cycles[2 * i];
+    uint32_t highCycles = cycles[2 * i + 1];
     if ((lowCycles == 0) || (highCycles == 0)) {
-      errorHandler.setInfo(F("#T,TDHT Timeout waiting for pulse i=%d\r\n"),i);
+      errorHandler.setInfo(F("#T,TDHT Timeout waiting for pulse i=%d\r\n"), i);
       _lastresult = false;
       return _lastresult;
     }
-    data[i/8] <<= 1;
+    data[i / 8] <<= 1;
     // Now compare the low and high cycle times to see if the bit is a 0 or 1. When AM2302 is sending data to MCU, every bit's transmission begin with low-voltage-level that last 50us
     if (highCycles > lowCycles) {
       // High cycles are greater than 50us low cycle count, must be a 1.
-      data[i/8] |= 1;
+      data[i / 8] |= 1;
     }
     // Else high cycles are less than (or equal to, a weird case) the 50us low
     // cycle count so this must be a zero.  Nothing needs to be changed in the
@@ -319,7 +319,7 @@ boolean TDHT::read(bool force) {
     return _lastresult;
   }
   else {
-	  errorHandler.setInfo(F("#T,TDHT Checksum failure!"));
+    errorHandler.setInfo(F("#T,TDHT Checksum failure!"));
     _lastresult = false;
     return _lastresult;
   }
@@ -328,16 +328,16 @@ boolean TDHT::read(bool force) {
 
 // Wait for a level change in the signal
 // Retruns 0 if timed out
-// Returns 1 if we haven't to wait for the level. 
+// Returns 1 if we haven't to wait for the level.
 uint32_t TDHT::waitForPulse(bool level) {
-	uint32_t count = 1;
+  uint32_t count = 1;
 
-	while (dioDHT.read() != level) {
-		if (count++ >= _maxcycles) {
-			return 0; // Exceeded timeout, fail.
-		}
-	}
-	return count;
+  while (dioDHT.read() != level) {
+    if (count++ >= _maxcycles) {
+      return 0; // Exceeded timeout, fail.
+    }
+  }
+  return count;
 }
 
 // Expect the signal line to be at the specified level for a period of time and
@@ -350,11 +350,11 @@ uint32_t TDHT::waitForPulse(bool level) {
 uint32_t TDHT::countPulse(bool level) {
   uint32_t count = 0;
 
-    while (dioDHT.read() == level) {
-      if (count++ >= _maxcycles) {
-        return 0; // Exceeded timeout, fail.
-      }
+  while (dioDHT.read() == level) {
+    if (count++ >= _maxcycles) {
+      return 0; // Exceeded timeout, fail.
     }
+  }
 
 
   return count;

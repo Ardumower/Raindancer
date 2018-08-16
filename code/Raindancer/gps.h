@@ -32,110 +32,110 @@
 
 /* Struktur fuer GPGGA-Record */
 struct gpgga
-    {
-    //char Latitude_Temp[GRABCHARLENGTH + 1];           // Latitude field, grab chars
-    //char Longitude_Temp[GRABCHARLENGTH + 1];          // Longitude field, grab chars
+{
+  //char Latitude_Temp[GRABCHARLENGTH + 1];           // Latitude field, grab chars
+  //char Longitude_Temp[GRABCHARLENGTH + 1];          // Longitude field, grab chars
 
-    double latitude;           /* degree of latitude */
-    char lat;                  /* 'N' or 'S' */
-    double longitude;          /* degree of longitude */
-    char lon;                  /* 'E' or 'W' */
-    unsigned char quality;     /* "Quality"-Field */
-    unsigned char satellites;  /* Number of satellites */
-    double altitude;           /* Above sea level */
-    };
+  double latitude;           /* degree of latitude */
+  char lat;                  /* 'N' or 'S' */
+  double longitude;          /* degree of longitude */
+  char lon;                  /* 'E' or 'W' */
+  unsigned char quality;     /* "Quality"-Field */
+  unsigned char satellites;  /* Number of satellites */
+  double altitude;           /* Above sea level */
+};
 
 /* Struktur fuer GPRMC-Record */
 struct gprmc
-    {
-    double latitude;           /* degree of latitude */
-    char lat;                  /* 'N' or 'S' */
-    double longitude;          /* degree of longitude */
-    char lon;                  /* 'E' or 'W' */
-    double speed;              /* speed */
-    double course;             /* march direction */
-    double time;               /* time of day */
-    long int date;             /* date */
-    };
+{
+  double latitude;           /* degree of latitude */
+  char lat;                  /* 'N' or 'S' */
+  double longitude;          /* degree of longitude */
+  char lon;                  /* 'E' or 'W' */
+  double speed;              /* speed */
+  double course;             /* march direction */
+  double time;               /* time of day */
+  long int date;             /* date */
+};
 
 struct gpsData
-    {
-    double latitude;           /* degree of latitude */
-    char lat;                  /* 'N' or 'S' */
-    double longitude;          /* degree of longitude */
-    char lon;                  /* 'E' or 'W' */
-    unsigned char quality;     /* "Quality"-Field */
-    unsigned char satellites;  /* Number of satellites */
-    double altitude;           /* Above sea level */
-    double speed;              /* speed */
-    double course;             /* march direction */
+{
+  double latitude;           /* degree of latitude */
+  char lat;                  /* 'N' or 'S' */
+  double longitude;          /* degree of longitude */
+  char lon;                  /* 'E' or 'W' */
+  unsigned char quality;     /* "Quality"-Field */
+  unsigned char satellites;  /* Number of satellites */
+  double altitude;           /* Above sea level */
+  double speed;              /* speed */
+  double course;             /* march direction */
 
-    byte hour = 0;
-    byte minute = 0;
-    byte second = 0;
-    byte dayOfWeek = 0;
-    byte day = 0;
-    byte month = 0;
-    short year = 0;
-    };
+  byte hour = 0;
+  byte minute = 0;
+  byte second = 0;
+  byte dayOfWeek = 0;
+  byte day = 0;
+  byte month = 0;
+  short year = 0;
+};
 
 class Tgps : public Thread
-    {
-    private:
+{
+  private:
 
-        uint8_t state = 0;
-        uint8_t sentence_type;
+    uint8_t state = 0;
+    uint8_t sentence_type;
 
-        int  idxInString;
-        char gpsInString[GPSINSTRINGLENGTH + 3];
+    int  idxInString;
+    char gpsInString[GPSINSTRINGLENGTH + 3];
 
-        struct gpgga m_gpgga;
-        struct gprmc m_gprmc;
+    struct gpgga m_gpgga;
+    struct gprmc m_gprmc;
 
-        
-        // GPGGA-Record examine and evaluate
-        void nmea_parse_gpgga(char *nmea, struct gpgga *loc);
- 
-        // GPRMC-Record examine and evaluate
-        void nmea_parse_gprmc(char *nmea, struct gprmc *loc);
 
-        /*
-        * Determine message type (GPGGA, GPRMC, etc.)
-        * Additionally: Filtering of incorrect packages (wrong checksum)
-        * Pass the message as parameter message
-        * Return value: The message type if valid
-        */
-        int8_t nmea_get_message_type(char *message);
+    // GPGGA-Record examine and evaluate
+    void nmea_parse_gpgga(char *nmea, struct gpgga *loc);
 
-        // Check checksum of a record
-        int8_t nmea_valid_checksum(char *message);
+    // GPRMC-Record examine and evaluate
+    void nmea_parse_gprmc(char *nmea, struct gprmc *loc);
 
-        // Convert length or width from degrees to decimal notation
-        double gps_deg_dec(double deg_point);
+    /*
+      Determine message type (GPGGA, GPRMC, etc.)
+      Additionally: Filtering of incorrect packages (wrong checksum)
+      Pass the message as parameter message
+      Return value: The message type if valid
+    */
+    int8_t nmea_get_message_type(char *message);
 
-        // Convert length and width from degrees to decimal notation
-        void gps_degLat(double *latitude, char ns);
-        void gps_degLong(double *longitude, char we);
+    // Check checksum of a record
+    int8_t nmea_valid_checksum(char *message);
 
-        // Convert date (stored as long int, format: ddmmyy) to string
-        void gps_date2str(long int date, char *datestr);
-        // Convert time(saved as double, format: hhmmss.sss) to string(without decimal places of seconds)
-        void gps_time2str(double time, char *timestr);
-        
-        // is point inside polygon
-        int pnpoly(int nvert, const float *vertx, const float *verty, float testx, float testy);
+    // Convert length or width from degrees to decimal notation
+    double gps_deg_dec(double deg_point);
 
-    public:
-        bool flagInsidePolygon;
-        bool flagShowGPS;  // show calculated gps data 
-        bool flagSendToCC; // send data to control center
-        gpsData m_gpsData; // pgs date determined
+    // Convert length and width from degrees to decimal notation
+    void gps_degLat(double *latitude, char ns);
+    void gps_degLong(double *longitude, char we);
 
-        void setup();
-        virtual void run();
-        void showConfig();
+    // Convert date (stored as long int, format: ddmmyy) to string
+    void gps_date2str(long int date, char *datestr);
+    // Convert time(saved as double, format: hhmmss.sss) to string(without decimal places of seconds)
+    void gps_time2str(double time, char *timestr);
 
-    };
+    // is point inside polygon
+    int pnpoly(int nvert, const float *vertx, const float *verty, float testx, float testy);
+
+  public:
+    bool flagInsidePolygon;
+    bool flagShowGPS;  // show calculated gps data
+    bool flagSendToCC; // send data to control center
+    gpsData m_gpsData; // pgs date determined
+
+    void setup();
+    virtual void run();
+    void showConfig();
+
+};
 
 
 
