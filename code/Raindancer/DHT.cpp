@@ -31,6 +31,9 @@ TDHT::TDHT( uint8_t type) {
 void TDHT::setup(void) {
   // set up the pins!
   //pinMode(_pin, INPUT_PULLUP); -- normally bus is high:
+  //bber20
+  dataRate = 3;
+  maxRecordReturn = 0;//deactivate the cco on startup
   dioDHT.setPinMode(INPUT);
 
   flagShowTemp = false;
@@ -85,14 +88,17 @@ void TDHT::run() {
 
   if (isnan(dhtTempActual)) {
     errorCounter = (errorCounter < 65000) ? errorCounter + 1 : errorCounter;
-    if (flagShowTemp) {
-      showData();
-    }
     return;
   }
 
   if (flagShowTemp) {
-    showData();
+    count++;
+    //bber20
+    if ((count >= dataRate) && (recordSentToCCO <= maxRecordReturn)) { // show value not every time the service is called
+      showData();
+      recordSentToCCO++;
+      count = 0;
+    }
   }
 
   // two times overtemp must be measured before CONF_OVERHEATING_TEMP is reached

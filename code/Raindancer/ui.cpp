@@ -404,8 +404,30 @@ void cmd_help(int arg_cnt, char **args)
 
   //xdes1
   errorHandler.setInfoNoLog(F("\r\n=== Control Center ===\r\n"));
-  errorHandler.setInfoNoLog(F("set.cco,1/0  //turn output for Control Center on/off\r\n"));
-
+   //bber20
+  errorHandler.setInfoNoLog(F("set.cco,arg1,arg2,arg3  //select data output for Control Center on/off\r\n"));
+  wait = millis();
+  while (millis() - wait < 100) executeLoop();
+  errorHandler.setInfoNoLog(F("        ***arg1*** is the data type you want :\r\n"));
+  errorHandler.setInfoNoLog(F("            0 Stop all \r\n"));
+  errorHandler.setInfoNoLog(F("            1 Start all \r\n"));
+  errorHandler.setInfoNoLog(F("            2 Battery Data \r\n"));
+  errorHandler.setInfoNoLog(F("            3 Temperature Data \r\n"));
+  errorHandler.setInfoNoLog(F("            4 GPS Data \r\n"));
+  errorHandler.setInfoNoLog(F("            5 Processing Data \r\n"));
+  wait = millis();
+  while (millis() - wait < 100) executeLoop();
+  errorHandler.setInfoNoLog(F("        ***arg2*** is rate (number of service loop before send) :\r\n"));
+  errorHandler.setInfoNoLog(F("            Battery service run each 1974ms, Temperature each 20013ms \r\n"));
+  errorHandler.setInfoNoLog(F("            GPS and Processing don't use this arg \r\n"));
+  wait = millis();
+  while (millis() - wait < 100) executeLoop();
+  errorHandler.setInfoNoLog(F("        ***arg3*** is maximum record return (send arg3 result and stop) :\r\n"));
+  errorHandler.setInfoNoLog(F("            Max value is 65000 \r\n"));
+  errorHandler.setInfoNoLog(F("            0 stop the arg1 data sending \r\n"));
+  
+  
+  
 
 }
 
@@ -903,6 +925,10 @@ void cmd_activateControlCenterOutput(int arg_cnt, char **args)
 {
 
   int i = atoi(args[1]);
+  //bber20
+  uint16_t argDataRate = atoi(args[2]);
+  uint16_t argMaxRecordReturn = atoi(args[3]);
+
   //xdes1
   if (i == 0)
   {
@@ -912,7 +938,7 @@ void cmd_activateControlCenterOutput(int arg_cnt, char **args)
     _printProcessingData = false;
     errorHandler.setInfoNoLog(F("Control Center Output Off\r\n"), i);
   }
-  else
+  if (i == 1)
   {
 
     if (CONF_DISABLE_DHT_SERVICE == false)
@@ -929,6 +955,76 @@ void cmd_activateControlCenterOutput(int arg_cnt, char **args)
     }
     _printProcessingData = true;
     errorHandler.setInfoNoLog(F("Control Center Output On\r\n"), i);
+  }
+  if (i == 2) //2 is battery data voltage ex: set.cco, 2, 10, 5000
+  {
+    if (CONF_DISABLE_BATTERY_SERVICE == false)
+    {
+      batterieSensor.recordSentToCCO = 0;
+      if (argMaxRecordReturn != 0) {
+        batterieSensor.dataRate = argDataRate;
+        batterieSensor.maxRecordReturn = argMaxRecordReturn;
+        batterieSensor.show();
+        errorHandler.setInfoNoLog(F("Control Center batterie Output On\r\n"), i);
+      }
+      else
+      {
+        batterieSensor.dataRate = 0;
+        batterieSensor.maxRecordReturn = 0;
+        batterieSensor.hide();
+        errorHandler.setInfoNoLog(F("Control Center batterie Output OFF\r\n"), i);
+      }
+    }
+  }
+  if (i == 3) //3 is Temperature ex: set.cco, 3, 10, 5000
+  {
+    if (CONF_DISABLE_DHT_SERVICE == false)
+    {
+      dht.recordSentToCCO = 0;
+
+      if (argMaxRecordReturn != 0) {
+        dht.dataRate = argDataRate;
+        dht.maxRecordReturn = argMaxRecordReturn;
+        dht.show();
+        errorHandler.setInfoNoLog(F("Control Center Temperature Output On\r\n"), i);
+      }
+      else
+      {
+        dht.dataRate = 0;
+        dht.maxRecordReturn = 0;
+        dht.hide();
+        errorHandler.setInfoNoLog(F("Control Center Temperature Output OFF\r\n"), i);
+      }
+
+    }
+  }
+  if (i == 4) //4 is GPS ex: set.cco, 4, 10, 5000
+  {
+    if (CONF_DISABLE_GPS == false)
+    {
+      if (argMaxRecordReturn != 0) {
+        gps.flagSendToCC = true;
+        errorHandler.setInfoNoLog(F("Control Center GPS Output On\r\n"), i);
+      }
+      else
+      {
+        gps.flagSendToCC = false;
+        errorHandler.setInfoNoLog(F("Control Center GPS Output OFF\r\n"), i);
+      }
+
+    }
+  }
+  if (i == 5) //5 is processing data ex: set.cco, 5, 10, 5000
+  {
+    if (argMaxRecordReturn != 0) {
+      _printProcessingData = true;
+      errorHandler.setInfoNoLog(F("Control Center Processing Output On\r\n"), i);
+    }
+    else
+    {
+      _printProcessingData = false;
+      errorHandler.setInfoNoLog(F("Control Center Processing Output OFF\r\n"), i);
+    }
   }
 }//ENDFUNC
 

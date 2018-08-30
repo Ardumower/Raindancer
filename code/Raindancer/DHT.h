@@ -44,6 +44,11 @@ class TDHT : public Thread
     void show();
     void hide();
 
+    //bber20
+    uint16_t dataRate;
+    uint16_t recordSentToCCO;
+    uint16_t count;
+    uint16_t maxRecordReturn;
 
     TDHT(uint8_t type);
     void setup(void);

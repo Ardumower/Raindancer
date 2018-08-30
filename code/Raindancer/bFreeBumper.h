@@ -527,7 +527,8 @@ public:
 
 
 	}
-
+ 
+//bber22
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
 		int buffer;

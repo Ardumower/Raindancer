@@ -93,6 +93,7 @@ public:
 
     virtual void run() {
         // Wird alle 53ms aufgerufen
+        
         runned();
 		if (CONF_DISABLE_CHARGE_SERVICE) {
 			chargeVoltage = 0;
@@ -112,7 +113,8 @@ public:
 		float chargeCurrent1 = sensorValueCC * CURRENTFACTOR_CS;
 
         const float accel = 0.1f;
-
+       
+              
         if (abs(chargeVoltage - chargeVoltage1)>5)
             chargeVoltage = chargeVoltage1;
         else
@@ -138,9 +140,12 @@ public:
         }
 
     }
-
+//bber24
     bool isInChargingStation() {
-        if (chargeVoltage > 10.0f)  {
+        //if (chargeVoltage > 10.0f)  {
+        if (chargeVoltage > 1.0f)  {
+             //bber24
+            errorHandler.setInfoNoLog(F("\r\n=== station voltage detected ===\r\n"));
             return true;
         }
         return false;

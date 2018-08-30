@@ -558,21 +558,25 @@ public:
 		if (getTimeInNode() > 10000) {
 			errorHandler.setError(F("!03,motorStop too long in state\r\n"));
 		}
-
+//bber24
 		if (bb.motor.isCLCStopped()) {
 			bb.cruiseSpeed = 0;
 			bb.history[0].rotAngleIst = bb.motor.getAngleRotatedAngleDeg();
 			bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
+			errorHandler.setInfoNoLog(F("!onUpdate enableFastStopRamping\r\n"));
 			//debug->printf("onUpdate enableFastStopRamping()\r\n");
 			//bb.motor.enableFastStopRamping();
-			return BH_SUCCESS;
+      if (bb.chargeSystem.isInChargingStation()) {
+        return BH_SUCCESS;
+      }
+			
 		}
 
 		return BH_RUNNING;
 	}
 
 	virtual void onTerminate(NodeStatus status, Blackboard& bb) {
-		//debug->printf("onTerminate FastStopRamping()\r\n");
+		errorHandler.setInfoNoLog(F("onTerminate FastStopRamping()\r\n"));
 		//bb.motor.enableDefaultRamping();
 	}
 };

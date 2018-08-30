@@ -724,7 +724,10 @@ void TBehaviour::setup()
 	//mseqTrackPerimeter.addChildren(&parLineFollow, &motorStop, &LFRotateCW, &motorStop, &LFRotateCC105);
 
 	mseqTrackPerimeter.addChildren(&parLineFollow, &motorStop, &LFRotateCC105);
+ 
 	mseqDockingStation.addChildren(&conInDockingStation,&MotorStopFast,&dnWaitDockingStation, &perTrackChargingStationReached);
+  //bber21
+  //mseqDockingStation.addChildren(&conInDockingStation,&hardstop,&dnWaitDockingStation, &perTrackChargingStationReached);
 
     //FLFailer.setChild(&motorStop);
     //mseqOvershootLeft.addChildren(&conStopOvershootLeft,&motorStop,&FLRotateCW,&FLFailer );

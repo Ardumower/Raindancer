@@ -51,10 +51,17 @@ class TbatterieSensor : public Thread
 
     float sensorValue;
     float voltage;
-
+    //bber20
+    uint16_t dataRate;
+    uint16_t recordSentToCCO = 10;
+    uint16_t maxRecordReturn;
+    
     void setup() {
       sensorValue = 0;
       voltage = 24;
+      //bber20
+      dataRate = 3;
+      maxRecordReturn = 0;//deactivate the cco on startup
       sensorValue = aiBATVOLT.getVoltage();
       time = millis();
     }
@@ -88,9 +95,11 @@ class TbatterieSensor : public Thread
       const float accel = 0.1f;
 
       if (flagShowVoltage) {
-        count++;
-        if (count > 3) { // show value not every time the service is called
+         count++;
+        //bber20
+        if ((count >= dataRate) && (recordSentToCCO <= maxRecordReturn)) { // show value not every time the service is called
           showData();
+          recordSentToCCO++;
           count = 0;
         }
       }

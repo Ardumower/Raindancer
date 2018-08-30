@@ -584,13 +584,14 @@ public:
 		if (bb.driveDirection == DD_REVERSE_ESC_OBST) {
 			return BH_FAILURE;
 		}
+//bber23
 
-		if (bb.bumperSensor.isBumperActivated()) {  
-	
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (bb.bumperSensor.isBumperActivated() && !bb.chargeSystem.isInChargingStation()) {  
+	  	sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
+      //return BH_FAILURE;
 		}
 
 		return BH_FAILURE;
