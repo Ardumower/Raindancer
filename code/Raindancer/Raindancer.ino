@@ -64,6 +64,8 @@ Set to true only the correct CHASSIS
 /*********************************************************************/
 // Global Variables
 /*********************************************************************/
+#define VERSION "1.0.0 Raindancer"
+
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;
 unsigned long startLoopTime = 0;
@@ -333,7 +335,8 @@ void setup()
 	errorHandler.setInfo(F("WATCHDOG ENABLED\r\n"));
 #endif
 
-    errorHandler.setInfo(F("Setup finished. Loop is running.\r\n\r\n"));
+    errorHandler.setInfo(F("Setup finished. Loop is running.\r\n"));
+    errorHandler.setInfo(F("Version %s\r\n\r\n"), VERSION);
     errorHandler.setInfo(F("Press H for help.\r\n"));
     //Startsound ausgeben
     Buzzer.sound(SND_START);
