@@ -98,6 +98,7 @@ Private-use only! (you need to ask for a commercial-use)
 //#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321                 
 //-----
 #define pinRain 44                 // rain sensor
+#define pinRainAD A6                 // rain sensor
 
 
 
@@ -149,6 +150,7 @@ DigitalOut doMyLED(pinLED);
 DigitalInOut dioDHT(pinDHT, INPUT);
 
 DigitalIn  diPinRain(pinRain, false);
+AnalogIn   aiPinRain(pinRainAD);
 
 // left wheel motor
 DigitalOut doMotorEnable(pinMotorEnable);
@@ -297,6 +299,7 @@ void hardwareSetup() {
 	dioDHT.write(LOW);
 
 	diPinRain.setup();
+    aiPinRain.setup();
 
 	diBumperL.setup();
 	diBumperR.setup();

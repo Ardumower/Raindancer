@@ -316,9 +316,6 @@ void setup()
 		chargeSystem.measureOffset();
 	}
 
-	errorHandler.setInfo(F("Setup finished. Loop is running.\r\n\r\n"));
-
-	errorHandler.setInfo(F("Press H for help.\r\n"));
 
 	// Show perimeter signals with arduino serial plotter
 	//perimeterSensoren.coilL.showADCWithoutOffset = true;
@@ -329,10 +326,6 @@ void setup()
 	//perimeterSensoren.coilR.showPSNRFunction = true;
 
 
-	//Startsound ausgeben
-	Buzzer.sound(SND_START);
-
-
 #if CONF_ENABLEWATCHDOG ==  true
 	// Wenn Watchdog enabled/disabled wurde, kann dieser nicht wieder disabled/enabled werden.
 	// Das geht nurl wenn der Microcontroller neu gestartet wird.
@@ -340,6 +333,10 @@ void setup()
 	errorHandler.setInfo(F("WATCHDOG ENABLED\r\n"));
 #endif
 
+    errorHandler.setInfo(F("Setup finished. Loop is running.\r\n\r\n"));
+    errorHandler.setInfo(F("Press H for help.\r\n"));
+    //Startsound ausgeben
+    Buzzer.sound(SND_START);
 
 }
 

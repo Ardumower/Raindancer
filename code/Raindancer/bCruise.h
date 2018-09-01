@@ -154,11 +154,35 @@ public:
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 		bb.flagGoHome = false;
 		bb.setBehaviour(BH_FINDPERIMETER);
-		//errorHandler.setInfo("!03,bb.setBehaviour(BH_FINDPERIMETER);");
+        errorHandler.setInfo(F("!03,TCruiseBatLow bat low detected\r\n"));
 		return BH_SUCCESS;
 	}
 };
 
+
+class TCruiseRaining : public Node
+    {
+    private:
+
+    public:
+
+        TCruiseRaining()
+            {
+            }
+
+        virtual void onInitialize(Blackboard& bb)
+            {
+            }
+
+        virtual NodeStatus onUpdate(Blackboard& bb)
+            {
+            bb.flagGoHome = false;
+            bb.setBehaviour(BH_FINDPERIMETER);
+            errorHandler.setInfo(F("!03,TCruiseRaining rain detected\r\n"));
+            bb.motor.mowMotStop();
+            return BH_SUCCESS;
+            }
+    };
 
 class TCruiseToPerimeter : public Node    // Each task will be a class (derived from Node of course).
 {
