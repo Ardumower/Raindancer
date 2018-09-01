@@ -109,6 +109,7 @@ TdnLeaveHeadChargingStation dnLeaveHeadChargingStation;
 
 WaitDecorator dnWaitDockingStation;
 WaitDecorator dnWaitGotoArea;
+WaitDecorator dnWaitFreeBumper2;
 
 
 
@@ -489,6 +490,11 @@ void TBehaviour::setup()
     dnWaitDockingStation.setChild(&conInDockingStation);
     dnWaitDockingStation.setWaitMillis(2000);
 
+    
+    dnWaitFreeBumper2.nodeName = (char*)"dnWaitFreeBumper2";
+    dnWaitFreeBumper2.setChild(&freeBumper2);
+    dnWaitFreeBumper2.setWaitMillis(1000);
+
 	dnRestoreHistory.nodeName = (char*)"dnRestoreHistory";
 	dnRestoreHistory.setChild(&selRestoreHist);
 
@@ -702,7 +708,7 @@ void TBehaviour::setup()
 
 	mseqSecondReverse.addChildren(&conSecondReverse, &secondReverse3, &motorStop);
 
-	mseqBumperActive2.addChildren(&conBumperActive, &MotorStopFast, &freeBumper2, &motorStop);
+	mseqBumperActive2.addChildren(&conBumperActive, &MotorStopFast, &dnWaitFreeBumper2, &motorStop);
 
 	mseqTrackPerimeterEscapeObst.addChildren(&conRotateAtPer,&setArc45CC,&mseqRotatePer);
 	mseqTrackPerimeterEscapeObst2.addChildren(&conDriveCurve,&driveCurve, &motorStop,&checkOutsideAgain);
@@ -735,7 +741,7 @@ void TBehaviour::setup()
     //selPerTracking.addChildren(&trackPerimeter );
 
     selPerimeterTracking.nodeName = (char*)"selPerimeterTracking";
-    selPerimeterTracking.addChildren(&mseqBumperActive2,&mseqDockingStation, &mseqSecondReverse, &mseqTrackPerimeterEscapeObst,&mseqTrackPerimeterEscapeObst2,&mseqTrackPerimeter);
+    selPerimeterTracking.addChildren(&mseqDockingStation, &mseqBumperActive2, &mseqSecondReverse, &mseqTrackPerimeterEscapeObst,&mseqTrackPerimeterEscapeObst2,&mseqTrackPerimeter);
 
 
 // ************************************
