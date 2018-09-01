@@ -104,6 +104,7 @@ int ADCManager::getConvCounter() {
 
 void ADCManager::setupChannel(byte pin, int samplecount) {
 	byte ch = pin - A0;
+    errorHandler.setInfoNoLog(F("adcman setup pin: AD%d\r\n"), ch);
 	pinMode(pin, INPUT);
 	channels[ch].pin = pin;
 	channels[ch].convComplete = false;

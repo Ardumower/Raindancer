@@ -334,7 +334,8 @@ MemSequence mseqRotateBump;
 // BatLow and raining Behaviour
 //*************************************
 
-TCruiseBatLow CruiseBatLow;
+TCruiseBatLow cruiseBatLow;
+TCruiseRaining cruiseRaining;
 Sequence seqMowBatLow;
 Sequence seqRaining;
 
@@ -825,12 +826,14 @@ void TBehaviour::setup()
     // BatLow and Raining Behaviour
     //*************************************
 
-    CruiseBatLow.nodeName= (char*)"cruiseBatLow";
+    cruiseBatLow.nodeName= (char*)"cruiseBatLow";
+    cruiseRaining.nodeName = (char*)"cruiseRaining";
+
     seqMowBatLow.nodeName= (char*)"seqMowBatLow";
 	seqRaining.nodeName = (char*)"seqRaining";
 
-    seqMowBatLow.addChildren( &conBatLow, &CruiseBatLow);
-	seqRaining.addChildren(&conRaining, &CruiseBatLow);
+    seqMowBatLow.addChildren( &conBatLow, &cruiseBatLow);
+	seqRaining.addChildren(&conRaining, &cruiseRaining);
 
     // ************************************
     // Check2 Behaviour

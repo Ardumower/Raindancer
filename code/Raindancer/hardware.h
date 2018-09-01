@@ -66,6 +66,7 @@ extern DigitalOut doMyLED;
 
 extern DigitalInOut dioDHT;
 extern DigitalIn diPinRain;
+extern AnalogIn aiPinRain;
 
 extern DigitalIn diBumperL;
 extern DigitalIn diBumperR;
