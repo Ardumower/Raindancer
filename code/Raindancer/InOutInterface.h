@@ -818,7 +818,7 @@ class i2cInOut
 
                 if (error == 0)
                     {
-                    errorHandler.setInfoNoLog(F("I2C device found at address %d  0x%02x  \r\n"), address, address);
+                    errorHandler.setInfoNoLog(F("I2C device found at address %d  0x%02x  "), address, address);
                     nDevices++;
                     switch (address)
                         {

@@ -174,6 +174,13 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 //#define CONF_USE32BIT_PER_SIGNAL        1
 
 //
+// Rain Sensor
+//
+#define CONF_RAINSENSOR_USE_DEFAULT    true    // Use a rainsensor with digital voltage output connected to P41 Rain
+#define CONF_RAINSENSOR_USE_ADC        false     // Use a rainsensor with analog voltage output connected at A6
+#define CONF_RAINSENSOR_ADC_THRESHOLD  2700     // When analog sensor goes under this threshold for 10seconds, it is raining
+
+//
 // GPS CONFIGURATION
 //
 #define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
@@ -358,6 +365,13 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_USE128BIT_PER_SIGNAL       1
 //#define CONF_USE64BIT_PER_SIGNAL          1
 //#define CONF_USE32BIT_PER_SIGNAL        1
+
+//
+// Rain Sensor
+//
+#define CONF_RAINSENSOR_USE_DEFAULT    true    // Use a rainsensor with digital voltage output connected to P41 Rain
+#define CONF_RAINSENSOR_USE_ADC        false     // Use a rainsensor with analog voltage output connected at A6
+#define CONF_RAINSENSOR_ADC_THRESHOLD  2700     // When analog sensor goes under this threshold for 10seconds, it is raining
 
 //
 // GPS CONFIGURATION
@@ -549,6 +563,14 @@ const char UBLOX_INIT[] PROGMEM =
 
 
 //
+// Rain Sensor
+//
+#define CONF_RAINSENSOR_USE_DEFAULT    false    // Use a rainsensor with digital voltage output connected to P41 Rain
+#define CONF_RAINSENSOR_USE_ADC        true     // Use a rainsensor with analog voltage output connected at A6
+#define CONF_RAINSENSOR_ADC_THRESHOLD  2700     // When analog sensor goes under this threshold for 10seconds, it is raining
+
+
+//
 // GPS CONFIGURATION
 //
 #define CONF_GPS_PASS_THROUGH           true    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
@@ -733,6 +755,12 @@ const char UBLOX_INIT[] PROGMEM =
 //#define CONF_USE64BIT_PER_SIGNAL          1
 //#define CONF_USE32BIT_PER_SIGNAL        1
 
+//
+// Rain Sensor
+//
+#define CONF_RAINSENSOR_USE_DEFAULT    false    // Use a rainsensor with digital voltage output connected to P41 Rain
+#define CONF_RAINSENSOR_USE_ADC        true     // Use a rainsensor with analog voltage output connected at A6
+#define CONF_RAINSENSOR_ADC_THRESHOLD  2700     // When analog sensor goes under this threshold for 10seconds, it is raining
 
 //
 // GPS CONFIGURATION

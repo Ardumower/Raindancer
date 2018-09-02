@@ -4,9 +4,9 @@
 #define _RAINSENSOR_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+#include "arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 /*
 http://www.netzmafia.de/skripten/hardware/RasPi/Projekt-Regensensor/index.html
@@ -42,46 +42,78 @@ delay(1000);
 #include "config.h"
 
 class TrainSensor : public Thread
-{
-private:
-	bool _isRaining;
-	
-public:
-	bool flagShowRainSensor;
+    {
+    private:
+        bool _isRainingDefault, _isRainingADC;
+        byte _count;
 
-	void setup() {
-		_isRaining = false;
-	}
+    public:
+        bool flagShowRainSensor;
+
+        void setup()
+            {
+            _isRainingDefault = false;
+            _isRainingADC = false;
+            _count = 0;
+            }
 
 
-	virtual void run() {
-		// Wird alle 1700ms aufgerufen
-		runned();
+        virtual void run()
+            {
+            // Will be called every 1773ms
+            runned();
 
-		if (CONF_DISABLE_RAIN_SERVICE) {
-			return;
-		}
+            if (CONF_DISABLE_RAIN_SERVICE)
+                {
+                return;
+                }
 
-		_isRaining = (diPinRain == LOW);
+            if (CONF_RAINSENSOR_USE_ADC)
+                {
+                int value32 = aiPinRain.read_int32();
 
-		if (flagShowRainSensor) {
-			errorHandler.setInfo(F("Is raining: %d\r\n"), _isRaining);
-		}
-	}
+                if (value32 < CONF_RAINSENSOR_ADC_THRESHOLD)
+                    {
+                    _count++;
+                    if (_count > 100) {_count = 100;} // limit count
+                    if (_count > 5) {_isRainingADC = true;}
+                    }
+                else
+                    {
+                    _count = 0;
+                    _isRainingADC = false;
+                    }
 
-	bool isRaining() {
-	
-			return _isRaining;
-	}
+                if (flagShowRainSensor)
+                    {
+                    errorHandler.setInfo(F("Is raining: %d adc: %d count: %d\r\n"), _isRainingADC, value32, _count);
+                    }
+                }
 
-	void showConfig()
-	{
-		errorHandler.setInfoNoLog(F("!03,Rain Sensor Config\r\n"));
-		errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-		errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-		errorHandler.setInfoNoLog(F("!03,is raining: %d\r\n"), _isRaining);
-	}
+            if (CONF_RAINSENSOR_USE_DEFAULT)
+                {
+                _isRainingDefault = (diPinRain == LOW);
+                if (flagShowRainSensor)
+                    {
+                    errorHandler.setInfo(F("Is raining: %d\r\n"), _isRainingDefault);
+                    }
+                }
+            }
 
-};
+        bool isRaining()
+            {
+            return _isRainingDefault || _isRainingADC;
+            }
+
+        void showConfig()
+            {
+            errorHandler.setInfoNoLog(F("!03,Rain Sensor Config\r\n"));
+            errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
+            errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
+            errorHandler.setInfoNoLog(F("!03,is _isRainingDefault: %d\r\n"), _isRainingDefault);
+            errorHandler.setInfoNoLog(F("!03,is _isRainingADC: %d\r\n"), _isRainingADC);
+            }
+
+    };
 #endif
 
