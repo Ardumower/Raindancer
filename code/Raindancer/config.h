@@ -49,8 +49,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 // If you develop the software, you are responsible, that the changes compiles with all configurations.
 
 #define ARDUMOWER_CHASSIS  false
-#define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS true
+#define PARANELLO_CHASSIS  true
+#define RAINDANCER_CHASSIS false
 #define TEST_ON_DUE_ONLY   false
 
 //======================================================================================================================
