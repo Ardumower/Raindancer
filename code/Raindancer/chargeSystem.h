@@ -140,11 +140,10 @@ public:
         }
 
     }
-//bber24
+
     bool isInChargingStation() {
-        //if (chargeVoltage > 10.0f)  {
-        if (chargeVoltage > 1.0f)  {
-             //bber24
+        if (chargeVoltage > 10.0f)  {
+            //bber24
             errorHandler.setInfoNoLog(F("\r\n=== station voltage detected ===\r\n"));
             return true;
         }
