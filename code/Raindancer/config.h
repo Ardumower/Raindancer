@@ -261,8 +261,8 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DISABLE_BT                 false
 #define CONF_DISABLE_WAN                true
-#define CONF_DISABLE_GPS                true   
-#define CONF_DISABLE_NATIVE_USB         true
+#define CONF_DISABLE_GPS                false   
+#define CONF_DISABLE_NATIVE_USB         false
 
 #define CONF_ENABLEWATCHDOG             true   // Set to false to disable Watchdog. true to enable.
 
@@ -305,7 +305,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DISABLE_DHT_SERVICE      false // Disables temp sensor
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  false   // Disables the motor stall/encoder check in closed loop control
-#define CONF_DISABLE_MOW_MOTOR          true   // Disables the mow motor
+#define CONF_DISABLE_MOW_MOTOR          false   // Disables the mow motor
 
 #define CONF_ACTVATE_AUTO_SPIRAL        true
 
@@ -369,14 +369,14 @@ const char UBLOX_INIT[] PROGMEM =
 //
 // Rain Sensor
 //
-#define CONF_RAINSENSOR_USE_DEFAULT    true    // Use a rainsensor with digital voltage output connected to P41 Rain
+#define CONF_RAINSENSOR_USE_DEFAULT    false    // Use a rainsensor with digital voltage output connected to P41 Rain
 #define CONF_RAINSENSOR_USE_ADC        false     // Use a rainsensor with analog voltage output connected at A6
 #define CONF_RAINSENSOR_ADC_THRESHOLD  2700     // When analog sensor goes under this threshold for 10seconds, it is raining
 
 //
 // GPS CONFIGURATION
 //
-#define CONF_GPS_PASS_THROUGH           false    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
+#define CONF_GPS_PASS_THROUGH           true    // When true, all received GPS data will be sent further to the control center, when control consol output is activated with set.cco,1.
 // If false, only filtered GPS data will be sent further to the control center. The code will filter out the messagetype $GPRMC (from all received GPS messages)
 // and send it to the control console, when control consol output is activated with set.cco,1.
 
@@ -402,7 +402,7 @@ const float CONF_LON_POLYGON_X[] = { 7.448400f,7.448500f,7.448400f,7.448700f,7.4
 const int   CONF_NUMBER_OF_POLYGON_POINTS = 5;  // The number of the ploygon points
 
 
-#define CONF_INIT_GPS_WITH_UBLOX        false    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
+#define CONF_INIT_GPS_WITH_UBLOX        true    // if this is set to true, the ublox gps nema 6/8 module will be initialised with the configuratinon in UBLOX_INIT[]
 // when the firmware is starting. This means only the GxRMC sentence is going to be send from the GPS module.
 
 // https://www.youtube.com/watch?v=ylxwOg2pXrc
