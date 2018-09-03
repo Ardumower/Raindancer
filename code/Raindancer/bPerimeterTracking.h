@@ -563,14 +563,10 @@ public:
 			bb.cruiseSpeed = 0;
 			bb.history[0].rotAngleIst = bb.motor.getAngleRotatedAngleDeg();
 			bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
-			errorHandler.setInfoNoLog(F("!onUpdate enableFastStopRamping\r\n"));
 			//debug->printf("onUpdate enableFastStopRamping()\r\n");
 			//bb.motor.enableFastStopRamping();
-      if (bb.chargeSystem.isInChargingStation()) {
-        return BH_SUCCESS;
-      }
-			
-		}
+      return BH_SUCCESS;
+   	}
 
 		return BH_RUNNING;
 	}
