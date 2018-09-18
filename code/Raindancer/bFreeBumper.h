@@ -126,17 +126,20 @@ public:
 
 		counter = 0;
 
-		// Wenn innerhalb von jeweils 50Sek  5x bumped. Fehler ausgeben.
+		// If bumped after freeing in 10 sec again, then increase counter.
+        // If this happens 10 times, give out error. This means if robot is not drive 10sec without a bump 10 times, 
+        // then give out an error because the mower stucks maybe.
 		// Abfangen, wenn bumperereignis wie bei AreaX und Perimetertracking nicht weiter bearbeitet wird. Dann faehrt robbi immer wieder gegen Hindernis. 
 		if (millis() - lastTimeCalled < 10000) {
 			counter1++;
+            errorHandler.setInfo(F("freeBumper counter1++ at: %lu\r\n"),millis());
 		}
 		else {
 			counter1 = 0;
 		}
 
-		if (counter1 > 5) {
-			errorHandler.setError(F("!03,freeBumper counter1 > 5\r\n"));
+		if (counter1 > 10) {
+			errorHandler.setError(F("!03,freeBumper counter1 > 10\r\n"));
 		}
 
 		if (bb.perimeterSensoren.isLeftOutside() || bb.perimeterSensoren.isRightOutside()) {
