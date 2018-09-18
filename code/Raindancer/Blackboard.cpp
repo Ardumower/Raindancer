@@ -219,32 +219,32 @@ void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _dist
 
 	if (flagShowHistory == true) {
 
-		errorHandler.setInfo(F("============================\r\n"));
+		errorHandler.setInfoNoLog(F("============================\r\n"));
 		sprintf(errorHandler.msg, "!05,driveDirection %s %s %s %s\r\n", enuDriveDirectionString[history[0].driveDirection], enuDriveDirectionString[history[1].driveDirection], enuDriveDirectionString[history[2].driveDirection], enuDriveDirectionString[history[3].driveDirection]);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
 		sprintf(errorHandler.msg, "!05,coilFirstOut %s %s %s %s\r\n", enuFlagCoilsOutsideString[history[0].coilFirstOutside], enuFlagCoilsOutsideString[history[1].coilFirstOutside], enuFlagCoilsOutsideString[history[2].coilFirstOutside], enuFlagCoilsOutsideString[history[3].coilFirstOutside]);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
 		sprintf(errorHandler.msg, "!05,rotAngleSoll %3.2f %3.2f %3.2f %3.2f\r\n", history[0].rotAngleSoll, history[1].rotAngleSoll, history[2].rotAngleSoll, history[3].rotAngleSoll);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
 		sprintf(errorHandler.msg, "!05,flagForceRotDir %s %s %s %s\r\n", enuFlagForceRotateDirectionString[history[0].flagForceRotDirection], enuFlagForceRotateDirectionString[history[1].flagForceRotDirection], enuFlagForceRotateDirectionString[history[2].flagForceRotDirection], enuFlagForceRotateDirectionString[history[3].flagForceRotDirection]);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
-		errorHandler.setInfo(F("---\r\n"));
+		errorHandler.setInfoNoLog(F("---\r\n"));
 
 		sprintf(errorHandler.msg, "!05,distanceDriven %3.2f %3.2f %3.2f %3.2f\r\n", history[0].distanceDriven, history[1].distanceDriven, history[2].distanceDriven, history[3].distanceDriven);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
 		sprintf(errorHandler.msg, "!05,rotAngleIst %3.2f %3.2f %3.2f %3.2f\r\n", history[0].rotAngleIst, history[1].rotAngleIst, history[2].rotAngleIst, history[3].rotAngleIst);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
 		sprintf(errorHandler.msg, "!05,restored  %d %d %d %d\r\n", history[0].restored, history[1].restored, history[2].restored, history[3].restored);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 
 		sprintf(errorHandler.msg, "!05,timeAdded %lu %lu %lu %lu\r\n", history[0].timeAdded, history[1].timeAdded, history[2].timeAdded, history[3].timeAdded);
-		errorHandler.setInfo();
+		errorHandler.setInfoNoLog();
 	}
 
 }
