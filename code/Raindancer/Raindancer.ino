@@ -142,7 +142,7 @@ TBehaviour myBehaviour(myBlackboard);
 // Module Variables
 /*********************************************************************/
 
-//unsigned long lastTimeShowError = 0;
+unsigned long lastTimeShowError = 0;
 bool _diableErrorhandling = false;
 
 
@@ -378,13 +378,11 @@ void loop()
 				_controlManuel = true;
 				motor.stopAllMotors();
 
-                /*
 				if (millis() - lastTimeShowError > 2000) {
 					lastTimeShowError = millis();
 					doMyLED = !doMyLED;
 					errorHandler.printError();
 				}
-                */
 			}
 		}
 

@@ -44,17 +44,17 @@ delay(1000);
 class TrainSensor : public Thread
     {
     private:
-        bool m_isRainingDefault, m_isRainingADC;
-        byte m_count;
+        bool _isRainingDefault, _isRainingADC;
+        byte _count;
 
     public:
         bool flagShowRainSensor;
 
         void setup()
             {
-            m_isRainingDefault = false;
-            m_isRainingADC = false;
-            m_count = 0;
+            _isRainingDefault = false;
+            _isRainingADC = false;
+            _count = 0;
             }
 
 
@@ -74,35 +74,35 @@ class TrainSensor : public Thread
 
                 if (value32 < CONF_RAINSENSOR_ADC_THRESHOLD)
                     {
-                    m_count++;
-                    if (m_count > 100) {m_count = 100;} // limit count
-                    if (m_count > 5) {m_isRainingADC = true;}
+                    _count++;
+                    if (_count > 100) {_count = 100;} // limit count
+                    if (_count > 5) {_isRainingADC = true;}
                     }
                 else
                     {
-                    m_count = 0;
-                    m_isRainingADC = false;
+                    _count = 0;
+                    _isRainingADC = false;
                     }
 
                 if (flagShowRainSensor)
                     {
-                    errorHandler.setInfo(F("Is raining: %d adc: %d count: %d\r\n"), m_isRainingADC, value32, m_count);
+                    errorHandler.setInfo(F("Is raining: %d adc: %d count: %d\r\n"), _isRainingADC, value32, _count);
                     }
                 }
 
             if (CONF_RAINSENSOR_USE_DEFAULT)
                 {
-                m_isRainingDefault = (diPinRain == LOW);
+                _isRainingDefault = (diPinRain == LOW);
                 if (flagShowRainSensor)
                     {
-                    errorHandler.setInfo(F("Is raining: %d\r\n"), m_isRainingDefault);
+                    errorHandler.setInfo(F("Is raining: %d\r\n"), _isRainingDefault);
                     }
                 }
             }
 
         bool isRaining()
             {
-            return m_isRainingDefault || m_isRainingADC;
+            return _isRainingDefault || _isRainingADC;
             }
 
         void showConfig()
@@ -110,8 +110,8 @@ class TrainSensor : public Thread
             errorHandler.setInfoNoLog(F("!03,Rain Sensor Config\r\n"));
             errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
             errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-            errorHandler.setInfoNoLog(F("!03,is _isRainingDefault: %d\r\n"), m_isRainingDefault);
-            errorHandler.setInfoNoLog(F("!03,is _isRainingADC: %d\r\n"), m_isRainingADC);
+            errorHandler.setInfoNoLog(F("!03,is _isRainingDefault: %d\r\n"), _isRainingDefault);
+            errorHandler.setInfoNoLog(F("!03,is _isRainingADC: %d\r\n"), _isRainingADC);
             }
 
     };

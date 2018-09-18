@@ -53,7 +53,7 @@ extern void executeLoop();
 extern bool _controlManuel;
 extern bool _printProcessingData;
 extern unsigned long maxLoopTime;
-//extern unsigned long lastTimeShowError;
+extern unsigned long lastTimeShowError;
 extern TfindTriangle findTriangle;
 
 // mow motor closed loop control - no closed loop used
@@ -1326,7 +1326,7 @@ void cmd_printError(int arg_cnt, char **args)
 void cmd_resetError(int arg_cnt, char **args)
 {
   errorHandler.resetError();
-  //lastTimeShowError = 0;
+  lastTimeShowError = 0;
   motorDriver.resetFault(true);
   mowMotorDriver.resetFault(true);
   maxLoopTime = 0;
@@ -1376,16 +1376,16 @@ void cmd_showHistory(int arg_cnt, char **args)
 
     for (int x = 0; x < HISTROY_BUFSIZE; x++)
     {
-      errorHandler.setInfoNoLog(F("============================\r\n"));
-      errorHandler.setInfoNoLog(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[myBlackboard.history[x].driveDirection]);
-      errorHandler.setInfoNoLog(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[myBlackboard.history[x].coilFirstOutside]);
-      errorHandler.setInfoNoLog(F("!05,rotAngleSoll     %f\r\n"), myBlackboard.history[x].rotAngleSoll);
-      errorHandler.setInfoNoLog(F("!05,flagForceRotDir  %s\r\n"), enuFlagForceRotateDirectionString[myBlackboard.history[x].flagForceRotDirection]);
-      errorHandler.setInfoNoLog(F("!05,timeAdded        %d \r\n"), myBlackboard.history[x].timeAdded);
-      errorHandler.setInfoNoLog(F("---\r\n"));
-      errorHandler.setInfoNoLog(F("!05,distanceDriven   %f\r\n"), myBlackboard.history[x].distanceDriven);
-      errorHandler.setInfoNoLog(F("!05,rotAngleIst      %f \r\n"), myBlackboard.history[x].rotAngleIst);
-      errorHandler.setInfoNoLog(F("!05,restored         %d \r\n"), myBlackboard.history[x].restored);
+      errorHandler.setInfo(F("============================\r\n"));
+      errorHandler.setInfo(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[myBlackboard.history[x].driveDirection]);
+      errorHandler.setInfo(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[myBlackboard.history[x].coilFirstOutside]);
+      errorHandler.setInfo(F("!05,rotAngleSoll     %f\r\n"), myBlackboard.history[x].rotAngleSoll);
+      errorHandler.setInfo(F("!05,flagForceRotDir  %s\r\n"), enuFlagForceRotateDirectionString[myBlackboard.history[x].flagForceRotDirection]);
+      errorHandler.setInfo(F("!05,timeAdded        %d \r\n"), myBlackboard.history[x].timeAdded);
+      errorHandler.setInfo(F("---\r\n"));
+      errorHandler.setInfo(F("!05,distanceDriven   %f\r\n"), myBlackboard.history[x].distanceDriven);
+      errorHandler.setInfo(F("!05,rotAngleIst      %f \r\n"), myBlackboard.history[x].rotAngleIst);
+      errorHandler.setInfo(F("!05,restored         %d \r\n"), myBlackboard.history[x].restored);
 
     }
 
