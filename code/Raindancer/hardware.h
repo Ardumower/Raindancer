@@ -26,7 +26,7 @@ Private-use only! (you need to ask for a commercial-use)
 #else
 	#include "WProgram.h"
 #endif
-
+#include "config.h"
 #include "InOutInterface.h"
 #include "BufferSerial.h"
 #include "CRotaryEncoder.h"
@@ -119,6 +119,11 @@ extern MC33926Mow mowMotorDriver;
 
 extern i2cInOut i2cRTC;
 extern i2cInOut i2cEEPROM;
+
+
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+extern i2cInOut i2cAPR;
+#endif
 
 
 extern void hardwareRun();

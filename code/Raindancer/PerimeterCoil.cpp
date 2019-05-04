@@ -1,6 +1,6 @@
-//
-//
-//
+#include "config.h"
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+//###########################################################
 
 #include "PerimeterCoil.h"
 #include "errorhandler.h"
@@ -420,8 +420,8 @@ void PerimeterCoil::run(void) {
 	}
 
 
-
-
-
-
 }
+
+
+//###########################################################
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false

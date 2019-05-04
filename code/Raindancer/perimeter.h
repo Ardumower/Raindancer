@@ -1,3 +1,5 @@
+
+
 /*
 Robotic Lawn Mower
 Copyright (c) 2017 by Kai WÃ¼rtz
@@ -34,16 +36,23 @@ Private-use only! (you need to ask for a commercial-use)
 #include "helpers.h"
 #include "PerimeterCoil.h"
 #include "RunningMedian.h"
+#include "config.h"
 
 
 enum EPerSignal {
-    SIGNAL_INSIDE = -1, // optional, -1 is the initial state of the fsm
-    SIGNAL_NA = 0,
-    SIGNAL_OUTSIDE = 1
+	SIGNAL_INSIDE = -1, // optional, -1 is the initial state of the fsm
+	SIGNAL_NA = 0,
+	SIGNAL_OUTSIDE = 1
 };
 
+
+//###########################################################
+// INCLUDE FOR PERIMETER RECEIVER CALCULATED BY DUE
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+//###########################################################
+
 enum EPerReceiveState {
-    SPR_OFF = -1, // optional, -1 is the initial state of the fsm
+	SPR_OFF = -1, // optional, -1 is the initial state of the fsm
 	SPR_WAIT_COILL_SAMPLE_COMPLETED,
 	SPR_WAIT_COILR_SAMPLE_COMPLETED,
 	SPR_COILL_CALCULATE,
@@ -51,81 +60,218 @@ enum EPerReceiveState {
 
 };
 
-
-
-class TPerimeterThread: public Thread, public FSM<EPerReceiveState>
-{
+class TPerimeterThread : public Thread, public FSM<EPerReceiveState> {
 private:
 
+	PerimeterCoil coilL;
+	PerimeterCoil coilR;
 
-    float arcToPerimeter;
-    
+	// Achtung, Werte sind positive fÃ¼r inside!!!
+	int magnetudeL;  // nimmt nur beim start 0 an. danach wird immer der letzte wert gelatched, wenn signal verloren
+	int magnetudeR;
+	int magnetudeL0; // nimmt zusätzlich 0 an wenn signal ungültig. Wird für Linefollowing verwendet verwendet.
 
-    virtual void UpdateState( EPerReceiveState t );
+	int16_t signalCounterL;    // 2 outside >=  wert  >=-2 inside
+	int16_t signalCounterR;
 
-    // Werte hier negative fÃ¼r inside
-    int32_t _magnetudeL;
+	virtual void UpdateState(EPerReceiveState t);
+
+	// Value negative for inside
+	int32_t _magnetudeL;
 	int32_t _magnetudeR;
 	int32_t curMaxL, curMaxR;
-	FastRunningMedian<int32_t, 16,0> medianMagL;
-	FastRunningMedian<int32_t, 16,0> medianMagR;
+	FastRunningMedian<int32_t, 16, 0> medianMagL;
+	FastRunningMedian<int32_t, 16, 0> medianMagR;
 
-    // Werte hier positiv fÃ¼r inside
-    void CaluculateInsideOutsideL(int32_t magl);
+	// Werte hier positiv fÃ¼r inside
+	void CaluculateInsideOutsideL(int32_t magl);
 	void CaluculateInsideOutsideR(int32_t magr);
 
 public:
 
-	PerimeterCoil coilL;
-	PerimeterCoil coilR;
-	//-----------------------------------------------------
-    // Empfangsdaten von Perimetersensoren Links und Rechts
-    //-----------------------------------------------------
+	void showADCWithoutOffset(uint8_t coil, bool bValue) {
+		if (coil == 'L') {
+			coilL.showADCWithoutOffset = bValue;
+		}
+		else {
+			coilR.showADCWithoutOffset = bValue;
+		}
+	}
 
-    //  Achtung, vor dem Verwenden  der Daten erstmal prÃ¼fen ob neueDatenEmpfangen == true ist. Wenn Daten verarbeitet wurden, neueDatenEmpfangen=false setzen.
-    // Funktioniert nicht, wenn mehrer Prozesse gleichzeitig auf die Daten zugreifen
-    //  checksumError gibt an, ob die empfangenen Daten richtig sind oder fehlerhaft. Die Daten werden in die Variablen eingetragen, neueDatenEmpfangen wird aber auf false gesetzt.
-    //  seriellesSignalHeaderError gibt an, dass Daten auf der Seriellen Leitung emfangen wurden, aber der Header nicht gefunden wurde. Variablen Daten werden nicht verÃ¤ndert.
+	void showCorrelation(uint8_t coil, bool bValue) {
+		if (coil == 'L') {
+			coilL.showCorrelation = bValue;
+		}
+		else {
+			coilR.showCorrelation = bValue;
+		}
+	}
 
+	void showCorrelationSQ(uint8_t coil, bool bValue) {
+		if (coil == 'L') {
+			coilL.showCorrelationSQ = bValue;
+		}
+		else {
+			coilR.showCorrelationSQ = bValue;
+		}
+	}
 
-    // Achtung, Werte sind positive fÃ¼r inside!!!
-    int magnetudeL;  // nimmt nur beim start 0 an. danach wird immer der letzte wert gelatched, wenn signal verloren
-    int magnetudeR;
-	int magnetudeL0; // nimmt zusätzlich 0 an wenn signal ungültig. Wird für Linefollowing verwendet verwendet.
+	void showPSNRFunction(uint8_t coil, bool bValue) {
+		if (coil == 'L') {
+			coilL.showPSNRFunction = bValue;
+		}
+		else {
+			coilR.showPSNRFunction = bValue;
+		}
+	}
+
+	void showValuesResults(uint8_t coil, bool bValue) {
+		if (coil == 'L') {
+			coilL.showValuesResults = bValue;
+		}
+		else {
+			coilR.showValuesResults = bValue;
+		}
+	}
+
+	void showMatchedFilter(uint8_t coil, bool bValue) {
+		if (coil == 'L') {
+			coilL.showMatchedFilter = bValue;
+		}
+		else {
+			coilR.showMatchedFilter = bValue;
+		}
+	}
+
 	int magnetudeR0;
 
-	int16_t signalCounterL;    // 2 outside >=  wert  >=-2 inside
-	int16_t signalCounterR;
-	int16_t signalCounterLFast;    // 2 outside >=  wert  >=-2 inside
-	int16_t signalCounterRFast;
-    
 	unsigned long lastTimeSignalReceivedL;
-    unsigned long lastTimeSignalReceivedR;
-    
-    int count;
+	unsigned long lastTimeSignalReceivedR;
 
 	int magMax;
-    
-    // Achtung, Linefollowing arbeitet mit positiven werten!!!
-    //long magLineFollow;
-    //long magLineFollowMin;
-    //long magLineFollowMax;
-       
-    bool showValuesOnConsole;
 
-    bool isNearPerimeter();
 
-    bool isLeftInside();
-    bool isRightInside();
+	bool showValuesOnConsole;
+
+	bool isNearPerimeter();
+
+	bool isLeftInside();
+	bool isRightInside();
 	//bool isRightInsideMag();
-    bool isLeftOutside();
-    bool isRightOutside();
+	bool isLeftOutside();
+	bool isRightOutside();
 	//bool isRightOutsideMag();
 
-    void setup();
-    virtual void run(void);
+	void setup();
+	virtual void run(void);
 	void showConfig();
 };
 
-#endif
 
+
+//###########################################################
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+
+
+
+//###########################################################
+// INCLUDE FOR PERIMETER RECEIVER CALCULATED BY DUE
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+//###########################################################
+
+
+#define I2C_RECEICEBUFFER 15 //10
+#define I2C_TXBUFFERSIZE 1
+
+class TPerimeterThread : public Thread {
+private:
+
+
+	// Achtung, Werte sind positive fÃ¼r inside!!!
+	int magnetudeL;  // nimmt nur beim start 0 an. danach wird immer der letzte wert gelatched, wenn signal verloren
+	int magnetudeR;
+	int magnetudeL0; // nimmt zusätzlich 0 an wenn signal ungültig. Wird für Linefollowing verwendet verwendet.
+
+	int16_t signalCounterL;    // 2 outside >=  wert  >=-2 inside
+	int16_t signalCounterR;
+
+
+	// Werte hier positiv fÃ¼r inside
+	void CaluculateInsideOutsideL(int32_t magl);
+	void CaluculateInsideOutsideR(int32_t magr);
+
+	int16_t packetCounter;
+	uint8_t shortResult = 0;
+	uint8_t lastPacketCounter = 0;
+
+
+	struct {
+		uint8_t result;
+		uint8_t potL;
+		uint8_t potR;
+		uint8_t ratioL;
+		uint8_t ratioR;
+		uint8_t resetCnt;
+		int16_t L;
+		int16_t R;;
+	} RxValues;
+
+
+	uint8_t RxBuf[I2C_RECEICEBUFFER];
+
+	uint8_t TxBuffer[I2C_TXBUFFERSIZE];
+
+	int state;
+	int testcounter;
+
+public:
+
+	void showADCWithoutOffset(uint8_t coil, bool bValue) {
+	}
+
+	void showCorrelation(uint8_t coil, bool bValue) {
+	}
+
+	void showCorrelationSQ(uint8_t coil, bool bValue) {
+	}
+
+	void showPSNRFunction(uint8_t coil, bool bValue) {
+	}
+
+	void showValuesResults(uint8_t coil, bool bValue) {
+	}
+
+	void showMatchedFilter(uint8_t coil, bool bValue) {
+	}
+
+	int magnetudeR0;
+
+	unsigned long lastTimeSignalReceivedL;
+	unsigned long lastTimeSignalReceivedR;
+
+	int magMax;
+
+	bool showValuesOnConsole;
+
+	bool isNearPerimeter();
+
+	bool isLeftInside();
+	bool isRightInside();
+
+	bool isLeftOutside();
+	bool isRightOutside();
+
+	void setup();
+	virtual void run(void);
+	void showConfig();
+};
+
+
+//###########################################################
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+
+
+
+//###########################################################
+//###########################################################
+#endif // #ifndef PERIMETER_H

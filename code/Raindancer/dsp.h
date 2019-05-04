@@ -1,4 +1,8 @@
 
+#include "config.h"
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+//###########################################################
+
 #ifndef _DSP_H_
 #define _DSP_H_
 
@@ -383,3 +387,5 @@ class DSP {
 #endif  /* _DSP_H_ */
 
 
+//###########################################################
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false

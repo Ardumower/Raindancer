@@ -1,3 +1,8 @@
+#include "config.h"
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+//###########################################################
+
+
 /*
  **************************       RADIX-4 FFT LIBRARY      *************************
  * http://coolarduino.wordpress.com
@@ -482,4 +487,5 @@ void DSP::fft4( DSP_TYPE *fr, DSP_TYPE *fi, int ldn, bool iFFTflag){
   
 }
 
-
+//###########################################################
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false

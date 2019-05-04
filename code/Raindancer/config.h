@@ -50,8 +50,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define ARDUMOWER_CHASSIS  false
 #define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS true
-#define TEST_ON_DUE_ONLY   false
+#define RAINDANCER_CHASSIS false
+#define TEST_ON_DUE_ONLY   true
 
 //======================================================================================================================
 // CONFIG FOR ARDUMOWER CHASSIS
@@ -102,7 +102,7 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 #define CONF_DISABLE_BUMPER_SERVICE		true   // Disables original bumper sensor on pinBumperLeft => diBumperL and pinBumperRight => diBumperR
 #define CONF_DISABLE_BUMPERDUINO_SERVICE	true   // Disables my own bumper duino sensor on pinUserSwitch2 => diBumperSensor
 
-
+#define CONF_USE_ADVANCED_PERIMETER_SERVICE	false  // Set this to true if you use an advanced perimeter receiver
 #define CONF_DISABLE_PERIMETER_SERVICE	false   // Disables perimeter sensor
 #define CONF_DISABLE_RTC_SERVICE		true    // Disables rtc sensor
 #define CONF_DISABLE_EEPROM_SERVICE		false   // Disables EEPROM requests
@@ -135,8 +135,7 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define CONF_PER_CORRECTION_ANGLE	    30			// TRotateBothCoilsInside rotates both coils inside. This angle must be rotated further to stand parallel to the perimeter wire. 
 // Depends on the chassis construction 
-#define CONF_PER_USE_COUNTER_THRESHOLD	200			// If the perimeter magnitude is below this value, use signalCounterL/R to evaluate signal otherwise use magnetude of perimetersignal.
-// This is to make the signal more robust when robot is in the middle of the lawn. 
+
 #define CONF_PER_SIGNAL_LOST_TIME	    (2000ul)	// (ms)  When no perimetersignal is received on both coils in this timerange, TCheck2PerSignal stops motors until signal is reached again
 
 #define CONF_PER_SIGNAL_LOST_TIME_OONECOIL	(10000ul) // same as CONF_PER_SIGNAL_LOST_TIME but the coils are checked separately.  
@@ -295,7 +294,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DISABLE_BUMPER_SERVICE   false   // Disables original bumper sensor on pinBumperLeft => diBumperL and pinBumperRight => diBumperR
 #define CONF_DISABLE_BUMPERDUINO_SERVICE  true   // Disables my own bumper duino sensor on pinUserSwitch2 => diBumperSensor
 
-
+#define CONF_USE_ADVANCED_PERIMETER_SERVICE	false  // Set this to true if you use an advanced perimeter receiver
 #define CONF_DISABLE_PERIMETER_SERVICE  false   // Disables perimeter sensor
 #define CONF_DISABLE_RTC_SERVICE    false    // Disables rtc sensor
 #define CONF_DISABLE_EEPROM_SERVICE   false   // Disables EEPROM requests
@@ -328,8 +327,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_PER_CORRECTION_ANGLE     5     // TRotateBothCoilsInside rotates both coils inside. This angle must be rotated further to stand parallel to the perimeter wire. 
 // Depends on the chassis construction
-#define CONF_PER_USE_COUNTER_THRESHOLD  200     // If the perimeter magnitude is below this value, use signalCounterL/R to evaluate signal otherwise use magnetude of perimetersignal.
-// This is to make the signal more robust when robot is in the middle of the lawn.
+
 #define CONF_PER_SIGNAL_LOST_TIME     (2000ul)  // (ms)  When no perimetersignal is received on both coils in this timerange, TCheck2PerSignal stops motors until signal is reached again
 
 #define CONF_PER_SIGNAL_LOST_TIME_OONECOIL  (10000ul) // same as CONF_PER_SIGNAL_LOST_TIME but the coils are checked separately.  
@@ -490,7 +488,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DISABLE_BUMPER_SERVICE		false   // Disables original bumper sensor on pinBumperLeft => diBumperL and pinBumperRight => diBumperR
 #define CONF_DISABLE_BUMPERDUINO_SERVICE	false   // Disables my own bumper duino sensor on pinUserSwitch2 => diBumperSensor
 
-
+#define CONF_USE_ADVANCED_PERIMETER_SERVICE	false  // Set this to true if you use an advanced perimeter receiver
 #define CONF_DISABLE_PERIMETER_SERVICE	false   // Disables perimeter sensor
 #define CONF_DISABLE_RTC_SERVICE		true    // Disables rtc sensor
 #define CONF_DISABLE_EEPROM_SERVICE		false   // Disables EEPROM requests
@@ -523,8 +521,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_PER_CORRECTION_ANGLE	    5			// TRotateBothCoilsInside rotates both coils inside. This angle must be rotated further to stand parallel to the perimeter wire. 
                                                     // Depends on the chassis construction 
-#define CONF_PER_USE_COUNTER_THRESHOLD	200			// If the perimeter magnitude is below this value, use signalCounterL/R to evaluate signal otherwise use magnetude of perimetersignal.
-                                                    // This is to make the signal more robust when robot is in the middle of the lawn. 
+
 #define CONF_PER_SIGNAL_LOST_TIME	    (2000ul)	// (ms)  When no perimetersignal is received on both coils in this timerange, TCheck2PerSignal stops motors until signal is reached again
 
 #define CONF_PER_SIGNAL_LOST_TIME_OONECOIL	(10000ul) // same as CONF_PER_SIGNAL_LOST_TIME but the coils are checked separately.  
@@ -685,13 +682,14 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DISABLE_BUMPERDUINO_SERVICE	true   // Disables my own bumper duino sensor on pinUserSwitch2 => diBumperSensor
 
 
-#define CONF_DISABLE_PERIMETER_SERVICE	true   // Disables perimeter sensor
+#define CONF_USE_ADVANCED_PERIMETER_SERVICE	true  // Set this to true if you use an advanced perimeter receiver
+#define CONF_DISABLE_PERIMETER_SERVICE	false   // Disables perimeter sensor
 #define CONF_DISABLE_RTC_SERVICE		true    // Disables rtc sensor
 #define CONF_DISABLE_EEPROM_SERVICE		true   // Disables EEPROM requests
-#define CONF_DISABLE_BATTERY_SERVICE	false   // Disables battery sensor
+#define CONF_DISABLE_BATTERY_SERVICE	true   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE		true   // Disables charge system service
 #define CONF_DISABLE_RAIN_SERVICE       true   // Disables rain sensor
-#define CONF_DISABLE_DHT_SERVICE        false   // Disables temp sensor
+#define CONF_DISABLE_DHT_SERVICE        true   // Disables temp sensor
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  true   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          true   // Disables the mow motor
@@ -717,8 +715,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_PER_CORRECTION_ANGLE	    5			// TRotateBothCoilsInside rotates both coils inside. This angle must be rotated further to stand parallel to the perimeter wire. 
 // Depends on the chassis construction 
-#define CONF_PER_USE_COUNTER_THRESHOLD	200			// If the perimeter magnitude is below this value, use signalCounterL/R to evaluate signal otherwise use magnetude of perimetersignal.
-// This is to make the signal more robust when robot is in the middle of the lawn. 
+
 #define CONF_PER_SIGNAL_LOST_TIME	    (2000ul)	// (ms)  When no perimetersignal is received on both coils in this timerange, TCheck2PerSignal stops motors until signal is reached again
 
 #define CONF_PER_SIGNAL_LOST_TIME_OONECOIL	(10000ul) // same as CONF_PER_SIGNAL_LOST_TIME but the coils are checked separately.  

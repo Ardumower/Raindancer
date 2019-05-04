@@ -105,6 +105,7 @@ Private-use only! (you need to ask for a commercial-use)
 
 byte DS1307_ADDRESS = B1101000;
 byte AT24CX_ADDRESS = B1010000;
+byte APR_ADDRESS = 0x33;
 
 // Serial
 BufferSerial pc(Serial, 1);
@@ -205,6 +206,10 @@ MC33926Mow mowMotorDriver;
 
 i2cInOut i2cRTC(DS1307_ADDRESS);
 i2cInOut i2cEEPROM(AT24CX_ADDRESS);
+
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+i2cInOut i2cAPR(APR_ADDRESS);
+#endif
 
 
 static void ISR_ML_ENC_SIGA() {
@@ -334,8 +339,16 @@ void hardwareSetup() {
 	diEncRA.setup();
 	//DigitalIn diEncRB.setup();
 
-	aiCoilLeft.setup(512);
-	aiCoilRight.setup(512);
+	if (CONF_USE_ADVANCED_PERIMETER_SERVICE == true) {
+		errorHandler.setInfo(F("Perimetersignal will be calculated by APR connected over I2C\r\n"));
+		aiCoilLeft.setup();
+		aiCoilRight.setup();
+	}
+	else {
+		errorHandler.setInfo(F("Perimetersignal will be calculated by DUE. Pins for ADC: A4,A5\r\n"));
+		aiCoilLeft.setup(512);
+		aiCoilRight.setup(512);
+	}
 
 	i2cRTC.setup();
 	i2cRTC.I2C_scan();

@@ -1,4 +1,5 @@
-// Perimeter.h
+#include "config.h"
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
 
 #ifndef _PERIMETER_h
 #define _PERIMETER_h
@@ -82,3 +83,5 @@ private:
 
 #endif
 
+//###########################################################
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false

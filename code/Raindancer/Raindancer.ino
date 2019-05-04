@@ -27,6 +27,7 @@ Set to true only the correct CHASSIS
 ****************************************************************************************************
 */
 
+#include <Wire.h>
 #include "bHeadStation.h"
 #include "config.h"
 #include "rainSensor.h"
@@ -64,7 +65,7 @@ Set to true only the correct CHASSIS
 /*********************************************************************/
 // Global Variables
 /*********************************************************************/
-#define VERSION "1.0.0 Raindancer"
+#define VERSION "1.1.0 Raindancer"
 
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;
@@ -192,10 +193,14 @@ void setup()
 	cmd.setInterval(116);
 	//---------------------------------
 	errorHandler.setInfo(F("perimeterSensoren Setup Startet\r\n"));
-	perimeterSensoren.coilL.showMatchedFilter = true;
+	//perimeterSensoren.coilL.showMatchedFilter = true; // now in perimeterSensoren.setup();
 	perimeterSensoren.setup();
-	perimeterSensoren.coilL.showMatchedFilter = false;
-	perimeterSensoren.setInterval(1); // immer aufrufen und checken ob ein neues byte empfangen wurde
+	//perimeterSensoren.coilL.showMatchedFilter = false; // now in perimeterSensoren.setup();
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+	perimeterSensoren.setInterval(10); 
+#else
+	perimeterSensoren.setInterval(1);
+#endif
 	errorHandler.setInfo(F("perimeterSensoren Setup Finished\r\n"));
 	//---------------------------------
 	batterieSensor.setup();

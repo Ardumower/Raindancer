@@ -1,9 +1,11 @@
+
 #include "config.h"
-#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+//###########################################################
 //###########################################################
 /*
 Robotic Lawn Mower
-Copyright (c) 2017 by Kai WÃ¼rtz
+Copyright (c) 2017 by Kai Würtz
 
 Private-use only! (you need to ask for a commercial-use)
 
@@ -32,8 +34,46 @@ Private-use only! (you need to ask for a commercial-use)
 //GPS Service
 extern Tgps gps;
 
+#define I2C_MT_SHORT_RESULT 0
+#define I2C_MT_AMPLITUDE_RESULT 1
+#define I2C_MT_DETAIL_RESULT 2
+#define I2C_MT_AGC_RESULT 3
+
+#define BYTE_TO_BINARY_PATTERN "Decoded L: %c R: %c VL: %c VR: %c Back: %c Counter: %c%c%c\r\n"
+#define BYTE_TO_BINARY(byte)           \
+      (byte & 0x80 ? '1' : '0'),       \
+            (byte & 0x40 ? '1' : '0'), \
+            (byte & 0x20 ? '1' : '0'), \
+            (byte & 0x10 ? '1' : '0'), \
+            (byte & 0x08 ? '1' : '0'), \
+            (byte & 0x04 ? '1' : '0'), \
+            (byte & 0x02 ? '1' : '0'), \
+            (byte & 0x01 ? '1' : '0')
+
+
+
+union uFloat {
+	uint8_t uBytes[4];
+	float sFloat;
+};
+
+union uInt32 {
+	uint8_t uBytes[4];
+	int32_t sIn32t;
+};
+
+union uInt16 {
+	uint8_t uBytes[2];
+	int16_t sIn16t;
+};
+
+union uInt8 {
+	uint8_t uBytes[1];
+	int8_t sInt8;
+};
+
 void TPerimeterThread::setup() {
-	coilL.showMatchedFilter = true;
+
 	magnetudeL = 0;       // maximum des korrelationssignals. Kann auch negative sein. Amplitude von kleiner +-40 ist rauschen
 	magnetudeL0 = 0;
 	lastTimeSignalReceivedL = 0;
@@ -49,20 +89,15 @@ void TPerimeterThread::setup() {
 	signalCounterL = 0;    // 2 outside >=  wert  >=-2 inside
 	signalCounterR = 0;
 
-	// Set ADC Sample Address
-	//coilL.showValues = true;
-	//coilL.showValuesResults = true;
-	coilL.setup(aiCoilLeft.getSamples());
-	coilR.setup(aiCoilRight.getSamples());
-
-
-	SetState(SPR_WAIT_COILL_SAMPLE_COMPLETED);
-	coilL.showMatchedFilter = false;
+	packetCounter = 0;
+	lastPacketCounter = 0;
+	shortResult = 0;
+	state = 0;
+	testcounter = 0;
 }
 
 
 void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl) {
-	int32_t average = 0;
 
 	if (CONF_LEFT_COIL_INVERSE) {
 		magl *= -1;
@@ -87,13 +122,6 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl) {
 		signalCounterL = min(signalCounterL + 1, 3);
 		lastTimeSignalReceivedL = millis();
 
-		// Determine Maximum amplitude
-		medianMagL.addValue((int32_t)magnetudeL);
-		curMaxL = medianMagL.getHighest(); // current max
-		average = medianMagL.getAverage(8);
-		if (average > magMax) {
-			magMax = average;
-		}
 
 	}
 
@@ -124,7 +152,6 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr) {
 	// Evaluate right
 	//----------------------------------------
 
-	int32_t average = 0;
 
 	if (CONF_RIGHT_COIL_INVERSE) {
 		magr *= -1;
@@ -144,14 +171,6 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr) {
 
 		signalCounterR = min(signalCounterR + 1, 3);
 		lastTimeSignalReceivedR = millis();
-
-		// Determine Maximum amplitude
-		medianMagR.addValue((int32_t)magnetudeR);
-		curMaxR = medianMagR.getHighest(); // current max
-		average = medianMagR.getAverage(8);
-		if (average > magMax) {
-			magMax = average;
-		}
 
 	}
 	else if (magr < 0) {
@@ -175,7 +194,7 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr) {
 
 }
 
-
+/*
 void TPerimeterThread::UpdateState(EPerReceiveState t) {
 
 	switch (t) {
@@ -222,7 +241,7 @@ void TPerimeterThread::UpdateState(EPerReceiveState t) {
 			if (showValuesOnConsole) {
 				//sprintf(errorHandler.msg, "!03,ML: %d MR: %d  CL:%d CR: %d\r\n", magnetudeL, magnetudeR, signalCounterL, signalCounterR);
 				//sprintf(errorHandler.msg, "!03,ML: %d MR: %d magMax:%d magMedL: %d magMedR: %d\r\n", magnetudeL, magnetudeR, magMax, (int)curMaxL,  (int)curMaxR);
-				sprintf(errorHandler.msg, "!03,ML: %d/%d MR: %d/%d magMax:%d magMedL%%: %d magMedR%%: %d\r\n", magnetudeL, signalCounterL, magnetudeR, signalCounterR,  magMax, (int)curMaxL * 100 / magMax, (int)curMaxR * 100 / magMax);
+				sprintf(errorHandler.msg, "!03,ML: %d/%d MR: %d/%d magMax:%d magMedL%%: %d magMedR%%: %d\r\n", magnetudeL, signalCounterL, magnetudeR, signalCounterR, magMax, (int)curMaxL * 100 / magMax, (int)curMaxR * 100 / magMax);
 				errorHandler.setInfoNoLog();
 			}
 		}
@@ -234,15 +253,19 @@ void TPerimeterThread::UpdateState(EPerReceiveState t) {
 		break;
 	}
 }
-
+*/
 
 void TPerimeterThread::showConfig() {
-	errorHandler.setInfoNoLog(F("!03,Perimeter Sensor Config\r\n"));
+	errorHandler.setInfoNoLog(F("!03,Advanced Perimeter Sensor Config\r\n"));
 	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
 	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
 }
 
 void TPerimeterThread::run() {
+	static int coil = 0;
+	int ret;
+	union uInt16 convert;
+
 	runned();
 	if (CONF_DISABLE_PERIMETER_SERVICE) {
 		magnetudeL = 1000;
@@ -251,34 +274,89 @@ void TPerimeterThread::run() {
 		magnetudeR0 = 1000;
 		return;
 	}
-	LoopFSM();
+
+
+	switch (state) {
+	case 0:
+
+		if (i2cAPR.read8Only(1, &shortResult, 1) != 1) {
+			errorHandler.setInfo(F("APR comm error\r\n"));
+			return;
+		}
+		errorHandler.setInfo(F("Short result: %u\r\n"), (unsigned int)shortResult);
+		errorHandler.setInfo(F(BYTE_TO_BINARY_PATTERN), BYTE_TO_BINARY(shortResult));
+
+		packetCounter = shortResult & 0x7;;
+		if (lastPacketCounter != packetCounter) {
+			lastPacketCounter = packetCounter;
+			state = 1;
+			interval = 1;
+		}
+		//interval = 100; 
+		break;
+	case 1:
+		ret = i2cAPR.read8Only(10, &RxBuf[0], 1);
+
+		RxValues.result = RxBuf[0];
+		RxValues.potL = RxBuf[1];
+		RxValues.potR = RxBuf[2];
+
+		convert.uBytes[0] = RxBuf[3];
+		convert.uBytes[1] = RxBuf[4];
+		RxValues.L = convert.sIn16t;
+		convert.uBytes[0] = RxBuf[5];
+		convert.uBytes[1] = RxBuf[6];
+		RxValues.R = convert.sIn16t;
+
+		RxValues.ratioL = RxBuf[7];
+		RxValues.ratioR = RxBuf[8];
+		RxValues.resetCnt = RxBuf[9];
+
+		errorHandler.setInfo(F("L: %d R: %d result: %u PotL: %u PotR: %u RatioL: %u RatioR: %u I2Creset: %u\r\n"),
+			RxValues.L, RxValues.R,
+			(unsigned int)RxValues.result,
+			(unsigned int)RxValues.potL, (unsigned int)RxValues.potR,
+			(unsigned int)RxValues.ratioL, (unsigned int)RxValues.ratioR,
+			(unsigned int)RxValues.resetCnt);
+
+		state = 0;
+		interval = 10;
+		testcounter++;
+
+		if (testcounter == 40) {
+			testcounter = 0;
+			state = 2;
+		}
+		break;
+
+	case 2:
+		if (coil == 0) {
+			coil = 1;
+			// 0xB will be send RxBuf is only a dummy write with len 0
+			ret = i2cAPR.write8(0xB, 0, &RxBuf[0]);
+		}
+		else {
+			coil = 0;
+			ret = i2cAPR.write8(0xF, 0, &RxBuf[0]);
+		}
+		state = 0;
+		interval = 10;
+
+		break;
+	default:
+		interval = 10;
+		state = 0;
+		break;
+
+	}
+
+
 }
 
 // ------------------------------------------------------------------------------------------
 // Folgende Funktionen werden von bMow aufgerufen um Max des Perimeters zu bestimmen
 // ------------------------------------------------------------------------------------------
 bool TPerimeterThread::isNearPerimeter() {
-	//return false;
-	if (magMax == 0) { //if we have not measured a magnitude always return near in order to drive low speed then
-		return true;
-	}
-
-	long thresholdUpper = (magMax * CONF_NEAR_PER_UPPER_THRESHOLD) / 100L; ; //(magMax * 80L) / 100L; //95% vom Maximalwert ist untere schwelle fuer bestimmung ob nah am perimeter wire
-	long thresholdLower = (magMax * CONF_NEAR_PER_LOWER_THRESHOLD) / 100L; ; //(magMax * 80L) / 100L; //95% vom Maximalwert ist untere schwelle fuer bestimmung ob nah am perimeter wire
-
-
-
-	if (curMaxL >= thresholdUpper && curMaxR >= thresholdLower) {
-		//sprintf(errorHandler.msg, "!03,NearPerimeter magMedL: %d magMedR: %d\r\n", (int)curMaxL, (int)curMaxR);
-		//errorHandler.setInfoNoLog();
-		return true;
-	}
-
-	if (curMaxL >= thresholdLower && curMaxR >= thresholdUpper) {
-		//sprintf(errorHandler.msg, "!03,NearPerimeter magMedL: %d magMedR: %d\r\n", (int)curMaxL, (int)curMaxR);
-		//errorHandler.setInfoNoLog();
-		return true;
-	}
 
 	if (signalCounterL <= 0 || signalCounterR <= 0) {
 		return true;
@@ -288,8 +366,6 @@ bool TPerimeterThread::isNearPerimeter() {
 }
 
 
-// ------------------------------------------------------------------------------------------
-
 
 
 bool TPerimeterThread::isLeftInside() {
@@ -297,14 +373,6 @@ bool TPerimeterThread::isLeftInside() {
 	return (signalCounterL > 0);
 }
 
-/*
-bool TPerimeterThread::isRightInsideMag()
-{
-    if (magnetudeR > 0)
-	  return true;
-    return false;
-}
-*/
 
 bool TPerimeterThread::isRightInside() {
 
@@ -326,16 +394,14 @@ bool TPerimeterThread::isRightOutside() {
 	return (signalCounterR <= 0);
 }
 
-/*
-bool TPerimeterThread::isRightOutsideMag()
-{
-    if (magnetudeR <= 0)
-	  return true;
-    return false;
-}
-*/
+
+
+
 
 
 
 //###########################################################
-#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  false
+#endif //#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+
+
+
