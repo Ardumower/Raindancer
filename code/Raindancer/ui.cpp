@@ -1256,6 +1256,8 @@ void cmd_showBHTShowLastNode(int arg_cnt, char **args) {
 
 
 void cmd_hideShowing(int arg_cnt, char **args) {
+
+	
 	clcL.flagShowSpeed = false;
 	clcR.flagShowSpeed = false;
 	clcL.flagShowEncoder = false;
@@ -1283,7 +1285,6 @@ void cmd_hideShowing(int arg_cnt, char **args) {
 	clcM.flagShowSpeed = false;
 	motorSensorL.showValuesOnConsole = false;
 	motorSensorR.showValuesOnConsole = false;
-
 	perimeterSensoren.showADCWithoutOffset('L', false);
 	perimeterSensoren.showADCWithoutOffset('R', false);
 
@@ -1303,14 +1304,12 @@ void cmd_hideShowing(int arg_cnt, char **args) {
 	perimeterSensoren.showMatchedFilter('L', false);
 	perimeterSensoren.showMatchedFilter('R', false);
 
-
 	findTriangle.flagShowFindTriangleStates = false;
 	myBlackboard.flagBHTShowLastNode = CONF_bb_flagBHTShowLastNode;
 	myBlackboard.flagShowRotateX = false;
 	myBlackboard.flagShowHistory = false;
 
 	errorHandler.setInfoNoLog(F("HIDE\r\n"));
-
 }
 
 

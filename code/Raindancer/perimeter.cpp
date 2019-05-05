@@ -99,7 +99,7 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl) {
 
 	// ** outside mag negative**
 	else if (magl < 0) {
-		signalCounterL = max(signalCounterL - 1, -3);
+		signalCounterL = max(signalCounterL - 1, -2);
 		lastTimeSignalReceivedL = millis();
 	}
 
@@ -155,7 +155,7 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr) {
 
 	}
 	else if (magr < 0) {
-		signalCounterR = max(signalCounterR - 1, -3);
+		signalCounterR = max(signalCounterR - 1, -2);
 		lastTimeSignalReceivedR = millis();
 
 	}

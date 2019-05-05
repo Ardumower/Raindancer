@@ -604,11 +604,15 @@ private:
 	}
 
 public:
+
+	
+
 	/** Create a i2c connected to the specified device
 	*
 	*  @param pin DigitalOut pin to connect to
 	*/
 	i2cInOut(const uint8_t _seven_bit_adress) : seven_bit_address(_seven_bit_adress) {
+		
 	}
 
 	void setup() {
@@ -702,8 +706,11 @@ public:
 
 
 	static void I2C_reset() {
+		i2cErrorcounter = 0;
+
 		int rtn = I2C_ClearBus(); // clear the I2C bus first before calling Wire.begin()
 		if (rtn == 0) {
+			Wire.begin();
 			return;
 		}
 
@@ -738,7 +745,7 @@ public:
 				nDevices++;
 				switch (address) {
 				case 0x1E: errorHandler.setInfoNoLog(F("probably HMC5883L\r\n")); break;
-				case 0x33: errorHandler.setInfoNoLog(F("probably Advanced perimeter Receiver\r\n")); break;
+				case 0x33: errorHandler.setInfoNoLog(F("probably Advanced Perimeter Receiver\r\n")); break;
 				case 0x50: errorHandler.setInfoNoLog(F("probably AT24C32\r\n")); break;
 				case 0x53: errorHandler.setInfoNoLog(F("probably ADXL345B\r\n")); break;
 				case 0x60: errorHandler.setInfoNoLog(F("probably CMPS11\r\n")); break;
@@ -784,6 +791,10 @@ public:
 		uint8_t rcode = Wire.endTransmission();    // Send the Tx buffer and stop
 		if (rcode != 0) {
 			errorHandler.setInfo(F("I2C write8 could not write to device: %d reg: %d code: %d\r\n"), seven_bit_address, rcode);
+			i2cErrorcounter++;
+		}
+		else {
+			if (i2cErrorcounter > 0) i2cErrorcounter--;
 		}
 		return rcode;
 		//}
@@ -822,6 +833,10 @@ public:
 		uint8_t rcode = Wire.endTransmission();    // Send the Tx buffer and stop
 		if (rcode) {
 			errorHandler.setInfo(F("I2C write16 could not write to device: %d reg: %d code: %d\r\n"), seven_bit_address, rcode);
+			i2cErrorcounter++;
+		}
+		else {
+			if (i2cErrorcounter > 0) i2cErrorcounter--;
 		}
 		return rcode;
 		//}
@@ -865,6 +880,7 @@ public:
 			//errorHandler.setInfo(F("I2C_Status 2: %lu\r\n"), I2C_Status);
 
 			if (len == i) {
+				if (i2cErrorcounter > 0) i2cErrorcounter--;
 				return i;
 			}
 			else {
@@ -873,13 +889,14 @@ public:
 
 			if (j != retryCount) {
 				delay(3);
-				errorHandler.setInfo(F("I2C read8Only N j(%i) != retryCount(%i) device: %d\r\n"), seven_bit_address,i, retryCount);
+				errorHandler.setInfo(F("I2C read8Only N j(%i) != retryCount(%i) device: %d\r\n"), seven_bit_address, i, retryCount);
 
 			}
 			errorHandler.setInfo(F("I2C read8Only N try to reading device again: %d\r\n"), seven_bit_address);
 		}
 
 		errorHandler.setInfo(F("I2C read8Only N could not read from device: %d\r\n"), seven_bit_address);
+		i2cErrorcounter++;
 		return i;
 	}
 
@@ -911,6 +928,7 @@ public:
 			}
 
 			if (len == i) {
+				if (i2cErrorcounter > 0) i2cErrorcounter--;
 				return i;
 			}
 			else {
@@ -926,6 +944,7 @@ public:
 		}
 
 		errorHandler.setInfo(F("I2C read8 N could not read from device: %d reg: %d\r\n"), seven_bit_address, reg);
+		i2cErrorcounter++;
 		return i;
 	}
 
@@ -959,6 +978,7 @@ public:
 			}
 
 			if (len == i) {
+				if (i2cErrorcounter > 0) i2cErrorcounter--;
 				return i;
 			}
 			else {
@@ -974,6 +994,7 @@ public:
 		}
 
 		errorHandler.setInfo(F("I2C read16 N could not read from device: %d reg: %d\r\n"), seven_bit_address, reg);
+		i2cErrorcounter++;
 		return i;
 	}
 
@@ -1032,6 +1053,7 @@ public:
 
 	void set_seven_bit_address(uint8_t _seven_bit_address) {
 		seven_bit_address = _seven_bit_address;
+		i2cErrorcounter = 0;
 	}
 
 	uint8_t read_seven_bit_address() {
@@ -1040,6 +1062,8 @@ public:
 
 protected:
 	uint8_t seven_bit_address;
+public:
+	static int i2cErrorcounter;
 };
 
 

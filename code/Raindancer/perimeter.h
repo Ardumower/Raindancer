@@ -188,8 +188,6 @@ private:
 
 
 	// Achtung, Werte sind positive fÃ¼r inside!!!
-	int magnetudeL;  // nimmt nur beim start 0 an. danach wird immer der letzte wert gelatched, wenn signal verloren
-	int magnetudeR;
 	int magnetudeL0; // nimmt zusätzlich 0 an wenn signal ungültig. Wird für Linefollowing verwendet verwendet.
 
 	int16_t signalCounterL;    // 2 outside >=  wert  >=-2 inside
@@ -197,11 +195,13 @@ private:
 
 
 	// Werte hier positiv fÃ¼r inside
-	void CaluculateInsideOutsideL(int32_t magl);
-	void CaluculateInsideOutsideR(int32_t magr);
+	void CaluculateInsideOutsideL(void);
+	void CaluculateInsideOutsideR(void);
 
-	int16_t packetCounter;
-	uint8_t shortResult = 0;
+	void DecodeResults(uint8_t shortResult);
+
+	
+
 	uint8_t lastPacketCounter = 0;
 
 
@@ -216,6 +216,15 @@ private:
 		int16_t R;;
 	} RxValues;
 
+	struct {
+		uint8_t result;
+		uint8_t insideL;
+		uint8_t insideR;
+		uint8_t validL;
+		uint8_t validR;
+		uint8_t backCoilActive;
+		int16_t packetCounter;
+	} RxShortResults;
 
 	uint8_t RxBuf[I2C_RECEICEBUFFER];
 
@@ -223,6 +232,8 @@ private:
 
 	int state;
 	int testcounter;
+
+	
 
 public:
 
@@ -249,7 +260,7 @@ public:
 	unsigned long lastTimeSignalReceivedL;
 	unsigned long lastTimeSignalReceivedR;
 
-	int magMax;
+	int magMax; // not used for APR. Only dummy to comply with the interface
 
 	bool showValuesOnConsole;
 

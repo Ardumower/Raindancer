@@ -673,7 +673,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_LEFT_ENCODER_INVERSE		false
 #define CONF_RIGHT_ENCODER_INVERSE		false
 
-#define CONF_LEFT_COIL_INVERSE          true
+#define CONF_LEFT_COIL_INVERSE          false
 #define CONF_RIGHT_COIL_INVERSE         false
 
 

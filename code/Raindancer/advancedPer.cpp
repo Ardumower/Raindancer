@@ -30,6 +30,7 @@ Private-use only! (you need to ask for a commercial-use)
 #include "errorhandler.h"
 #include "config.h"
 #include "gps.h"
+#include "helpers.h"
 
 //GPS Service
 extern Tgps gps;
@@ -39,7 +40,7 @@ extern Tgps gps;
 #define I2C_MT_DETAIL_RESULT 2
 #define I2C_MT_AGC_RESULT 3
 
-#define BYTE_TO_BINARY_PATTERN "Decoded L: %c R: %c VL: %c VR: %c Back: %c Counter: %c%c%c\r\n"
+#define BYTE_TO_BINARY_PATTERN "Result iL: %c iR: %c vL: %c vR: %c back: %c counter: %c%c%c\r\n"
 #define BYTE_TO_BINARY(byte)           \
       (byte & 0x80 ? '1' : '0'),       \
             (byte & 0x40 ? '1' : '0'), \
@@ -74,42 +75,53 @@ union uInt8 {
 
 void TPerimeterThread::setup() {
 
-	magnetudeL = 0;       // maximum des korrelationssignals. Kann auch negative sein. Amplitude von kleiner +-40 ist rauschen
 	magnetudeL0 = 0;
 	lastTimeSignalReceivedL = 0;
 
-	magnetudeR = 0;
 	magnetudeR0 = 0;
 	lastTimeSignalReceivedR = 0;
-	magMax = 0;
 
 	showValuesOnConsole = false;
 
+	magMax = 0;
 
 	signalCounterL = 0;    // 2 outside >=  wert  >=-2 inside
 	signalCounterR = 0;
 
-	packetCounter = 0;
 	lastPacketCounter = 0;
-	shortResult = 0;
 	state = 0;
 	testcounter = 0;
+
+	// initiate RxShortResults
+	DecodeResults(0);
+
 }
 
 
-void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl) {
+void TPerimeterThread::CaluculateInsideOutsideL(void) {
 
+	// Inverse coil 
 	if (CONF_LEFT_COIL_INVERSE) {
-		magl *= -1;
+		if (RxShortResults.insideL == 1) {
+			RxShortResults.insideL = 0;
+		}
+		else {
+			RxShortResults.insideL = 1;
+		}
 	}
 
 
-	if (magl == 0) {
-		magnetudeL0 = magl;   //needed for TlineFollow
+	// Set magnitude for linefollowing
+	if (RxShortResults.validL == 0) {
+		magnetudeL0 = 0;   //needed for TlineFollow
 	}
 	else {
-		magnetudeL = magl;
-		magnetudeL0 = magl;
+		if (RxShortResults.insideL == 1) {
+			magnetudeL0 = 1;
+		}
+		else {
+			magnetudeL0 = -1;
+		}
 	}
 
 	//----------------------------------------
@@ -117,29 +129,24 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl) {
 	//----------------------------------------
 
 	// ** inside mag positive**
-	if (magl > 0) {
+	if (RxShortResults.validL > 0) {
+		if (RxShortResults.insideL == 1) {
 
-		signalCounterL = min(signalCounterL + 1, 3);
-		lastTimeSignalReceivedL = millis();
+			signalCounterL = min(signalCounterL + 1, 3);
+			lastTimeSignalReceivedL = millis();
+		}
 
-
-	}
-
-	// ** outside mag negative**
-	else if (magl < 0) {
-		signalCounterL = max(signalCounterL - 1, -3);
-		lastTimeSignalReceivedL = millis();
-	}
-
-	// ** lost ** _magnetudeL.sIn16t == 0
-	else {
-		//signalCounterL = max(signalCounterL - 1, -3);
+		// ** outside mag negative**
+		else if (RxShortResults.insideL == 0) {
+			signalCounterL = max(signalCounterL - 1, -2);
+			lastTimeSignalReceivedL = millis();
+		}
 	}
 
 	// Overwrite values when inside GPS polygon
 	if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
 	{
-		if (gps.flagInsidePolygon && abs(magnetudeL) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+		if (gps.flagInsidePolygon && !RxShortResults.validL < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
 		{
 			signalCounterL = 3;
 			lastTimeSignalReceivedL = millis();
@@ -147,45 +154,57 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl) {
 	}
 }
 
-void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr) {
+void TPerimeterThread::CaluculateInsideOutsideR(void) {
 	//----------------------------------------
 	// Evaluate right
 	//----------------------------------------
 
-
 	if (CONF_RIGHT_COIL_INVERSE) {
-		magr *= -1;
+		if (RxShortResults.insideR == 1) {
+			RxShortResults.insideR = 0;
+		}
+		else {
+			RxShortResults.insideR = 1;
+		}
 	}
 
 
-	if (magr == 0) {
-		magnetudeR0 = magr;
-	}
-	else {
-		magnetudeR = magr;
-		magnetudeR0 = magr;
-	}
-
-
-	if (magr > 0) {
-
-		signalCounterR = min(signalCounterR + 1, 3);
-		lastTimeSignalReceivedR = millis();
-
-	}
-	else if (magr < 0) {
-		signalCounterR = max(signalCounterR - 1, -3);
-		lastTimeSignalReceivedR = millis();
-
+	// Set magnitude for linefollowing
+	if (RxShortResults.validR == 0) {
+		magnetudeR0 = 0;   //needed for TlineFollow
 	}
 	else {
-		//signalCounterR = max(signalCounterR - 1, -3);
+		if (RxShortResults.insideR == 1) {
+			magnetudeR0 = 1;
+		}
+		else {
+			magnetudeR0 = -1;
+		}
+	}
+
+
+	//----------------------------------------
+	// Evaluate Right
+	//----------------------------------------
+
+	// ** inside mag positive**
+	if (RxShortResults.validR > 0) {
+		if (RxShortResults.insideR == 1) {
+			signalCounterR = min(signalCounterR + 1, 3);
+			lastTimeSignalReceivedR = millis();
+		}
+
+		// ** outside mag negative**
+		else if (RxShortResults.insideR == 0) {
+			signalCounterR = max(signalCounterR - 1, -2);
+			lastTimeSignalReceivedR = millis();
+		}
 	}
 
 	// Overwrite values when inside GPS polygon
 	if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
 	{
-		if (gps.flagInsidePolygon && abs(magnetudeR) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+		if (gps.flagInsidePolygon && !RxShortResults.validR < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if signal not valid
 		{
 			signalCounterR = 3;
 			lastTimeSignalReceivedR = millis();
@@ -194,66 +213,6 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr) {
 
 }
 
-/*
-void TPerimeterThread::UpdateState(EPerReceiveState t) {
-
-	switch (t) {
-	case SPR_WAIT_COILL_SAMPLE_COMPLETED:
-		if (aiCoilLeft.isConvComplete()) {
-			aiCoilRight.restartConv();
-			SetState(SPR_COILL_CALCULATE);
-		}
-		break;
-
-	case SPR_COILL_CALCULATE:
-		coilL.run();
-		if (coilL.state == 0) {
-			if (coilL.isSignalValid()) {
-				CaluculateInsideOutsideL(coilL.magnetude);
-			}
-			else {
-				CaluculateInsideOutsideL(0);
-			}
-			SetState(SPR_WAIT_COILR_SAMPLE_COMPLETED);
-			//errorHandler.setInfoNoLog(F("CompL %lu\r\n"), millis());
-
-		}
-		break;
-
-	case SPR_WAIT_COILR_SAMPLE_COMPLETED:
-		if (aiCoilRight.isConvComplete()) {
-			//errorHandler.setInfoNoLog(F("ResL %lu\r\n"), millis());
-			aiCoilLeft.restartConv();
-			SetState(SPR_COILR_CALCULATE);
-		}
-		break;
-
-	case SPR_COILR_CALCULATE:
-		coilR.run();
-		if (coilR.state == 0) {
-			if (coilR.isSignalValid()) {
-				CaluculateInsideOutsideR(coilR.magnetude);
-			}
-			else {
-				CaluculateInsideOutsideR(0);
-			}
-			SetState(SPR_WAIT_COILL_SAMPLE_COMPLETED);
-			if (showValuesOnConsole) {
-				//sprintf(errorHandler.msg, "!03,ML: %d MR: %d  CL:%d CR: %d\r\n", magnetudeL, magnetudeR, signalCounterL, signalCounterR);
-				//sprintf(errorHandler.msg, "!03,ML: %d MR: %d magMax:%d magMedL: %d magMedR: %d\r\n", magnetudeL, magnetudeR, magMax, (int)curMaxL,  (int)curMaxR);
-				sprintf(errorHandler.msg, "!03,ML: %d/%d MR: %d/%d magMax:%d magMedL%%: %d magMedR%%: %d\r\n", magnetudeL, signalCounterL, magnetudeR, signalCounterR, magMax, (int)curMaxL * 100 / magMax, (int)curMaxR * 100 / magMax);
-				errorHandler.setInfoNoLog();
-			}
-		}
-
-		break;
-
-	default:
-		//TODO invalid state - reset, perhaps?
-		break;
-	}
-}
-*/
 
 void TPerimeterThread::showConfig() {
 	errorHandler.setInfoNoLog(F("!03,Advanced Perimeter Sensor Config\r\n"));
@@ -261,49 +220,126 @@ void TPerimeterThread::showConfig() {
 	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
 }
 
+
+void TPerimeterThread::DecodeResults(uint8_t shortResult) {
+	// ---- Set short result byte used by I2C ----
+	// Bits: 7		 6	     5	  4	     3	      2-0
+	// Bits: L in/out, R in/out, L valid, R valid, F or B coil, counter
+	RxShortResults.result = shortResult;
+	RxShortResults.insideL = BitTest(shortResult, 7);
+	RxShortResults.insideR = BitTest(shortResult, 6);
+	RxShortResults.validL = BitTest(shortResult, 5);
+	RxShortResults.validR = BitTest(shortResult, 4);
+	RxShortResults.backCoilActive = BitTest(shortResult, 3);
+	RxShortResults.packetCounter = shortResult & 0x07;
+}
 void TPerimeterThread::run() {
 	static int coil = 0;
-	int ret;
+	uint8_t shortResult = 0;
 	union uInt16 convert;
+	uint8_t packetCounter = 0;
 
 	runned();
 	if (CONF_DISABLE_PERIMETER_SERVICE) {
-		magnetudeL = 1000;
 		magnetudeL0 = 1000;
-		magnetudeR = 1000;
 		magnetudeR0 = 1000;
+		DecodeResults(0xF0);
+		RxValues.potL = 0;
+		RxValues.potR = 0;
 		return;
 	}
 
 
 	switch (state) {
-	case 0:
+	case 0: // poll APR if new data is available
 
 		if (i2cAPR.read8Only(1, &shortResult, 1) != 1) {
-			errorHandler.setInfo(F("APR comm error\r\n"));
+			errorHandler.setInfo(F("!03,APR 0 comm error errorCountert:%d\r\n"), i2cAPR.i2cErrorcounter);
 			return;
 		}
-		errorHandler.setInfo(F("Short result: %u\r\n"), (unsigned int)shortResult);
-		errorHandler.setInfo(F(BYTE_TO_BINARY_PATTERN), BYTE_TO_BINARY(shortResult));
 
-		packetCounter = shortResult & 0x7;;
+		if (showValuesOnConsole) {
+			//errorHandler.setInfo(F(BYTE_TO_BINARY_PATTERN), BYTE_TO_BINARY(shortResult));
+		}
+
+		// check if packetcounter changed. If yes, new data are available.
+		packetCounter = shortResult & 0x7;
 		if (lastPacketCounter != packetCounter) {
 			lastPacketCounter = packetCounter;
 			state = 1;
 			interval = 1;
 		}
-		//interval = 100; 
 		break;
 	case 1:
-		ret = i2cAPR.read8Only(10, &RxBuf[0], 1);
+		// Read Pot values to check if near perimeter
+		if (i2cAPR.read8Only(3, &RxBuf[0], 1) != 3) {
+			errorHandler.setInfo(F("!03,APR 1 comm error errorCountert:%d\r\n"), i2cAPR.i2cErrorcounter);
+			state = 0;
+			interval = 10;
+			return;
+		}
 
 		RxValues.result = RxBuf[0];
 		RxValues.potL = RxBuf[1];
 		RxValues.potR = RxBuf[2];
 
+		DecodeResults(RxValues.result);
+		CaluculateInsideOutsideL();
+		CaluculateInsideOutsideR();
+
+
+		if (showValuesOnConsole) {
+			state = 3; // go to state 3 to read and show extended values
+			interval = 1;
+			//state = 0;
+			//interval = 10;
+		}
+		else {
+			state = 0;
+			interval = 10;
+		}
+
+
+		/* test for coil switch
+		testcounter++;
+
+		if (testcounter == 40) {
+		testcounter = 0;
+		state = 2;
+		}
+		*/
+		break;
+
+	case 2: // Test coil switch front to back and vice versa
+		if (coil == 0) {
+			coil = 1;
+			// 0xB will be send RxBuf is only a dummy write with len 0
+			i2cAPR.write8(0xB, 0, &RxBuf[0]);
+		}
+		else {
+			coil = 0;
+			i2cAPR.write8(0xF, 0, &RxBuf[0]);
+		}
+		state = 0;
+		interval = 10;
+
+		break;
+	case 3:
+		if (i2cAPR.read8Only(10, &RxBuf[0], 1) != 10) {
+			errorHandler.setInfo(F("!03,APR 3 comm error errorCountert:%d\r\n"), i2cAPR.i2cErrorcounter);
+			state = 0;
+			interval = 10;
+			return;
+		}
+
+		//RxValues.result = RxBuf[0];
+		//RxValues.potL = RxBuf[1];
+		//RxValues.potR = RxBuf[2];
+		
 		convert.uBytes[0] = RxBuf[3];
 		convert.uBytes[1] = RxBuf[4];
 		RxValues.L = convert.sIn16t;
+
 		convert.uBytes[0] = RxBuf[5];
 		convert.uBytes[1] = RxBuf[6];
 		RxValues.R = convert.sIn16t;
@@ -312,85 +348,56 @@ void TPerimeterThread::run() {
 		RxValues.ratioR = RxBuf[8];
 		RxValues.resetCnt = RxBuf[9];
 
-		errorHandler.setInfo(F("L: %d R: %d result: %u PotL: %u PotR: %u RatioL: %u RatioR: %u I2Creset: %u\r\n"),
-			RxValues.L, RxValues.R,
-			(unsigned int)RxValues.result,
+		errorHandler.setInfo(F("Decode result: %d iL: %d iR: %d vL: %d vR: %d back: %d counter: %d\r\n"),
+			RxShortResults.result, RxShortResults.insideL, RxShortResults.insideR, RxShortResults.validL, RxShortResults.validR,
+			RxShortResults.backCoilActive, RxShortResults.packetCounter);
+
+		errorHandler.setInfo(F("!03,aL: %d/%d aR: %d/%d  potL: %u potR: %u ratioL: %u ratioR: %u result: %u I2Creset: %u\r\n"),
+			RxValues.L, signalCounterL, RxValues.R, signalCounterR,
 			(unsigned int)RxValues.potL, (unsigned int)RxValues.potR,
 			(unsigned int)RxValues.ratioL, (unsigned int)RxValues.ratioR,
-			(unsigned int)RxValues.resetCnt);
+			(unsigned int)RxValues.result, (unsigned int)RxValues.resetCnt);
 
 		state = 0;
 		interval = 10;
-		testcounter++;
-
-		if (testcounter == 40) {
-			testcounter = 0;
-			state = 2;
-		}
-		break;
-
-	case 2:
-		if (coil == 0) {
-			coil = 1;
-			// 0xB will be send RxBuf is only a dummy write with len 0
-			ret = i2cAPR.write8(0xB, 0, &RxBuf[0]);
-		}
-		else {
-			coil = 0;
-			ret = i2cAPR.write8(0xF, 0, &RxBuf[0]);
-		}
-		state = 0;
-		interval = 10;
-
 		break;
 	default:
+		state = 0;
 		interval = 10;
 		state = 0;
 		break;
-
 	}
-
-
 }
 
 // ------------------------------------------------------------------------------------------
 // Folgende Funktionen werden von bMow aufgerufen um Max des Perimeters zu bestimmen
 // ------------------------------------------------------------------------------------------
 bool TPerimeterThread::isNearPerimeter() {
-
-	if (signalCounterL <= 0 || signalCounterR <= 0) {
+	if (RxValues.potL > 0 || RxValues.potR > 0) {
 		return true;
 	}
-
 	return false;
 }
 
 
-
-
 bool TPerimeterThread::isLeftInside() {
-	// Low signal, use filtered value for increased reliability
+	// use filtered value for increased reliability
 	return (signalCounterL > 0);
 }
 
-
 bool TPerimeterThread::isRightInside() {
-
-	// Low signal, use filtered value for increased reliability
+	// use filtered value for increased reliability
 	return (signalCounterR > 0);
 }
 
-
 bool TPerimeterThread::isLeftOutside() {
-
-	// Low signal, use filtered value for increased reliability
+	// use filtered value for increased reliability
 	return (signalCounterL <= 0);
 
 }
 
 bool TPerimeterThread::isRightOutside() {
-
-	// Low signal, use filtered value for increased reliability
+	// use filtered value for increased reliability
 	return (signalCounterR <= 0);
 }
 

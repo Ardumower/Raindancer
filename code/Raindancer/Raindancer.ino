@@ -362,6 +362,11 @@ void loop()
 		watchdogReset();
 #endif
 
+		if (i2cAPR.i2cErrorcounter > 10) {
+			errorHandler.setInfoNoLog(F("i2cAPR.I2C_reset();\r\n"));
+			i2cAPR.I2C_reset();
+			
+		}
 
 		//Show that loop is running and not hangs
 		/*

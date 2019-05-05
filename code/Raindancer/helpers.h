@@ -32,10 +32,10 @@ extern long myRandom(long min, long max, bool init = false);
 extern long mapl(long x, long in_min, long in_max, long out_min, long out_max);
 extern float mapf(float x, float in_min, float in_max, float out_min, float out_max);
 
-#define BitTest (var, bit) ((var & (1 << bit)) != 0) // Returns true/false if bit is set
-#define GetBit  (var, bit) ((var & (1 << bit)) != 0)  // Returns true/false if bit is set
-#define SetBit  (var, bit) (var |= (1 << bit))
-#define FlipBit (var, bit) (var ^= (1 << bit))
+#define BitTest(var, bit) ((var & (1 << bit)) != 0) // Returns true/false if bit is set
+#define GetBit(var, bit) ((var & (1 << bit)) != 0)  // Returns true/false if bit is set
+#define SetBit(var, bit) (var |= (1 << bit))
+#define FlipBit(var, bit) (var ^= (1 << bit))
 #define ClearBit(var, bit) (var &= ~(1 << bit))
 
 //#define PI (3.141592653589793238463f)
