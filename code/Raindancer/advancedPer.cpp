@@ -5,7 +5,7 @@
 //###########################################################
 /*
 Robotic Lawn Mower
-Copyright (c) 2017 by Kai Würtz
+Copyright (c) 2019 by Kai Würtz
 
 Private-use only! (you need to ask for a commercial-use)
 
@@ -128,14 +128,12 @@ void TPerimeterThread::CaluculateInsideOutsideL(void) {
 	// Evaluate left
 	//----------------------------------------
 
-	// ** inside mag positive**
 	if (RxShortResults.validL > 0) {
+		// ** inside mag positive**
 		if (RxShortResults.insideL == 1) {
-
 			signalCounterL = min(signalCounterL + 1, 3);
 			lastTimeSignalReceivedL = millis();
 		}
-
 		// ** outside mag negative**
 		else if (RxShortResults.insideL == 0) {
 			signalCounterL = max(signalCounterL - 1, -2);
@@ -146,7 +144,7 @@ void TPerimeterThread::CaluculateInsideOutsideL(void) {
 	// Overwrite values when inside GPS polygon
 	if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
 	{
-		if (gps.flagInsidePolygon && !RxShortResults.validL < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+		if (gps.flagInsidePolygon && !RxShortResults.validL) // only check if amplitude is lower than threshold
 		{
 			signalCounterL = 3;
 			lastTimeSignalReceivedL = millis();
@@ -187,8 +185,9 @@ void TPerimeterThread::CaluculateInsideOutsideR(void) {
 	// Evaluate Right
 	//----------------------------------------
 
-	// ** inside mag positive**
+
 	if (RxShortResults.validR > 0) {
+		// ** inside mag positive**
 		if (RxShortResults.insideR == 1) {
 			signalCounterR = min(signalCounterR + 1, 3);
 			lastTimeSignalReceivedR = millis();
@@ -204,7 +203,7 @@ void TPerimeterThread::CaluculateInsideOutsideR(void) {
 	// Overwrite values when inside GPS polygon
 	if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
 	{
-		if (gps.flagInsidePolygon && !RxShortResults.validR < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if signal not valid
+		if (gps.flagInsidePolygon && !RxShortResults.validR) // only check if signal not valid
 		{
 			signalCounterR = 3;
 			lastTimeSignalReceivedR = millis();
@@ -233,6 +232,7 @@ void TPerimeterThread::DecodeResults(uint8_t shortResult) {
 	RxShortResults.backCoilActive = BitTest(shortResult, 3);
 	RxShortResults.packetCounter = shortResult & 0x07;
 }
+
 void TPerimeterThread::run() {
 	static int coil = 0;
 	uint8_t shortResult = 0;
@@ -240,12 +240,16 @@ void TPerimeterThread::run() {
 	uint8_t packetCounter = 0;
 
 	runned();
+
 	if (CONF_DISABLE_PERIMETER_SERVICE) {
 		magnetudeL0 = 1000;
 		magnetudeR0 = 1000;
 		DecodeResults(0xF0);
 		RxValues.potL = 0;
 		RxValues.potR = 0;
+		interval = 100;
+		lastTimeSignalReceivedL = millis();
+		lastTimeSignalReceivedR = millis();
 		return;
 	}
 
@@ -392,13 +396,13 @@ bool TPerimeterThread::isRightInside() {
 
 bool TPerimeterThread::isLeftOutside() {
 	// use filtered value for increased reliability
-	return (signalCounterL <= 0);
+	return (signalCounterL < 1);
 
 }
 
 bool TPerimeterThread::isRightOutside() {
 	// use filtered value for increased reliability
-	return (signalCounterR <= 0);
+	return (signalCounterR < 1);
 }
 
 

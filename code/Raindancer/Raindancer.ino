@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Private-use only! (you need to ask for a commercial-use)
 
 ****************************************************************************************************
-*      INTO CONFIG.H 
+*      INTO CONFIG.H
 *
 #define RAINDANCER_CHASSIS true
 #define PARANELLO_CHASSIS false
@@ -123,7 +123,7 @@ BuzzerClass Buzzer;
 // Shutdown service
 TShutdown shutdown;
 // DHT Temperature sensor
-TDHT dht( DHTTYPE);
+TDHT dht(DHTTYPE);
 //GPS Service
 Tgps gps;
 //-----------------------------------------------------
@@ -153,8 +153,7 @@ void watchdogSetup(void) {} // muss definiert werden.
 							// und das Disable verhindert den nächsten enable. somit kann Watchdog nicht mehr aktiviert werden.
 #endif
 
-void setup()
-{
+void setup() {
 	//---------------------------------
 	// Initialize interface to hardware
 	//---------------------------------
@@ -197,7 +196,7 @@ void setup()
 	perimeterSensoren.setup();
 	//perimeterSensoren.coilL.showMatchedFilter = false; // now in perimeterSensoren.setup();
 #if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
-	perimeterSensoren.setInterval(10); 
+	perimeterSensoren.setInterval(10);
 #else
 	perimeterSensoren.setInterval(1);
 #endif
@@ -241,20 +240,20 @@ void setup()
 	Buzzer.setup();
 	//Buzzer.setInterval(0); // will be controled by the class itselfe
 	Buzzer.enabled = false;  // will be controled by the class itselfe
-    //---------------------------------
-    shutdown.setup();
-    shutdown.setInterval(1000);
-    shutdown.enabled = false;  // when activated, service initiate shutdown
-    //---------------------------------
+      //---------------------------------
+	shutdown.setup();
+	shutdown.setInterval(1000);
+	shutdown.enabled = false;  // when activated, service initiate shutdown
+	//---------------------------------
 	dht.setup();
 	dht.setInterval(20013);
-    //---------------------------------
-    gps.setup();
-    gps.setInterval(0);
-    
+	//---------------------------------
+	gps.setup();
+	gps.setInterval(0);
 
-    //------------
-	// Important: In TreadController.h the number of threads must be configured if services are more than 25
+
+	//------------
+	  // Important: In TreadController.h the number of threads must be configured if services are more than 25
 	controller.add(&hal);
 
 	controller.add(&clcM);
@@ -286,8 +285,8 @@ void setup()
 
 	controller.add(&Buzzer);
 
-    controller.add(&shutdown);
-    controller.add(&gps);
+	controller.add(&shutdown);
+	controller.add(&gps);
 	//---------------------------------
 	// Behaviour Objects konfigurieren
 	//---------------------------------
@@ -340,11 +339,11 @@ void setup()
 	errorHandler.setInfo(F("WATCHDOG ENABLED\r\n"));
 #endif
 
-    errorHandler.setInfo(F("Setup finished. Loop is running.\r\n"));
-    errorHandler.setInfo(F("Version %s\r\n\r\n"), VERSION);
-    errorHandler.setInfo(F("Press H for help.\r\n"));
-    //Startsound ausgeben
-    Buzzer.sound(SND_START);
+	errorHandler.setInfo(F("Setup finished. Loop is running.\r\n"));
+	errorHandler.setInfo(F("Version %s\r\n\r\n"), VERSION);
+	errorHandler.setInfo(F("Press H for help.\r\n"));
+	//Startsound ausgeben
+	Buzzer.sound(SND_START);
 
 }
 
@@ -353,71 +352,73 @@ void executeLoop() //wird von ui.cpp verwendet wenn Hilfe ausgegeben wird
 	loop();
 }
 
-void loop()
-{
+void loop() {
 	// we don't use serialevent
 	//while (true) {
 
 #if  CONF_ENABLEWATCHDOG ==  true
-		watchdogReset();
+	watchdogReset();
 #endif
 
-		if (i2cAPR.i2cErrorcounter > 10) {
-			errorHandler.setInfoNoLog(F("i2cAPR.I2C_reset();\r\n"));
-			i2cAPR.I2C_reset();
-			
+#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
+	// only check i2c error with APR. Because if the RTC is not working, don't care
+	if (i2cAPR.i2cErrorcounter > 10) {
+		//motor.stopAllMotors();
+		//_controlManuel = true;
+		errorHandler.setError(F("i2cAPR.I2C_reset();\r\n"));
+		//i2cAPR.I2C_reset(); muss in statmachine aufgerufen werden. erst müssen alle Motoren gestoppt sein. Dann reseten. Reseten kann bis zu 4 sek dauern.
+	}
+#endif
+	//Show that loop is running and not hangs
+	/*
+	if (lastTimeShowError == 0) {
+		lastTimeShowError = millis();
+	}
+	if (millis() - lastTimeShowError > 2000) {
+		lastTimeShowError = millis();
+		doMyLED = !doMyLED;
+		debug.serial.println(lastTimeShowError);
+	}
+	*/
+
+	startLoopTime = micros();
+	loopCounter++;
+
+	if (!_diableErrorhandling) {
+		if (errorHandler.isErrorActive()) {
+			_controlManuel = true;
+			motor.stopAllMotors();
+
+			/*
+				  if (millis() - lastTimeShowError > 2000) {
+					  lastTimeShowError = millis();
+					  doMyLED = !doMyLED;
+					  errorHandler.printError();
+				  }
+			*/
 		}
+	}
 
-		//Show that loop is running and not hangs
-		/*
-		if (lastTimeShowError == 0) {
-			lastTimeShowError = millis();
-		}
-		if (millis() - lastTimeShowError > 2000) {
-			lastTimeShowError = millis();
-			doMyLED = !doMyLED;
-			debug.serial.println(lastTimeShowError);
-		}
-		*/
-
-		startLoopTime = micros();
-		loopCounter++;
-
-		if (!_diableErrorhandling) {
-			if (errorHandler.isErrorActive()) {
-				_controlManuel = true;
-				motor.stopAllMotors();
-
-                /*
-				if (millis() - lastTimeShowError > 2000) {
-					lastTimeShowError = millis();
-					doMyLED = !doMyLED;
-					errorHandler.printError();
-				}
-                */
-			}
-		}
-
-		// Run the services
-		controller.run();
+	// Run the services
+	controller.run();
 
 
-		//clcR.testEncoder();
+	//clcR.testEncoder();
 
-		// Auswerten ob user manuellen mode gesetzt hat und kommando ausführen
-		// Auszuwertende variablen sind in Klasse TSerialEventThread definiert
-		if (_controlManuel) {
-			dht.run(); // run dht here, because in auto it runs from BHT and not from controller
-		}
-		else {
-			myBehaviour.loop();
-		}
+	// Auswerten ob user manuellen mode gesetzt hat und kommando ausführen
+	// Auszuwertende variablen sind in Klasse TSerialEventThread definiert
+	if (_controlManuel) {
+		dht.run(); // run dht here, because in auto it runs from BHT and not from controller
+	}
+	else {
+		myBehaviour.loop();
+	}
 
-		unsigned long loopTime = micros() - startLoopTime;
-		if (loopTime > maxLoopTime) {
-			maxLoopTime = loopTime;
-			//must reset in printSensorData, not to include the output of Senordata in the calculation
-		}
+	unsigned long loopTime = micros() - startLoopTime;
+	if (loopTime > maxLoopTime) {
+		maxLoopTime = loopTime;
+		//must reset in printSensorData, not to include the output of Senordata in the calculation
+	}
 
 	//}//while(true)
 }

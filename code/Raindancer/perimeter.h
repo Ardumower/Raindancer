@@ -37,6 +37,7 @@ Private-use only! (you need to ask for a commercial-use)
 #include "PerimeterCoil.h"
 #include "RunningMedian.h"
 #include "config.h"
+#include "errorhandler.h"
 
 
 enum EPerSignal {
@@ -200,7 +201,7 @@ private:
 
 	void DecodeResults(uint8_t shortResult);
 
-	
+
 
 	uint8_t lastPacketCounter = 0;
 
@@ -233,26 +234,44 @@ private:
 	int state;
 	int testcounter;
 
-	
+
 
 public:
 
 	void showADCWithoutOffset(uint8_t coil, bool bValue) {
+		if (bValue) {
+			errorHandler.setInfoNoLog(F("!03,Not available with APR\r\n"));
+		}
 	}
 
 	void showCorrelation(uint8_t coil, bool bValue) {
+		if (bValue) {
+			errorHandler.setInfoNoLog(F("!03,Not available with APR\r\n"));
+		}
 	}
 
 	void showCorrelationSQ(uint8_t coil, bool bValue) {
+		if (bValue) {
+			errorHandler.setInfoNoLog(F("!03,Not available with APR\r\n"));
+		}
 	}
 
 	void showPSNRFunction(uint8_t coil, bool bValue) {
+		if (bValue) {
+			errorHandler.setInfoNoLog(F("!03,Not available with APR\r\n"));
+		}
 	}
 
 	void showValuesResults(uint8_t coil, bool bValue) {
+		if (bValue) {
+			errorHandler.setInfoNoLog(F("!03,Not available with APR\r\n"));
+		}
 	}
 
 	void showMatchedFilter(uint8_t coil, bool bValue) {
+		if (bValue) {
+			errorHandler.setInfoNoLog(F("!03,Not available with APR\r\n"));
+		}
 	}
 
 	int magnetudeR0;

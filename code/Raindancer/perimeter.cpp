@@ -249,6 +249,9 @@ void TPerimeterThread::run() {
 		magnetudeL0 = 1000;
 		magnetudeR = 1000;
 		magnetudeR0 = 1000;
+		interval = 100;
+		lastTimeSignalReceivedL = millis();
+		lastTimeSignalReceivedR = millis();
 		return;
 	}
 	LoopFSM();
@@ -316,14 +319,14 @@ bool TPerimeterThread::isRightInside() {
 bool TPerimeterThread::isLeftOutside() {
 
 	// Low signal, use filtered value for increased reliability
-	return (signalCounterL <= 0);
+	return (signalCounterL < 1);
 
 }
 
 bool TPerimeterThread::isRightOutside() {
 
 	// Low signal, use filtered value for increased reliability
-	return (signalCounterR <= 0);
+	return (signalCounterR < 1);
 }
 
 /*

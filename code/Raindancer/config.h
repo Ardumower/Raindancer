@@ -50,8 +50,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define ARDUMOWER_CHASSIS  false
 #define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS false
-#define TEST_ON_DUE_ONLY   true
+#define RAINDANCER_CHASSIS true
+#define TEST_ON_DUE_ONLY   false
 
 //======================================================================================================================
 // CONFIG FOR ARDUMOWER CHASSIS
