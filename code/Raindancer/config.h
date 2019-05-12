@@ -50,8 +50,8 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define ARDUMOWER_CHASSIS  false
 #define PARANELLO_CHASSIS  false
-#define RAINDANCER_CHASSIS true
-#define TEST_ON_DUE_ONLY   false
+#define RAINDANCER_CHASSIS false
+#define TEST_ON_DUE_ONLY   true
 
 //======================================================================================================================
 // CONFIG FOR ARDUMOWER CHASSIS
@@ -543,8 +543,8 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_ESCAPEDIR_DEPENDING_ON_BUMPER false  // if set to true, the robot rotates in the opposite direction of the activated buper. If false, the escape direction is random.
                                                  // only set to true if you use a bumper for left and a bumper for right.
 
-#define CONF_NEAR_PER_UPPER_THRESHOLD   80.0L    // Threshold of one coil where Perimetersignal is detected as near perimeter
-#define CONF_NEAR_PER_LOWER_THRESHOLD   70.0L    // Threshold of the other coil where Perimetersignal is detected as near perimeter
+#define CONF_NEAR_PER_UPPER_THRESHOLD   90.0L    // Threshold of one coil where Perimetersignal is detected as near perimeter
+#define CONF_NEAR_PER_LOWER_THRESHOLD   80.0L    // Threshold of the other coil where Perimetersignal is detected as near perimeter
 
 #define CONF_VOLTAGE_LOW_BS				23.7f    // Batterysensor. Batteryvoltage to go home
 #define CONF_VOLTAGE_SWITCHOFF_BS		21.7f    // Batterysensor. Batteryvoltage to switch power off for the PCB1.3

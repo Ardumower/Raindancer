@@ -208,13 +208,13 @@ private:
 
 	struct {
 		uint8_t result;
-		uint8_t potL;
-		uint8_t potR;
 		uint8_t ratioL;
 		uint8_t ratioR;
 		uint8_t resetCnt;
-		int16_t L;
-		int16_t R;;
+		int16_t magnitudeL;
+		int16_t magnitudeR;
+		uint8_t AMPOverdriveDetectedL;
+		uint8_t AMPOverdriveDetectedR;
 	} RxValues;
 
 	struct {
@@ -234,7 +234,11 @@ private:
 	int state;
 	int testcounter;
 
-
+	int32_t _magnetudeL;
+	int32_t _magnetudeR;
+	int32_t curMaxL, curMaxR;
+	FastRunningMedian<int32_t, 16, 0> medianMagL;
+	FastRunningMedian<int32_t, 16, 0> medianMagR;
 
 public:
 

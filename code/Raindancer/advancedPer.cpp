@@ -238,6 +238,8 @@ void TPerimeterThread::run() {
 	uint8_t shortResult = 0;
 	union uInt16 convert;
 	uint8_t packetCounter = 0;
+	int32_t average = 0;
+	uint8_t temp = 0;
 
 	runned();
 
@@ -245,8 +247,6 @@ void TPerimeterThread::run() {
 		magnetudeL0 = 1000;
 		magnetudeR0 = 1000;
 		DecodeResults(0xF0);
-		RxValues.potL = 0;
-		RxValues.potR = 0;
 		interval = 100;
 		lastTimeSignalReceivedL = millis();
 		lastTimeSignalReceivedR = millis();
@@ -275,8 +275,8 @@ void TPerimeterThread::run() {
 		}
 		break;
 	case 1:
-		// Read Pot values to check if near perimeter
-		if (i2cAPR.read8Only(3, &RxBuf[0], 1) != 3) {
+		// Read Amplitude values to check if near perimeter
+		if (i2cAPR.read8Only(5, &RxBuf[0], 1) != 5) {
 			errorHandler.setInfo(F("!03,APR 1 comm error errorCountert:%d\r\n"), i2cAPR.i2cErrorcounter);
 			state = 0;
 			interval = 10;
@@ -284,13 +284,32 @@ void TPerimeterThread::run() {
 		}
 
 		RxValues.result = RxBuf[0];
-		RxValues.potL = RxBuf[1];
-		RxValues.potR = RxBuf[2];
+		convert.uBytes[0] = RxBuf[1];
+		convert.uBytes[1] = RxBuf[2];
+		RxValues.magnitudeL = convert.sIn16t;
+
+		convert.uBytes[0] = RxBuf[3];
+		convert.uBytes[1] = RxBuf[4];
+		RxValues.magnitudeR = convert.sIn16t;
 
 		DecodeResults(RxValues.result);
 		CaluculateInsideOutsideL();
 		CaluculateInsideOutsideR();
 
+		medianMagL.addValue((int32_t)RxValues.magnitudeL);
+		curMaxL = medianMagL.getHighest(); // current max
+		average = medianMagL.getAverage(8);
+		if (average > magMax) {
+			magMax = average;
+		}
+
+		// Determine Maximum amplitude
+		medianMagR.addValue((int32_t)RxValues.magnitudeR);
+		curMaxR = medianMagR.getHighest(); // current max
+		average = medianMagR.getAverage(8);
+		if (average > magMax) {
+			magMax = average;
+		}
 
 		if (showValuesOnConsole) {
 			state = 3; // go to state 3 to read and show extended values
@@ -329,7 +348,7 @@ void TPerimeterThread::run() {
 
 		break;
 	case 3:
-		if (i2cAPR.read8Only(10, &RxBuf[0], 1) != 10) {
+		if (i2cAPR.read8Only(9, &RxBuf[0], 1) != 9) {
 			errorHandler.setInfo(F("!03,APR 3 comm error errorCountert:%d\r\n"), i2cAPR.i2cErrorcounter);
 			state = 0;
 			interval = 10;
@@ -339,7 +358,7 @@ void TPerimeterThread::run() {
 		//RxValues.result = RxBuf[0];
 		//RxValues.potL = RxBuf[1];
 		//RxValues.potR = RxBuf[2];
-		
+		/*
 		convert.uBytes[0] = RxBuf[3];
 		convert.uBytes[1] = RxBuf[4];
 		RxValues.L = convert.sIn16t;
@@ -347,20 +366,35 @@ void TPerimeterThread::run() {
 		convert.uBytes[0] = RxBuf[5];
 		convert.uBytes[1] = RxBuf[6];
 		RxValues.R = convert.sIn16t;
+		*/
+		RxValues.ratioL = RxBuf[5];
+		RxValues.ratioR = RxBuf[6];
+		RxValues.resetCnt = RxBuf[7];
 
-		RxValues.ratioL = RxBuf[7];
-		RxValues.ratioR = RxBuf[8];
-		RxValues.resetCnt = RxBuf[9];
+		temp = RxBuf[8];
 
-		errorHandler.setInfo(F("Decode result: %d iL: %d iR: %d vL: %d vR: %d back: %d counter: %d\r\n"),
+		if (temp & 0x1) {
+			RxValues.AMPOverdriveDetectedL = 1;
+		}
+		else {
+			RxValues.AMPOverdriveDetectedL = 0;
+		}
+
+		if (temp & 0x2) {
+			RxValues.AMPOverdriveDetectedR = 1;
+		}
+		else {
+			RxValues.AMPOverdriveDetectedR = 0;
+		}
+		errorHandler.setInfo(F("!03,decode result: %d iL: %d iR: %d vL: %d vR: %d back: %d counter: %d\r\n"),
 			RxShortResults.result, RxShortResults.insideL, RxShortResults.insideR, RxShortResults.validL, RxShortResults.validR,
 			RxShortResults.backCoilActive, RxShortResults.packetCounter);
 
-		errorHandler.setInfo(F("!03,aL: %d/%d aR: %d/%d  potL: %u potR: %u ratioL: %u ratioR: %u result: %u I2Creset: %u\r\n"),
-			RxValues.L, signalCounterL, RxValues.R, signalCounterR,
-			(unsigned int)RxValues.potL, (unsigned int)RxValues.potR,
+		errorHandler.setInfo(F("!03,aL: %d/%d aR: %d/%d ratioL: %u ratioR: %u result: %u I2Creset: %u oL: %d oR: %d \r\n"),
+			RxValues.magnitudeL, signalCounterL, RxValues.magnitudeR, signalCounterR,
 			(unsigned int)RxValues.ratioL, (unsigned int)RxValues.ratioR,
-			(unsigned int)RxValues.result, (unsigned int)RxValues.resetCnt);
+			(unsigned int)RxValues.result, (unsigned int)RxValues.resetCnt,
+			(unsigned int)RxValues.AMPOverdriveDetectedL, (unsigned int)RxValues.AMPOverdriveDetectedR);
 
 		state = 0;
 		interval = 10;
@@ -377,9 +411,32 @@ void TPerimeterThread::run() {
 // Folgende Funktionen werden von bMow aufgerufen um Max des Perimeters zu bestimmen
 // ------------------------------------------------------------------------------------------
 bool TPerimeterThread::isNearPerimeter() {
-	if (RxValues.potL > 0 || RxValues.potR > 0) {
+	//return false;
+	if (magMax == 0) { //if we have not measured a magnitude always return near in order to drive low speed then
 		return true;
 	}
+
+	long thresholdUpper = (magMax * CONF_NEAR_PER_UPPER_THRESHOLD) / 100L; ; //(magMax * 80L) / 100L; //95% vom Maximalwert ist untere schwelle fuer bestimmung ob nah am perimeter wire
+	long thresholdLower = (magMax * CONF_NEAR_PER_LOWER_THRESHOLD) / 100L; ; //(magMax * 80L) / 100L; //95% vom Maximalwert ist untere schwelle fuer bestimmung ob nah am perimeter wire
+
+
+
+	if (curMaxL >= thresholdUpper && curMaxR >= thresholdLower) {
+		//sprintf(errorHandler.msg, "!03,NearPerimeter magMedL: %d magMedR: %d\r\n", (int)curMaxL, (int)curMaxR);
+		//errorHandler.setInfoNoLog();
+		return true;
+	}
+
+	if (curMaxL >= thresholdLower && curMaxR >= thresholdUpper) {
+		//sprintf(errorHandler.msg, "!03,NearPerimeter magMedL: %d magMedR: %d\r\n", (int)curMaxL, (int)curMaxR);
+		//errorHandler.setInfoNoLog();
+		return true;
+	}
+
+	if (signalCounterL <= 0 || signalCounterR <= 0) {
+		return true;
+	}
+
 	return false;
 }
 
