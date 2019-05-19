@@ -195,11 +195,7 @@ void setup() {
 	//perimeterSensoren.coilL.showMatchedFilter = true; // now in perimeterSensoren.setup();
 	perimeterSensoren.setup();
 	//perimeterSensoren.coilL.showMatchedFilter = false; // now in perimeterSensoren.setup();
-#if CONF_USE_ADVANCED_PERIMETER_SERVICE ==  true
-	perimeterSensoren.setInterval(10);
-#else
 	perimeterSensoren.setInterval(1);
-#endif
 	errorHandler.setInfo(F("perimeterSensoren Setup Finished\r\n"));
 	//---------------------------------
 	batterieSensor.setup();
@@ -365,7 +361,7 @@ void loop() {
 	if (i2cAPR.i2cErrorcounter > 10) {
 		//motor.stopAllMotors();
 		//_controlManuel = true;
-		errorHandler.setError(F("i2cAPR.I2C_reset();\r\n"));
+//		errorHandler.setError(F("i2cAPR.I2C_reset();\r\n"));
 		//i2cAPR.I2C_reset(); muss in statmachine aufgerufen werden. erst müssen alle Motoren gestoppt sein. Dann reseten. Reseten kann bis zu 4 sek dauern.
 	}
 #endif

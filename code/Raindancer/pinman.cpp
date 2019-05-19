@@ -16,7 +16,7 @@ this library solves this
 
 
 #define PWM_FREQUENCY 3900
-#define TC_FREQUENCY 3900
+#define TC_FREQUENCY  3900
 
 //#define PWM_FREQUENCY 20000
 //#define TC_FREQUENCY 20000

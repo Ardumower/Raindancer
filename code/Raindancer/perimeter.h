@@ -224,6 +224,7 @@ private:
 		uint8_t validL;
 		uint8_t validR;
 		uint8_t backCoilActive;
+		uint8_t nearPerimeter;
 		int16_t packetCounter;
 	} RxShortResults;
 
@@ -233,12 +234,6 @@ private:
 
 	int state;
 	int testcounter;
-
-	int32_t _magnetudeL;
-	int32_t _magnetudeR;
-	int32_t curMaxL, curMaxR;
-	FastRunningMedian<int32_t, 16, 0> medianMagL;
-	FastRunningMedian<int32_t, 16, 0> medianMagR;
 
 public:
 

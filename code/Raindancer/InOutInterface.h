@@ -889,7 +889,7 @@ public:
 
 			if (j != retryCount) {
 				delay(3);
-				errorHandler.setInfo(F("I2C read8Only N j(%i) != retryCount(%i) device: %d\r\n"), seven_bit_address, i, retryCount);
+				errorHandler.setInfo(F("I2C read8Only N j(%i) != retryCount(%i) device: %d\r\n"), i, retryCount, seven_bit_address);
 
 			}
 			errorHandler.setInfo(F("I2C read8Only N try to reading device again: %d\r\n"), seven_bit_address);
