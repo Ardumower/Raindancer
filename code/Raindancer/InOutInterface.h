@@ -605,14 +605,14 @@ private:
 
 public:
 
-	
+
 
 	/** Create a i2c connected to the specified device
 	*
 	*  @param pin DigitalOut pin to connect to
 	*/
 	i2cInOut(const uint8_t _seven_bit_adress) : seven_bit_address(_seven_bit_adress) {
-		
+
 	}
 
 	void setup() {
@@ -859,44 +859,25 @@ public:
 		  }
 	    }
 	*/
-	int read8Only(uint8_t len, uint8_t buff[], int retryCount) {
+	int read8Only(uint8_t len, uint8_t buff[]) {
 		int i = 0;
-		//uint32_t I2C_Status;
 
-		for (int j = 0; j < retryCount + 1; j++) {
-			i = 0;
-
-			//I2C_Status = TWI_GetStatus(WIRE1_INTERFACE);
-			//errorHandler.setInfo(F("I2C_Status 1: %lu\r\n"), I2C_Status);
-
-			Wire.requestFrom(seven_bit_address, len, (uint8_t)true); // read len bytes and send a stop bit. retVal has numer of received bytes
-			while (Wire.available() && i < len)    //device may send less than requested (abnormal)
-			{
-				buff[i] = Wire.read(); // receive a byte
-				i++;
-				//errorHandler.setInfo(F("I2C read8Only read: %u\r\n"), (unsigned int)buff[0]);
-			}
-			//I2C_Status = TWI_GetStatus(WIRE1_INTERFACE);
-			//errorHandler.setInfo(F("I2C_Status 2: %lu\r\n"), I2C_Status);
-
-			if (len == i) {
-				if (i2cErrorcounter > 0) i2cErrorcounter--;
-				return i;
-			}
-			else {
-				errorHandler.setInfo(F("I2C read8Only N retVal != len from device: %d len received: %i\r\n"), seven_bit_address, i);
-			}
-
-			if (j != retryCount) {
-				delay(3);
-				errorHandler.setInfo(F("I2C read8Only N j(%i) != retryCount(%i) device: %d\r\n"), i, retryCount, seven_bit_address);
-
-			}
-			errorHandler.setInfo(F("I2C read8Only N try to reading device again: %d\r\n"), seven_bit_address);
+		Wire.requestFrom(seven_bit_address, len, (uint8_t)true); // read len bytes and send a stop bit. retVal has numer of received bytes
+		while (Wire.available() && i < len)    //device may send less than requested (abnormal)
+		{
+			buff[i] = Wire.read(); // receive a byte
+			i++;
+			//errorHandler.setInfo(F("I2C read8Only read: %u\r\n"), (unsigned int)buff[0]);
 		}
 
-		errorHandler.setInfo(F("I2C read8Only N could not read from device: %d\r\n"), seven_bit_address);
-		i2cErrorcounter++;
+		if (len == i) {
+			if (i2cErrorcounter > 0) { i2cErrorcounter--; }
+		}
+		else {
+			errorHandler.setInfo(F("I2C read8Only could not read from device: %d\r\n"), seven_bit_address);
+			i2cErrorcounter++;
+		}
+
 		return i;
 	}
 

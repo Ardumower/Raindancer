@@ -5,7 +5,6 @@
       Copyright (c) 2013-2014 by Sven Gennat
       Copyright (c) 2019      by Kai Würtz
 
-      Private-use only! (you need to ask for a commercial-use)
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -20,7 +19,6 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-      Private-use only! (you need to ask for a commercial-use)
 */
 
 /*
@@ -38,7 +36,7 @@
       This 20 seconds wait time is used to settle the contacts and the robot have time to correct the position.
 
       For sigcode[] only use -1 and 1. If 0 is used, the motordriver will be disabled. To enable it again needs more time (ms instead of us)
-      than to change pinIN1 and pinIN2 and the timing of the perimeter signal therefore is not correct.
+      than to change pinM1_IN1 and pinM1_IN2 and the timing of the perimeter signal therefore is not correct.
 */
 
 
@@ -47,22 +45,26 @@
 #include "RunningMedian.h"
 
 
-// --- MC33926 motor driver ---
-#define USE_DOUBLE_AMPLTIUDE    1         // 1: use +/- input voltage for amplitude (default), 
-// 0: use only +input/GND voltage for amplitude
 
-#define pinIN1       9  // M1_IN1         PB1        (if using old L298N driver, connect this pin to L298N-IN1)
-#define pinIN2       2  // M1_IN2         PD2        (if using old L298N driver, connect this pin to L298N-IN2)
-#define pin_nD2      3  // M1_PWM / nD2              (if using old L298N driver, leave open)
-#define pinEnable    5  // EN             PD5        (connect to motor driver enable)             
+#define pinEnable       5  // EN             PD5        (connect to motor driver enable)             
 
-// motor driver fault pin
-#define pinFault     4  // M1_nSF
-#define USE_PERI_FAULT        1     // use pinFault for driver fault detection? (set to '0' if not connected!)
+#define pinM1_IN1       9  // M1_IN1         PB1        (if using old L298N driver, connect this pin to L298N-IN1)
+#define pinM1_IN2       2  // M1_IN2         PD2        (if using old L298N driver, connect this pin to L298N-IN2)
+#define pinM1_nD2pwm    3  // M1_PWM / nD2              (if using old L298N driver, leave open)
+#define pinM1_Fault     4  // M1_nSF                    motor driver fault pin
+
+#define pinM2_IN1       7  // M2_IN1         PD7        (if using old L298N driver, connect this pin to L298N-IN1)
+#define pinM2_IN2       6  // M2_IN2         PD6        (if using old L298N driver, connect this pin to L298N-IN2)
+#define pinM2_nD2pwm    11 // M2_PWM / nD2              (if using old L298N driver, leave open)
+#define pinM2_Fault     8  // M2_nSF                    motor driver fault pin
+
+
+#define USE_PERI_FAULT        1     // use pinM1_Fault for driver fault detection? (set to '0' if not connected!)
 
 // motor driver feedback pin (=perimeter open/close detection, used for status LED)
-#define USE_PERI_CURRENT      1     // use pinFeedback for perimeter current measurements? (set to '0' if not connected!)
-#define pinFeedback A0  // M1_FB
+#define USE_PERI_CURRENT      1     // use pinM1_Feedback for perimeter current measurements? (set to '0' if not connected!)
+#define pinM1_Feedback A0  // M1_FB
+#define pinM2_Feedback A1  // M2_FB
 #define PERI_CURRENT_MIN    0.03     // minimum Ampere for perimeter-is-closed detection 
 
 // ---- sender automatic standby (via current sensor for charger) ----
@@ -79,10 +81,10 @@
 #define  pinLEDRed2   A4  // ON: Perimeter current too low or perimeter broken, BLINK: motordriver fault
 
 
-#define USE_DEVELOPER_TEST    0      // set to one for a perimeter test signal (developers-only)  
+
 
 // code version
-#define VER "7.0.0.kwrtz"
+#define VER "APR_1.0.0"
 
 // --------------------------------------
 
@@ -111,11 +113,9 @@ int robotOutOfStationTimeMins = 0;
 // http://grauonline.de/alexwww/ardumower/filter/filter.html
 // "pseudonoise4_pw" signal (sender)
 
-#if USE_DEVELOPER_TEST
+
 // a more motor driver friendly signal (sender)
-const int8_t sigcode[] = {  1, 1, -1};
-#else
-// int8_t sigcode[] = { 1,1,-1,-1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,1,1,-1 }; // Ardumower
+//const int8_t sigcode[] = {  1, 1, -1};
 //const int8_t sigcode[] = { -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1}; // 60 Zahlen
 
 //const int8_t sigcode[] = { 1,-1,1,-1,1,1,-1,-1,1,-1,1,-1,1,-1,1,1,-1,-1,1,1,-1,-1,1,1,-1,1,-1,1,-1,-1,1,1,-1,1,-1,-1,1,-1,1,-1,1,1,-1,1,-1,1,-1,1,-1,1,-1,-1,1,-1,1,1,-1,1,-1,-1,1,1,-1,-1 }; /*Part of Bosch Indego Signal 64 Zahlen*/
@@ -127,18 +127,21 @@ const int8_t sigcode[] = {  1, 1, -1};
       }; // 128 Zahlen
 */
 
-int8_t sigcode[102] = { -1, // Einschwingen
+int8_t sigcode_0[102] = { -1, // Einschwingen
                         1, -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, -1,
                         -1, 1, 1, -1, 1, 1, -1, -1, 1, -1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, -1, -1, 1, 1, -1, 1, 1, -1, -1, 1,
                         -1 // Ausschwingen
                         }; //100+2 Zahlen
+int8_t sigcode_1[25] = {-1, // Einschwingen
+                        1,1,-1,-1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,1,1,-1 }; // Use Ardumower signal as second signal
 
-#endif
+
 
 volatile boolean enableSender = false;
 volatile int state = 0;
 volatile int step = 0;
-volatile const int maxSteps = 1024 - 128;
+volatile int step1 = 0;
+volatile const int maxSteps = 3*256; //1024 - 128;
 
 #define SET_BIT(PORT, BIT)     ((PORT) |= (1 << BIT))
 #define CLEAR_BIT(PORT, BIT)   ((PORT) &= ~(1 << BIT))
@@ -146,33 +149,107 @@ volatile const int maxSteps = 1024 - 128;
 void timerCallback() {
       if (enableSender) {
             if (state == 0) {
-                  // send signal in sigcode
-                  if (sigcode[step] == 1) {
-                        CLEAR_BIT(PORTB,PB1); //PORTB &= ~(1 << PB1);  //digitalWrite(pinIN1, LOW);
-#if USE_DOUBLE_AMPLTIUDE
-                        SET_BIT(PORTD,PD2);   //PORTD |= (1 << PD2);   //digitalWrite(pinIN2, HIGH);
-#endif
+                  // send signal in sigcode_0
+                  if (sigcode_0[step] == 1) {
+                        CLEAR_BIT(PORTB,PB1); //PORTB &= ~(1 << PB1);  //digitalWrite(pinM1_IN1, LOW);
+                        SET_BIT(PORTD,PD2);   //PORTD |= (1 << PD2);   //digitalWrite(pinM1_IN2, HIGH);
                         SET_BIT(PORTD,PD5);   //PORTD |= (1 << PD5);   //digitalWrite(pinEnable, HIGH);
-                  } else if (sigcode[step] == -1) {
-                        SET_BIT(PORTB,PB1);   // PORTB  |= (1 << PB1); //digitalWrite(pinIN1, HIGH);
-                        CLEAR_BIT(PORTD,PD2); // PORTD &= ~(1 << PD2);  //digitalWrite(pinIN2, LOW);
+                  } else if (sigcode_0[step] == -1) {
+                        SET_BIT(PORTB,PB1);   // PORTB  |= (1 << PB1); //digitalWrite(pinM1_IN1, HIGH);
+                        CLEAR_BIT(PORTD,PD2); // PORTD &= ~(1 << PD2);  //digitalWrite(pinM1_IN2, LOW);
                         SET_BIT(PORTD,PD5);   //PORTD |= (1 << PD5);   //digitalWrite(pinEnable, HIGH);
                   } else {
                         CLEAR_BIT(PORTD,PD5); // PORTD &= ~(1 << PD5);  //// Disable PWM; digitalWrite(pinEnable, LOW);
                   }
                   step ++;
-                  if (step == sizeof sigcode) {
+                  if (step == sizeof sigcode_0) {
                         state = 1;
+                        step1 = 0;
                   }
             }//if(state=0)
+            else if (state == 1) {
+                  // disable output and wait until next signal should be sent this is 256+50-12. 256 is the next 2048 block an there start a little bit inside. 
+                  CLEAR_BIT(PORTD,PD5); //PORTD &= ~(1 << PD5);  //// Disable PWM; digitalWrite(pinEnable, LOW);
+                  SET_BIT(PORTB,PB1);
+                  SET_BIT(PORTD,PD2);
+                  SET_BIT(PORTD,PD7);
+                  SET_BIT(PORTD,PD6);
+                  step++;
+                  if (step == (256+51-12)) {
+                        state = 2;
+                        step1 = 0;
+                  }           
+            }
+            else if (state == 2) {
+                        // send signal in sigcode
+                  if (sigcode_1[step1] == 1) {
+                        CLEAR_BIT(PORTD,PD7); //digitalWrite(pinM2_IN1, LOW);
+                        SET_BIT(PORTD,PD6);    //digitalWrite(pinM2_IN2, HIGH);
+                        SET_BIT(PORTD,PD5);    //digitalWrite(pinEnable, HIGH);
+                  } else if (sigcode_1[step1] == -1) {
+                        SET_BIT(PORTD,PD7);    //digitalWrite(pinM2_IN1, HIGH);
+                        CLEAR_BIT(PORTD,PD6); ;  //digitalWrite(pinM2 _IN2, LOW);
+                        SET_BIT(PORTD,PD5);      //digitalWrite(pinEnable, HIGH);
+                  } else {
+                        CLEAR_BIT(PORTD,PD5); // PORTD &= ~(1 << PD5);  //// Disable PWM; digitalWrite(pinEnable, LOW);
+                  }
+                  step ++;
+                  step1 ++;
+                  if (step1 == sizeof sigcode_1) {
+                        state = 3;
+                        step1 = 0;
+                  }        
+            }
+
+
+            else if (state == 3) {
+                  // disable output and wait until next signal should be sent this is 256+50-12. 256 is the next 2048 block an there start a little bit inside. 
+                  CLEAR_BIT(PORTD,PD5); //PORTD &= ~(1 << PD5);  //// Disable PWM; digitalWrite(pinEnable, LOW);
+                  SET_BIT(PORTB,PB1);
+                  SET_BIT(PORTD,PD2);
+                  SET_BIT(PORTD,PD7);
+                  SET_BIT(PORTD,PD6);
+                  step++;
+                  if (step == ( (2*256)+51-12)) {
+                        state = 4;
+                        step1 = 0;
+                  }           
+            }
+            else if (state == 4) {
+                        // send signal in sigcode
+                  if (sigcode_1[step1] == 1) {
+                        CLEAR_BIT(PORTD,PD7); //digitalWrite(pinM2_IN1, LOW);
+                        SET_BIT(PORTD,PD6);    //digitalWrite(pinM2_IN2, HIGH);
+                        SET_BIT(PORTD,PD5);    //digitalWrite(pinEnable, HIGH);
+                  } else if (sigcode_1[step1] == -1) {
+                        SET_BIT(PORTD,PD7);    //digitalWrite(pinM2_IN1, HIGH);
+                        CLEAR_BIT(PORTD,PD6); ;  //digitalWrite(pinM2 _IN2, LOW);
+                        SET_BIT(PORTD,PD5);      //digitalWrite(pinEnable, HIGH);
+                  } else {
+                        CLEAR_BIT(PORTD,PD5); // PORTD &= ~(1 << PD5);  //// Disable PWM; digitalWrite(pinEnable, LOW);
+                  }
+                  step ++;
+                  step1 ++;
+                  if (step1 == sizeof sigcode_1) {
+                        state = 5;
+                        step1 = 0;
+                  }        
+            }
+
 
             else { // if (state == 0)
                   // disable output and wait until maxSteps is reached
                   CLEAR_BIT(PORTD,PD5); //PORTD &= ~(1 << PD5);  //// Disable PWM; digitalWrite(pinEnable, LOW);
+                  SET_BIT(PORTB,PB1);
+                  SET_BIT(PORTD,PD2);
+                  SET_BIT(PORTD,PD7);
+                  SET_BIT(PORTD,PD6);
+                  
                   step++;
                   if (step == maxSteps) {
                         state = 0;
                         step = 0;
+                        step1 = 0;
                   }
             } // else if (state == 0)
 
@@ -220,15 +297,22 @@ void calibrateChargeCurrentSensor() {
 
 
 void setup() {
-      pinMode(pinIN1, OUTPUT);
-      pinMode(pinIN2, OUTPUT);
+      pinMode(pinM1_IN1, OUTPUT);
+      pinMode(pinM1_IN2, OUTPUT);
+      pinMode(pinM1_nD2pwm, OUTPUT);
+      pinMode(pinM1_Feedback, INPUT);
+      pinMode(pinM1_Fault, INPUT);
+
+      pinMode(pinM2_IN1, OUTPUT);
+      pinMode(pinM2_IN2, OUTPUT);
+      pinMode(pinM2_nD2pwm, OUTPUT);
+      pinMode(pinM2_Feedback, INPUT);
+      pinMode(pinM2_Fault, INPUT);
+      
       pinMode(pinEnable, OUTPUT);
-      pinMode(pin_nD2, OUTPUT);
       pinMode(pinLEDGreen1, OUTPUT);
       pinMode(pinLEDGreen2, OUTPUT);
       pinMode(pinLEDRed2, OUTPUT);
-      pinMode(pinFeedback, INPUT);
-      pinMode(pinFault, INPUT);
       pinMode(pinChargeCurrent, INPUT);
 
       // configure ADC reference
@@ -242,9 +326,7 @@ void setup() {
       Serial.println(F("START"));
       Serial.print(F("Ardumower Sender "));
       Serial.println(VER);
-#if USE_DEVELOPER_TEST
-      Serial.println(F("Warning: USE_DEVELOPER_TEST activated"));
-#endif
+
       Serial.print(F("USE_PERI_FAULT="));
       Serial.println(USE_PERI_FAULT);
       Serial.print(F("USE_PERI_CURRENT="));
@@ -262,7 +344,8 @@ void setup() {
       Serial.println(1000.0 * 1000.0 / T);
       Timer1.initialize(T);         // initialize timer1, and set period
 
-      digitalWrite(pin_nD2, LOW); // In case of fault, D1, /D2 or Enable must be toggled to clear the statusflag
+      digitalWrite(pinM1_nD2pwm, LOW); // In case of fault, D1, /D2 or Enable must be toggled to clear the statusflag
+      digitalWrite(pinM2_nD2pwm, LOW); // In case of fault, D1, /D2 or Enable must be toggled to clear the statusflag
 
       // Check LEDs
       digitalWrite(pinLEDGreen1, HIGH);
@@ -363,7 +446,7 @@ void loop() {
       // Read perimeter current
       if (USE_PERI_CURRENT) {
             delay(2);
-            periCurrentMeasurements.add( analogRead(pinFeedback) );
+            periCurrentMeasurements.add( analogRead(pinM1_Feedback) );
       }
 
       // Read charging current
@@ -407,26 +490,38 @@ void loop() {
             nextTimeControl = millis() + 100;
 
             // Perimeter motor driver fault
-            if ( USE_PERI_FAULT  && (digitalRead(pinFault) == LOW) ) {
+            if ( USE_PERI_FAULT  && ( (digitalRead(pinM1_Fault) == LOW)   || (digitalRead(pinM2_Fault) == LOW)      ) ) {
                   // Motordriver fault
-                  enableSender = false;
-                  digitalWrite(pin_nD2, LOW); // In case of fault, D1, /D2 or Enable must be toggled to clear the statusflag
+                 enableSender = false;
+                 
+                 if(digitalRead(pinM1_Fault) == LOW){ 
+                      Serial.println(F("MC_FAULT M1"));
+                 }
+
+                 if(digitalRead(pinM2_Fault) == LOW){ 
+                      Serial.println(F("MC_FAULT M2"));
+                 }
+
+                  digitalWrite(pinM1_nD2pwm, LOW); // In case of fault, D1, /D2 or Enable must be toggled to clear the statusflag
+                  digitalWrite(pinM2_nD2pwm, LOW);
                   faults++;
-                  Serial.println(F("MC_FAULT"));
+                  
                   setLedFault();
             }
             // Is charging
             else if  ( (isCharging) || (robotOutOfStationTimeMins >= ROBOT_OUT_OF_STATION_TIMEOUT_MINS) ) {
                   // switch off perimeter
                   enableSender = false;
-                  digitalWrite(pin_nD2, LOW);
+                  digitalWrite(pinM1_nD2pwm, LOW);
+                  digitalWrite(pinM2_nD2pwm, LOW);
                   setLedChargingPerOff();
             }
             // Perimeter on
             else {
                   // switch on perimeter
                   enableSender = true;
-                  digitalWrite(pin_nD2, HIGH);
+                  digitalWrite(pinM1_nD2pwm, HIGH);
+                  digitalWrite(pinM2_nD2pwm, HIGH);
                   setLedPerOn();
             }
       }

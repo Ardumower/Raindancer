@@ -7,8 +7,6 @@
 Robotic Lawn Mower
 Copyright (c) 2019 by Kai Würtz
 
-Private-use only! (you need to ask for a commercial-use)
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -19,8 +17,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Private-use only! (you need to ask for a commercial-use)
 */
 
 //#include <algorithm>   //for min/max
@@ -41,7 +37,7 @@ extern Tgps gps;
 #define I2C_MT_DETAIL_RESULT 2
 #define I2C_MT_AGC_RESULT 3
 
-#define BYTE_TO_BINARY_PATTERN "!03,Result iL: %c iR: %c vL: %c vR: %c back: %c np: %c counter: %c%c\r\n"
+#define BYTE_TO_BINARY_PATTERN "!03,iL: %c iR: %c vL: %c vR: %c back: %c np: %c counter: %c%c\r\n"
 #define BYTE_TO_BINARY(byte)           \
       (byte & 0x80 ? '1' : '0'),       \
             (byte & 0x40 ? '1' : '0'), \
@@ -260,7 +256,7 @@ void TPerimeterThread::run() {
 	switch (state) {
 	case 0: // poll APR if new data is available
 
-		if (i2cAPR.read8Only(1, &shortResult, 1) != 1) {
+		if (i2cAPR.read8Only(1, &shortResult) != 1) {
 			errorHandler.setInfo(F("!03,APR 0 comm error errorCountert:%d time %lu\r\n"), i2cAPR.i2cErrorcounter, millis());
 			return;
 		}
@@ -284,18 +280,22 @@ void TPerimeterThread::run() {
 			CaluculateInsideOutsideL();
 			CaluculateInsideOutsideR();
 
-			if (showValuesOnConsole) {
+			if (showValuesOnConsole) { // Show in the next loop. Not to block too much the loop.
 				//errorHandler.setInfo(F(BYTE_TO_BINARY_PATTERN), BYTE_TO_BINARY(shortResult));
-				errorHandler.setInfo(F("!03,decode result: %d iL: %d iR: %d vL: %d vR: %d back: %d np: %d counter: %d\r\n"),
+				/*errorHandler.setInfo(F("!03,decode result: %d iL: %d iR: %d vL: %d vR: %d back: %d np: %d counter: %d\r\n"),
 					RxShortResults.result, RxShortResults.insideL, RxShortResults.insideR, RxShortResults.validL, RxShortResults.validR,
 					RxShortResults.backCoilActive, RxShortResults.nearPerimeter, RxShortResults.packetCounter);
+				*/
 				state = 1;
 				interval = 1;
 			}
 		}
+		else {
+			interval = I2C_POLL_INTERVALL;
+		}
 		break;
 	case 1:
-		if (i2cAPR.read8Only(9, &RxBuf[0], 1) != 9) {
+		if (i2cAPR.read8Only(9, &RxBuf[0]) != 9) {
 			errorHandler.setInfo(F("!03,APR 1 comm error errorCountert:%d\r\n"), i2cAPR.i2cErrorcounter);
 			state = 0;
 			interval = I2C_POLL_INTERVALL;
@@ -306,10 +306,28 @@ void TPerimeterThread::run() {
 		convert.uBytes[0] = RxBuf[1];
 		convert.uBytes[1] = RxBuf[2];
 		RxValues.magnitudeL = convert.sIn16t;
+		if (CONF_LEFT_COIL_INVERSE) {
+			RxValues.magnitudeL = -1*convert.sIn16t;
+		}
+		else {
+			RxValues.magnitudeL =  convert.sIn16t;
+		}
+		if (RxShortResults.validL == 0) {
+			RxValues.magnitudeL = 0;
+		}
 
 		convert.uBytes[0] = RxBuf[3];
 		convert.uBytes[1] = RxBuf[4];
 		RxValues.magnitudeR = convert.sIn16t;
+		if (CONF_RIGHT_COIL_INVERSE) {
+			RxValues.magnitudeR = -1 * convert.sIn16t;
+		}
+		else {
+			RxValues.magnitudeR = convert.sIn16t;
+		}
+		if (RxShortResults.validR == 0) {
+			RxValues.magnitudeR = 0;
+		}
 
 		RxValues.ratioL = RxBuf[5];
 		RxValues.ratioR = RxBuf[6];
@@ -331,13 +349,25 @@ void TPerimeterThread::run() {
 			RxValues.AMPOverdriveDetectedR = 0;
 		}
 		
+		if (showValuesOnConsole) {
+
+		}
+
+		sprintf(errorHandler.msg, "!03,ML: %d/%d MR: %d/%d back: %d np: %d\r\n", RxValues.magnitudeL, signalCounterL, RxValues.magnitudeR, signalCounterR, RxShortResults.backCoilActive, RxShortResults.nearPerimeter);
+		errorHandler.setInfoNoLog();
+
+/*
+		errorHandler.setInfo(F("!03,iL: %d iR: %d vL: %d vR: %d back: %d np: %d counter: %d\r\n"),
+			RxShortResults.result, RxShortResults.insideL, RxShortResults.insideR, RxShortResults.validL, RxShortResults.validR,
+			RxShortResults.backCoilActive, RxShortResults.nearPerimeter, RxShortResults.packetCounter);
+
 
 		errorHandler.setInfo(F("!03,aL: %d/%d aR: %d/%d ratioL: %u ratioR: %u result: %u I2Creset: %u oL: %d oR: %d \r\n"),
 			RxValues.magnitudeL, signalCounterL, RxValues.magnitudeR, signalCounterR,
 			(unsigned int)RxValues.ratioL, (unsigned int)RxValues.ratioR,
 			(unsigned int)RxValues.result, (unsigned int)RxValues.resetCnt,
 			(unsigned int)RxValues.AMPOverdriveDetectedL, (unsigned int)RxValues.AMPOverdriveDetectedR);
-
+*/
 		state = 0;
 		interval = I2C_POLL_INTERVALL;
 
