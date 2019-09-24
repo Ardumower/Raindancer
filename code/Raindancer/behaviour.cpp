@@ -2,7 +2,7 @@
 Robotic Lawn Mower
 Copyright (c) 2017 by Kai Würtz
 
-Private-use only! (you need to ask for a commercial-use)
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Private-use only! (you need to ask for a commercial-use)
+
 */
 #include "bConditions.h"
 #include "bDecorators.h"
@@ -853,7 +853,7 @@ void TBehaviour::setup()
 
     Check2PerSignal.nodeName = (char*)"check2PerSignal";
     Check2AllCoilsOutside.nodeName = (char*)"check2AllCoilsOutside";
-    selCheck2.addChildren( &Check2PerSignal, &Check2CoilSignalAreaX, &Check2LeftCoilSignal,&Check2RightCoilSignal);
+    selCheck2.addChildren( &Check2CoilSignalAreaX, &Check2PerSignal, &Check2LeftCoilSignal,&Check2RightCoilSignal);
 	//selCheck2.addChildren(&Check2PerSignal, &Check2AllCoilsOutside, &Check2BackCoilSignalAreaX, &Check2LeftCoilSignal, &Check2RightCoilSignal, &Check2BackCoilSignal);
 
     // ************************************
