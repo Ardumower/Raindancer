@@ -1,0 +1,5 @@
+V1.1.0
++ Goto TCheck2PerSignal was activated first, before TCheck2CoilSignalAreaX could rotate the mower while starting GotoArea => Changed position of TCheck2CoilSignalAreaX in selCheck2.
++ Somtetimes the mower does not rotate at the perimter because of uneven ground and wet gras. The mower stucks. => If both coils could not rotate inside, drive 30cm back and try again. If this is not working, an error is thrown. If this happens often, the mower is mayby to heavy at the front or the wheels has not enogh grip.
++ If the perimeter signal was to strong, the signal recoginition changed inside to outside => This case will now be detected.
+ 
