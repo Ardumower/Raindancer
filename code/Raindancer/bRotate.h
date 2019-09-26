@@ -622,7 +622,7 @@ public:
 	virtual void onInitialize(Blackboard& bb) {
 
 		bb.cruiseSpeed = bb.CRUISE_SPEED_HIGH;
-		bb.motor.rotateCM(-(2* CONF_DRIVE_OVER_PERIMETER_CM), bb.cruiseSpeed); // x cm zurueckfahren
+		bb.motor.rotateCM(-(3* CONF_DRIVE_OVER_PERIMETER_CM), bb.cruiseSpeed); // x cm zurueckfahren
 		bb.driveDirection = DD_REVERSE_INSIDE; // DD_REVERSE_INSIDE;
 		//bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, bb.flagCoilFirstOutside);
 
@@ -1089,4 +1089,3 @@ public:
 
 
 #endif
-
