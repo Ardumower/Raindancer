@@ -295,7 +295,7 @@ public:
 					errorHandler.setInfo();
 					bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
 					bb.driveDirection = DD_ROTATECW;
-					bb.motor.turnTo(15, bb.cruiseSpeed);
+					bb.motor.turnTo(10, bb.cruiseSpeed);
 					state = 2;
 					return BH_RUNNING;
 				} 
@@ -332,4 +332,3 @@ public:
 	}
 };
 #endif
-
