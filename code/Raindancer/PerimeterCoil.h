@@ -48,11 +48,15 @@ public:
   int peakIdx = 0;
   DSP_TYPE peakValue2 = 0;
   int peakIdx2 = 0;
+  DSP_TYPE peakValueSLL = 0;
+  int peakIdxSLL = 0;
   int64_t corrSum = 0;
   float MSE = 0;
   float psnr=0;
   float psnr2=0;
+  float psnrSLL = 0;
   float ratio;
+  bool overdriveDetected = false;
   
 	PerimeterCoil();
 	bool isSignalValid();
