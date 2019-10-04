@@ -2,7 +2,7 @@
 Robotic Lawn Mower
 Copyright (c) 2017 by Kai Würtz
 
-Private-use only! (you need to ask for a commercial-use)
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Private-use only! (you need to ask for a commercial-use)
+
 */
 
 #ifndef BH_PERIMETEROUTSIDE_H
@@ -595,7 +595,55 @@ public:
 		}
 
 		if (bb.motor.isPositionReached()) {
-			errorHandler.setError(F("!03,TRotateBothCoilsInside not able to rotate both coils to inside\r\n"));
+			return BH_FAILURE;
+			//errorHandler.setError(F("!03,TRotateBothCoilsInside not able to rotate both coils to inside\r\n"));
+		}
+
+		return BH_RUNNING;
+	}
+
+	virtual void onTerminate(NodeStatus status, Blackboard& bb) {
+		/*
+		if(status != BH_ABORTED) {
+
+		}
+		*/
+	}
+
+};
+
+class TRotateDriveBackInside : public Node {
+private:
+	long weg;
+public:
+
+	TRotateDriveBackInside() {}
+
+	virtual void onInitialize(Blackboard& bb) {
+
+		bb.cruiseSpeed = bb.CRUISE_SPEED_HIGH;
+		bb.motor.rotateCM(-(3* CONF_DRIVE_OVER_PERIMETER_CM), bb.cruiseSpeed); // x cm zurueckfahren
+		bb.driveDirection = DD_REVERSE_INSIDE; // DD_REVERSE_INSIDE;
+		//bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, bb.flagCoilFirstOutside);
+
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+		if (getTimeInNode() > 10000) {
+			errorHandler.setError(F("!03,TRotateDriveBackInside too long in state\r\n"));
+		}
+
+		//bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
+
+		if (bb.motor.isPositionReached()) {
+			if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside()) {
+				return BH_SUCCESS;
+			}
+			else {
+				errorHandler.setError(F("!03,TRotateDriveBackInside not able to drive back inside\r\n"));
+				return BH_FAILURE;
+			}
+			
 		}
 
 		return BH_RUNNING;
@@ -1041,4 +1089,3 @@ public:
 
 
 #endif
-

@@ -2,7 +2,7 @@
 Robotic Lawn Mower
 Copyright (c) 2017 by Kai Würtz
 
-Private-use only! (you need to ask for a commercial-use)
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Private-use only! (you need to ask for a commercial-use)
+
 
 ****************************************************************************************************
 *      INTO CONFIG.H 
@@ -27,6 +27,7 @@ Set to true only the correct CHASSIS
 ****************************************************************************************************
 */
 
+#include <Wire.h>
 #include "bHeadStation.h"
 #include "config.h"
 #include "rainSensor.h"
@@ -64,7 +65,7 @@ Set to true only the correct CHASSIS
 /*********************************************************************/
 // Global Variables
 /*********************************************************************/
-#define VERSION "1.0.0 Raindancer"
+#define VERSION "1.1.0 Raindancer"
 
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;

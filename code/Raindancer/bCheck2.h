@@ -2,7 +2,7 @@
 Robotic Lawn Mower
 Copyright (c) 2017 by Kai WÃ¼rtz
 
-Private-use only! (you need to ask for a commercial-use)
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Private-use only! (you need to ask for a commercial-use)
+
 */
 #ifndef BH_CHECK2_H
 #define BH_CHECK2_H
@@ -279,17 +279,30 @@ public:
 					return BH_RUNNING;
 				}
 
-				// Wurde Signal empfangen
-				if (bb.perimeterSensoren.magnetudeR0 != 0) {
-					state = 0;
-					bb.flagGotoAreaXFirstCall = false;
-					sprintf(errorHandler.msg, "!03,Signal Right Found SignalAreaX1\r\n");
+				// Is right coil outside then rotate 5 degree right further to be sure to really be outside
+				if (bb.perimeterSensoren.isRightOutside()) {
+					sprintf(errorHandler.msg, "!03,Signal Right Found SignalAreaX1 Outside rotate 5 degree further\r\n");
 					errorHandler.setInfo();
-					return BH_FAILURE;
+					bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
+					bb.driveDirection = DD_ROTATECW;
+					bb.motor.turnTo(5, bb.cruiseSpeed);
+					state = 2;
+					return BH_RUNNING;
 				}
+				// Is right coil inside then rotate 15 degree right further to be sure to really be outside
+				else if (bb.perimeterSensoren.isRightInside()) {
+					sprintf(errorHandler.msg, "!03,Signal Right Found SignalAreaX1 Inside rotate 15 degree further\r\n");
+					errorHandler.setInfo();
+					bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
+					bb.driveDirection = DD_ROTATECW;
+					bb.motor.turnTo(10, bb.cruiseSpeed);
+					state = 2;
+					return BH_RUNNING;
+				} 
 
-				// Drehe 10Grad CW
-
+				// Rotate 10 degree CW because signal is 0
+				sprintf(errorHandler.msg, "!03,Signal Right NOT Found SignalAreaX1  rotate 10 degree further\r\n");
+				errorHandler.setInfo();
 				bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
 				bb.driveDirection = DD_ROTATECW;
 				bb.motor.turnTo(10, bb.cruiseSpeed);
@@ -306,7 +319,7 @@ public:
 				if (bb.motor.isPositionReached()) {
 					state = 0;
 					bb.flagGotoAreaXFirstCall = false;
-					sprintf(errorHandler.msg, "!03,TCheck2CoilSignalAreaX rotated 10deg\r\n");
+					sprintf(errorHandler.msg, "!03,TCheck2CoilSignalAreaX rotated\r\n");
 					errorHandler.setInfo();
 					return BH_FAILURE;
 				}
@@ -319,4 +332,3 @@ public:
 	}
 };
 #endif
-

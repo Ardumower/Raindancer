@@ -20,7 +20,7 @@ int8_t  PerimeterCoil::referenceSignal_r[REFERENCE_SIGNAL_SIZE] =
 #ifdef CONF_USE64BIT_PER_SIGNAL
 int8_t  PerimeterCoil::referenceSignal_r[REFERENCE_SIGNAL_SIZE] =
 //{ 1,-1,1,-1,1,1,-1,-1,1,-1,1,-1,1,-1,1,1,-1,-1,1,1,-1,-1,1,1,-1,1,-1,1,-1,-1,1,1,-1,1,-1,-1,1,-1,1,-1,1,1,-1,1,-1,1,-1,1,-1,1,-1,-1,1,-1,1,1,-1,1,-1,-1,1,1,-1,-1 }; /*Part of Bosch Indego Signal */
-{-1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1};
+{ -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1 };
 #endif // CONF_USE64BIT_PER_SIGNAL
 
 #ifdef CONF_USE32BIT_PER_SIGNAL
@@ -44,7 +44,7 @@ PerimeterCoil::PerimeterCoil() {
 
 #ifdef CONF_USE128BIT_PER_SIGNAL
 bool PerimeterCoil::isSignalValid() {
-	if ( (ratio > 2.3f) && (psnr > 25) && (abs(magnetude) > 25)) {  // use if you don't square the correlation array
+	if ((ratio > 2.3f) && (psnr > 25) && (abs(magnetude) > 25)) {  // use if you don't square the correlation array
 	//if (((psnr > 25 && ratio > 8.0f) || (psnr > 50)) && (abs(magnetude) > 25)) {  // use if you square the correlation array
 		return true;
 	}
@@ -55,11 +55,11 @@ bool PerimeterCoil::isSignalValid() {
 
 #ifdef CONF_USE64BIT_PER_SIGNAL
 bool PerimeterCoil::isSignalValid() {
-//	if (((psnr > 10 && ratio > 2.3f) || (psnr > 25)) && (abs(magnetude) > 25)) {  // use if you don't square the correlation array
-																				  //if (((psnr > 25 && ratio > 8.0f) || (psnr > 50)) && (abs(magnetude) > 25)) {  // use if you square the correlation array
-	if ( (ratio > 3f) && (psnr > 25)) && (abs(magnetude) > 25)) {  // use if you don't square the correlation array
+	//	if (((psnr > 10 && ratio > 2.3f) || (psnr > 25)) && (abs(magnetude) > 25)) {  // use if you don't square the correlation array
+																					  //if (((psnr > 25 && ratio > 8.0f) || (psnr > 50)) && (abs(magnetude) > 25)) {  // use if you square the correlation array
+	if ((ratio > 3f) && (psnr > 25)) && (abs(magnetude) > 25)) {  // use if you don't square the correlation array
 
-		return true;
+	return true;
 	}
 	return false;
 }
@@ -90,6 +90,9 @@ void PerimeterCoil::printSignal(char *text, DSP_TYPE *samples, int sz) {
 }
 
 void PerimeterCoil::printSignalValues(DSP_TYPE *samples, int sz) {
+	for (int i = 0; i < 20; i++) {
+		errorHandler.setInfoNoLog(F("%d\r\n"), -200);
+	}
 	for (int i = 0; i < sz; i++) {
 		errorHandler.setInfoNoLog(F("%d\r\n"), samples[i]);
 	}
@@ -180,6 +183,10 @@ void PerimeterCoil::run(void) {
 
 	int32_t sum;
 	int32_t countNumbers;
+	int32_t delta = 0;
+	int32_t idxSearchEnd, idxSearchStart;
+	float percentage;
+
 
 	switch (state) {
 
@@ -187,8 +194,7 @@ void PerimeterCoil::run(void) {
 		// ---- compute offset of real part  ---------
 		sum = 0;
 		// Mittelwert bzw. Offset berechnen
-		for (int i = 0; i < FFT_SIZE; i++)
-		{
+		for (int i = 0; i < FFT_SIZE; i++) {
 			sum += sampling_r[i];
 		}
 		adcOffset = sum / FFT_SIZE; // Offset is the average
@@ -196,8 +202,7 @@ void PerimeterCoil::run(void) {
 
 	case 1: state++;
 		// Offset subtrahieren von empfsngssignal
-		for (int i = 0; i < FFT_SIZE; i++)
-		{
+		for (int i = 0; i < FFT_SIZE; i++) {
 			sampling_r[i] -= adcOffset;
 		}
 		if (showADCWithoutOffset) {
@@ -282,6 +287,39 @@ void PerimeterCoil::run(void) {
 			}
 		}
 
+		// find second right peak instead of real peak. For testing peakSLL code only!
+		//errorHandler.setInfoNoLog(F("real peak: %d @%d\r\n"), peakValue, peakIdx);
+		/*
+
+		peakIdx2 = peakIdx;
+		if (peakValue > 0) {
+			peakValue = 0;
+			// search for negative max
+			for (int i = 0; i < FFT_SIZE; i++) {
+				if (i != peakIdx2) { // skip the real peak.
+					if ( correlation_r[i] < peakValue) {
+						peakValue = correlation_r[i];
+						peakIdx = i;
+					}
+				}
+			}
+		}
+		else {
+			peakValue = 0;
+			// search for positive max
+			for (int i = 0; i < FFT_SIZE; i++) {
+				if (i != peakIdx2) { // skip the real peak.
+					if (correlation_r[i] > peakValue) {
+						peakValue = correlation_r[i]; 
+						peakIdx = i;
+					}
+				}
+			}
+		}
+		//errorHandler.setInfoNoLog(F("second peak: %d @%d\r\n"), peakValue, peakIdx);
+		*/
+
+
 		// Save magetude which is used by perimeter.cpp
 		magnetude = peakValue;
 
@@ -293,29 +331,29 @@ void PerimeterCoil::run(void) {
 
 		break;
 
-// ================================================================================================================
-// Now we have the magnitude and its sign
-// The following code from now on is only needed to determin if the received signal is valid or has too much errors
-// ================================================================================================================
+		// ================================================================================================================
+		// Now we have the magnitude and its sign
+		// The following code from now on is only needed to determin if the received signal is valid or has too much errors
+		// ================================================================================================================
 
-/*
-	case 14: state++; // This state will not be called anymore
-		// ---- square correlation array ---------
+		/*
+			case 14: state++; // This state will not be called anymore
+				// ---- square correlation array ---------
 
-		peakValue = peakValue * peakValue;
-		for (int i = 0; i < FFT_SIZE; i++) {
-		//	if (correlation_r[i] < 0)
-		//		correlation_r[i] = -sq(correlation_r[i]);
-		//	else
-				correlation_r[i] = sq(correlation_r[i]);
-		}
-		// From here on the correlation signal is only positive!!!
+				peakValue = peakValue * peakValue;
+				for (int i = 0; i < FFT_SIZE; i++) {
+				//	if (correlation_r[i] < 0)
+				//		correlation_r[i] = -sq(correlation_r[i]);
+				//	else
+						correlation_r[i] = sq(correlation_r[i]);
+				}
+				// From here on the correlation signal is only positive!!!
 
-		if (showCorrelationSQ) {
-			printSignalValues(correlation_r, FFT_SIZE);
-		}
-		break;
-		*/
+				if (showCorrelationSQ) {
+					printSignalValues(correlation_r, FFT_SIZE);
+				}
+				break;
+				*/
 
 	case 14: state++;
 		// --- get correlation sum (without max peak and nearby coils) and peakValue2 value -------
@@ -379,15 +417,76 @@ void PerimeterCoil::run(void) {
 		break;
 
 	case 15: state++;
+
+		// ---- find peakSLL (peak Side Lobe Left)
+		// Search for left sidelobe of other sign. Because if receiver overdrives then it could be,
+		// that the second sidelobe is higher than the normal matched filter peak which is the first.
+
+		peakValueSLL = 0;
+		peakIdxSLL = 0;
+		delta = peakIdx - 8;
+		idxSearchStart = peakIdx-2;
+		idxSearchEnd = idxSearchStart - 8;
+		if (idxSearchEnd < 0) {
+			idxSearchEnd = -1;
+		}
+
+
+		if (peakValue > 0) { // Peak1 positive -> Search SLL for negative values
+			for (int i = idxSearchStart; i > idxSearchEnd; i--) {
+				if (correlation_r[i] < peakValueSLL) {
+					peakValueSLL = correlation_r[i];
+					peakIdxSLL = i;
+				}
+			}
+
+			// If delta < 0 search at the end of the array
+			if (delta < 0) {
+				idxSearchStart = FFT_SIZE - 1;
+				idxSearchEnd = idxSearchStart - abs(delta);
+				for (int i = idxSearchStart; i > idxSearchEnd; i--) {
+					if (correlation_r[i] < peakValueSLL) {
+						peakValueSLL = correlation_r[i];
+						peakIdxSLL = i;
+					}
+				}
+			}
+		}
+		else { // Peak1 negative -> Search SLL for positive values
+
+			for (int i = idxSearchStart; i > idxSearchEnd; i--) {
+				if (correlation_r[i] > peakValueSLL) {
+					peakValueSLL = correlation_r[i];
+					peakIdxSLL = i;
+				}
+			}
+
+			// If delta < 0 search at the end of the array
+			if (delta < 0) {
+				idxSearchStart = FFT_SIZE - 1;
+				idxSearchEnd = idxSearchStart - abs(delta);
+				for (int i = idxSearchStart; i > idxSearchEnd; i--) {
+					if (correlation_r[i] > peakValueSLL) {
+						peakValueSLL = correlation_r[i];
+						peakIdxSLL = i;
+					}
+				}
+			}
+		}
+
+
 		//https://de.wikipedia.org/wiki/Signal-Rausch-Verh%C3%A4ltnis
 
 		if (MSE > 0.000001f) {
 			psnr = (sq(((float)(peakValue))) / MSE);
 			psnr2 = (sq(((float)(peakValue2))) / MSE);
+			psnrSLL = (sq(((float)(peakValueSLL))) / MSE);
 		}
 		else {
 			psnr = 1;
 			psnr2 = 1;
+			psnrSLL = 1;
+
 		}
 
 		if (psnr2 < 0.000001f) {
@@ -397,16 +496,31 @@ void PerimeterCoil::run(void) {
 
 		//float snr = dsp.snr(signal_r, peakIdx, sampling_r, 1.0f/4095.0f, FFT_SIZE);
 
+		// Check if sidelobe left is near found signal
+		if (isSignalValid()) {
+			overdriveDetected = false;
+			percentage = (psnrSLL * 100.0f) / psnr;
+			if (percentage > 95.0f) {
+				//peakValue = -1 * peakValue;
+				magnetude = -1 * magnetude;
+				overdriveDetected = true;
+			}
+		}
 
 		if (showValuesResults) {
-			errorHandler.setInfoNoLog(F("mag: %4d  peak @ %3d : %4d   peak2 @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f   ratio: %8.3f"),
-				magnetude, peakIdx, peakValue, peakIdx2, peakValue2, MSE, psnr, psnr2, ratio);
+			errorHandler.setInfoNoLog(F("mag: %4d  peak @ %3d : %4d   peak2 @ %3d : %4d   peakSLL @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f  psnrSLL: %8.3f  ratio: %8.3f"),
+				magnetude, peakIdx, peakValue, peakIdx2, peakValue2, peakIdxSLL, peakValueSLL, MSE, psnr, psnr2, psnrSLL, ratio);
 
-//			errorHandler.setInfoNoLog(F("  peak @ %3d : %4d^2= %4d  peak2 @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f   ratio: %8.3f"),
-//				peakIdx, magnetude, peakValue, peakIdx2, peakValue2, MSE, psnr, psnr2, ratio);
+			//			errorHandler.setInfoNoLog(F("  peak @ %3d : %4d^2= %4d  peak2 @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f   ratio: %8.3f"),
+			//				peakIdx, magnetude, peakValue, peakIdx2, peakValue2, MSE, psnr, psnr2, ratio);
 
 
-			if (!isSignalValid()){
+			if (isSignalValid()) {
+				if (overdriveDetected) {
+					errorHandler.setInfoNoLog(F("    ODR"));
+				}
+			}
+			else {
 				errorHandler.setInfoNoLog(F("    BAD"));
 			}
 

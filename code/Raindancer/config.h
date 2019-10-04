@@ -2,7 +2,7 @@
 Robotic Lawn Mower
 Copyright (c) 2017 by Kai Wuertz
 
-Private-use only! (you need to ask for a commercial-use)
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Private-use only! (you need to ask for a commercial-use)
+
 */
 
 
@@ -531,7 +531,7 @@ const char UBLOX_INIT[] PROGMEM =
                                                       // For example: right coil receives signal and left coil not for this time then after this time motors will be stopped. 
                                                       // because it could be, that the left coil is broken	
 
-#define CONF_DRIVE_MAX_CM				10000.0f // 10000cm = 100m  When starting from perimeter or obstaclw the robot drives not more than this distance.
+#define CONF_DRIVE_MAX_CM				10000.0f // 10000cm = 100m  When starting from perimeter or obstacle the robot drives not more than this distance.
 #define CONF_DRIVE_OVER_PERIMETER_CM	20.0f    // Overrun the perimeter by 20cm 	
 #define CONF_PERIMETER_DRIVE_BACK_CM    10.0f    // After Perimeter overrun drive back x cm
 #define CONF_PERIMETER_DRIVE_BACK_ANGLE 30.0f    // Only drive back if overrun angle is smaller than this x degree. 0 degree is both coils faces forwared perimeter.
@@ -685,10 +685,10 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DISABLE_BUMPERDUINO_SERVICE	true   // Disables my own bumper duino sensor on pinUserSwitch2 => diBumperSensor
 
 
-#define CONF_DISABLE_PERIMETER_SERVICE	true   // Disables perimeter sensor
+#define CONF_DISABLE_PERIMETER_SERVICE	false   // Disables perimeter sensor
 #define CONF_DISABLE_RTC_SERVICE		true    // Disables rtc sensor
 #define CONF_DISABLE_EEPROM_SERVICE		true   // Disables EEPROM requests
-#define CONF_DISABLE_BATTERY_SERVICE	false   // Disables battery sensor
+#define CONF_DISABLE_BATTERY_SERVICE	true   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE		true   // Disables charge system service
 #define CONF_DISABLE_RAIN_SERVICE       true   // Disables rain sensor
 #define CONF_DISABLE_DHT_SERVICE        false   // Disables temp sensor
