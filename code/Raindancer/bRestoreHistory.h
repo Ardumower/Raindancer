@@ -12,7 +12,7 @@
 #include "BehaviourTree.h"
 #include "config.h"
 
-class TRestoreHistory : public Node
+class TRestoreHistory : public Action
 {
 private:
 

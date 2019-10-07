@@ -311,9 +311,6 @@ bool Blackboard::histGetTwoLastForwardDistances(float& a, float& b) {
 void Blackboard::resetBB()
 {
 	errorHandler.setInfo(F("Blackboard:reset\r\n"));
-	// Init black board variables
-	lastNodeLastRun = NULL;
-	lastNodeCurrentRun = NULL;
 
 	cruiseSpeed = 0;
 	timeCruiseSpeedSet = 0;

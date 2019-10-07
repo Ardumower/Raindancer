@@ -50,7 +50,7 @@ Set to true only the correct CHASSIS
 #include "rangeSensor.h"
 #include "bumperSensor.h"
 #include "Blackboard.h"
-#include "behaviour.h"
+#include "bCreateTree.h"
 #include "chargeSystem.h"
 #include "ui.h"
 #include "printSensordata.h"
@@ -65,7 +65,7 @@ Set to true only the correct CHASSIS
 /*********************************************************************/
 // Global Variables
 /*********************************************************************/
-#define VERSION "1.1.0 Raindancer"
+#define VERSION "1.2.0 Raindancer"
 
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;
@@ -339,9 +339,16 @@ void setup()
     errorHandler.setInfo(F("Setup finished. Loop is running.\r\n"));
     errorHandler.setInfo(F("Version %s\r\n\r\n"), VERSION);
     errorHandler.setInfo(F("Press H for help.\r\n"));
+
+
+#if TEST_ON_DUE_ONLY ==  true
+    errorHandler.setInfo(F("********************\r\n"));
+    errorHandler.setInfo(F("* TEST_ON_DUE_ONLY *\r\n"));
+    errorHandler.setInfo(F("********************\r\n"));
+#endif
+
     //Startsound ausgeben
     Buzzer.sound(SND_START);
-
 }
 
 void executeLoop() //wird von ui.cpp verwendet wenn Hilfe ausgegeben wird

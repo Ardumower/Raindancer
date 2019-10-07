@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TCheck2LeftCoilSignal: public Node
+class TCheck2LeftCoilSignal: public Action
 {
 private:
     int state;
@@ -78,7 +78,7 @@ public:
     }
 };
 
-class TCheck2RightCoilSignal: public Node
+class TCheck2RightCoilSignal: public Action
 {
 private:
     int state;
@@ -128,7 +128,7 @@ public:
 
 
 
-class TCheck2PerSignal: public Node
+class TCheck2PerSignal: public Action
 {
 private:
     int state;
@@ -187,7 +187,7 @@ public:
 
 
 class TCheck2AllCoilsOutside
-    : public Node
+    : public Action
 {
 private:
     int state;
@@ -246,7 +246,7 @@ public:
 
 
 
-class TCheck2CoilSignalAreaX : public Node
+class TCheck2CoilSignalAreaX : public Action
 {
 private:
 	int state;

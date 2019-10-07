@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TSetflagBumperActivatedLR : public Node    // Each task will be a class (derived from Node of course).
+class TSetflagBumperActivatedLR : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -82,7 +82,7 @@ public:
 };
 
 
-class THardstop : public Node
+class THardstop : public Action
 {
 private:
 
@@ -106,7 +106,7 @@ public:
 };
 
 
-class TFreeBumper : public Node
+class TFreeBumper : public Action
 {
 private:
 	int counter, counter1;
@@ -431,7 +431,7 @@ public:
 
 
 
-class TFreeBumper2 : public Node
+class TFreeBumper2 : public Action
 {
 private:
 	int counter, counter1;
@@ -627,7 +627,7 @@ public:
 
 
 
-class TselEscapeAlgorithm : public Node
+class TselEscapeAlgorithm : public Action
 {
 private:
 	int counter;

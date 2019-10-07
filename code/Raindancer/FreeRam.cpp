@@ -35,6 +35,7 @@ void FreeMem(void) {
 	unsigned int i = 0xaa;
 	ptr_i = &i;
 
+	sprintf(Txt, "Size of bool: %d\r\n", sizeof(bool)); debug->print(Txt);
 	sprintf(Txt, "Size of int: %d, Size of uint: %d\r\n", sizeof(int), sizeof(unsigned int)); debug->print(Txt);
 	sprintf(Txt, "Size of char: %d, Size of uchar: %d\r\n", sizeof(char), sizeof(unsigned char)); debug->print(Txt);
 	sprintf(Txt, "Size of short: %d, Size of ushort: %d\r\n", sizeof(short), sizeof(unsigned short)); debug->print(Txt);

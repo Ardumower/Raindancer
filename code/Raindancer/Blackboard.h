@@ -47,17 +47,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //Achtung, bei Aenderung auch enuDriveDirectionString[] aendern!!!
 enum enuDriveDirection {
-    DD_FORWARD = 0,
-    DD_FORWARD_INSIDE = 1, //Darf eigentlich nicht vorkommen wenn ich prÃ¼fe, dass Spule hinten rausfÃ¤hrt beim zurÃ¼ckfahren
-    DD_OVERRUN = 2,
-    DD_REVERSE_ESC_OBST  = 3, 
-    DD_REVERSE_INSIDE = 4,
-    DD_ROTATECW = 5,
-    DD_ROTATECC = 6,
+	DD_FORWARD = 0,
+	DD_FORWARD_INSIDE = 1, //Darf eigentlich nicht vorkommen wenn ich prÃ¼fe, dass Spule hinten rausfÃ¤hrt beim zurÃ¼ckfahren
+	DD_OVERRUN = 2,
+	DD_REVERSE_ESC_OBST = 3,
+	DD_REVERSE_INSIDE = 4,
+	DD_ROTATECW = 5,
+	DD_ROTATECC = 6,
 	DD_ROTATECW1 = 7,
 	DD_ROTATECC1 = 8,
 	DD_LINE_FOLLOW = 9,
-    DD_SPIRAL_CW = 10,
+	DD_SPIRAL_CW = 10,
 	DD_FEOROTATECC = 11,
 	DD_FEOROTATECW = 12,
 	DD_FEOROTATECC1 = 13,
@@ -73,24 +73,24 @@ enum enuDriveDirection {
 extern const char* enuDriveDirectionString[];  //in Blackboard.cpp definiert
 
 
-enum enuFlagCoilsOutside  {CO_NONE, CO_RIGHT, CO_LEFT, CO_BOTH };
+enum enuFlagCoilsOutside { CO_NONE, CO_RIGHT, CO_LEFT, CO_BOTH };
 extern const char* enuFlagCoilsOutsideString[]; //in Blackboard.cpp definiert
 
-enum enuFlagPeriStateChanged  {PSC_NONE, PSC_IO, PSC_OI};
+enum enuFlagPeriStateChanged { PSC_NONE, PSC_IO, PSC_OI };
 
-enum enuFlagForceRotateDirection  {FRD_NONE, FRD_CC, FRD_CW};
+enum enuFlagForceRotateDirection { FRD_NONE, FRD_CC, FRD_CW };
 extern const char* enuFlagForceRotateDirectionString[]; //in Blackboard.cpp definiert
 
 //Achtung, bei Aenderung auch enuFlagEscabeObstacleConFlagString[] aendern!!! FEO = Flag Escape Obstacle
-enum enuFlagEscabeObstacleConFlag  {FEO_NONE, FEO_ROTCC1, FEO_ROTCW1, FEO_ROTCC2, FEO_ROTCW2, FEO_BACKINSIDE, FEO_ROT}; // Condition which algortihm will be used by mselEscabeObstacle
+enum enuFlagEscabeObstacleConFlag { FEO_NONE, FEO_ROTCC1, FEO_ROTCW1, FEO_ROTCC2, FEO_ROTCW2, FEO_BACKINSIDE, FEO_ROT }; // Condition which algortihm will be used by mselEscabeObstacle
 extern const char* enuFlagEscabeObstacleConFlagString[]; //in Blackboard.cpp definiert
 
-enum enuBehaviour  {BH_NONE, BH_MOW, BH_PERITRACK, BH_CHARGING, BH_GOTOAREA, BH_FINDPERIMETER, BH_LEAVE_HEAD_CS};
+enum enuBehaviour { BH_NONE, BH_MOW, BH_PERITRACK, BH_CHARGING, BH_GOTOAREA, BH_FINDPERIMETER, BH_LEAVE_HEAD_CS };
 
 
 //Structure for history and current rotation data
 typedef struct {
- 	enuDriveDirection driveDirection;	// [0]  Enthaelt Fahrtrichtung
+	enuDriveDirection driveDirection;	// [0]  Enthaelt Fahrtrichtung
 	float  distanceDriven;				// [0] Enthaelt die gerade gefahrene distanz/winkeldistanz
 	float rotAngleSoll;					// [0] Sollwinkel der aktuellen Drehung
 	float rotAngleIst;					// [0] Tatsächlich gedrehter Winkel
@@ -106,8 +106,7 @@ class Node;
 
 
 // We will use a Blackboard object. This object will be created by the user and will be propagated to the nodes during the Blackboard through the tick function.
-class Blackboard
-{
+class Blackboard {
 public:
 	Blackboard(TMotorInterface &_motor, TPerimeterThread &_perimeterSenoren, TMowMotorSensor& _mowMotorSensor, TrangeSensor &_rangeSensor,
 		TbumperSensor &_bumperSensor, TbatterieSensor& _batterieSensor, CRotaryEncoder &_encoderL, CRotaryEncoder &_encoderR, TchargeSystem &_chargeSystem, TEEPROM &_eeprom, TrainSensor &_rainSensor, TDHT & _dht) :
@@ -122,16 +121,24 @@ public:
 		chargeSystem(_chargeSystem),
 		eeprom(_eeprom),
 		rainSensor(_rainSensor),
-		dht(_dht)
-    {  
+		dht(_dht) {
 		flagEnableMowing = false;
 		flagEnablePerimetertracking = false;
 		flagEnableCharging = false;
 		flagEnableGotoAreaX = false;
 		flagEnableFindPerimeter = false;
 		flagEnableLeaveHeadChargingStation = false;
-		
+
+		flagBHTShowChanges = true;
+
+		flagShortWayCounter = true; // Will never be changed.
 	}
+
+
+	// Variables used by default BehaviourTree funktions
+	bool flagBHTShowChanges; // shows leaf which changes the state during a tick
+	NodeStack changedStatusNodes;
+
 
 	THistory history[HISTROY_BUFSIZE];
 	THistory hist; // use in freeBumper. TFreeBumper should inform TselEscapeAlgorithm about the last deleted node.
@@ -140,68 +147,70 @@ public:
 	long randAngle;
 
 	static const int CRUISE_SPEED_HIGH = 85;//92,90
-    static const int CRUISE_SPEED_MEDIUM = 70;
-    static const int CRUISE_SPEED_LOW = 50;
-    static const int CRUISE_SPEED_OBSTACLE = 40;  // Lowest Speed to drive
+	static const int CRUISE_SPEED_MEDIUM = 70;
+	static const int CRUISE_SPEED_LOW = 50;
+	static const int CRUISE_SPEED_OBSTACLE = 40;  // Lowest Speed to drive
 	static const int CRUISE_ROTATE_HIGH = 40;
 	static const int CRUISE_ROTATE_LOW = 25;
 	static const int LINEFOLLOW_SPEED_HIGH = 50;
 	static const int LINEFOLLOW_SPEED_LOW = 50;
-    static const int SHORTWAYCOUNT  = 3; //3
+	static const int SHORTWAYCOUNT = 3; //3
 
 
 	enuFlagCoilsOutside   flagCoilFirstOutsideLatched;
-    enuFlagCoilsOutside   flagCoilFirstOutside;
-    //enuFlagCoilsOutside   flagCoilOutsideAfterOverrun;
-    enuFlagPeriStateChanged  flagPerimeterStateChanged;
-    enuFlagForceRotateDirection flagForceRotateDirection;
-    enuFlagEscabeObstacleConFlag flagEscabeObstacleConFlag;
+	enuFlagCoilsOutside   flagCoilFirstOutside;
+	//enuFlagCoilsOutside   flagCoilOutsideAfterOverrun;
+	enuFlagPeriStateChanged  flagPerimeterStateChanged;
+	enuFlagForceRotateDirection flagForceRotateDirection;
+	enuFlagEscabeObstacleConFlag flagEscabeObstacleConFlag;
 
 
-    bool flagBumperInsidePerActivated ;
-    bool flagBumperOutsidePerActivated;
-    bool flagCruiseSpiral;
+	bool flagBumperInsidePerActivated;
+	bool flagBumperOutsidePerActivated;
+	bool flagCruiseSpiral;
 	bool flagForceAngle;
 	bool flagDeactivateRotInside;
-    //bool flagPerimeterActivated;
+	//bool flagPerimeterActivated;
 	bool flagRotateAtPer;
 	bool flagDriveCurve;
-    
-    int flagForceSmallRotAngle; // Anzahl, wie haeufig kleiner Winkel gedreht werden soll 
+
+	int flagForceSmallRotAngle; // Anzahl, wie haeufig kleiner Winkel gedreht werden soll 
 
 
-    bool flagEnableMowing;
-    bool flagEnablePerimetertracking;
-    bool flagEnableCharging;
-    bool flagEnableGotoAreaX;
-    bool flagEnableFindPerimeter;
+	bool flagEnableMowing;
+	bool flagEnablePerimetertracking;
+	bool flagEnableCharging;
+	bool flagEnableGotoAreaX;
+	bool flagEnableFindPerimeter;
 	bool flagEnableLeaveHeadChargingStation;
+
+	bool flagShortWayCounter; // Will never be changed. Used for eotSetbbShortWayCounter
 
 
 	bool flagEnableRestoreHistory;
-     //bber -------------------------------------------------------
-    bool flagBumperActivatedLeft; //flag to record the next rotate dir
-    bool flagBumperActivatedRight;  //flag to record the next rotate dir
-    // ----------------------------------------
-    
-    bool flagGotoAreaXFirstCall;
+	//bber -------------------------------------------------------
+	bool flagBumperActivatedLeft; //flag to record the next rotate dir
+	bool flagBumperActivatedRight;  //flag to record the next rotate dir
+	// ----------------------------------------
 
-    bool flagGoHome;
+	bool flagGotoAreaXFirstCall;
 
-    int cruiseSpeed;
-    unsigned long timeCruiseSpeedSet;
+	bool flagGoHome;
+
+	int cruiseSpeed;
+	unsigned long timeCruiseSpeedSet;
 
 	int32_t numberOfRotations;
 	unsigned long timeInMowBehaviour;
-	
-    enuDriveDirection driveDirection;
 
-    int arcRotateXArc;
+	enuDriveDirection driveDirection;
 
-    long areaTargetDistanceInMeter;
+	int arcRotateXArc;
 
-    unsigned long lastTimeSpiralStarted;
-   
+	long areaTargetDistanceInMeter;
+
+	unsigned long lastTimeSpiralStarted;
+
 	bool flagBHTShowLastNode; //shows last nodes and conditions on the terminal
 
 	bool flagShowRotateX;
@@ -210,27 +219,22 @@ public:
 	float coilsOutsideAngle;
 	bool flagEnableSecondReverse;
 
-    TMotorInterface& motor;
-    TPerimeterThread& perimeterSensoren;
-    TrangeSensor& rangeSensor;
-    TbumperSensor& bumperSensor;
-    TMowMotorSensor& mowMotorSensor;
-    TbatterieSensor& batterieSensor;
-    CRotaryEncoder& encoderL;
-    CRotaryEncoder& encoderR;
-    TchargeSystem& chargeSystem;
+	TMotorInterface& motor;
+	TPerimeterThread& perimeterSensoren;
+	TrangeSensor& rangeSensor;
+	TbumperSensor& bumperSensor;
+	TMowMotorSensor& mowMotorSensor;
+	TbatterieSensor& batterieSensor;
+	CRotaryEncoder& encoderL;
+	CRotaryEncoder& encoderR;
+	TchargeSystem& chargeSystem;
 	TEEPROM& eeprom;
 	TrainSensor& rainSensor;
 	TDHT& dht;
 
-    // Wird von BehaviourTree funktionen verwendet und muss immer vorhanden sein.
-    Node* lastNodeLastRun;
-    Node* lastNodeCurrentRun;
-    NodeStack runningNodes;
-    //
 
 	void resetBB();
-    void setBehaviour(enuBehaviour b );
+	void setBehaviour(enuBehaviour b);
 	//void addHistoryEntry(THistory &h);
 	void addHistoryEntry(enuDriveDirection _driveDirection, float  _distanceDriven, float _rotAngleSoll, float _rotAngleIst, enuFlagForceRotateDirection _flagForceRotDirection, enuFlagCoilsOutside   _coilFirstOutside);
 	void deleteLastHistoryEntry();

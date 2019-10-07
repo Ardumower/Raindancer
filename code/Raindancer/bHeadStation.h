@@ -12,7 +12,7 @@
 #include "BehaviourTree.h"
 #include "config.h"
 
-class TdriveBackXCS : public Node    // Each task will be a class (derived from Node of course).
+class TdriveBackXCS : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -54,7 +54,7 @@ public:
 };
 
 
-class TdriveForwardXCS : public Node    // Each task will be a class (derived from Node of course).
+class TdriveForwardXCS : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -97,7 +97,7 @@ public:
 
 
 
-class TSetArcHeadStation_ROT : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcHeadStation_ROT : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:

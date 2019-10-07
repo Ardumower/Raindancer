@@ -22,68 +22,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NODESTACK_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+#include "arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
-#include "hardware.h"
 #include "errorhandler.h"
 
+
+// Forwarddeclarations
 class Node;
+enum NodeStatus : uint8_t;
+//enum NodeAdditionalInfo : uint8_t;
 
-#define NODE_STACK_MAX 20
+#define NODE_STACK_MAX 30
 
-class NodeStack
-{
+
+typedef struct {
+	Node*   node;
+	NodeStatus previousStatus;
+	NodeStatus newStatus;
+} NodeStackItem;
+
+class NodeStack {
 
 public:
-    Node*   data[NODE_STACK_MAX];
-    int     size;
 
-    NodeStack() : size(0) {}       // Constructor      
-    
+	NodeStack();// Constructor      
+	~NodeStack();   // Destructor
 
-    ~NodeStack() { }    // Destructor
+	Node* Top();
 
-    Node* Top() { 
-        if (size == 0) {
-            errorHandler.setError(F("!03,Error: stack empty\r\n"));
-            return NULL;
-        }
-        return data[size-1];
-    }
+	Node*& operator[](int idx);
 
+	NodeStackItem Get(int i);
+	Node* GetNode(int i);
+	NodeStatus GetPrevStatus(int i);
 
-    Node*& operator[](int idx) {
-        return data[idx];
-    }
+	void Push(NodeStatus _previousStatus, NodeStatus _newStatus, Node* n);
 
-    Node* Get(int i) {
-        if (i >= size) {
-            errorHandler.setError(F("!03,Error: stack index greater than size\r\n"));
-            return NULL;
-        }
-        return data[i];
-    }
+	NodeStackItem  Pop();
 
-    void Push(Node* d) {
-        if (size < NODE_STACK_MAX)
-            data[size++] = d;
-        else
-            errorHandler.setError(F("!03,Error: stack full\r\n"));
-    }
+	void Clear();
 
-    void Pop() {
-        if (size == 0)
-            errorHandler.setError(F("!03,Error: stack empty\r\n"));
-        else
-            size--;
-    }
+	bool isNotEmpty();
 
-    void Clear() {
-        size = 0;
-    }
+	uint16_t GetSize();
+
+private:
+	NodeStackItem stack[NODE_STACK_MAX];
+
+	uint16_t  size;
 };
 
 

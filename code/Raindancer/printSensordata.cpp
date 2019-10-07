@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rangeSensor.h"
 #include "bumperSensor.h"
 #include "Blackboard.h"
-#include "behaviour.h"
+#include "bCreateTree.h"
 #include "bPerimeterTracking.h"
 #include "chargeSystem.h"
 #include "bRotate.h"

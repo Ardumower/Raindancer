@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "BehaviourTree.h"
 
-class TsetDD_FORWARD: public Node    // Each task will be a class (derived from Node of course).
+class TsetDD_FORWARD: public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 

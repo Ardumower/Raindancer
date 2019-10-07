@@ -1,3 +1,17 @@
+V1.2.0
++ Changed the code of the behavior tree: 
+  Removed stack operation for running nodes. Now the tree recognize by itself, if a running node has to be canceld. 
+  New classes in BHT: 
+  Instead of Node use: Action, Condition for leafs.
+  Action nodes can now have a condition: ActionCond, ActionMemCond.
+  Now a Conditiondecorator node is bavailabe: ConditionDeco. 
+  A waittimedecorator which queries the waittime from variable on the blackboard is now available: WaitBBTimeDecorator.
+  A desisiondecorator which queries a bool flag on the blackboard si now available: ExecuteOnTrue, .
+  A second Parallenode is introduces: ParallelUntilFail, Monitor.
+  A filter is introduced, which is derivated from a Sequence : Filter.
+  Introduced  Services which can be connected to Compositnodes: CompNodeService.  
+  Introduced a Setup function which will be called once before the tree starts running.
++ The decorator nodes with flags are now changed to ExecuteOnTrue nodes.
 V1.1.0
 + GotoArea Behaviour: TCheck2PerSignal was activated first, before TCheck2CoilSignalAreaX could rotate the mower while starting GotoArea => Changed position of TCheck2CoilSignalAreaX in selCheck2  and mower will always be rotated outside
 with the right coil, before starting GotoArea Behaviour.

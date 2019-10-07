@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TSecondReverse : public Node    // Each task will be a class (derived from Node of course).
+class TSecondReverse : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -78,7 +78,7 @@ public:
 };
 
 
-class TSecondReverse2 : public Node    // Each task will be a class (derived from Node of course).
+class TSecondReverse2 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	bool bothCoilsOutside;
@@ -140,7 +140,7 @@ public:
 
 
 
-class TSecondReverse3 : public Node    // Each task will be a class (derived from Node of course).
+class TSecondReverse3 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -191,26 +191,10 @@ public:
 
 
 
-class TConditionFEONotFound : public Node    // Each task will be a class (derived from Node of course).
-{
-private:
 
-public:
-
-	TConditionFEONotFound() {}
-
-
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-			errorHandler.setError(F("!03,TConditionFEONotFound not found %s\r\n"), enuFlagEscabeObstacleConFlagString[bb.flagEscabeObstacleConFlag]);
-			return BH_SUCCESS;
-	}
-
-
-};
 
 /*
-class TForward20: public Node    // Each task will be a class (derived from Node of course).
+class TForward20: public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -242,7 +226,7 @@ public:
 
 
 
-class TEscRotateCC : public Node    // Each task will be a class (derived from Node of course).
+class TEscRotateCC : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -294,7 +278,7 @@ public:
 };
 
 
-class TEscRotateCW : public Node    // Each task will be a class (derived from Node of course).
+class TEscRotateCW : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	unsigned long lastTimeCalled;

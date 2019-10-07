@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /*
-class TconStopOvershootLeft: public Node    // Condition
+class TconStopOvershootLeft: public Condition    // Condition
 {
 private:
 
@@ -53,7 +53,7 @@ public:
 };
 
 
-class TconStopOvershootRight: public Node    // Condition
+class TconStopOvershootRight: public Condition    // Condition
 {
 private:
 
@@ -76,7 +76,7 @@ public:
 */
 
 
-class TdriveCurve : public Node
+class TdriveCurve : public Action
 {
 private:
 	bool oneCoilsOutside;
@@ -161,7 +161,7 @@ public:
 };
 
 
-class TcheckOutsideAgain : public Node    // Each task will be a class (derived from Node of course).
+class TcheckOutsideAgain : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -188,7 +188,7 @@ public:
 };
 
 
-class TSetArc45CC : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc45CC : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -218,7 +218,7 @@ public:
 
 
 
-class TperTrackChargingStationReached : public Node
+class TperTrackChargingStationReached : public Action
 {
 private:
 
@@ -244,7 +244,7 @@ public:
 
 
 /*
-class TFLRotateCC : public Node
+class TFLRotateCC : public Action
 {
 private:
 
@@ -278,7 +278,7 @@ public:
 };
 
 
-class TLFRotateCW : public Node
+class TLFRotateCW : public Action
 {
 private:
 
@@ -313,7 +313,7 @@ public:
 
 */
 
-class TLFRotateCC105 : public Node
+class TLFRotateCC105 : public Action
 {
 private:
 
@@ -362,7 +362,7 @@ public:
 
 #define ENCDELTAARRAY 5  // Check curve for 2.5 sec.
 
-class TfindTriangle : public Node
+class TfindTriangle : public Action
 {
 private:
 	unsigned long lastRunAngleCalculation;
@@ -540,7 +540,7 @@ public:
 };
 
 
-class TMotorStopFast : public Node
+class TMotorStopFast : public Action
 {
 private:
 
@@ -579,7 +579,7 @@ public:
 
 
 /********************************
-class TfindTriangle : public Node
+class TfindTriangle : public Action
 {
 private:
 unsigned long lastRunAngleCalculation;
@@ -762,7 +762,7 @@ angle = (cmL - cmR)  * 57.2957795f / CONF_DISTANCE_BETWEEN_WHEELS_CM;
 */
 
 /**********************************
-class TFLfollowLine: public Node
+class TFLfollowLine: public Action
 {
 private:
 
@@ -857,7 +857,7 @@ public:
 ********************************/
 
 /**********************************
-class TFLfollowLine: public Node
+class TFLfollowLine: public Action
 {
 private:
 
@@ -964,7 +964,7 @@ public:
 /**********************************
 
 
-class TFLfollowLine: public Node
+class TFLfollowLine: public Action
 {
 private:
 

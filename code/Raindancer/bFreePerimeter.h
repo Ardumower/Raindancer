@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TSetflagCoilFirstOutsideLatched : public Node    // Each task will be a class (derived from Node of course).
+class TSetflagCoilFirstOutsideLatched : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -53,19 +53,19 @@ public:
 		if (bb.flagCoilFirstOutsideLatched == CO_NONE) { //Latch first coil outside until both coils are inside
 			if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightOutside()) {
 				bb.flagCoilFirstOutsideLatched = CO_BOTH;
-				sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutsideLatched = CO_BOTH\r\n", nodeName);
+				sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutsideLatched = CO_BOTH\r\n", m_nodeName);
 				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 				else { errorHandler.writeToLogOnly(); }
 			}
 			else if (bb.perimeterSensoren.isLeftOutside()) {
 				bb.flagCoilFirstOutsideLatched = CO_LEFT;
-				sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutsideLatched = CO_LEFT\r\n", nodeName);
+				sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutsideLatched = CO_LEFT\r\n", m_nodeName);
 				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 				else { errorHandler.writeToLogOnly(); }
 			}
 			else if (bb.perimeterSensoren.isRightOutside()) {
 				bb.flagCoilFirstOutsideLatched = CO_RIGHT;
-				sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutsideLatched= CO_RIGHT\r\n", nodeName);
+				sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutsideLatched= CO_RIGHT\r\n", m_nodeName);
 				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 				else { errorHandler.writeToLogOnly(); }
 			}
@@ -80,7 +80,7 @@ public:
 
 
 
-class TSetflagCoilFirstOutside : public Node    // Each task will be a class (derived from Node of course).
+class TSetflagCoilFirstOutside : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -99,21 +99,21 @@ public:
 		/*
 		if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightOutside()) {
 			bb.flagCoilFirstOutside = CO_BOTH;
-			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_BOTH\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_BOTH\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
 		}
 		else if (bb.perimeterSensoren.isLeftOutside()) {
 			bb.flagCoilFirstOutside = CO_LEFT;
-			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_LEFT\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_LEFT\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
 		}
 		else if (bb.perimeterSensoren.isRightOutside()) {
 			bb.flagCoilFirstOutside = CO_RIGHT;
-			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside= CO_RIGHT\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside= CO_RIGHT\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -125,7 +125,7 @@ public:
 		// Routine should never come here
 
 		//bb.flagCoilFirstOutside = CO_BOTH;
-		//sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside2!! = CO_BOTH\r\n", nodeName);
+		//sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside2!! = CO_BOTH\r\n", m_nodeName);
 		//if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 		//else { errorHandler.writeToLogOnly(); }
 		//return BH_SUCCESS;
@@ -138,7 +138,7 @@ public:
 };
 
 
-class TConditionPerimeterNotFound : public Node    // Each task will be a class (derived from Node of course).
+class TConditionPerimeterNotFound : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -164,7 +164,7 @@ public:
 
 };
 
-class TOverRun : public Node    // Each task will be a class (derived from Node of course).
+class TOverRun : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	float weg;
@@ -237,7 +237,7 @@ public:
 };
 
 
-class TRunTempService : public Node    // Each task will be a class (derived from Node of course).
+class TRunTempService : public Action    // Each task will be a class (derived from Node of course).
 {
   private:
 
@@ -260,7 +260,7 @@ class TRunTempService : public Node    // Each task will be a class (derived fro
 
 
 
-class TReverseInside : public Node    // Each task will be a class (derived from Node of course).
+class TReverseInside : public Action    // Each task will be a class (derived from Node of course).
 {
 
 public:
@@ -281,7 +281,7 @@ public:
 
 		bb.motor.rotateCM(-70, -bb.cruiseSpeed);
 		bb.driveDirection = DD_REVERSE_INSIDE;
-		//sprintf(errorHandler.msg,"!03,#%s\r\n",nodeName);
+		//sprintf(errorHandler.msg,"!03,#%s\r\n",m_nodeName);
 		//errorHandler.setInfo();
 		/*
 		if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightOutside()) {
@@ -306,7 +306,7 @@ public:
 
 		// Wenn zeit in state > 10 Sek dann fehler oder anhalten undnochmal checken.
 		if (getTimeInNode() > 10000) {
-			sprintf(errorHandler.msg, "!03,->%s too long in state\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s too long in state\r\n", m_nodeName);
 			errorHandler.setError();
 		}
 
@@ -336,13 +336,13 @@ public:
 			/*            if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightOutside()) {
 				bb.motor.L->setSpeed(-(bb.cruiseSpeed-13));
 				bb.motor.R->setSpeed(-(bb.cruiseSpeed+13));
-				//sprintf(errorHandler.msg,"!03,->%s >3000\r\n",nodeName);
+				//sprintf(errorHandler.msg,"!03,->%s >3000\r\n",m_nodeName);
 				//errorHandler.setInfo();
 			}
 			if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightInside()) {
 				bb.motor.L->setSpeed(-(bb.cruiseSpeed+13));
 				bb.motor.R->setSpeed(-(bb.cruiseSpeed-13));
-				//sprintf(errorHandler.msg,"!03,->%s >3000\r\n",nodeName);
+				//sprintf(errorHandler.msg,"!03,->%s >3000\r\n",m_nodeName);
 				//errorHandler.setInfo();
 			}
 			*/
@@ -357,7 +357,7 @@ public:
 };
 
 
-class TReverseFurtherInside : public Node
+class TReverseFurtherInside : public Action
 {
 private:
 	long weg;
@@ -397,7 +397,7 @@ public:
 };
 
 
-class TPerDriveBack : public Node
+class TPerDriveBack : public Action
 {
 private:
 	long weg;
@@ -477,7 +477,7 @@ public:
 
 };
 
-class TMotorStop : public Node
+class TMotorStop : public Action
 {
 private:
 
@@ -510,7 +510,7 @@ public:
 };
 
 
-class TRotateBackCW : public Node
+class TRotateBackCW : public Action
 {
 private:
 	long distance;
@@ -561,7 +561,7 @@ public:
 	}
 };
 
-class TRotateBackCC : public Node
+class TRotateBackCC : public Action
 {
 private:
 	long distance;
@@ -615,7 +615,7 @@ public:
 };
 
 /*
-class TPerRotateInsideCW : public Node
+class TPerRotateInsideCW : public Action
 {
 private:
 
@@ -664,7 +664,7 @@ public:
 */
 
 /*
-class TPerRotateInsideCC : public Node
+class TPerRotateInsideCC : public Action
 {
 private:
 
@@ -717,7 +717,7 @@ public:
 
 
 /*
-class TRotateOtherDirection: public Node    // Each task will be a class (derived from Node of course).
+class TRotateOtherDirection: public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	bool flagRotationFurther;
@@ -807,7 +807,7 @@ public:
 };
 */
 
-class TForwardInsideError : public Node    // Each task will be a class (derived from Node of course).
+class TForwardInsideError : public Action    // Each task will be a class (derived from Node of course).
 {
 
 public:
@@ -832,7 +832,7 @@ public:
 };
 
 
-class TDirectionOverrunError : public Node    // Each task will be a class (derived from Node of course).
+class TDirectionOverrunError : public Action    // Each task will be a class (derived from Node of course).
 {
 
 public:
@@ -856,7 +856,7 @@ public:
 
 };
 
-class TReverseInsideError : public Node    // Each task will be a class (derived from Node of course).
+class TReverseInsideError : public Action    // Each task will be a class (derived from Node of course).
 {
 
 public:
@@ -881,7 +881,7 @@ public:
 };
 
 
-class TForwardInside : public Node    // Each task will be a class (derived from Node of course).
+class TForwardInside : public Action    // Each task will be a class (derived from Node of course).
 {
 
 public:
@@ -936,7 +936,7 @@ public:
 
 
 
-class TSetArc90CW1 : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc90CW1 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -975,7 +975,7 @@ public:
 
 };
 
-class TSetArc90CC1 : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc90CC1 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -1011,7 +1011,7 @@ public:
 
 };
 
-class TSetArc90CW : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc90CW : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -1051,7 +1051,7 @@ public:
 };
 
 
-class TSetflagForceSmallRotAngle : public Node    // Each task will be a class (derived from Node of course).
+class TSetflagForceSmallRotAngle : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -1071,7 +1071,7 @@ public:
 	}
 };
 
-class TSetArc90CC : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc90CC : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:

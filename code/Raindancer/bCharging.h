@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //-----------
 
 
-class TchargeRelayOn : public Node
+class TchargeRelayOn : public Action
 {
 private:
 

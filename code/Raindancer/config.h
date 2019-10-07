@@ -691,7 +691,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DISABLE_BATTERY_SERVICE	true   // Disables battery sensor
 #define CONF_DISABLE_CHARGE_SERVICE		true   // Disables charge system service
 #define CONF_DISABLE_RAIN_SERVICE       true   // Disables rain sensor
-#define CONF_DISABLE_DHT_SERVICE        false   // Disables temp sensor
+#define CONF_DISABLE_DHT_SERVICE        true   // Disables temp sensor
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  true   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          true   // Disables the mow motor

@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BehaviourTree.h"
 
 
-class TsetMowBehaviour : public Node
+class TsetMowBehaviour : public Action
 {
 private:
 
@@ -47,7 +47,7 @@ public:
 
 
 
-class TARrotate90CC : public Node
+class TARrotate90CC : public Action
 {
 private:
 
@@ -79,7 +79,7 @@ public:
 };
 
 
-class TlineFollow : public Node
+class TlineFollow : public Action
 {
 private:
 	bool waitForRightInside;
@@ -229,7 +229,7 @@ public:
 
 
 /*
-class TlineFollow : public Node
+class TlineFollow : public Action
 {
 private:
 bool waitForRightInside;
@@ -380,7 +380,7 @@ virtual void onTerminate(NodeStatus status, Blackboard& bb) {
 
 
 /**********************************
-class TFLfollowLine: public Node
+class TFLfollowLine: public Action
 {
 private:
 
@@ -475,7 +475,7 @@ public:
 ********************************/
 
 /**********************************
-class TFLfollowLine: public Node
+class TFLfollowLine: public Action
 {
 private:
 
@@ -582,7 +582,7 @@ public:
 /**********************************
 
 
-class TFLfollowLine: public Node
+class TFLfollowLine: public Action
 {
 private:
 

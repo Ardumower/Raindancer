@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 //forums.parallax.com/discussion/154274/the-artist-robot/p5
-class TCruiseSpiral : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseSpiral : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -137,7 +137,7 @@ public:
 };
 
 
-class TCruiseBatLow : public Node
+class TCruiseBatLow : public Action
 {
 private:
 
@@ -160,7 +160,7 @@ public:
 };
 
 
-class TCruiseRaining : public Node
+class TCruiseRaining : public Action
     {
     private:
 
@@ -184,7 +184,7 @@ class TCruiseRaining : public Node
             }
     };
 
-class TCruiseToPerimeter : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseToPerimeter : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	int lastCruiseSpeed;
@@ -205,7 +205,7 @@ public:
 			bb.flagCoilFirstOutside = CO_BOTH;
 			bb.motor.stopPC(); //stop motor
 			bb.cruiseSpeed = 0;
-			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_BOTH\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_BOTH\r\n", m_nodeName);
 			errorHandler.setInfo();
 			return BH_SUCCESS;
 
@@ -214,7 +214,7 @@ public:
 			bb.flagCoilFirstOutside = CO_LEFT;
 			bb.motor.stopPC(); //stop motor
 			bb.cruiseSpeed = 0;
-			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_LEFT\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside = CO_LEFT\r\n", m_nodeName);
 			errorHandler.setInfo();
 			return BH_SUCCESS;
 
@@ -223,7 +223,7 @@ public:
 			bb.flagCoilFirstOutside = CO_RIGHT;
 			bb.motor.stopPC(); //stop motor
 			bb.cruiseSpeed = 0;
-			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside= CO_RIGHT\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s flagCoilFirstOutside= CO_RIGHT\r\n", m_nodeName);
 			errorHandler.setInfo();
 			return BH_SUCCESS;
 		}
@@ -236,7 +236,7 @@ public:
 	}
 };
 
-class TCruiseStopped : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseStopped : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -263,7 +263,7 @@ public:
 	}
 };
 
-class TCruiseRotCW : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseRotCW : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	int state;
@@ -332,7 +332,7 @@ public:
 };
 
 
-class TCruiseSpeedToMotor : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseSpeedToMotor : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -371,7 +371,7 @@ public:
 };
 
 
-class TCruiseObstacleNear : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseObstacleNear : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	unsigned long lastTimeMotorDecceleration;
@@ -414,7 +414,7 @@ public:
 	}
 };
 
-class TCruisePerimeterNear : public Node    // Each task will be a class (derived from Node of course).
+class TCruisePerimeterNear : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	unsigned long lastTimeMotorDecceleration;
@@ -473,7 +473,7 @@ public:
 };
 
 
-class TCruiseHighSpeed : public Node    // Each task will be a class (derived from Node of course).
+class TCruiseHighSpeed : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	unsigned long lastTimeMotorAcceleration;
@@ -516,7 +516,7 @@ public:
 
 
 
-class TCruiseStartMowMotor : public Node
+class TCruiseStartMowMotor : public Action
 {
 private:
 	unsigned long startTime;

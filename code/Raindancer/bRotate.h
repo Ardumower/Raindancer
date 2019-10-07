@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TSetArc20CW : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc20CW : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -65,7 +65,7 @@ public:
 
 };
 
-class TSetArc20CC : public Node    // Each task will be a class (derived from Node of course).
+class TSetArc20CC : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -91,7 +91,7 @@ public:
 
 };
 
-class TSetArcFEO_ROTCC1 : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROTCC1 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -114,7 +114,7 @@ public:
 
 };
 
-class TSetArcFEO_ROTCW1 : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROTCW1 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -137,7 +137,7 @@ public:
 
 };
 
-class TSetArcFEO_ROTCC2 : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROTCC2 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -160,7 +160,7 @@ public:
 
 };
 
-class TSetArcFEO_ROTCW2 : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROTCW2 : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -183,7 +183,7 @@ public:
 
 };
 
-class TSetArcFEO_ROT : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcFEO_ROT : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -238,7 +238,7 @@ public:
 
 
 
-class TRotateX : public Node    // Each task will be a class (derived from Node of course).
+class TRotateX : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -299,7 +299,7 @@ public:
 /********************************************************************************************/
 /********************************************************************************************/
 /********************************************************************************************/
-class TPreUpdateHistoryBump : public Node    // Each task will be a class (derived from Node of course).
+class TPreUpdateHistoryBump : public Action    // Each task will be a class (derived from Node of course).
 {
 public:
 
@@ -327,7 +327,7 @@ public:
 
 
 
-class TPreUpdateHistory : public Node    // Each task will be a class (derived from Node of course).
+class TPreUpdateHistory : public Action    // Each task will be a class (derived from Node of course).
 {
 public:
 
@@ -356,7 +356,7 @@ public:
 
 
 
-class TCalcAngle : public Node    // Each task will be a class (derived from Node of course).
+class TCalcAngle : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	bool isArcNotInitialised;
@@ -539,7 +539,7 @@ public:
 
 
 class TRotateBothCoilsInside
-	: public Node
+	: public Action
 {
 private:
 
@@ -612,7 +612,7 @@ public:
 
 };
 
-class TRotateDriveBackInside : public Node {
+class TRotateDriveBackInside : public Action {
 private:
 	long weg;
 public:
@@ -660,7 +660,7 @@ public:
 };
 
 /*
-class TPreUpdateHistory : public Node    // Each task will be a class (derived from Node of course).
+class TPreUpdateHistory : public Action    // Each task will be a class (derived from Node of course).
 {
 public:
 	bool showValuesOnConsole;
@@ -726,7 +726,7 @@ public:
 */
 
 /*
-class TPostUpdateHistory : public Node    // Each task will be a class (derived from Node of course).
+class TPostUpdateHistory : public Action    // Each task will be a class (derived from Node of course).
 {
 public:
 	bool showValuesOnConsole;
@@ -772,7 +772,7 @@ public:
 */
 
 /*
-class TCalcAngle : public Node    // Each task will be a class (derived from Node of course).
+class TCalcAngle : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 	bool isArcNotInitialised;
@@ -893,7 +893,7 @@ public:
 
 /*
 class TRotateBothCoilsInside
-	: public Node
+	: public Action
 {
 private:
 
@@ -1006,7 +1006,7 @@ public:
 
 */
 /*
-class TRotatePer : public Node    // Each task will be a class (derived from Node of course).
+class TRotatePer : public Action    // Each task will be a class (derived from Node of course).
 {
 public:
 	bool showValuesOnConsole;

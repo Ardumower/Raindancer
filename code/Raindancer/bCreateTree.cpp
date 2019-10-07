@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #include "bConditions.h"
-#include "bDecorators.h"
-#include "behaviour.h"
+#include "bCreateTree.h"
 #include "bCruise.h"
 #include "bFreePerimeter.h"
 #include "bRotate.h"
@@ -95,17 +94,16 @@ TconSecondReverse conSecondReverse;
 // Decorator Nodes Behaviour
 //*************************************
 
-TdnCruiseSpiral dnCruiseSpiral;
-TdnMowing dnMowing;
-TdnPermeterTracking dnPermeterTracking;
-TdnBumpPeriActivated dnBumpPeriActivated;
-TdnCharging dnCharging;
-TdnGotoAreaX dnGotoAreaX;
-TdnFindPerimeter dnFindPerimeter;
-
-TdnRestoreHistory dnRestoreHistory;
-
-TdnLeaveHeadChargingStation dnLeaveHeadChargingStation;
+ExecuteOnTrue eotCruiseSpiral;
+ExecuteOnTrue eotMowing;
+ExecuteOnTrue eotPermeterTracking;
+ExecuteOnTrue eotBumperActivated;
+ExecuteOnTrue eotBumpPeriActivated;
+ExecuteOnTrue eotCharging;
+ExecuteOnTrue eotGotoAreaX;
+ExecuteOnTrue eotFindPerimeter;
+ExecuteOnTrue eotRestoreHistory;
+ExecuteOnTrue eotLeaveHeadChargingStation;
 
 WaitDecorator dnWaitDockingStation;
 WaitDecorator dnWaitGotoArea;
@@ -300,7 +298,7 @@ MemSelector mselEscabeObstacle;
 
 Selector selEscabeObstacle1;
 
-TdnBumperActivated dnBumperActivated;
+
 // ************************************
 // Perimeter Outside Behaviour
 //*************************************
@@ -379,7 +377,7 @@ TCruisePerimeterNear CruisePerimeterNear;
 TCruiseHighSpeed CruiseHighSpeed;
 Selector selCruiseSpeed;
 Sequence seqCruise;
-TdnSetbbShortWayCounter dnSetbbShortWayCounter;
+ExecuteOnTrue eotSetbbShortWayCounter;
 
 
 Selector selPerimeterTracking;
@@ -416,107 +414,116 @@ void TBehaviour::setup() {
 	// Conditions Behaviour
 	//*************************************
 
-	    //conFEO_BACK180.nodeName = (char*)"conFEO_BACK180";
-	    //conFEO_FWD20.nodeName = (char*)"conFEO_FWD20";
-	conFEO_ROTCC2.nodeName = (char*)"conFEO_ROTCC2";
-	conFEO_ROTCW2.nodeName = (char*)"conFEO_ROTCW2";
-	conFEO_ROTCC1.nodeName = (char*)"conFEO_ROTCC1";
-	conFEO_ROTCW1.nodeName = (char*)"conFEO_ROTCW1";
-	conFEO_ROT.nodeName = (char*)"conFEO_ROT";
-	conFEO_BACKINSIDE.nodeName = (char*)"conFEO_BACKINSIDE";
+	    //conFEO_BACK180.m_nodeName = (char*)"conFEO_BACK180";
+	    //conFEO_FWD20.m_nodeName = (char*)"conFEO_FWD20";
+	conFEO_ROTCC2.m_nodeName = (char*)"conFEO_ROTCC2";
+	conFEO_ROTCW2.m_nodeName = (char*)"conFEO_ROTCW2";
+	conFEO_ROTCC1.m_nodeName = (char*)"conFEO_ROTCC1";
+	conFEO_ROTCW1.m_nodeName = (char*)"conFEO_ROTCW1";
+	conFEO_ROT.m_nodeName = (char*)"conFEO_ROT";
+	conFEO_BACKINSIDE.m_nodeName = (char*)"conFEO_BACKINSIDE";
 
 
-	conWasDirectionFeoRotateCC.nodeName = (char*)"conWasDirectionFeoRotateCC";
-	conWasDirectionFeoRotateCW.nodeName = (char*)"conWasDirectionFeoRotateCW";
-	conWasDirectionFeoRotateCC1.nodeName = (char*)"conWasDirectionFeoRotateCC1";
-	conWasDirectionFeoRotateCW1.nodeName = (char*)"conWasDirectionFeoRotateCW1";
+	conWasDirectionFeoRotateCC.m_nodeName = (char*)"conWasDirectionFeoRotateCC";
+	conWasDirectionFeoRotateCW.m_nodeName = (char*)"conWasDirectionFeoRotateCW";
+	conWasDirectionFeoRotateCC1.m_nodeName = (char*)"conWasDirectionFeoRotateCC1";
+	conWasDirectionFeoRotateCW1.m_nodeName = (char*)"conWasDirectionFeoRotateCW1";
 
-	conWasDirectionForward.nodeName = (char*)"conWasDirectionForward";
-	//conWasDirectionForward20.nodeName = (char*)"conWasDirectionForward20";
-	conWasDirectionForwardInside.nodeName = (char*)"conWasDirectionForwardInside";
-	conWasDirectionOverrun.nodeName = (char*)"conWasDirectionOverrun";
-	conWasDirectionReverseObstacle.nodeName = (char*)"conWasDirectionReverseObstacle";
-	conWasDirectionReverseInside.nodeName = (char*)"conWasDirectionReverseInside";
-	conWasDirectionRotateCC.nodeName = (char*)"conWasDirectionRotateCC";
-	conWasDirectionRotateCW.nodeName = (char*)"conWasDirectionRotateCW";
-	//conNOTflagPerimeterActivated.nodeName = "conNOTflagPerimeterActivated";
+	conWasDirectionForward.m_nodeName = (char*)"conWasDirectionForward";
+	//conWasDirectionForward20.m_nodeName = (char*)"conWasDirectionForward20";
+	conWasDirectionForwardInside.m_nodeName = (char*)"conWasDirectionForwardInside";
+	conWasDirectionOverrun.m_nodeName = (char*)"conWasDirectionOverrun";
+	conWasDirectionReverseObstacle.m_nodeName = (char*)"conWasDirectionReverseObstacle";
+	conWasDirectionReverseInside.m_nodeName = (char*)"conWasDirectionReverseInside";
+	conWasDirectionRotateCC.m_nodeName = (char*)"conWasDirectionRotateCC";
+	conWasDirectionRotateCW.m_nodeName = (char*)"conWasDirectionRotateCW";
+	//conNOTflagPerimeterActivated.m_nodeName = "conNOTflagPerimeterActivated";
 
-	conBumperActive.nodeName = (char*)"conBumperActive";
-	conPerOutside.nodeName = (char*)"conPerOutside"; //Condition
+	conBumperActive.m_nodeName = (char*)"conBumperActive";
+	conPerOutside.m_nodeName = (char*)"conPerOutside"; //Condition
 
-	//conStopOvershootLeft.nodeName = "conStopOvershootLeft";
-	//conStopOvershootRight.nodeName = "conStopOvershootRight";
-	conBatLow.nodeName = (char*)"conBatLow";
-	conRaining.nodeName = (char*)"conRaining";
+	//conStopOvershootLeft.m_nodeName = "conStopOvershootLeft";
+	//conStopOvershootRight.m_nodeName = "conStopOvershootRight";
+	conBatLow.m_nodeName = (char*)"conBatLow";
+	conRaining.m_nodeName = (char*)"conRaining";
 
-	conRightCoilOutside.nodeName = (char*)"conRightCoilOutside";
-	conLeftCoilOutside.nodeName = (char*)"conLeftCoilOutside";
+	conRightCoilOutside.m_nodeName = (char*)"conRightCoilOutside";
+	conLeftCoilOutside.m_nodeName = (char*)"conLeftCoilOutside";
 
-	conAreaReached.nodeName = (char*)"conAreaReached";
+	conAreaReached.m_nodeName = (char*)"conAreaReached";
 
-	conRotateAtPer.nodeName = (char*)"conRotateAtPer";
-	conDriveCurve.nodeName = (char*)"conDriveCurve";
-	conSecondReverse.nodeName = (char*)"conSecondReverse";
+	conRotateAtPer.m_nodeName = (char*)"conRotateAtPer";
+	conDriveCurve.m_nodeName = (char*)"conDriveCurve";
+	conSecondReverse.m_nodeName = (char*)"conSecondReverse";
 
 	// ************************************
 	// Decorator Nodes Behaviour
 	//*************************************
 
-	dnCruiseSpiral.nodeName = (char*)"dnCruiseSpiral";
-	dnCruiseSpiral.setChild(&cruiseSpiral);
+	eotCruiseSpiral.m_nodeName = (char*)"eotCruiseSpiral";
+	eotCruiseSpiral.setFlag(&bb.flagCruiseSpiral);
+	eotCruiseSpiral.setChild(&cruiseSpiral);
 
-	dnBumpPeriActivated.nodeName = (char*)"dnBumpPeriActivated";
+	eotBumpPeriActivated.m_nodeName = (char*)"eotBumpPeriActivated";
+	eotBumpPeriActivated.setFlag(&bb.flagBumperOutsidePerActivated);
+	eotBumpPeriActivated.setFlagToFalseOnTerminate();
+	eotBumpPeriActivated.setChild(&mselEscObstacleOutside);
 
-	dnBumpPeriActivated.setChild(&mselEscObstacleOutside);
 
+	eotMowing.m_nodeName = (char*)"eotMowing";
+	eotMowing.setFlag(&bb.flagEnableMowing);
+	eotMowing.setChild(&selMowing);
 
-	dnMowing.nodeName = (char*)"dnMowing";
-	dnMowing.setChild(&selMowing);
+	eotPermeterTracking.m_nodeName = (char*)"eotPermeterTracking";
+	eotPermeterTracking.setFlag(&bb.flagEnablePerimetertracking);
+	eotPermeterTracking.setChild(&selPerimeterTracking);
 
-	dnPermeterTracking.nodeName = (char*)"dnPermeterTracking";
-	dnPermeterTracking.setChild(&selPerimeterTracking);
+	eotCharging.m_nodeName = (char*)"eotCharging";
+	eotCharging.setFlag(&bb.flagEnableCharging);
+	eotCharging.setChild(&selCharging);
 
-	dnCharging.nodeName = (char*)"dnCharging";
-	dnCharging.setChild(&selCharging);
+	eotGotoAreaX.m_nodeName = (char*)"eotGotoAreaX";
+	eotGotoAreaX.setFlag(&bb.flagEnableGotoAreaX);
+	eotGotoAreaX.setChild(&selGotoAreaX);
 
-	dnGotoAreaX.nodeName = (char*)"dnGotoAreaX";
-	dnGotoAreaX.setChild(&selGotoAreaX);
+	eotFindPerimeter.m_nodeName = (char*)"eotFindPerimeter";
+	eotFindPerimeter.setFlag(&bb.flagEnableFindPerimeter);
+	eotFindPerimeter.setChild(&selFindPerimeter);
 
-	dnFindPerimeter.nodeName = (char*)"dnFindPerimeter";
-	dnFindPerimeter.setChild(&selFindPerimeter);
+	conInDockingStation.m_nodeName = (char*)"conInDockingStation";
 
-	conInDockingStation.nodeName = (char*)"conInDockingStation";
-
-	dnWaitDockingStation.nodeName = (char*)"dnWaitDockingStation";
+	dnWaitDockingStation.m_nodeName = (char*)"dnWaitDockingStation";
 	dnWaitDockingStation.setChild(&conInDockingStation);
 	dnWaitDockingStation.setWaitMillis(2000);
 
 
-	dnWaitFreeBumper2.nodeName = (char*)"dnWaitFreeBumper2";
+	dnWaitFreeBumper2.m_nodeName = (char*)"dnWaitFreeBumper2";
 	dnWaitFreeBumper2.setChild(&freeBumper2);
 	dnWaitFreeBumper2.setWaitMillis(1000);
 
-	dnRestoreHistory.nodeName = (char*)"dnRestoreHistory";
-	dnRestoreHistory.setChild(&selRestoreHist);
+	eotRestoreHistory.m_nodeName = (char*)"eotRestoreHistory";
+	eotRestoreHistory.setFlag(&bb.flagEnableRestoreHistory);
+	eotRestoreHistory.setChild(&selRestoreHist);
 
-	dnWaitGotoArea.nodeName = (char*)"dnWaitGotoArea";
+	dnWaitGotoArea.m_nodeName = (char*)"dnWaitGotoArea";
 	dnWaitGotoArea.setChild(&lineFollow);
 	dnWaitGotoArea.setWaitMillis(2000);
 
-	dnLeaveHeadChargingStation.nodeName = (char*)"dnLeaveHeadChargingStation";
-	dnLeaveHeadChargingStation.setChild(&selLeaveHeadCS);
+	eotLeaveHeadChargingStation.m_nodeName = (char*)"eotLeaveHeadChargingStation";
+	eotLeaveHeadChargingStation.setFlag(&bb.flagEnableLeaveHeadChargingStation);
+	eotLeaveHeadChargingStation.setChild(&selLeaveHeadCS);
 
 	// ************************************
 	// Escape Obstacle Outside Perimeter
 	//*************************************
 
 
-	mseqEscOOPReverse.nodeName = (char*)"mseqEscOOPReverse";
-	mselEscObstacleOutside.nodeName = (char*)"mselEscObstacleOutside";
-	setDD_FORWARD.nodeName = (char*)"setDD_FORWARD";
-	//seqEscOOPRot.nodeName = (char*)"seqEscOOPRot";
-	mseqEscOOPRotCC.nodeName = (char*)"mseqEscOOPRotCC";
-	mseqEscOOPRotCW.nodeName = (char*)"mseqEscOOPRotCW";
+	mseqEscOOPReverse.m_nodeName = (char*)"mseqEscOOPReverse";
+	mselEscObstacleOutside.m_nodeName = (char*)"mselEscObstacleOutside";
+	setDD_FORWARD.m_nodeName = (char*)"setDD_FORWARD";
+	//seqEscOOPRot.m_nodeName = (char*)"seqEscOOPRot";
+	mseqEscOOPRotCC.m_nodeName = (char*)"mseqEscOOPRotCC";
+	mseqEscOOPRotCW.m_nodeName = (char*)"mseqEscOOPRotCW";
 
 	//seqEscOOPRot.addChildren(&mseqEscRotate,&setDD_FORWARD);
 	mseqEscOOPRotCC.addChildren(&conFEO_ROTCC2, &secondReverse2, &setArc90CC, &mseqRotatePer, &setDD_FORWARD);
@@ -531,12 +538,12 @@ void TBehaviour::setup() {
 	// Bumper Behaviour
 	//*************************************
 
-	setflagBumperActivatedLR.nodeName = (char*)"setflagBumperActivatedLR";
-	selEscapeAlgorithm.nodeName = (char*)"selEscapeAlgorithm";
-	hardstop.nodeName = (char*)"hardstop";
+	setflagBumperActivatedLR.m_nodeName = (char*)"setflagBumperActivatedLR";
+	selEscapeAlgorithm.m_nodeName = (char*)"selEscapeAlgorithm";
+	hardstop.m_nodeName = (char*)"hardstop";
 
-	freeBumper.nodeName = (char*)"freeBumper";
-	mseqBumperActive.nodeName = (char*)"mseqBumperActive";
+	freeBumper.m_nodeName = (char*)"freeBumper";
+	mseqBumperActive.m_nodeName = (char*)"mseqBumperActive";
 
 	//mseqBumperActive.addChildren(&conBumperActive,&hardstop,&freeBumper,&selEscapeAlgorithm );
 	mseqBumperActive.addChildren(&conBumperActive, &setflagBumperActivatedLR, &MotorStopFast, &freeBumper, &selEscapeAlgorithm);
@@ -546,67 +553,67 @@ void TBehaviour::setup() {
 	// Free Perimeter Behaviour
 	//*************************************
 
-	runTempService.nodeName = (char*)"runTempService";
+	runTempService.m_nodeName = (char*)"runTempService";
 
-	conditionPerimeterNotFound.nodeName = (char*)"conditionPerimeterNotFound";
+	conditionPerimeterNotFound.m_nodeName = (char*)"conditionPerimeterNotFound";
 
-	rotateBackCW.nodeName = (char*)"rotateBackCW";
-	rotateBackCC.nodeName = (char*)"rotateBackCC";
-
-
-	setflagCoilFirstOutsideLatched.nodeName = (char*)"setflagCoilFirstOutsideLatched";
-	setflagCoilFirstOutside.nodeName = (char*)"setflagCoilFirstOutside";
-	setFlagForceSmallRotAngle.nodeName = (char*)"flagForceSmallRotAngle";
-	//mseqPerimeterForward20.nodeName = (char*)"mseqPerimeterForward20";
-
-	mseqPerimeterForwardInside.nodeName = (char*)"mseqPerimeterForwardInside";
-
-	setArc90CW.nodeName = (char*)"setArc90CW";
-	setArc90CC.nodeName = (char*)"setArc90CC";
-	setArc90CW1.nodeName = (char*)"setArc90CW1";
-	setArc90CC1.nodeName = (char*)"setArc90CC1";
-	mseqPRRCO.nodeName = (char*)"mseqPRRCO";
-	mseqPRLCO.nodeName = (char*)"mseqPRLCO";
-	mselPerimeterReverse.nodeName = (char*)"mseqPRLCO";
+	rotateBackCW.m_nodeName = (char*)"rotateBackCW";
+	rotateBackCC.m_nodeName = (char*)"rotateBackCC";
 
 
-	motorStop.nodeName = (char*)"motorStop";
+	setflagCoilFirstOutsideLatched.m_nodeName = (char*)"setflagCoilFirstOutsideLatched";
+	setflagCoilFirstOutside.m_nodeName = (char*)"setflagCoilFirstOutside";
+	setFlagForceSmallRotAngle.m_nodeName = (char*)"flagForceSmallRotAngle";
+	//mseqPerimeterForward20.m_nodeName = (char*)"mseqPerimeterForward20";
 
-	mseqPerimeterFeoRotCC.nodeName = (char*)"mseqPerimeterFeoRotCC";
-	mseqPerimeterFeoRotCW.nodeName = (char*)"mseqPerimeterFeoRotCW";
-	mseqPerimeterFeoRotCC1.nodeName = (char*)"mseqPerimeterFeoRotCC1";
-	mseqPerimeterFeoRotCW1.nodeName = (char*)"mseqPerimeterFeoRotCW1";
-	//    perRotateInsideCW.nodeName = (char*)"perRotateInsideCW";
-	//    perRotateInsideCC.nodeName = (char*)"perRotateInsideCC";
-	setArc20CW.nodeName = (char*)"setArc20CW";
-	setArc20CC.nodeName = (char*)"setArc20CC";
-	mseqPerimeterRotCC.nodeName = (char*)"mseqPerimeterRotCC";
-	mseqPerimeterRotCW.nodeName = (char*)"mseqPerimeterRotCW";
+	mseqPerimeterForwardInside.m_nodeName = (char*)"mseqPerimeterForwardInside";
+
+	setArc90CW.m_nodeName = (char*)"setArc90CW";
+	setArc90CC.m_nodeName = (char*)"setArc90CC";
+	setArc90CW1.m_nodeName = (char*)"setArc90CW1";
+	setArc90CC1.m_nodeName = (char*)"setArc90CC1";
+	mseqPRRCO.m_nodeName = (char*)"mseqPRRCO";
+	mseqPRLCO.m_nodeName = (char*)"mseqPRLCO";
+	mselPerimeterReverse.m_nodeName = (char*)"mseqPRLCO";
 
 
-	overRun.nodeName = (char*)"overRun";
+	motorStop.m_nodeName = (char*)"motorStop";
 
-	reverseFurtherInside.nodeName = (char*)"reverseFurtherInside";
-	perDriveBack.nodeName = (char*)"perDriveBack";
+	mseqPerimeterFeoRotCC.m_nodeName = (char*)"mseqPerimeterFeoRotCC";
+	mseqPerimeterFeoRotCW.m_nodeName = (char*)"mseqPerimeterFeoRotCW";
+	mseqPerimeterFeoRotCC1.m_nodeName = (char*)"mseqPerimeterFeoRotCC1";
+	mseqPerimeterFeoRotCW1.m_nodeName = (char*)"mseqPerimeterFeoRotCW1";
+	//    perRotateInsideCW.m_nodeName = (char*)"perRotateInsideCW";
+	//    perRotateInsideCC.m_nodeName = (char*)"perRotateInsideCC";
+	setArc20CW.m_nodeName = (char*)"setArc20CW";
+	setArc20CC.m_nodeName = (char*)"setArc20CC";
+	mseqPerimeterRotCC.m_nodeName = (char*)"mseqPerimeterRotCC";
+	mseqPerimeterRotCW.m_nodeName = (char*)"mseqPerimeterRotCW";
 
-	conOneCoilOutside.nodeName = (char*)"conOneCoilOutside";
-	conBothCoilsOutside.nodeName = (char*)"conBothCoilsOutside";
 
-	reverseInsideError.nodeName = (char*)"reverseInsideError";
-	mseqPerimeterRevInside.nodeName = (char*)"mseqPerimeterRevInside";
+	overRun.m_nodeName = (char*)"overRun";
 
-	directionOverrunError.nodeName = (char*)"directionOverrunError";
-	mseqPerimeterOverrun.nodeName = (char*)"seqPerimeterOverrun";
+	reverseFurtherInside.m_nodeName = (char*)"reverseFurtherInside";
+	perDriveBack.m_nodeName = (char*)"perDriveBack";
 
-	mseqPerimeterForward.nodeName = (char*)"mseqPerimeterForward";
-	mselPerimeterActive.nodeName = (char*)"mselPerimeterActive";
-	mseqPerimeterAvtive.nodeName = (char*)"mseqPerimeterAvtive";
+	conOneCoilOutside.m_nodeName = (char*)"conOneCoilOutside";
+	conBothCoilsOutside.m_nodeName = (char*)"conBothCoilsOutside";
 
-	forwardInside.nodeName = (char*)"forwardInside";
-	forwardInsideError.nodeName = (char*) "forwardInsideError";
-	mseqPerimeterReverse.nodeName = (char*)"mseqPerimeterReverse";
+	reverseInsideError.m_nodeName = (char*)"reverseInsideError";
+	mseqPerimeterRevInside.m_nodeName = (char*)"mseqPerimeterRevInside";
 
-	rotateBothCoilsInside.nodeName = (char*)"rotateBothCoilsInside";
+	directionOverrunError.m_nodeName = (char*)"directionOverrunError";
+	mseqPerimeterOverrun.m_nodeName = (char*)"seqPerimeterOverrun";
+
+	mseqPerimeterForward.m_nodeName = (char*)"mseqPerimeterForward";
+	mselPerimeterActive.m_nodeName = (char*)"mselPerimeterActive";
+	mseqPerimeterAvtive.m_nodeName = (char*)"mseqPerimeterAvtive";
+
+	forwardInside.m_nodeName = (char*)"forwardInside";
+	forwardInsideError.m_nodeName = (char*) "forwardInsideError";
+	mseqPerimeterReverse.m_nodeName = (char*)"mseqPerimeterReverse";
+
+	rotateBothCoilsInside.m_nodeName = (char*)"rotateBothCoilsInside";
 
 
 
@@ -648,11 +655,11 @@ void TBehaviour::setup() {
 	// ************************************
 	// GoTo Area Behaviour
 	//*************************************
-	selGotoAreaX.nodeName = (char*)"selGotoAreaX";
-	mseqGotoAreaX.nodeName = (char*)"mseqGotoAreaX";
-	lineFollow.nodeName = (char*)"lineFollow";
-	arRotate90CC.nodeName = (char*)"arRotate90CC";
-	setMowBehaviour.nodeName = (char*)"setMowBehaviour";
+	selGotoAreaX.m_nodeName = (char*)"selGotoAreaX";
+	mseqGotoAreaX.m_nodeName = (char*)"mseqGotoAreaX";
+	lineFollow.m_nodeName = (char*)"lineFollow";
+	arRotate90CC.m_nodeName = (char*)"arRotate90CC";
+	setMowBehaviour.m_nodeName = (char*)"setMowBehaviour";
 
 	mseqGotoAreaX.addChildren(&conAreaReached, &motorStop, &arRotate90CC, &setMowBehaviour);
 	selGotoAreaX.addChildren(&CruiseStartMowMotor, &mseqBumperActive2, &mseqSecondReverse, &mseqTrackPerimeterEscapeObst, &mseqTrackPerimeterEscapeObst2, &mseqGotoAreaX, &dnWaitGotoArea);
@@ -661,8 +668,8 @@ void TBehaviour::setup() {
 	// Charging Behaviour
 	//*************************************
 
-	selCharging.nodeName = (char*)"selCharging";
-	chargeRelayOn.nodeName = (char*)"chargeRelayOn";
+	selCharging.m_nodeName = (char*)"selCharging";
+	chargeRelayOn.m_nodeName = (char*)"chargeRelayOn";
 	selCharging.addChildren(&chargeRelayOn);
 
 
@@ -671,40 +678,40 @@ void TBehaviour::setup() {
 	// Find Perimeter Behaviour
 	//*************************************
 
-	selFindPerimeter.nodeName = (char*)"selCharging";
-	seqFindPerimeter.nodeName = (char*)"seqFindPerimeter",
-		mseqFindPerimeter.nodeName = (char*)"mseqFindPerimeter";
-	conIsOutsidePerimeter.nodeName = (char*)"conIsOutsidePerimeter";
+	selFindPerimeter.m_nodeName = (char*)"selCharging";
+	seqFindPerimeter.m_nodeName = (char*)"seqFindPerimeter",
+		mseqFindPerimeter.m_nodeName = (char*)"mseqFindPerimeter";
+	conIsOutsidePerimeter.m_nodeName = (char*)"conIsOutsidePerimeter";
 
-	dnWaitSignalOutside.nodeName = (char*)"dnWaitSignalOutside";
+	dnWaitSignalOutside.m_nodeName = (char*)"dnWaitSignalOutside";
 	dnWaitSignalOutside.setChild(&conIsOutsidePerimeter);
 	dnWaitSignalOutside.setWaitMillis(2000);
 
 	seqFindPerimeter.addChildren(&selCruiseSpeed, &mseqFindPerimeter);
 	mseqFindPerimeter.addChildren(&CruiseToPerimeter, &CruiseStopped, &dnWaitSignalOutside, &CruiseRotCW, &CruiseStopped);
-	selFindPerimeter.addChildren(&mseqBumperActive, &dnBumpPeriActivated, &dnBumperActivated, &seqFindPerimeter, &mseqFindPerimeter);
+	selFindPerimeter.addChildren(&mseqBumperActive, &eotBumpPeriActivated, &eotBumperActivated, &seqFindPerimeter, &mseqFindPerimeter);
 
 	// ************************************
 	// Perimeter Tracking
 	//*************************************
 
-	mseqBumperActive2.nodeName = (char*)"mseqBumperActive2";
-	freeBumper2.nodeName = (char*)"freeBumper2";
+	mseqBumperActive2.m_nodeName = (char*)"mseqBumperActive2";
+	freeBumper2.m_nodeName = (char*)"freeBumper2";
 
-	LFRotateCC105.nodeName = (char*)"LFRotateCC105";
-	mseqTrackPerimeter.nodeName = (char*)"mseqTrackPerimeter";
+	LFRotateCC105.m_nodeName = (char*)"LFRotateCC105";
+	mseqTrackPerimeter.m_nodeName = (char*)"mseqTrackPerimeter";
 
-	MotorStopFast.nodeName = (char*)"motorStopFast";
-	mseqDockingStation.nodeName = (char*)"mseqDockingStation";
-	perTrackChargingStationReached.nodeName = (char*)"perTrackChargingStationReached";
-	checkOutsideAgain.nodeName = (char*)"checkOutsideAgain";
+	MotorStopFast.m_nodeName = (char*)"motorStopFast";
+	mseqDockingStation.m_nodeName = (char*)"mseqDockingStation";
+	perTrackChargingStationReached.m_nodeName = (char*)"perTrackChargingStationReached";
+	checkOutsideAgain.m_nodeName = (char*)"checkOutsideAgain";
 
-	driveCurve.nodeName = (char*)"driveCurve";
-	setArc45CC.nodeName = (char*)"setArc45CC";
-	mseqTrackPerimeterEscapeObst.nodeName = (char*)"mseqTrackPerimeterEscapeObst";
-	mseqTrackPerimeterEscapeObst2.nodeName = (char*)"mseqTrackPerimeterEscapeObst2";
+	driveCurve.m_nodeName = (char*)"driveCurve";
+	setArc45CC.m_nodeName = (char*)"setArc45CC";
+	mseqTrackPerimeterEscapeObst.m_nodeName = (char*)"mseqTrackPerimeterEscapeObst";
+	mseqTrackPerimeterEscapeObst2.m_nodeName = (char*)"mseqTrackPerimeterEscapeObst2";
 
-	mseqSecondReverse.nodeName = (char*)"mseqSecondReverse";
+	mseqSecondReverse.m_nodeName = (char*)"mseqSecondReverse";
 
 
 	mseqSecondReverse.addChildren(&conSecondReverse, &secondReverse3, &motorStop);
@@ -715,17 +722,17 @@ void TBehaviour::setup() {
 	mseqTrackPerimeterEscapeObst2.addChildren(&conDriveCurve, &driveCurve, &motorStop, &checkOutsideAgain);
 
 
-	//FLRotateCC.nodeName = "fLRotateCC";
-	//LFRotateCW.nodeName = (char*)"LFRotateCW";
-	findTriangle.nodeName = (char*)"findTriangle";
-	parLineFollow.nodeName = (char*)"parLineFollow";
+	//FLRotateCC.m_nodeName = "fLRotateCC";
+	//LFRotateCW.m_nodeName = (char*)"LFRotateCW";
+	findTriangle.m_nodeName = (char*)"findTriangle";
+	parLineFollow.m_nodeName = (char*)"parLineFollow";
 
 
-	//FLFailer.nodeName = (char*)"fLFailer";
-	//mseqOvershootLeft.nodeName = "mseqOvershootLeft";
-	//mseqOvershootRight.nodeName = "mseqOvershootRight";
-	//selPerTracking.nodeName = (char*)"selPerTracking";
-	//mselFollowLine.nodeName = "mselFollowLine";
+	//FLFailer.m_nodeName = (char*)"fLFailer";
+	//mseqOvershootLeft.m_nodeName = "mseqOvershootLeft";
+	//mseqOvershootRight.m_nodeName = "mseqOvershootRight";
+	//selPerTracking.m_nodeName = (char*)"selPerTracking";
+	//mselFollowLine.m_nodeName = "mselFollowLine";
 
 	parLineFollow.addChildren(&lineFollow, &findTriangle);
 
@@ -741,7 +748,7 @@ void TBehaviour::setup() {
 	//selFollowLine.addChildren(&mselFollowLine,&trackPerimeter );
 	//selPerTracking.addChildren(&trackPerimeter );
 
-	selPerimeterTracking.nodeName = (char*)"selPerimeterTracking";
+	selPerimeterTracking.m_nodeName = (char*)"selPerimeterTracking";
 	selPerimeterTracking.addChildren(&mseqDockingStation, &mseqBumperActive2, &mseqSecondReverse, &mseqTrackPerimeterEscapeObst, &mseqTrackPerimeterEscapeObst2, &mseqTrackPerimeter);
 
 
@@ -749,38 +756,42 @@ void TBehaviour::setup() {
 	// Escape Obstacle Inside Perimeter
 	//*************************************
 
-	    //mseqEscRotate.nodeName = (char*)"mseqEscRotate";
+	    //mseqEscRotate.m_nodeName = (char*)"mseqEscRotate";
 
-	conditionFEONotFound.nodeName = (char*)"conditionFEONotFound";
+	conditionFEONotFound.m_nodeName = (char*)"conditionFEONotFound";
 
-	setArcFEO_ROT.nodeName = (char*)"setArcFEO_ROT";
-	setArcFEO_ROTCW1.nodeName = (char*)"setArcFEO_ROTCW2";
-	setArcFEO_ROTCC1.nodeName = (char*)"setArcFEO_ROTCC2";
-	setArcFEO_ROTCW2.nodeName = (char*)"setArcFEO_ROTCW2";
-	setArcFEO_ROTCC2.nodeName = (char*)"setArcFEO_ROTCC2";
+	setArcFEO_ROT.m_nodeName = (char*)"setArcFEO_ROT";
+	setArcFEO_ROTCW1.m_nodeName = (char*)"setArcFEO_ROTCW2";
+	setArcFEO_ROTCC1.m_nodeName = (char*)"setArcFEO_ROTCC2";
+	setArcFEO_ROTCW2.m_nodeName = (char*)"setArcFEO_ROTCW2";
+	setArcFEO_ROTCC2.m_nodeName = (char*)"setArcFEO_ROTCC2";
 
-	escRotateCC.nodeName = (char*)"escRotateCC";
-	mseqEscRotateCW1.nodeName = (char*)"mseqEscRotateCW1";
-	mseqEscRotateCW2.nodeName = (char*)"mseqEscRotateCW2";
-
-
-	escRotateCW.nodeName = (char*)"escRotateCW";
-	mseqEscRotateCC1.nodeName = (char*)"mseqEscRotateCC1";
-	mseqEscRotateCC2.nodeName = (char*)"mseqEscRotateCC2";
+	escRotateCC.m_nodeName = (char*)"escRotateCC";
+	mseqEscRotateCW1.m_nodeName = (char*)"mseqEscRotateCW1";
+	mseqEscRotateCW2.m_nodeName = (char*)"mseqEscRotateCW2";
 
 
+	escRotateCW.m_nodeName = (char*)"escRotateCW";
+	mseqEscRotateCC1.m_nodeName = (char*)"mseqEscRotateCC1";
+	mseqEscRotateCC2.m_nodeName = (char*)"mseqEscRotateCC2";
 
-	//forward20.nodeName = (char*)"forward20";
-	//mseqEscForward.nodeName = (char*)"mseqEscForward";
 
-	secondReverse.nodeName = (char*)"secondReverse";
-	secondReverse2.nodeName = (char*)"secondReverse2";
-	secondReverse3.nodeName = (char*)"secondReverse3";
-	mseqEscBackward.nodeName = (char*)"mseqEscBackward";
 
-	mselEscabeObstacle.nodeName = (char*)"mselEscabeObstacle";
-	selEscabeObstacle1.nodeName = (char*)"selEscabeObstacle1";
-	dnBumperActivated.nodeName = (char*)"dnBumperActivated";
+	//forward20.m_nodeName = (char*)"forward20";
+	//mseqEscForward.m_nodeName = (char*)"mseqEscForward";
+
+	secondReverse.m_nodeName = (char*)"secondReverse";
+	secondReverse2.m_nodeName = (char*)"secondReverse2";
+	secondReverse3.m_nodeName = (char*)"secondReverse3";
+	mseqEscBackward.m_nodeName = (char*)"mseqEscBackward";
+
+	mselEscabeObstacle.m_nodeName = (char*)"mselEscabeObstacle";
+	selEscabeObstacle1.m_nodeName = (char*)"selEscabeObstacle1";
+
+	eotBumperActivated.m_nodeName = (char*)"eotBumperActivated";
+	eotBumperActivated.setFlag(&bb.flagBumperInsidePerActivated);
+	eotBumperActivated.setFlagToFalseOnTerminate();
+	eotBumperActivated.setChild(&selEscabeObstacle1);
 
 
 	//mseqEscRotate.addChildren(&conFEO_ROT,&mseqRotatePer);
@@ -797,22 +808,22 @@ void TBehaviour::setup() {
 	mseqEscBackward.addChildren(&conFEO_ROT, &setArcFEO_ROT, &mseqRotateBump);
 	mselEscabeObstacle.addChildren(&mseqEscBackward, &mseqEscRotateCC1, &mseqEscRotateCW1, &mseqEscRotateCC2, &mseqEscRotateCW2, &mseqPerimeterForwardInside, &conditionFEONotFound);
 	selEscabeObstacle1.addChildren(&mselEscabeObstacle);
-	dnBumperActivated.setChild(&selEscabeObstacle1);
+
 
 	// ************************************
 	// Perimeter Outside Behaviour
 	//*************************************
 
 
-	preUpdateHistory.nodeName = (char*)"preUpdateHistory";
-	calcAngle.nodeName = (char*)"calcAngle";
-	rotateDriveBackInside.nodeName = (char*)"rotateDriveBackInside";
-	//postUpdateHistory.nodeName = (char*)"postUpdateHistory";
-    //rotatePer.nodeName = (char*)"rotatePer";
+	preUpdateHistory.m_nodeName = (char*)"preUpdateHistory";
+	calcAngle.m_nodeName = (char*)"calcAngle";
+	rotateDriveBackInside.m_nodeName = (char*)"rotateDriveBackInside";
+	//postUpdateHistory.m_nodeName = (char*)"postUpdateHistory";
+    //rotatePer.m_nodeName = (char*)"rotatePer";
 
 
-	mseqRotatePer.nodeName = (char*)"mseqRotatePer";
-	mselRotatePer1.nodeName = (char*)"mselRotatePer1";   
+	mseqRotatePer.m_nodeName = (char*)"mseqRotatePer";
+	mselRotatePer1.m_nodeName = (char*)"mselRotatePer1";   
 
 
 	//mseqRotatePer.addChildren(&preUpdateHistory, &calcAngle, &rotateBothCoilsInside, &rotatePer, &postUpdateHistory);
@@ -826,9 +837,9 @@ void TBehaviour::setup() {
 
 
 
-	preUpdateHistoryBump.nodeName = (char*)"preUpdateHistoryBump";
-	rotateX.nodeName = (char*)"rotateX";
-	mseqRotateBump.nodeName = (char*)"mseqRotateBump";
+	preUpdateHistoryBump.m_nodeName = (char*)"preUpdateHistoryBump";
+	rotateX.m_nodeName = (char*)"rotateX";
+	mseqRotateBump.m_nodeName = (char*)"mseqRotateBump";
 
 	mseqRotateBump.addChildren(&preUpdateHistoryBump, &rotateX);
 
@@ -836,11 +847,11 @@ void TBehaviour::setup() {
 	// BatLow and Raining Behaviour
 	//*************************************
 
-	cruiseBatLow.nodeName = (char*)"cruiseBatLow";
-	cruiseRaining.nodeName = (char*)"cruiseRaining";
+	cruiseBatLow.m_nodeName = (char*)"cruiseBatLow";
+	cruiseRaining.m_nodeName = (char*)"cruiseRaining";
 
-	seqMowBatLow.nodeName = (char*)"seqMowBatLow";
-	seqRaining.nodeName = (char*)"seqRaining";
+	seqMowBatLow.m_nodeName = (char*)"seqMowBatLow";
+	seqRaining.m_nodeName = (char*)"seqRaining";
 
 	seqMowBatLow.addChildren(&conBatLow, &cruiseBatLow);
 	seqRaining.addChildren(&conRaining, &cruiseRaining);
@@ -849,14 +860,14 @@ void TBehaviour::setup() {
 	// Check2 Behaviour
 	//*************************************
 
-	selCheck2.nodeName = (char*)"selCheck2";
+	selCheck2.m_nodeName = (char*)"selCheck2";
 
-	Check2CoilSignalAreaX.nodeName = (char*)"Check2CoilSignalAreaX";
-	Check2LeftCoilSignal.nodeName = (char*)"Check2LeftCoilSignal";
-	Check2RightCoilSignal.nodeName = (char*)"Check2RightCoilSignal";
+	Check2CoilSignalAreaX.m_nodeName = (char*)"Check2CoilSignalAreaX";
+	Check2LeftCoilSignal.m_nodeName = (char*)"Check2LeftCoilSignal";
+	Check2RightCoilSignal.m_nodeName = (char*)"Check2RightCoilSignal";
 
-	Check2PerSignal.nodeName = (char*)"check2PerSignal";
-	Check2AllCoilsOutside.nodeName = (char*)"check2AllCoilsOutside";
+	Check2PerSignal.m_nodeName = (char*)"check2PerSignal";
+	Check2AllCoilsOutside.m_nodeName = (char*)"check2AllCoilsOutside";
 	selCheck2.addChildren(&Check2CoilSignalAreaX, &Check2PerSignal, &Check2LeftCoilSignal, &Check2RightCoilSignal);
 	//selCheck2.addChildren(&Check2PerSignal, &Check2AllCoilsOutside, &Check2BackCoilSignalAreaX, &Check2LeftCoilSignal, &Check2RightCoilSignal, &Check2BackCoilSignal);
 
@@ -864,50 +875,53 @@ void TBehaviour::setup() {
     // Cruise Behaviour
     //*************************************
 
-	cruiseSpiral.nodeName = (char*)"cruiseSpiral";
+	cruiseSpiral.m_nodeName = (char*)"cruiseSpiral";
 
-	CruiseStartMowMotor.nodeName = (char*)"cruiseStartMowMotor";
-	CruiseRotCW.nodeName = (char*)"cruiseRotCW";
-	CruiseStopped.nodeName = (char*)"cruiseStopped";
-	CruiseToPerimeter.nodeName = (char*)"cruiseToPerimeter";
+	CruiseStartMowMotor.m_nodeName = (char*)"cruiseStartMowMotor";
+	CruiseRotCW.m_nodeName = (char*)"cruiseRotCW";
+	CruiseStopped.m_nodeName = (char*)"cruiseStopped";
+	CruiseToPerimeter.m_nodeName = (char*)"cruiseToPerimeter";
 
-	CruiseObstacleNear.nodeName = (char*)"cruiseObstacleNear";
-	CruisePerimeterNear.nodeName = (char*)"cruisePerimeterNear";
-	CruiseHighSpeed.nodeName = (char*)"cruiseHighSpeed";
-	CruiseSpeedToMotor.nodeName = (char*)"cruiseSpeedToMotor";
-	selCruiseSpeed.nodeName = (char*)"selCruiseSpeed";
-	seqCruise.nodeName = (char*)"seqCruise";
-	dnSetbbShortWayCounter.nodeName = (char*)"dnSetbbShortWayCounter";
+	CruiseObstacleNear.m_nodeName = (char*)"cruiseObstacleNear";
+	CruisePerimeterNear.m_nodeName = (char*)"cruisePerimeterNear";
+	CruiseHighSpeed.m_nodeName = (char*)"cruiseHighSpeed";
+	CruiseSpeedToMotor.m_nodeName = (char*)"cruiseSpeedToMotor";
+	selCruiseSpeed.m_nodeName = (char*)"selCruiseSpeed";
+	seqCruise.m_nodeName = (char*)"seqCruise";
+	
 
 	//selCruiseSpeed.addChildren(&CruiseObstacleNear, &CruiseHighSpeed);
 	selCruiseSpeed.addChildren(&CruiseObstacleNear, &CruisePerimeterNear, &CruiseHighSpeed);
 	seqCruise.addChildren(&selCruiseSpeed, &CruiseSpeedToMotor);
-	dnSetbbShortWayCounter.setChild(&seqCruise);
+
+	eotSetbbShortWayCounter.m_nodeName = (char*)"eotSetbbShortWayCounter";
+	eotSetbbShortWayCounter.setFlag(&bb.flagShortWayCounter);
+	eotSetbbShortWayCounter.setChild(&seqCruise);
 
 	// ************************************
 	// Mowing
 	//*************************************
 
-	selMowing.nodeName = (char*)"selMowing";
+	selMowing.m_nodeName = (char*)"selMowing";
 
-	selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &dnRestoreHistory, &mseqBumperActive, &dnBumpPeriActivated, &mseqPerimeterAvtive, &dnBumperActivated, &seqRaining, &seqMowBatLow, &Check2AllCoilsOutside, &dnCruiseSpiral, &dnSetbbShortWayCounter);
+	selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &eotRestoreHistory, &mseqBumperActive, &eotBumpPeriActivated, &mseqPerimeterAvtive, &eotBumperActivated, &seqRaining, &seqMowBatLow, &Check2AllCoilsOutside, &eotCruiseSpiral, &eotSetbbShortWayCounter);
 
 	// ************************************
 	// Restore history
 	//*************************************
-	selRestoreHist.nodeName = (char*)"selRestoreHist";
-	restoreHistory.nodeName = (char*)"restoreHistory";
+	selRestoreHist.m_nodeName = (char*)"selRestoreHist";
+	restoreHistory.m_nodeName = (char*)"restoreHistory";
 	selRestoreHist.addChildren(&restoreHistory);
 
 
 	// ************************************
 	// Leave Head Charging Station Behaviour
 	//*************************************
-	selLeaveHeadCS.nodeName = (char*)"selLeaveHeadCS";
-	mseqLeaveHeadCS.nodeName = (char*)"mseqLeaveHeadCS";
-	driveBackXCS.nodeName = (char*)"driveBackXCS";
-	driveForwardXCS.nodeName = (char*)"driveForwardXCS";
-	setArcHeadStation_ROT.nodeName = (char*)"setArcHeadStation_ROT";
+	selLeaveHeadCS.m_nodeName = (char*)"selLeaveHeadCS";
+	mseqLeaveHeadCS.m_nodeName = (char*)"mseqLeaveHeadCS";
+	driveBackXCS.m_nodeName = (char*)"driveBackXCS";
+	driveForwardXCS.m_nodeName = (char*)"driveForwardXCS";
+	setArcHeadStation_ROT.m_nodeName = (char*)"setArcHeadStation_ROT";
 
 	mseqLeaveHeadCS.addChildren(&driveBackXCS, &arRotate90CC, &driveForwardXCS, &setArcHeadStation_ROT, &mseqRotateBump, &setMowBehaviour);
 	selLeaveHeadCS.addChildren(&mseqLeaveHeadCS);
@@ -916,12 +930,15 @@ void TBehaviour::setup() {
 	// Root
 	//*************************************
 
-	selRoot.nodeName = (char*)"rootSel";
-	//selRoot.addChildren(&dnCharging, &selCheck2, &dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing, &dnLeaveHeadChargingStation);
-	selRoot.addChildren(&dnCharging, &dnLeaveHeadChargingStation, &selCheck2, &dnGotoAreaX, &dnPermeterTracking, &dnFindPerimeter, &dnMowing);
-	//selRoot.addChildren(&dnCharging,&selCheck2,&dnGotoAreaX,&dnPermeterTracking,&dnFindPerimeter,&dnMowing);
+	selRoot.m_nodeName = (char*)"rootSel";
+	//selRoot.addChildren(&eotCharging, &selCheck2, &eotGotoAreaX,&eotPermeterTracking,&eotFindPerimeter,&eotMowing, &eotLeaveHeadChargingStation);
+	selRoot.addChildren(&eotCharging, &eotLeaveHeadChargingStation, &selCheck2, &eotGotoAreaX, &eotPermeterTracking, &eotFindPerimeter, &eotMowing);
+	//selRoot.addChildren(&eotCharging,&selCheck2,&eotGotoAreaX,&eotPermeterTracking,&eotFindPerimeter,&eotMowing);
 
 	behaviorTree.setRootNode(&selRoot);
+
+	// Run the setup of all nodes which have a setup function.
+	behaviorTree.onSetup(bb);
 }
 
 void TBehaviour::loop() {
