@@ -29,49 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BehaviourTree.h"
 
 
-class TConBatLow : public Condition    // Each task will be a class (derived from Condition of course).
-{
-private:
-
-public:
-
-	TConBatLow() {}
-
-	virtual NodeStatus onCheckCondition(Blackboard& bb) {
-
-		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
-			if (bb.batterieSensor.isVoltageLow() || bb.flagGoHome) {
-				sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
-				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-				else { errorHandler.writeToLogOnly(); }
-				return BH_SUCCESS;
-			}
-		}
-		return BH_FAILURE;
-	}
-};
-
-class TConRaining : public Condition    // Each task will be a class (derived from Condition of course).
-{
-private:
-
-public:
-
-	TConRaining() {}
-
-	virtual NodeStatus onCheckCondition(Blackboard& bb) {
-
-		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
-			if (bb.rainSensor.isRaining()) {
-				sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
-				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-				else { errorHandler.writeToLogOnly(); }
-				return BH_SUCCESS;
-			}
-		}
-		return BH_FAILURE;
-	}
-};
 
 /*
 class TConFEO_BACK180 : public Condition    // Each task will be a class (derived from Condition of course).

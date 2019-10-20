@@ -74,8 +74,6 @@ TConPerOutside conPerOutside;
 
 //TconStopOvershootLeft conStopOvershootLeft;
 //TconStopOvershootRight conStopOvershootRight;
-TConBatLow conBatLow;
-TConRaining conRaining;
 
 TConRightCoilOutside conRightCoilOutside;
 TConLeftCoilOutside  conLeftCoilOutside;
@@ -336,10 +334,9 @@ MemSequence mseqRotateBump;
 // BatLow and raining Behaviour
 //*************************************
 
-TCruiseBatLow cruiseBatLow;
-TCruiseRaining cruiseRaining;
-Sequence seqMowBatLow;
-Sequence seqRaining;
+TacCruiseBatLow acCruiseBatLow;
+TacCruiseRaining acCruiseRaining;
+
 
 // ************************************
 // Check2 Behaviour
@@ -444,8 +441,6 @@ void TBehaviour::setup() {
 
 	//conStopOvershootLeft.m_nodeName = "conStopOvershootLeft";
 	//conStopOvershootRight.m_nodeName = "conStopOvershootRight";
-	conBatLow.m_nodeName = (char*)"conBatLow";
-	conRaining.m_nodeName = (char*)"conRaining";
 
 	conRightCoilOutside.m_nodeName = (char*)"conRightCoilOutside";
 	conLeftCoilOutside.m_nodeName = (char*)"conLeftCoilOutside";
@@ -847,14 +842,10 @@ void TBehaviour::setup() {
 	// BatLow and Raining Behaviour
 	//*************************************
 
-	cruiseBatLow.m_nodeName = (char*)"cruiseBatLow";
-	cruiseRaining.m_nodeName = (char*)"cruiseRaining";
+	acCruiseBatLow.m_nodeName = (char*)"acCruiseBatLow";
+	acCruiseRaining.m_nodeName = (char*)"acCruiseRaining";
 
-	seqMowBatLow.m_nodeName = (char*)"seqMowBatLow";
-	seqRaining.m_nodeName = (char*)"seqRaining";
 
-	seqMowBatLow.addChildren(&conBatLow, &cruiseBatLow);
-	seqRaining.addChildren(&conRaining, &cruiseRaining);
 
 	// ************************************
 	// Check2 Behaviour
@@ -904,7 +895,7 @@ void TBehaviour::setup() {
 
 	selMowing.m_nodeName = (char*)"selMowing";
 
-	selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &eotRestoreHistory, &mseqBumperActive, &eotBumpPeriActivated, &mseqPerimeterAvtive, &eotBumperActivated, &seqRaining, &seqMowBatLow, &Check2AllCoilsOutside, &eotCruiseSpiral, &eotSetbbShortWayCounter);
+	selMowing.addChildren(&CruiseStartMowMotor, &setflagCoilFirstOutsideLatched, &eotRestoreHistory, &mseqBumperActive, &eotBumpPeriActivated, &mseqPerimeterAvtive, &eotBumperActivated, &acCruiseRaining, &acCruiseBatLow, &Check2AllCoilsOutside, &eotCruiseSpiral, &eotSetbbShortWayCounter);
 
 	// ************************************
 	// Restore history

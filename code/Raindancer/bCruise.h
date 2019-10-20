@@ -137,14 +137,27 @@ public:
 };
 
 
-class TCruiseBatLow : public Action
+class TacCruiseBatLow : public ActionCond
 {
 private:
 
 public:
 
-	TCruiseBatLow() {
+	TacCruiseBatLow() {
 
+	}
+
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
+
+		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
+			if (bb.batterieSensor.isVoltageLow() || bb.flagGoHome) {
+				sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
+				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+				else { errorHandler.writeToLogOnly(); }
+				return BH_SUCCESS;
+			}
+		}
+		return BH_FAILURE;
 	}
 
 	virtual void onInitialize(Blackboard& bb) {
@@ -160,15 +173,27 @@ public:
 };
 
 
-class TCruiseRaining : public Action
+class TacCruiseRaining : public ActionCond
     {
     private:
 
     public:
 
-        TCruiseRaining()
+	    TacCruiseRaining()
             {
             }
+	  virtual NodeStatus onCheckCondition(Blackboard& bb) {
+
+		  if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
+			  if (bb.rainSensor.isRaining()) {
+				  sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
+				  if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+				  else { errorHandler.writeToLogOnly(); }
+				  return BH_SUCCESS;
+			  }
+		  }
+		  return BH_FAILURE;
+	  }
 
         virtual void onInitialize(Blackboard& bb)
             {

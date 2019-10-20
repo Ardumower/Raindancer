@@ -31,7 +31,6 @@ I have extended it to own needs.
 #endif
 
 #include "Blackboard.h"
-#include "NodeStack.h"
 
 // Comment out,  if you don't want to use services
 // Services are often used to make checks and to update the Blackboard.
@@ -47,13 +46,13 @@ enum NodeStatus : uint8_t {
 	BH_INVALID = 4,	// Node just created or reseted 
 	// Following states are not used by the behavior tree. They are only used to send more information to changedStatusNodes,
 	// wich will show the changed nodes at the end of the tick of the tree
-	BH_TRUE = 5,	// Will ony be used by ExecuteOnTrue to show in changedStatusNodes if flag is true or false
-	BH_FALSE = 6,	// Will ony be used by ExecuteOnTrue to show in changedStatusNodes if flag is true or false
+	BH_TRUE = 5,	// Will ony be used by ExecuteOnTrue, ConditionDeco, ConditionMemDeco to log if flag is true or false
+	BH_FALSE = 6,	// Will ony be used by ExecuteOnTrue, ConditionDeco, ConditionMemDeco to log if flag is true or false
 	BH_SET_FLAG_FALSE = 7,	// Will ony be used by ExecuteOnTrue to show in changedStatusNodes if flag is true or false
 	BH_WAITING = 8,	// Will only be used by WaitDecorator to show in changedStatusNodes  that the decorator is waiting
 	BH_WAITTIME_EXPIRED = 9, // Will only be used by WaitDecorator to show in changedStatusNodes  that the waittime has expired
 	BH_TRY_TO_ABORT_CHILD = 10, // Will be used to give info in changedStatusNodes when the contolnodes tries to abort the childs
-	BH_EMPTY = 11
+	BH_EMPTY = 11  // Write empty string
 };
 
 /*
@@ -496,6 +495,8 @@ public:
 */
 
 class ConditionDeco : public DecoratorNode {
+private:
+	NodeStatus  m_result;
 public:
 	ConditionDeco();
 	ConditionDeco(Node* child);
@@ -514,6 +515,8 @@ public:
 */
 
 class ConditionMemDeco : public DecoratorNode {
+private:
+	NodeStatus  m_result;
 public:
 	ConditionMemDeco();
 	ConditionMemDeco(Node* child);
@@ -635,7 +638,7 @@ public:
 class BehaviourTree : public Node {
 private:
 	Node* root;
-	uint8_t groupIdx;
+	
 public:
 	bool flagLogChangedNode; // is only used to deactivate the showing of state changes of the nodes at the terminal 
 	BehaviourTree();

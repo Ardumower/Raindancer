@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WProgram.h"
 #endif
 
-#include "NodeStack.h"
 
 #include "hardware.h"
 #include "helpers.h"
@@ -137,8 +136,6 @@ public:
 
 	// Variables used by default BehaviourTree funktions
 	bool flagBHTShowChanges; // shows leaf which changes the state during a tick
-	NodeStack changedStatusNodes;
-
 
 	THistory history[HISTROY_BUFSIZE];
 	THistory hist; // use in freeBumper. TFreeBumper should inform TselEscapeAlgorithm about the last deleted node.

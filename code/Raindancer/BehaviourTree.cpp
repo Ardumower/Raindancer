@@ -19,15 +19,16 @@ I have extended it to own needs.
 */
 
 #include "BehaviourTree.h"
+#include "errorhandler.h"
 
 //#define DEBUG_BHT_TREE 1
 //#define DEBUG_BHT_SETUP 1
 
-// Action, Condition, WaitDecorator and ParallelUntilFail will always be logged. One can enable LOG_CONTROL_NODES
-// to see how the tree run. The values will be shown, after the tick comes back to the behavior tree.
+// Action, Condition, WaitDecorator and ParallelUntilFail will be logged
+#define LOG_NODES 1
 
+// Enable LOG_CONTROL_NODES to see how the tree runs. 
 #define LOG_CONTROL_NODES 1
-
 
 
 #ifdef DEBUG_BHT_TREE
@@ -42,18 +43,39 @@ I have extended it to own needs.
 #  define DSETUP(x) 
 #endif
 
+#ifdef LOG_NODES
+#	define LOG_SAVE_OLD_STATUS NodeStatus oldState = m_eNodeStatus;
+#	define LOG_NODE(o,n, node)  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[o], enumNodeStatusStrings[n]);
+#	define LOG_CONDITION(node)  	if (m_result != oldResult) {\
+							if (m_result == BH_SUCCESS) { \
+								errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_FALSE], enumNodeStatusStrings[BH_TRUE]);\
+							} \
+							else { \
+								errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_TRUE], enumNodeStatusStrings[BH_FALSE]);\
+							}\
+						}
+#     define SAVE_OLD_CON_RESULT NodeStatus oldResult = m_result;
+#else
+#	define LOG_SAVE_OLD_STATUS 
+#	define LOG_NODE(o,n, node)
+#	define LOG_CONDITION(node)
+#     define SAVE_OLD_CON_RESULT
+#endif
+
+
+
 #ifdef LOG_CONTROL_NODES
 #	define SAVE_OLD_STATUS NodeStatus oldState = m_eNodeStatus;
-#	define PUSH_STACK  if (m_eNodeStatus != oldState) { \
-					bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this); \
+#	define LOG_CONTROL_NODE  if (m_eNodeStatus != oldState) { \
+					errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, this->m_nodeName, enumNodeStatusStrings[oldState], enumNodeStatusStrings[m_eNodeStatus]); \
 				 }
-#	define PUSH_STACK_ABORT  bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this); 
-#     define PUSH_STACK_TRY_ABORT_CHILD  bb.changedStatusNodes.Push(BH_EMPTY, BH_TRY_TO_ABORT_CHILD, this); 
+#	define LOG_CONTROL_NODE_ABORT  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, this->m_nodeName, enumNodeStatusStrings[oldState], enumNodeStatusStrings[m_eNodeStatus]);
+#     define LOG_TRY_ABORT_CHILD  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, this->m_nodeName, enumNodeStatusStrings[BH_EMPTY], enumNodeStatusStrings[BH_TRY_TO_ABORT_CHILD]);
 #else
 #	define SAVE_OLD_STATUS
-#	define PUSH_STACK
-#	define PUSH_STACK_ABORT
-#     define PUSH_STACK_TRY_ABORT_CHILD
+#	define LOG_CONTROL_NODE
+#	define LOG_CONTROL_NODE_ABORT
+#     define LOG_TRY_ABORT_CHILD
 #endif
 
 
@@ -64,6 +86,7 @@ I have extended it to own needs.
 #  define RUNSERVICE(b) 
 #endif
 
+static uint16_t groupIdx = 0;
 
 static int nodeIdCounter = 0;
 
@@ -152,7 +175,7 @@ NodeStatus Action::tick(Blackboard& bb) {
 
 
 	if (m_eNodeStatus != oldState) {
-		bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this);
+		LOG_NODE(oldState, m_eNodeStatus, this);
 	}
 
 
@@ -166,11 +189,11 @@ NodeStatus Action::tick(Blackboard& bb) {
 }
 
 void Action::abort(Blackboard& bb) {
-	NodeStatus oldState = m_eNodeStatus;
+	LOG_SAVE_OLD_STATUS;
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::abort -> executing onTerminate\r\n"), m_nodeName, m_nodeId););
 	onTerminate(BH_ABORTED, bb);
 	m_eNodeStatus = BH_ABORTED;
-	bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this);
+	LOG_NODE(oldState, m_eNodeStatus, this);
 }
 
 unsigned long Action::getTimeInNode() {
@@ -216,7 +239,7 @@ NodeStatus ActionCond::tick(Blackboard& bb) {
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	m_eNodeStatus = BH_FAILURE;
 	if (m_eNodeStatus != oldState) {
-		bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this);
+		LOG_NODE(oldState, m_eNodeStatus, this);
 	}
 	return BH_FAILURE;
 }
@@ -255,7 +278,7 @@ NodeStatus ActionMemCond::tick(Blackboard& bb) {
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick ->cond returned BH_FAILURE returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	m_eNodeStatus = BH_FAILURE;
 	if (m_eNodeStatus != oldState) {
-		bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this);
+		LOG_NODE(oldState, m_eNodeStatus, this);
 	}
 	return BH_FAILURE;
 }
@@ -280,7 +303,7 @@ NodeStatus Condition::tick(Blackboard& bb) {
 	m_eNodeStatus = onCheckCondition(bb);
 
 	if (m_eNodeStatus != oldState) {
-		bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this);
+		LOG_NODE(oldState, m_eNodeStatus, this);
 	}
 
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
@@ -288,10 +311,10 @@ NodeStatus Condition::tick(Blackboard& bb) {
 }
 
 void Condition::abort(Blackboard& bb) {
-	NodeStatus oldState = m_eNodeStatus;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::abort -> executing onTerminate\r\n"), m_nodeName, m_nodeId););
+	LOG_SAVE_OLD_STATUS;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::abort\r\n"), m_nodeName, m_nodeId););
 	m_eNodeStatus = BH_ABORTED;
-	bb.changedStatusNodes.Push(oldState, m_eNodeStatus, this);
+	LOG_NODE(oldState, m_eNodeStatus, this);
 
 }
 // ============================================================================
@@ -443,7 +466,7 @@ void CompositeNode::addChild(Node* child) {
 
 
 void CompositeNode::abortChild(Blackboard& bb, int i) {
-	PUSH_STACK_TRY_ABORT_CHILD;
+	LOG_TRY_ABORT_CHILD;
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChild -> try abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 	if (m_children[i]->isRunning()) {
 		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChild -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
@@ -452,7 +475,7 @@ void CompositeNode::abortChild(Blackboard& bb, int i) {
 }
 
 void CompositeNode::abortChildren(Blackboard& bb, int i) {
-	PUSH_STACK_TRY_ABORT_CHILD;
+	LOG_TRY_ABORT_CHILD;
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChildren -> try abort children\r\n"), m_nodeName, m_nodeId););
 	for (int j = i; j < m_children_size; j++) {
 		if (m_children[j]->isRunning()) {
@@ -687,8 +710,8 @@ NodeStatus Sequence::tick(Blackboard& bb) {
 
 		if (m_eNodeStatus != BH_SUCCESS) {
 
-			PUSH_STACK;
-
+			LOG_CONTROL_NODE;
+			
 			// Switching from a low -> high priority branch causes an abort signal to be sent to the previously executing low priority branch.
 			// if the current child is running or failure the sequence will break.
 			// therefore check if the current node was also in state running at the previous call.
@@ -701,7 +724,7 @@ NodeStatus Sequence::tick(Blackboard& bb) {
 			/*
 			if ((m_children[m_idxLastRunnedNode]->isRunning()) && (m_idxLastRunnedNode != i)) {
 				DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
-				PUSH_STACK_TRY_ABORT_CHILD;
+				LOG_TRY_ABORT_CHILD;
 				m_children[m_idxLastRunnedNode]->abort(bb);
 			}
 			*/
@@ -710,7 +733,7 @@ NodeStatus Sequence::tick(Blackboard& bb) {
 		}
 	}
 
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 
 	return BH_SUCCESS;  // All children succeeded so the entire sequence succeeds
 }
@@ -722,7 +745,7 @@ void Sequence::abort(Blackboard& bb) {
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -764,14 +787,14 @@ NodeStatus MemSequence::tick(Blackboard& bb) {
 
 		if (m_eNodeStatus != BH_SUCCESS) {
 
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 
 			m_idxLastRunnedNode = i;
 			return m_eNodeStatus;
 		}
 	}
 
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 
 	return BH_SUCCESS;  // All children failed so the entire run() operation fails.
 }
@@ -783,7 +806,7 @@ void MemSequence::abort(Blackboard& bb) {
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -815,13 +838,13 @@ NodeStatus StarSequence::tick(Blackboard& bb) {
 		switch (m_eNodeStatus) {
 		case BH_RUNNING:
 		{
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			return BH_RUNNING;
 			break;
 		}
 		case BH_FAILURE:
 		{
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			originalStatus = m_eNodeStatus;
 			m_eNodeStatus = BH_RUNNING;
 			return BH_FAILURE;
@@ -829,7 +852,7 @@ NodeStatus StarSequence::tick(Blackboard& bb) {
 		}
 		case BH_SUCCESS:
 		{
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			m_idxLastRunnedNode++;
 			break;
 		}
@@ -859,7 +882,7 @@ void StarSequence::abort(Blackboard& bb) {
 	m_idxLastRunnedNode = 0;
 	originalStatus = BH_ABORTED;
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 */
 
@@ -884,7 +907,7 @@ NodeStatus Selector::tick(Blackboard& bb) {
 		m_eNodeStatus = m_children[i]->tick(bb);
 
 		if (m_eNodeStatus != BH_FAILURE) {
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			// Switching from a low -> high priority branch causes an abort signal to be sent to the previously executing low priority branch.
 			// if the current child is running or success the sequence will break.
 			// therefore check if the current node was also in state running at the previous call.
@@ -897,7 +920,7 @@ NodeStatus Selector::tick(Blackboard& bb) {
 			/*
 			if ((m_children[m_idxLastRunnedNode]->isRunning()) && (m_idxLastRunnedNode != i)) {
 				DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
-				PUSH_STACK_TRY_ABORT_CHILD;
+				LOG_TRY_ABORT_CHILD;
 				m_children[m_idxLastRunnedNode]->abort(bb);
 			}
 			*/
@@ -908,7 +931,7 @@ NodeStatus Selector::tick(Blackboard& bb) {
 		}
 	}
 
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return BH_FAILURE;  // All children failed so the entire run() operation fails
 }
 
@@ -919,7 +942,7 @@ void Selector::abort(Blackboard& bb) {
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -945,12 +968,12 @@ NodeStatus MemSelector::tick(Blackboard& bb) {
 		m_eNodeStatus = m_children[i]->tick(bb);
 
 		if (m_eNodeStatus != BH_FAILURE) {
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			m_idxLastRunnedNode = i; //don't have to ask if node is running, because if not running, m_idxLastRunnedNode will be reseted to 0.
 			return m_eNodeStatus;
 		}
 	}
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return BH_FAILURE;  // All children failed so the entire run() operation fails.
 }
 
@@ -961,7 +984,7 @@ void MemSelector::abort(Blackboard& bb) {
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -986,11 +1009,11 @@ NodeStatus Parallel::tick(Blackboard& bb) {
 	for (int i = 0; i < m_children_size; i++) {
 		m_eNodeStatus = m_children[i]->tick(bb);
 		if (m_eNodeStatus != BH_RUNNING) {
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			// Abort all running children
 			abortChildren(bb, 0);
 			/*
-			PUSH_STACK_TRY_ABORT_CHILD;
+			LOG_TRY_ABORT_CHILD;
 			for (int i = 0; i < m_children_size; i++) {
 				if (m_children[i]->isRunning()) {
 					DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
@@ -1001,7 +1024,7 @@ NodeStatus Parallel::tick(Blackboard& bb) {
 			return m_eNodeStatus;
 		}
 	}
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return BH_RUNNING;  // All children failed so the entire run() operation fails.
 }
 
@@ -1014,7 +1037,7 @@ void Parallel::abort(Blackboard& bb) {
 		}
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -1042,11 +1065,11 @@ NodeStatus ParallelUntilFail::tick(Blackboard& bb) {
 			countRunning++;
 		}
 		if (m_eNodeStatus == BH_FAILURE) {
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			// Abort all running children
 			abortChildren(bb, 0);
 			/*
-			PUSH_STACK_TRY_ABORT_CHILD;
+			LOG_TRY_ABORT_CHILD;
 			for (int i = 0; i < m_children_size; i++) {
 				if (m_children[i]->isRunning()) {
 					DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
@@ -1064,7 +1087,7 @@ NodeStatus ParallelUntilFail::tick(Blackboard& bb) {
 	}
 
 	m_eNodeStatus = BH_SUCCESS;
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return BH_SUCCESS;  // All children failed so the entire run() operation fails.
 }
 
@@ -1077,7 +1100,7 @@ void ParallelUntilFail::abort(Blackboard& bb) {
 		}
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -1134,7 +1157,7 @@ void DecoratorNode::abort(Blackboard& bb) {
 		m_pChild->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 // ============================================================================
@@ -1166,17 +1189,17 @@ void ExecuteOnTrue::setFlag(bool * _pFlag) {
 void ExecuteOnTrue::setChangedStatusNodes(Blackboard& bb) {
 	if (*m_pFlag != m_flag_last_value) {
 		if (*m_pFlag == true) {
-			bb.changedStatusNodes.Push(BH_FALSE, BH_TRUE, this);
+			LOG_NODE(BH_FALSE, BH_TRUE, this);
 		}
 		else {
-			bb.changedStatusNodes.Push(BH_TRUE, BH_FALSE, this);
+			LOG_NODE(BH_TRUE, BH_FALSE, this);
 		}
 		m_flag_last_value = *m_pFlag;
 	}
 }
 void ExecuteOnTrue::setChangedStatusNodesSetFlagFalse(Blackboard& bb) {
 	if (*m_pFlag == true) {
-		bb.changedStatusNodes.Push(BH_TRUE, BH_SET_FLAG_FALSE, this);
+		LOG_NODE(BH_TRUE, BH_SET_FLAG_FALSE, this);
 	}
 	*m_pFlag = false;
 	m_flag_last_value = *m_pFlag;
@@ -1197,7 +1220,7 @@ NodeStatus ExecuteOnTrue::tick(Blackboard& bb) {
 
 		}
 
-		PUSH_STACK;
+		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
 	}
 	else {
@@ -1210,10 +1233,10 @@ NodeStatus ExecuteOnTrue::tick(Blackboard& bb) {
 		setChangedStatusNodesSetFlagFalse(bb);
 	}
 
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 
 	if (m_pChild->isRunning()) {
-		PUSH_STACK_TRY_ABORT_CHILD;
+		LOG_TRY_ABORT_CHILD;
 		m_pChild->abort(bb);
 	}
 
@@ -1240,19 +1263,21 @@ void ExecuteOnTrue::abort(Blackboard& bb) {
 //  If condition returns with BH_FAILURE, the node returns with BH_FAILURE. If 
 //  the child is also in running satate, bort will be called before returning BH_FAILURE which aborts the child.
 
-ConditionDeco::ConditionDeco() : DecoratorNode() {}
-ConditionDeco::ConditionDeco(Node* child) : DecoratorNode(child) {}
+ConditionDeco::ConditionDeco() : DecoratorNode(), m_result(BH_FAILURE){}
+ConditionDeco::ConditionDeco(Node* child) : DecoratorNode(child), m_result(BH_FAILURE) {}
 
 NodeStatus ConditionDeco::tick(Blackboard& bb) {
-	NodeStatus result;
+	SAVE_OLD_CON_RESULT;
 	SAVE_OLD_STATUS;
 
-	result = onCheckCondition(bb);
+	m_result = onCheckCondition(bb);
 
-	if (result == BH_SUCCESS) {
+	LOG_CONDITION(this);
+
+	if (m_result == BH_SUCCESS) {
 		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> cond returned BH_SUCCESS -> call child->tick %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_eNodeStatus = m_pChild->tick(bb);
-		PUSH_STACK;
+		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
 	}
 
@@ -1262,12 +1287,13 @@ NodeStatus ConditionDeco::tick(Blackboard& bb) {
 #ifdef LOG_CONTROL_NODES
 		oldState = m_eNodeStatus;
 #endif
+		return m_eNodeStatus;
 	}
 
 	// Node is not running when code comes here and condition was failure
 
 	m_eNodeStatus = BH_FAILURE;
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return BH_FAILURE;
 }
@@ -1282,34 +1308,36 @@ NodeStatus ConditionDeco::tick(Blackboard& bb) {
 //  If condition returns BH_FAILURE, the node returns with BH_FAILURE
 
 
-ConditionMemDeco::ConditionMemDeco() : DecoratorNode() {}
-ConditionMemDeco::ConditionMemDeco(Node* child) : DecoratorNode(child) {}
+ConditionMemDeco::ConditionMemDeco() : DecoratorNode(), m_result(BH_FAILURE) {}
+ConditionMemDeco::ConditionMemDeco(Node* child) : DecoratorNode(child), m_result(BH_FAILURE) {}
 
 
 NodeStatus ConditionMemDeco::tick(Blackboard& bb) {
-	NodeStatus result;
+	SAVE_OLD_CON_RESULT;
 	SAVE_OLD_STATUS;
 
 	if (m_pChild->isRunning()) { // Is child is running, then don't query condition. Run child directly.
 		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond not called because child is running -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_eNodeStatus = m_pChild->tick(bb);
-		PUSH_STACK;
+		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
 	}
 
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> calling condition %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
-	result = onCheckCondition(bb);
+	m_result = onCheckCondition(bb);
 
-	if (result == BH_SUCCESS) {
+	LOG_CONDITION(this);
+
+	if (m_result == BH_SUCCESS) {
 		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_SUCCESS  -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_eNodeStatus = m_pChild->tick(bb);
-		PUSH_STACK;
+		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
 	}
 
 	// Node is not running, therfore I don't need to abort here.
 	m_eNodeStatus = BH_FAILURE;
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_FAILURE. Returning failure to parent %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return BH_FAILURE;
 }
@@ -1331,7 +1359,7 @@ NodeStatus Inverter::tick(Blackboard& bb) {
 	else if (m_eNodeStatus == BH_SUCCESS) {
 		m_eNodeStatus = BH_FAILURE;
 	}
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return m_eNodeStatus;
 }
 
@@ -1351,7 +1379,7 @@ NodeStatus Succeeder::tick(Blackboard& bb) {
 	else if (m_eNodeStatus == BH_SUCCESS) {
 		m_eNodeStatus = BH_SUCCESS;
 	}
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return m_eNodeStatus;
 }
 
@@ -1370,7 +1398,7 @@ NodeStatus Failer::tick(Blackboard& bb) {
 	else if (m_eNodeStatus == BH_SUCCESS) {
 		m_eNodeStatus = BH_FAILURE;
 	}
-	PUSH_STACK;
+	LOG_CONTROL_NODE;
 	return m_eNodeStatus;
 }
 
@@ -1399,16 +1427,16 @@ NodeStatus Repeat::tick(Blackboard& bb) {
 	for (;;) {
 		m_eNodeStatus = m_pChild->tick(bb);
 		if (m_eNodeStatus == BH_RUNNING) {
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			break;
 		}
 		if (m_eNodeStatus == BH_FAILURE) {
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			return BH_FAILURE;
 		}
 		if (++m_iCounter == m_iLimit) {
 			m_eNodeStatus = BH_SUCCESS;
-			PUSH_STACK;
+			LOG_CONTROL_NODE;
 			return BH_SUCCESS;
 		}
 		m_pChild->reset();
@@ -1443,13 +1471,13 @@ NodeStatus WaitDecorator::tick(Blackboard& bb) {
 		m_waittimeExpired = false;
 		m_ulStartTime = millis();
 		m_eNodeStatus = BH_RUNNING;
-		bb.changedStatusNodes.Push(BH_EMPTY, BH_WAITING, this);
+		LOG_NODE(BH_EMPTY, BH_WAITING, this);
 	}
 
 
 	if ((millis() - m_ulStartTime > m_ulWaitMillis) && (m_waittimeExpired == false)) {
 		m_waittimeExpired = true;
-		bb.changedStatusNodes.Push(BH_WAITING, BH_WAITTIME_EXPIRED, this);
+		LOG_NODE(BH_WAITING, BH_WAITTIME_EXPIRED, this);
 		//debug->printf("millis(): %lu  m_ulStartTime: %lu\r\n",millis(), m_ulStartTime);
 	}
 
@@ -1473,15 +1501,15 @@ void WaitDecorator::abort(Blackboard& bb) {
 		m_pChild->abort(bb);
 
 		if (m_waittimeExpired) {
-			bb.changedStatusNodes.Push(BH_WAITTIME_EXPIRED, BH_ABORTED, this);
+			LOG_NODE(BH_WAITTIME_EXPIRED, BH_ABORTED, this);
 		}
 		else {
-			bb.changedStatusNodes.Push(BH_WAITING, BH_ABORTED, this);
+			LOG_NODE(BH_WAITING, BH_ABORTED, this);
 		}
 
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 
@@ -1515,13 +1543,13 @@ NodeStatus WaitBBTimeDecorator::tick(Blackboard& bb) {
 		m_waittimeExpired = false;
 		m_ulStartTime = millis();
 		m_eNodeStatus = BH_RUNNING;
-		bb.changedStatusNodes.Push(BH_WAITING, BH_WAITING, this);
+		LOG_NODE(BH_WAITING, BH_WAITING, this);
 	}
 
 
 	if ((millis() - m_ulStartTime > (*m_ulpWaitMillis)) && (m_waittimeExpired == false)) {
 		m_waittimeExpired = true;
-		bb.changedStatusNodes.Push(BH_WAITING, BH_WAITTIME_EXPIRED, this);
+		LOG_NODE(BH_WAITING, BH_WAITTIME_EXPIRED, this);
 		//debug->printf("millis(): %lu  m_ulStartTime: %lu\r\n",millis(), m_ulStartTime);
 	}
 
@@ -1544,15 +1572,15 @@ void WaitBBTimeDecorator::abort(Blackboard& bb) {
 		m_pChild->abort(bb);
 
 		if (m_waittimeExpired) {
-			bb.changedStatusNodes.Push(BH_WAITTIME_EXPIRED, BH_ABORTED, this);
+			LOG_NODE(BH_WAITTIME_EXPIRED, BH_ABORTED, this);
 		}
 		else {
-			bb.changedStatusNodes.Push(BH_WAITING, BH_ABORTED, this);
+			LOG_NODE(BH_WAITING, BH_ABORTED, this);
 		}
 
 	}
 	m_eNodeStatus = BH_ABORTED;
-	PUSH_STACK_ABORT;
+	LOG_CONTROL_NODE_ABORT;
 }
 // ============================================================================
 //  BehaviourTree
@@ -1578,40 +1606,14 @@ NodeStatus BehaviourTree::tick(Blackboard& bb) {
 
 	DTREE(errorHandler.setInfoNoLog(F("** TREE BEGIN **\r\n")););
 
-	bb.changedStatusNodes.Clear();
 
 	// run the tree
 	m_eNodeStatus = root->tick(bb);
 
-	if (flagLogChangedNode) {
-		groupIdx++;
-		/*
-		if (groupIdx > 9) {
-			groupIdx = 0;
-		}
-		*/
-		int size = bb.changedStatusNodes.GetSize();
-		//errorHandler.setInfoNoLog(F("size: %d\r\n"), size);
+	groupIdx++;
 
-		for (int i = 0; i < size; i++) {
-			NodeStackItem n = bb.changedStatusNodes.Get(i);
-			if (n.node != NULL) {
-				sprintf(errorHandler.msg, "%3d %-20s\t%s -> %s\r\n", groupIdx, n.node->m_nodeName, enumNodeStatusStrings[n.previousStatus], enumNodeStatusStrings[n.newStatus]);
-				if (bb.flagBHTShowChanges) {
-					errorHandler.setInfo();
-				}
-				else {
-					errorHandler.writeToLogOnly();
-				}
-			}
-			else {
-				errorHandler.setInfoNoLog(F("******************\r\n"));
-				errorHandler.setInfoNoLog(F("** NODE IS NULL **\r\n"));
-				errorHandler.setInfoNoLog(F("******************\r\n"));
-			}
-
-		}
-
+	if (groupIdx > 9999) {
+		groupIdx = 0;
 	}
 	return m_eNodeStatus;
 }
