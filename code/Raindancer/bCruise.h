@@ -253,7 +253,7 @@ public:
 			bb.driveDirection = DD_FORWARD;
 			//errorHandler.setInfo("!03,TCruiseStopped SUCCESS\r\n" );
 #if CONF_DISABLE_CHARGINGSTATION == true
-			errorHandler.setError("BAT LOW\r\n");
+			errorHandler.setError(F("BAT LOW\r\n"));
 #endif
 
 			return BH_SUCCESS;
