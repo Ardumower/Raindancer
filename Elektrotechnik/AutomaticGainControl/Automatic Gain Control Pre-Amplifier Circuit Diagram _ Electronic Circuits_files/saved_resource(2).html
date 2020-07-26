@@ -1,0 +1,53 @@
+
+<!-- saved from url=(0107)http://www.electronicecircuits.com/electronic-circuits/automatic-gain-control-pre-amplifier-circuit-diagram -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script id="spHTMLFormElementPrototypeScript">(function()
+  {
+    try
+    {
+      var sp_old_HTMLFormElementPrototype_submit = HTMLFormElement.prototype.submit;
+      HTMLFormElement.prototype.submit = function(AEvent)
+      {
+        try
+        {
+          var spEvent = document.createEvent('Event');
+          spEvent.initEvent('sp_submit', true, true);
+          this.dispatchEvent(spEvent);
+        }
+        catch(ErrorMessage)
+        {
+          console.error('spFormElementPrototype() Error sending "sp_submit" event from HTMLFormElement.prototype.submit: ' + ErrorMessage);
+        }
+        sp_old_HTMLFormElementPrototype_submit.apply(this);
+      };
+    }
+    catch(ErrorMessage)
+    {
+      console.error('spFormElementPrototype() Error attaching to HTMLFormElement.prototype.submit: ' + ErrorMessage);
+    }
+
+    try
+    {
+      if (typeof __doPostBack == 'function')
+      {
+        var sp_old__doPostBack = __doPostBack;
+        __doPostBack = function(eventTarget, eventArgument)
+        {
+          try
+          {
+            var spEvent = document.createEvent('Event');
+            spEvent.initEvent('sp_submit', true, true);
+            window.dispatchEvent(spEvent);
+          }
+          catch(ErrorMessage)
+          {
+            console.error('spFormElementPrototype() Error sending "sp_submit" event from __doPostBack(): ' + ErrorMessage);
+          }
+          sp_old__doPostBack(eventTarget, eventArgument);
+        };      
+      }
+    }
+    catch(ErrorMessage)
+    {
+      console.error('spFormElementPrototype() Error attaching to __doPostBack(): ' + ErrorMessage);
+    }
+  })();</script></head><body onload="var js=document.createElement(&#39;script&#39;);js.src=&#39;https://connect.facebook.net/en_US/all.js?hash=9908824a274253e7cf7bbd72d814e42b&amp;ua=modern_es6&#39;;document.body.appendChild(js);"><script src="./all.js(1).Download"></script></body></html>

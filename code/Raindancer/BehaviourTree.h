@@ -221,6 +221,7 @@ class CompNodeService {
 		Updates last_run
 		NOTE: This MUST be called if extending
 		this class and implementing run() method
+		MORE IMPORTANT:
 		Will in comopsit nodes automatically be called.
 		There is no need to call this in the classes derivited
 		from CompNodeService.

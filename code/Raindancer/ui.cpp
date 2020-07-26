@@ -1377,6 +1377,7 @@ void cmd_showHistory(int arg_cnt, char **args)
     for (int x = 0; x < HISTROY_BUFSIZE; x++)
     {
       errorHandler.setInfoNoLog(F("============================\r\n"));
+      errorHandler.setInfoNoLog(F("!05,Idx:             %d \r\n"), x);
       errorHandler.setInfoNoLog(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[myBlackboard.history[x].driveDirection]);
       errorHandler.setInfoNoLog(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[myBlackboard.history[x].coilFirstOutside]);
       errorHandler.setInfoNoLog(F("!05,rotAngleSoll     %f\r\n"), myBlackboard.history[x].rotAngleSoll);

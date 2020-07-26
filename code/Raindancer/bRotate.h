@@ -371,6 +371,10 @@ private:
 
 	int angleCounter;
 
+	enuDriveDirection lastRotateDirection;
+
+
+
 public:
 
 
@@ -378,37 +382,39 @@ public:
 		isArcNotInitialised = true;
 		angleCounter = 0;
 		state = 0;
+		lastRotateDirection = DD_ROTATECW;
 	}
 
 	virtual void onInitialize(Blackboard& bb) {}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		float distance1, distance2;
-		bool result;
+		//float distance1, distance2, distance3;
+		//int8_t result;
 
 		bb.flagDeactivateRotInside = false;
 
 		// Dertermine Drive Direction
 		if (bb.flagCoilFirstOutside == CO_BOTH) { // Beide Coils waren gleichzeitig draussen
-			if (bb.history[0].driveDirection == DD_ROTATECW) { // NOCH KORRIGIEREN KAnn niemals auftreten
-				bb.driveDirection = DD_ROTATECC;
-				bb.flagForceRotateDirection = FRD_CC;
-				if (bb.flagShowRotateX) {
-					errorHandler.setInfo(F("!05,CO_BOTH => FRD_CC;\r\n"));
-				}
-			}
-			else {
+			if (lastRotateDirection == DD_ROTATECW) { // NOCH KORRIGIEREN KAnn niemals auftreten
 				bb.driveDirection = DD_ROTATECW;
 				bb.flagForceRotateDirection = FRD_CW;
 				if (bb.flagShowRotateX) {
 					errorHandler.setInfo(F("!05,CO_BOTH => FRD_CW;\r\n"));
 				}
 			}
+			else {
+				bb.driveDirection = DD_ROTATECC;
+				bb.flagForceRotateDirection = FRD_CC;
+				if (bb.flagShowRotateX) {
+					errorHandler.setInfo(F("!05,CO_BOTH => FRD_CC;\r\n"));
+				}
+			}
 		}
 		else if (bb.flagCoilFirstOutside == CO_LEFT) {
 			bb.flagForceRotateDirection = FRD_CW;
 			bb.driveDirection = DD_ROTATECW;
+			lastRotateDirection = DD_ROTATECW;
 			if (bb.flagShowRotateX) {
 				errorHandler.setInfo(F("!05,CO_LEFT => FRD_CW;\r\n"));
 			}
@@ -416,6 +422,7 @@ public:
 		else { // if ( bb.flagCoilFirstOutside == CO_RIGHT) {
 			bb.flagForceRotateDirection = FRD_CC;
 			bb.driveDirection = DD_ROTATECC;
+			lastRotateDirection = DD_ROTATECC;
 			if (bb.flagShowRotateX) {
 				errorHandler.setInfo(F("!05,CO_RIGHT => FRD_CC;\r\n"));
 			}
@@ -448,23 +455,34 @@ public:
 			state0Count++;
 
 			// calcualte default angle
-			bb.arcRotateXArc = myRandom(5, 80) + CONF_PER_CORRECTION_ANGLE;
-			if (bb.flagShowRotateX) {
-				errorHandler.setInfo(F("!05,S0: 5-80: %ld\r\n"), bb.arcRotateXArc);
+			if (bb.flagCoilOutsideAfterOverrun == CO_BOTH) {
+				bb.arcRotateXArc = myRandom(70, 105) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S0: 70-105: %ld\r\n"), bb.arcRotateXArc);
+			}
+			else {
+				bb.arcRotateXArc = myRandom(30, 70) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 30-70: %ld\r\n"), bb.arcRotateXArc);
 			}
 
 
-			// Check for short way and override the above angel if two times short way or no two forawards found 
-			result = bb.histGetTwoLastForwardDistances(distance1, distance2);
+			if (bb.flagShowRotateX) {
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 30-70: %ld\r\n"), bb.arcRotateXArc);
+			}
 
-			if (result) {
-				if (distance1 < 150 && distance2 < 150) {
-					bb.arcRotateXArc = myRandom(20, 50) + CONF_PER_CORRECTION_ANGLE;
+			/*
+			// Check for short way and override the above angel if two times short way or no two forawards found 
+			result = bb.histGetThreeLastForwardDistances(distance1, distance2, distance3);
+
+			if (result==3) {
+				if (distance1 < 100 && distance2 < 100 && distance3 < 100) {
+					bb.arcRotateXArc = myRandom(90, 130) + CONF_PER_CORRECTION_ANGLE;
 					if (bb.flagShowRotateX) {
 						errorHandler.setInfo(F("!5,override result=true S0:20-50: %ld\r\n"), bb.arcRotateXArc);
 					}
 				}
-			}/*
+			}
+			*/
+			/*
 			else { // also if result == false use small angel
 				bb.arcRotateXArc = myRandom(20, 50) + CONF_PER_CORRECTION_ANGLE;
 				if (bb.flagShowRotateX) {
@@ -478,28 +496,62 @@ public:
 				state = 1;
 			}
 
+
+			//  Forward
+			if (bb.history[0].driveDirection == DD_FORWARD && bb.history[2].driveDirection == DD_FORWARD
+				&& bb.history[0].distanceDriven < 60 && bb.history[2].distanceDriven < 60 && bb.history[4].distanceDriven < 60
+				&& bb.history[1].coilFirstOutside != bb.history[3].coilFirstOutside) {
+
+				bb.arcRotateXArc = 120;
+				
+				if (bb.history[1].driveDirection == DD_ROTATECW) {
+					bb.flagForceRotateDirection = FRD_CW;
+					bb.driveDirection = DD_ROTATECW;
+					lastRotateDirection = DD_ROTATECW;
+				}
+				else {
+					bb.flagForceRotateDirection = FRD_CC;
+					bb.driveDirection = DD_ROTATECC;
+					lastRotateDirection = DD_ROTATECC;
+				}
+				errorHandler.setInfo(F("!05,arcRotateXArcc FORCE 180: %ld\r\n"), bb.arcRotateXArc);
+			}
+
+
 			break; //case 0
 
 		case 1:
 			state1Count++;
 
+						
+			if (bb.flagCoilOutsideAfterOverrun == CO_BOTH) {
+				bb.arcRotateXArc = myRandom(160, 190) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S1: 160-190: %ld\r\n"), bb.arcRotateXArc);
+			}
+			else {
+				bb.arcRotateXArc = myRandom(90, 170) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 90-170: %ld\r\n"), bb.arcRotateXArc);
+			}
 
-			bb.arcRotateXArc = myRandom(60, 110) + CONF_PER_CORRECTION_ANGLE;
 			if (bb.flagShowRotateX) {
 				errorHandler.setInfo(F("!05,s1:60-110: %ld\r\n"), bb.arcRotateXArc);
 			}
 
+
+			/*
 			// Check for short way and override the above angel
-			result = bb.histGetTwoLastForwardDistances(distance1, distance2);
+			result = bb.histGetThreeLastForwardDistances(distance1, distance2);
 
 			if (result) {
-				if (distance1 < 150 && distance2 < 150) {
-					bb.arcRotateXArc = myRandom(20, 50) + CONF_PER_CORRECTION_ANGLE;
+				if (distance1 < 100 && distance2 < 100 && distance3 < 100) {
+					bb.arcRotateXArc = myRandom(90, 130) + CONF_PER_CORRECTION_ANGLE;
 					if (bb.flagShowRotateX) {
 						errorHandler.setInfo(F("!5,override result = true S1:20-50: %ld\r\n"), bb.arcRotateXArc);
 					}
 				}
-			}/*
+			}
+			*/
+			/*
 			else {
 				{ // also if result == false use small angel
 					bb.arcRotateXArc = myRandom(20, 50) + CONF_PER_CORRECTION_ANGLE;
@@ -507,6 +559,18 @@ public:
 						errorHandler.setInfo(F("!5,override result=false S1:20-50: %ld\r\n"), bb.arcRotateXArc);
 					}
 			}*/
+
+
+			
+			//  Forward
+			if (bb.history[0].driveDirection== DD_FORWARD && bb.history[2].driveDirection == DD_FORWARD 
+				&& bb.history[0].distanceDriven < 60 && bb.history[2].distanceDriven < 60 && bb.history[4].distanceDriven < 60 
+				&& bb.history[1].coilFirstOutside != bb.history[3].coilFirstOutside) {
+				bb.arcRotateXArc = 120;
+				errorHandler.setInfo(F("!05,arcRotateXArcc FORCE 180: %ld\r\n"), bb.arcRotateXArc);
+			}
+
+
 
 			// Transition
 			if (state1Count >= state1CountMax) {
@@ -536,7 +600,6 @@ public:
 	}
 
 };
-
 
 class TRotateBothCoilsInside
 	: public Action

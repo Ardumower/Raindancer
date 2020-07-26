@@ -180,7 +180,7 @@ public:
 		bb.motor.stopPCAtPerimeter();
 		bb.driveDirection = DD_OVERRUN;
 
-		bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, bb.flagCoilFirstOutside);
+		//bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, bb.flagCoilFirstOutside);
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
@@ -198,7 +198,7 @@ public:
 			bb.motor.stopDistanceMeasurementRCoilOut();
 		}
 
-		bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
+		//bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
 
 		if (bb.motor.isPositionReached()) {
 
@@ -206,7 +206,7 @@ public:
 			//float drivenDistance = bb.motor.getDistanceInCMForOverRun();
 			//errorHandler.setInfoNoLog(F("drivenDistance: %f\r\n"), drivenDistance);
 
-/*
+
 			if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightOutside()) {
 				//bb.driveDirection =  DD_FORWARD;
 				//return BH_FAILURE;
@@ -219,7 +219,7 @@ public:
 			else if (bb.perimeterSensoren.isRightOutside()) {
 				bb.flagCoilOutsideAfterOverrun = CO_RIGHT;
 			}
-			*/
+			
 
 
 			if (CONF_USE_ZONE_RECOGNITION == false) { // When useing zone recognition, don't drive further.
@@ -397,8 +397,7 @@ public:
 };
 
 
-class TPerDriveBack : public Action
-{
+class TPerDriveBack : public Action {
 private:
 	long weg;
 public:
@@ -407,6 +406,11 @@ public:
 
 	virtual void onInitialize(Blackboard& bb) {
 
+		bb.cruiseSpeed = bb.CRUISE_SPEED_MEDIUM;
+		bb.motor.rotateCM(-CONF_PERIMETER_DRIVE_BACK_CM, bb.cruiseSpeed); // x cm zurueckfahren
+		bb.driveDirection = DD_REVERSE_ESC_OBST; ; // DD_REVERSE_INSIDE;
+
+		/*
 		// if 0 cm then do nothing
 		if (CONF_PERIMETER_DRIVE_BACK_CM < 0.1f) {
 			return;
@@ -441,41 +445,52 @@ public:
 
 
 		//bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, bb.flagCoilFirstOutside);
-
+		*/
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
-		if (getTimeInNode() > 8000) {
-			errorHandler.setError(F("!03,TPerDriveBack too long in state\r\n"));
-		}
 
-		//bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
 
-		// if 0 cm then do nothing
-		if (CONF_PERIMETER_DRIVE_BACK_CM < 0.1f) {
+		/*
+		if (getTimeInNode() > 2000) {
 			return BH_SUCCESS;
-		}
-
-		if (bb.coilsOutsideAngle > CONF_PERIMETER_DRIVE_BACK_ANGLE) {
-			return BH_SUCCESS;
-		}
+		}*/
 
 		if (bb.motor.isPositionReached()) {
 			return BH_SUCCESS;
 		}
 
-		return BH_RUNNING;
-	}
-
-	virtual void onTerminate(NodeStatus status, Blackboard& bb) {
-		/*
-		if(status != BH_ABORTED) {
-
+		if (getTimeInNode() > 8000) {
+			errorHandler.setError(F("!03,TPerDriveBack too long in state\r\n"));
 		}
+
+		return BH_RUNNING;
+
+		/*
+				if (getTimeInNode() > 8000) {
+					errorHandler.setError(F("!03,TPerDriveBack too long in state\r\n"));
+				}
+
+				//bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
+
+				// if 0 cm then do nothing
+				if (CONF_PERIMETER_DRIVE_BACK_CM < 0.1f) {
+					return BH_SUCCESS;
+				}
+
+				if (bb.coilsOutsideAngle > CONF_PERIMETER_DRIVE_BACK_ANGLE) {
+					return BH_SUCCESS;
+				}
+
+				if (bb.motor.isPositionReached()) {
+					return BH_SUCCESS;
+				}
+
+				return BH_RUNNING;
 		*/
 	}
-
 };
+
 
 class TMotorStop : public Action
 {

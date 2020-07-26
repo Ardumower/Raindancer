@@ -326,7 +326,7 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_CMD_ENABLE_CONSOLE_FEEDBACK false   // Send back received serial characters on debug interface
 
 
-#define CONF_PER_CORRECTION_ANGLE     5     // TRotateBothCoilsInside rotates both coils inside. This angle must be rotated further to stand parallel to the perimeter wire. 
+#define CONF_PER_CORRECTION_ANGLE     0     // TRotateBothCoilsInside rotates both coils inside. This angle must be rotated further to stand parallel to the perimeter wire. 
 // Depends on the chassis construction
 #define CONF_PER_USE_COUNTER_THRESHOLD  200     // If the perimeter magnitude is below this value, use signalCounterL/R to evaluate signal otherwise use magnetude of perimetersignal.
 // This is to make the signal more robust when robot is in the middle of the lawn.
@@ -338,7 +338,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DRIVE_MAX_CM       10000.0f // 10000cm = 100m  When starting from perimeter or obstaclw the robot drives not more than this distance.
 #define CONF_DRIVE_OVER_PERIMETER_CM  20.0f    // Overrun the perimeter by 20cm   
-#define CONF_PERIMETER_DRIVE_BACK_CM    10.0f    // After Perimeter overrun drive back x cm
+#define CONF_PERIMETER_DRIVE_BACK_CM    50.0f    // After Perimeter overrun drive back x cm
 #define CONF_PERIMETER_DRIVE_BACK_ANGLE 30.0f    // Only drive back if overrun angle is smaller than this x degree. 0 degree is both coils faces forwared perimeter.
 #define CONF_BUMPER_REVERSE_CM          30.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
 #define CONF_BUMPER_SEC_REVERSE_CM      40.0f    // Driving back this cm in second reverse\reverse2 nodes.
@@ -533,7 +533,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DRIVE_MAX_CM				10000.0f // 10000cm = 100m  When starting from perimeter or obstacle the robot drives not more than this distance.
 #define CONF_DRIVE_OVER_PERIMETER_CM	20.0f    // Overrun the perimeter by 20cm 	
-#define CONF_PERIMETER_DRIVE_BACK_CM    10.0f    // After Perimeter overrun drive back x cm
+#define CONF_PERIMETER_DRIVE_BACK_CM    50.0f    // After Perimeter overrun drive back x cm
 #define CONF_PERIMETER_DRIVE_BACK_ANGLE 30.0f    // Only drive back if overrun angle is smaller than this x degree. 0 degree is both coils faces forwared perimeter.
 #define CONF_BUMPER_REVERSE_CM          30.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
 #define CONF_BUMPER_SEC_REVERSE_CM      40.0f    // Driving back this cm in second reverse\reverse2 nodes.

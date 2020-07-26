@@ -1,0 +1,74 @@
+
+
+document.write(' \
+<style type="text/css" media="screen">\
+	 .dsq-widget ul.dsq-widget-list {\
+	 padding: 0;\
+	 margin: 0;\
+	 text-align: left;\
+	 }\
+	 img.dsq-widget-avatar {\
+	 width: 32px;\
+	 height: 32px;\
+	 border: 0px;\
+	 margin: 0px;\
+	 padding: 0px 3px 3px 0px;\
+	 float: left;\
+	 }\
+	 a.dsq-widget-user {\
+	 font-weight: bold;\
+	 }\
+	 a.dsq-widget-thread {\
+	 font-weight: bold;\
+	 }\
+	 p.dsq-widget-meta {\
+	 clear: both;\
+	 font-size: 80%;\
+	 padding: 0;\
+	 margin: 0;\
+	 }\
+	 li.dsq-widget-item {\
+	 margin: 15px 0;\
+	 list-style-type: none;\
+	 clear: both;\
+	 }\
+	 span.dsq-widget-clout {\
+	 padding: 0 2px;\
+	 background-color: #ff7300;\
+	 color: #fff;\
+	 }\
+	 table.dsq-widget-horiz td {\
+	 padding-right: 15px;\
+	 }\
+	 .dsq-widget-comment p {\
+	 display: inline;\
+	 }\
+	 </style>\
+	 <ul class="dsq-widget-list">\
+	 <li class="dsq-widget-item">\
+	 <a class="dsq-widget-user" href="https://disqus.com/by/miloaustin/">Milo Austin</a>\
+	 <span class="dsq-widget-comment"><p>A very tantalizing radio. However, being an inveterate builder, I consider its appellation of being a "kit" to be a bit of a stretch. Wiring a few external parts to the board does not make it much...</p></span>\
+	 <p class="dsq-widget-meta"><a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit">Meet the Microbitx:&nbsp; A Simple to Build, Yet Challenging All-Band Transceiver Kit</a>&nbsp;&middot;&nbsp;<a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit#comment-4243331195">9 hours ago</a></p>\
+	 </li>\
+	 <li class="dsq-widget-item">\
+	 <a class="dsq-widget-user" href="https://disqus.com/by/raymondramrez/">Raymond Ramírez</a>\
+	 <span class="dsq-widget-comment"><p>This can be a guide for those who prefer the Arduino controller as the translating device, or just read the PS/2 keyboard directly for a new application.</p></span>\
+	 <p class="dsq-widget-meta"><a href="http://www.nutsvolts.com/magazine/article/get-ascii-data-from-ps-2-keyboards">Get ASCII Data from PS-2 Keyboards</a>&nbsp;&middot;&nbsp;<a href="http://www.nutsvolts.com/magazine/article/get-ascii-data-from-ps-2-keyboards#comment-4242504263">1 day ago</a></p>\
+	 </li>\
+	 <li class="dsq-widget-item">\
+	 <a class="dsq-widget-user" href="https://disqus.com/by/californiakayaker/">californiakayaker</a>\
+	 <span class="dsq-widget-comment"><p>Challenging ? This radio might challenge a very new ham. Its very simple and easy to hook up and use. It isn\'t an appliance like a toaster though. You do need to do a little wiring. The boards work...</p></span>\
+	 <p class="dsq-widget-meta"><a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit">Meet the Microbitx:&nbsp; A Simple to Build, Yet Challenging All-Band Transceiver Kit</a>&nbsp;&middot;&nbsp;<a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit#comment-4242104486">1 day ago</a></p>\
+	 </li>\
+	 <li class="dsq-widget-item">\
+	 <a class="dsq-widget-user" href="https://disqus.com/by/californiakayaker/">californiakayaker</a>\
+	 <span class="dsq-widget-comment"><p>I haven\'t had any of these problems. Not even the audio chip failure. I have two, one rev3 and a rev4 . I have expanded and re-aligned it and have replaced software. It has been very helpful in my...</p></span>\
+	 <p class="dsq-widget-meta"><a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit">Meet the Microbitx:&nbsp; A Simple to Build, Yet Challenging All-Band Transceiver Kit</a>&nbsp;&middot;&nbsp;<a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit#comment-4242082478">1 day ago</a></p>\
+	 </li>\
+	 <li class="dsq-widget-item">\
+	 <a class="dsq-widget-user" href="https://disqus.com/by/be_seeing_you/">be_seeing_you</a>\
+	 <span class="dsq-widget-comment"><p>Hey Ken,</p><p>Drop me an email when you get this ready.</p><p>Thanks!</p></span>\
+	 <p class="dsq-widget-meta"><a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit">Meet the Microbitx:&nbsp; A Simple to Build, Yet Challenging All-Band Transceiver Kit</a>&nbsp;&middot;&nbsp;<a href="https://www.nutsvolts.com/magazine/article/meet-the-microbitx-a-simple-to-build-yet-challenging-all-band-transceiver-kit#comment-4241865889">1 day ago</a></p>\
+	 </li>\
+	 </ul>\
+');

@@ -1,0 +1,137 @@
+HTML,
+BODY {
+  font-family: "Arial", san-serif;
+  font-weight: 700;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+IMG {
+  border: none;
+}
+
+#adContent {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding-top: 17px;
+}
+
+.core {
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 4px 8px 0;
+  position: relative;
+  float: left;
+}
+
+.core.rtl {
+  padding: 0 0 8px 4px;
+  float: right;
+}
+
+.core.bottom {
+  padding-bottom: 0;
+}
+
+.core.border {
+  padding-right: 0;
+}
+
+.core.rtl.border {
+  padding-left: 0;
+}
+
+.core A {
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.core-img {
+  overflow: hidden;
+  float: left;
+}
+
+.core-img.rtl {
+  float: right;
+}
+
+.core-img IMG {
+  height: 100%;
+  margin: auto;
+  display: block;
+}
+
+.core-title {
+  text-align:-webkit-match-parent;
+}
+
+.core-title .sponsored {
+  font: 300 12px "Roboto";
+  color: #848484;
+  padding-bottom: 3px;
+  line-height: inherit;
+}
+
+.core-title A {
+  display: block;
+  text-decoration: none;
+}
+
+.core-title A:hover {
+  text-decoration: underline;
+}
+
+.core-body {
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 0 0 8px;
+  line-height: 1.2;
+}
+
+.core-body.rtl {
+  padding: 0 8px 0 0;
+}
+
+.core-ad-pill {
+  white-space: nowrap;
+  display: inline-block;
+  bottom: 10px;
+  position: absolute;
+}
+
+.core.bottom .core-ad-pill {
+  bottom: 0px;
+}
+
+.core-ad-pill .ad-badge {
+  background-color: #b3b3b3;
+  color: #ffffff;
+  font: 500 11px/13px "Roboto";
+  border-radius: 2px;
+  padding: 2px;
+  float: left;
+  margin: 0 4px 0 0;
+}
+
+.core-ad-pill.rtl .ad-badge {
+  float: right;
+  margin: 0 0 0 4px;
+}
+
+.core-ad-pill .url-or-advertiser {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: 300 11px "Roboto";
+  color: #b3b3b3;
+  display: block;
+  vertical-align: middle;
+  text-decoration: none;
+  /* line-height = ad badge font size (13) + top/bottom padding (2*2) = 17px */
+  line-height: 17px;
+  width: auto;
+}

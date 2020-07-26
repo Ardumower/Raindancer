@@ -46,19 +46,29 @@ I have extended it to own needs.
 #ifdef LOG_NODES
 #	define LOG_SAVE_OLD_STATUS NodeStatus oldState = m_eNodeStatus;
 #	define LOG_NODE(o,n, node)  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[o], enumNodeStatusStrings[n]);
-#	define LOG_CONDITION(node)  	if (m_result != oldResult) {\
-							if (m_result == BH_SUCCESS) { \
-								errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_FALSE], enumNodeStatusStrings[BH_TRUE]);\
-							} \
-							else { \
-								errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_TRUE], enumNodeStatusStrings[BH_FALSE]);\
-							}\
-						}
+#	define LOG_CONDITION_DECO(node)  	if (m_result != oldResult) {\
+								if (m_result == BH_SUCCESS) { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_FALSE], enumNodeStatusStrings[BH_TRUE]);\
+								} \
+								else { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_TRUE], enumNodeStatusStrings[BH_FALSE]);\
+								}\
+							}
+#	define LOG_CONDITION(node)     if (m_eNodeStatus != oldState) {\
+								if (m_eNodeStatus == BH_SUCCESS) { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_FALSE], enumNodeStatusStrings[BH_TRUE]);\
+								} \
+								else { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_TRUE], enumNodeStatusStrings[BH_FALSE]);\
+								}\
+							}
+						
 #     define SAVE_OLD_CON_RESULT NodeStatus oldResult = m_result;
 #else
 #	define LOG_SAVE_OLD_STATUS 
 #	define LOG_NODE(o,n, node)
-#	define LOG_CONDITION(node)
+#	define LOG_CONDITION_DECO(node)
+#	define LOG_CONDITION(node) 
 #     define SAVE_OLD_CON_RESULT
 #endif
 
@@ -296,15 +306,11 @@ Condition::~Condition() {
 // This function will be called to run a node.
 NodeStatus Condition::tick(Blackboard& bb) {
 
-	NodeStatus oldState;
-
-	oldState = m_eNodeStatus;
+	LOG_SAVE_OLD_STATUS;
 
 	m_eNodeStatus = onCheckCondition(bb);
 
-	if (m_eNodeStatus != oldState) {
-		LOG_NODE(oldState, m_eNodeStatus, this);
-	}
+	LOG_CONDITION(this);
 
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return m_eNodeStatus;
@@ -1272,7 +1278,7 @@ NodeStatus ConditionDeco::tick(Blackboard& bb) {
 
 	m_result = onCheckCondition(bb);
 
-	LOG_CONDITION(this);
+	LOG_CONDITION_DECO(this);
 
 	if (m_result == BH_SUCCESS) {
 		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> cond returned BH_SUCCESS -> call child->tick %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
@@ -1326,7 +1332,7 @@ NodeStatus ConditionMemDeco::tick(Blackboard& bb) {
 	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> calling condition %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	m_result = onCheckCondition(bb);
 
-	LOG_CONDITION(this);
+	LOG_CONDITION_DECO(this);
 
 	if (m_result == BH_SUCCESS) {
 		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_SUCCESS  -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
@@ -1373,12 +1379,16 @@ Succeeder::Succeeder(Node* child) : DecoratorNode(child) {}
 NodeStatus Succeeder::tick(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	m_eNodeStatus = m_pChild->tick(bb);
+	if (m_eNodeStatus != BH_RUNNING) {
+		m_eNodeStatus = BH_SUCCESS;
+	}
+	/*
 	if (m_eNodeStatus == BH_FAILURE) {
 		m_eNodeStatus = BH_SUCCESS;
 	}
 	else if (m_eNodeStatus == BH_SUCCESS) {
 		m_eNodeStatus = BH_SUCCESS;
-	}
+	}*/
 	LOG_CONTROL_NODE;
 	return m_eNodeStatus;
 }
@@ -1392,12 +1402,16 @@ Failer::Failer(Node* child) : DecoratorNode(child) {}
 NodeStatus Failer::tick(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	m_eNodeStatus = m_pChild->tick(bb);
+	if (m_eNodeStatus != BH_RUNNING) {
+		m_eNodeStatus = BH_FAILURE;
+	}
+	/*
 	if (m_eNodeStatus == BH_FAILURE) {
 		m_eNodeStatus = BH_FAILURE;
 	}
 	else if (m_eNodeStatus == BH_SUCCESS) {
 		m_eNodeStatus = BH_FAILURE;
-	}
+	}*/
 	LOG_CONTROL_NODE;
 	return m_eNodeStatus;
 }

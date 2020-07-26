@@ -154,6 +154,7 @@ public:
 	static const int SHORTWAYCOUNT = 3; //3
 
 
+	enuFlagCoilsOutside flagCoilOutsideAfterOverrun;
 	enuFlagCoilsOutside   flagCoilFirstOutsideLatched;
 	enuFlagCoilsOutside   flagCoilFirstOutside;
 	//enuFlagCoilsOutside   flagCoilOutsideAfterOverrun;
@@ -235,7 +236,7 @@ public:
 	//void addHistoryEntry(THistory &h);
 	void addHistoryEntry(enuDriveDirection _driveDirection, float  _distanceDriven, float _rotAngleSoll, float _rotAngleIst, enuFlagForceRotateDirection _flagForceRotDirection, enuFlagCoilsOutside   _coilFirstOutside);
 	void deleteLastHistoryEntry();
-	bool histGetTwoLastForwardDistances(float& a, float& b);
+	int8_t histGetThreeLastForwardDistances(float& a, float& b, float& c);
 
 
 };

@@ -13,6 +13,9 @@ V1.2.0
   Introduced a Setup function which will be called only once before the tree starts running.
   Logging of changed leafs and control nodes during a tick is now available.
 + The decorator nodes with flags are now changed to ExecuteOnTrue nodes.
++ Changed the behaviour at the perimeter. Now the mower drives back inside and return instead of turning direcly over the perimeter
+  The reason for that is, that the mole dig near the perimeter and mower had therfore problems to rotate because the wheels dig in the ground.
+
 V1.1.0
 + GotoArea Behaviour: TCheck2PerSignal was activated first, before TCheck2CoilSignalAreaX could rotate the mower while starting GotoArea => Changed position of TCheck2CoilSignalAreaX in selCheck2  and mower will always be rotated outside
 with the right coil, before starting GotoArea Behaviour.

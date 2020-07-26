@@ -271,13 +271,15 @@ void Blackboard::deleteLastHistoryEntry() {
 }
 
 
-bool Blackboard::histGetTwoLastForwardDistances(float& a, float& b) {
+int8_t Blackboard::histGetThreeLastForwardDistances(float& a, float& b, float& c) {
 
-	int i, j;
-	bool aFound, bFound;
+	int i, j, h;
+	bool aFound, bFound, cFound;
 	j = HISTROY_BUFSIZE;
+	h = HISTROY_BUFSIZE;
 	aFound = false;
 	bFound = false;
+	cFound = false;
 
 	for (i = 0; i < HISTROY_BUFSIZE; i++) {
 		if (history[i].driveDirection == DD_FORWARD) {
@@ -292,19 +294,33 @@ bool Blackboard::histGetTwoLastForwardDistances(float& a, float& b) {
 		if (history[j].driveDirection == DD_FORWARD) {
 			b = history[j].distanceDriven;
 			bFound = true;
+			h = j + 1;
+			break;
+		}
+	}
+
+
+	for (; h < HISTROY_BUFSIZE; h++) {
+		if (history[h].driveDirection == DD_FORWARD) {
+			c = history[h].distanceDriven;
+			cFound = true;
 			break;
 		}
 	}
 
 	if (flagShowRotateX) {
-		errorHandler.setInfo(F("!5,histGTLFD result: %d forwDistA: %f forwDistB: %f\r\n"), aFound && bFound, a, b);
+		errorHandler.setInfo(F("!5,histGTLFD result: %d forwDistA: %f forwDistB: %f forwDistC: %f\r\n"), aFound && bFound && cFound, a, b, c);
+	}
+
+	if (aFound && bFound && cFound) {
+		return 3;
 	}
 
 	if (aFound && bFound) {
-		return true;
+		return 2;
 	}
 
-	return false;
+	return 0;
 
 }
 
@@ -325,6 +341,8 @@ void Blackboard::resetBB()
 
 	//errorHandler.setInfo(F("bht->reset disable flagCruiseSpiral\r\n"));
 
+
+	flagCoilOutsideAfterOverrun = CO_NONE;
 	flagCoilFirstOutside = CO_NONE;
 	flagCoilFirstOutsideLatched = CO_NONE;
 	//flagCoilOutsideAfterOverrun  = CO_BOTH;
