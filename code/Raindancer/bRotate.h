@@ -456,8 +456,8 @@ public:
 
 			// calcualte default angle
 			if (bb.flagCoilOutsideAfterOverrun == CO_BOTH) {
-				bb.arcRotateXArc = myRandom(70, 105) + CONF_PER_CORRECTION_ANGLE;
-				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S0: 70-105: %ld\r\n"), bb.arcRotateXArc);
+				bb.arcRotateXArc = myRandom(35, 105) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S0: 35-105: %ld\r\n"), bb.arcRotateXArc);
 			}
 			else {
 				bb.arcRotateXArc = myRandom(30, 70) + CONF_PER_CORRECTION_ANGLE;
