@@ -174,8 +174,8 @@ public:
 
 			bb.hist.distanceDriven = abs(bb.history[0].distanceDriven);
 			if (bb.hist.distanceDriven < CONF_BUMPER_REVERSE_CM) {
-				if (bb.hist.distanceDriven < 5.0f) { // drive 5cm if distance is near 0
-					bb.hist.distanceDriven = -5.0f;
+				if (bb.hist.distanceDriven < 10.0f) { // drive 5cm if distance is near 0
+					bb.hist.distanceDriven = -10.0f;
 				}
 				else {
 					bb.hist.distanceDriven = -bb.hist.distanceDriven;

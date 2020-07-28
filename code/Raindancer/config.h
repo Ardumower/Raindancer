@@ -535,8 +535,8 @@ const char UBLOX_INIT[] PROGMEM =
 #define CONF_DRIVE_OVER_PERIMETER_CM	20.0f    // Overrun the perimeter by 20cm 	
 #define CONF_PERIMETER_DRIVE_BACK_CM    50.0f    // After Perimeter overrun drive back x cm
 #define CONF_PERIMETER_DRIVE_BACK_ANGLE 30.0f    // Only drive back if overrun angle is smaller than this x degree. 0 degree is both coils faces forwared perimeter.
-#define CONF_BUMPER_REVERSE_CM          30.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
-#define CONF_BUMPER_SEC_REVERSE_CM      40.0f    // Driving back this cm in second reverse\reverse2 nodes.
+#define CONF_BUMPER_REVERSE_CM          50.0f    // After driving forward and bumnper activated, drive back this cm to get distance from Obstacle.
+#define CONF_BUMPER_SEC_REVERSE_CM      50.0f    // Driving back this cm in second reverse\reverse2 nodes.
 
 // configure bumper service
 #define CONF_USE_LEFT_BUMPER            false     // left bumper is used

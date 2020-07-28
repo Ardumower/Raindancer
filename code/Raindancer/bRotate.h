@@ -432,7 +432,7 @@ public:
 
 		if (isArcNotInitialised) {
 			state0CountMax = myRandom(9, 23);
-			state1CountMax = myRandom(2, 5);
+			state1CountMax = myRandom(5, 12);
 			state2CountMax = myRandom(2, 5);
 			state0Count = 0;
 			state1Count = 0;
@@ -456,12 +456,12 @@ public:
 
 			// calcualte default angle
 			if (bb.flagCoilOutsideAfterOverrun == CO_BOTH) {
-				bb.arcRotateXArc = myRandom(35, 105) + CONF_PER_CORRECTION_ANGLE;
-				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S0: 35-105: %ld\r\n"), bb.arcRotateXArc);
+				bb.arcRotateXArc = myRandom(35, 115) + CONF_PER_CORRECTION_ANGLE; //108
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S0: 35-115: %ld\r\n"), bb.arcRotateXArc);
 			}
 			else {
-				bb.arcRotateXArc = myRandom(30, 70) + CONF_PER_CORRECTION_ANGLE;
-				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 30-70: %ld\r\n"), bb.arcRotateXArc);
+				bb.arcRotateXArc = myRandom(30, 80) + CONF_PER_CORRECTION_ANGLE; //70
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 30-80: %ld\r\n"), bb.arcRotateXArc);
 			}
 
 
@@ -525,12 +525,12 @@ public:
 
 						
 			if (bb.flagCoilOutsideAfterOverrun == CO_BOTH) {
-				bb.arcRotateXArc = myRandom(160, 190) + CONF_PER_CORRECTION_ANGLE;
-				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S1: 160-190: %ld\r\n"), bb.arcRotateXArc);
+				bb.arcRotateXArc = myRandom(100, 155) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_BOTH S1: 100-155: %ld\r\n"), bb.arcRotateXArc);
 			}
 			else {
-				bb.arcRotateXArc = myRandom(90, 170) + CONF_PER_CORRECTION_ANGLE;
-				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 90-170: %ld\r\n"), bb.arcRotateXArc);
+				bb.arcRotateXArc = myRandom(80, 100) + CONF_PER_CORRECTION_ANGLE;
+				errorHandler.setInfo(F("!05,arcRotateXArcc CO_LR S0: 80-100: %ld\r\n"), bb.arcRotateXArc);
 			}
 
 			if (bb.flagShowRotateX) {

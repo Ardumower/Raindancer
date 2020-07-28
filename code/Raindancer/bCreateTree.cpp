@@ -524,7 +524,7 @@ void TBehaviour::setup() {
 	mseqEscOOPRotCC.addChildren(&conFEO_ROTCC2, &secondReverse2, &setArc90CC, &mseqRotatePer, &setDD_FORWARD);
 	mseqEscOOPRotCW.addChildren(&conFEO_ROTCW2, &secondReverse2, &setArc90CW, &mseqRotatePer, &setDD_FORWARD);
 
-	mseqEscOOPReverse.addChildren(&conFEO_BACKINSIDE, &perDriveBack, &calcAngle, &mseqRotatePer);
+	mseqEscOOPReverse.addChildren(&conFEO_BACKINSIDE, &calcAngle, &mseqRotatePer);
 	//mseqEscOOPReverse.addChildren(&conFEO_BACKINSIDE,&reverseInside,&reverseFurtherInside,&mseqRotatePer);
 	mselEscObstacleOutside.addChildren(&mseqEscOOPReverse, &mseqEscOOPRotCW, &mseqEscOOPRotCC, &conditionFEONotFound);
 
