@@ -34,9 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "errorhandler.h"
 #include "RunningMedian.h"
 
-extern TbatterieSensor batterieSensor;
+extern TbatterieSensor srvBatSensor;
 extern TErrorHandler errorHandler;
-extern TMowClosedLoopControlThread clcM;
+extern TMowClosedLoopControlThread srvClcM;
 
 // Liest MowMotorstrom aus und berechnet die Wattzahl
 // Wenn diese zu hoch ist, wird der MÃ¤hmotor sofort ausgeschaltet.
@@ -105,15 +105,15 @@ public:
 
 		current = (1.0f - accel) * current + accel * sensorCurrent;
 
-		watt = batterieSensor.voltage * current;
+		watt = srvBatSensor.voltage * current;
 
 		checkMowCurrent();
 		checkIfUnderHeavyLoad();
 		checkMotorFault();
 
 		if (showValuesOnConsole && (++count > 10)) {
-			errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f scale %f, motorDisabled %d\r\n"), watt, current, sensorValue, scale, clcM.motorDisabled);
-			//errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f motorDisabled %d ADC %d\r\n"),watt, current, sensorValue, clcM.motorDisabled,adc);
+			errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f scale %f, motorDisabled %d\r\n"), watt, current, sensorValue, scale, srvClcM.motorDisabled);
+			//errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f motorDisabled %d ADC %d\r\n"),watt, current, sensorValue, srvClcM.motorDisabled,adc);
 			count = 0;
 		}
 
@@ -122,7 +122,7 @@ public:
 
 	void checkMotorFault() {
 
-		if (clcM.GetState() != STMM_STOP) { // While motor ist stopping it coud be, that there is a motorfault. mowclosedloopcontrol.cpp handle this in statw STMM_STOP
+		if (srvClcM.GetState() != STMM_STOP) { // While motor ist stopping it coud be, that there is a motorfault. mowclosedloopcontrol.cpp handle this in statw STMM_STOP
 			if (myDiMotorFault == LOW) {
 				myMotorEnable = LOW;
 				errorHandler.setError(F("Motor %c  fault\r\n"), 'M');
@@ -141,15 +141,15 @@ public:
 		else {
 			motorMowSenseCounter = 0;
 			if (millis() >= lastTimeMotorMowStucked + 15000) { // wait 30 seconds before switching on again
-				clcM.motorDisabled = false;
+				srvClcM.motorDisabled = false;
 			}
 		}
 
 		if (motorMowSenseCounter >= 30) { //ignore motorMowPower for 3 seconds
-			if (clcM.motorDisabled == false) { //Show message only once
+			if (srvClcM.motorDisabled == false) { //Show message only once
 				errorHandler.setInfo(F("!03,Mow MotorDisabled: current high\r\n"));
 			}
-			clcM.motorDisabled = true;
+			srvClcM.motorDisabled = true;
 			lastTimeMotorMowStucked = millis();
 		}
 	}

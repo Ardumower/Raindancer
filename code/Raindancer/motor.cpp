@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // perimeter only used for motorPerOverrunTest
 #include "perimeter.h"
-extern TPerimeterThread perimeterSensoren;
+extern TPerimeterThread srvPerSensoren;
 
 
 //#define ENCODER_TEST 1   // use this to verify that your encoders are working
@@ -35,8 +35,7 @@ extern TPerimeterThread perimeterSensoren;
 Klassenfunktionen.
 ********************************************************************************************/
 
-void TMotorInterface::setup(TMowClosedLoopControlThread *_M, TClosedLoopControlThread *_LEFT, TClosedLoopControlThread *_R, TPositionControl *_pcL, TPositionControl *_pcR)
-{
+void TMotorInterface::setup(TMowClosedLoopControlThread* _M, TClosedLoopControlThread* _LEFT, TClosedLoopControlThread* _R, TPositionControl* _pcL, TPositionControl* _pcR) {
 	L = _LEFT;
 	R = _R;
 	pcL = _pcL;
@@ -49,13 +48,12 @@ void TMotorInterface::setup(TMowClosedLoopControlThread *_M, TClosedLoopControlT
 	flagMotorPFSB = false;
 	flagMotorPerOverrun = false;
 	lastrunTest = 0;
-	stateTest= 0;
+	stateTest = 0;
 
 }
 
 
-void TMotorInterface::run()
-{
+void TMotorInterface::run() {
 	// Wird alle 100ms aufgerufen
 	runned();
 	/*
@@ -67,10 +65,10 @@ void TMotorInterface::run()
 
 
 	// Test functions start
-    if (flagMotorStepSpeed) {
+	if (flagMotorStepSpeed) {
 		motorStepSpeed();
-	} 
-    else if (flagMotorFSB) {
+	}
+	else if (flagMotorFSB) {
 		testForwardStopBackward();
 	}
 	else if (flagMotorPFSB) {
@@ -82,15 +80,13 @@ void TMotorInterface::run()
 }
 
 
-void TMotorInterface::stopAllMotors()
-{
+void TMotorInterface::stopAllMotors() {
 	//stopPositioning();
 	stopCLC();
 	mowMotStop();
 }
 
-void TMotorInterface::hardStop()
-{
+void TMotorInterface::hardStop() {
 	stopCLC();
 	/*
 	L->hardStop();
@@ -100,8 +96,7 @@ void TMotorInterface::hardStop()
 	*/
 }
 
-void TMotorInterface::stopCLC()
-{
+void TMotorInterface::stopCLC() {
 	L->stop();
 	R->stop();
 	pcL->reset();
@@ -109,37 +104,31 @@ void TMotorInterface::stopCLC()
 }
 
 
-void TMotorInterface::stopPC()
-{
+void TMotorInterface::stopPC() {
 	pcL->stop();
 	pcR->stop();
 }
 
 
-void TMotorInterface::stopPCAtPerimeter()
-{
+void TMotorInterface::stopPCAtPerimeter() {
 	pcL->stopAtPerimeter();
 	pcR->stopAtPerimeter();
 }
 
-void TMotorInterface::mowMotStart()
-{
+void TMotorInterface::mowMotStart() {
 	M->forward();
 }
 
-void TMotorInterface::mowMotStop()
-{
+void TMotorInterface::mowMotStop() {
 	M->stop();
 }
 
-bool TMotorInterface::isMowMotRunning()
-{
+bool TMotorInterface::isMowMotRunning() {
 	return M->isRunning();
 }
 
 
-void TMotorInterface::setSpeedCLC(long  speed)
-{
+void TMotorInterface::setSpeedCLC(long  speed) {
 	L->setSpeed(speed);
 	R->setSpeed(speed);
 }
@@ -150,22 +139,19 @@ void TMotorInterface::changeSpeedPC(long  speed) //-100% to +100%
 	pcR->changeSpeed(speed);
 }
 
-void TMotorInterface::enableDefaultRamping()
-{
+void TMotorInterface::enableDefaultRamping() {
 	L->enableDefaultRamping();
 	R->enableDefaultRamping();
 }
 
 
 
-void TMotorInterface::enablePerTrackRamping()
-{
+void TMotorInterface::enablePerTrackRamping() {
 	L->enablePerTrackRamping();
 	R->enablePerTrackRamping();
 }
 
-void TMotorInterface::enableFastStopRamping()
-{
+void TMotorInterface::enableFastStopRamping() {
 	L->enableFastStopRamping();
 	R->enableFastStopRamping();
 }
@@ -177,26 +163,22 @@ pcR->stopPositioning();
 }
 */
 
-void TMotorInterface::rotateAngle(float _angle, long _speed)
-{
-	pcL->rotateAngle(_angle, _speed );
+void TMotorInterface::rotateAngle(float _angle, long _speed) {
+	pcL->rotateAngle(_angle, _speed);
 	pcR->rotateAngle(_angle, _speed);
 }
 
-void TMotorInterface::rotateCM(float _cm, long _speed)
-{
+void TMotorInterface::rotateCM(float _cm, long _speed) {
 	pcL->rotateCM(_cm, _speed);
 	pcR->rotateCM(_cm, _speed);
 }
 
-void TMotorInterface::rotateCM(float _cmL, float _cmR, long _speedL, long _speedR )
-{
+void TMotorInterface::rotateCM(float _cmL, float _cmR, long _speedL, long _speedR) {
 	pcL->rotateCM(_cmL, _speedL);
 	pcR->rotateCM(_cmR, _speedR);
 }
 
-void TMotorInterface::turnTo(float _angle, long _speed)
-{
+void TMotorInterface::turnTo(float _angle, long _speed) {
 	//float weg = (_angle * PI * (GETTF(TF_DISTANCE_BETWEEN_WHEELS_CM)/2) ) /180;
 	float weg = (_angle * PI * CONF_DISTANCE_BETWEEN_WHEELS_CM) / 360.0f;
 
@@ -205,67 +187,71 @@ void TMotorInterface::turnTo(float _angle, long _speed)
 
 }
 
-bool  TMotorInterface::isPositionReached()
-{
+bool  TMotorInterface::isPositionReached() {
 	if (pcL->isPositionReached() && pcR->isPositionReached()) {
 		return true;
 	}
 	return false;
 }
 
-bool  TMotorInterface::isCLCStopped()
-{
+bool  TMotorInterface::isCLCStopped() {
 	if (L->isStopped() && R->isStopped()) {
 		return true;
 	}
 	return false;
 }
 
-long TMotorInterface::getCountsForM(float x)
-{
+long TMotorInterface::getCountsForM(float x) {
 	return pcL->getCountsForCM(x * 100);
 }
 
 
-long TMotorInterface::getMForCounts(float x)
-{
+long TMotorInterface::getMForCounts(float x) {
 	return pcL->getCMForCounts(x) / 100;
 }
 
 
-void TMotorInterface::resetEncoderCounter()
-{
+void TMotorInterface::resetEncoderCounter() {
 	L->resetEncoderCounter();
 	R->resetEncoderCounter();;
+}
+
+
+long TMotorInterface::getEncoderTickCountsL() {
+	return L->myEncoder->getTickCounter();
+}
+long TMotorInterface::getEncoderTickCountsR() {
+	return R->myEncoder->getTickCounter();
 }
 
 long encCountsLCoilOut;
 long encCountsRCoilOut;
 unsigned long lastRunDistanceMeasurementCoilOut;
 
-void TMotorInterface::startDistanceMeasurementCoilOut()
-{
+void TMotorInterface::startDistanceMeasurementCoilOut() {
 	//errorHandler.setInfo(F("startDistanceMeasurementCoilOut\r\n"));
 	//if (b) { // Beide coils outside
-		encCountsLCoilOut = L->myEncoder->getTickCounter();
-		encCountsRCoilOut = R->myEncoder->getTickCounter();
-		lastRunDistanceMeasurementCoilOut = millis();
-		coilOutMeasurementRunningL = true;
-		coilOutMeasurementRunningR = true;
-		/*	}
+	encCountsLCoilOut = L->myEncoder->getTickCounter();
+	encCountsRCoilOut = R->myEncoder->getTickCounter();
+	lastRunDistanceMeasurementCoilOut = millis();
+	coilOutMeasurementRunningL = true;
+	coilOutMeasurementRunningR = true;
+	/*	}
 
-	else { // Wenn nur eine coil outside, hohe distanz vorgeben
-		encCountsLCoilOut = pcL->getCountsForCM(100);
-		encCountsRCoilOut = 0;
-		lastRunDistanceMeasurementCoilOut = millis();
-		coilOutMeasurementRunningL = false;
-		coilOutMeasurementRunningR = false;
-	}
-	*/
+else { // Wenn nur eine coil outside, hohe distanz vorgeben
+	encCountsLCoilOut = pcL->getCountsForCM(100);
+	encCountsRCoilOut = 0;
+	lastRunDistanceMeasurementCoilOut = millis();
+	coilOutMeasurementRunningL = false;
+	coilOutMeasurementRunningR = false;
+}
+*/
 }
 
-void TMotorInterface::stopDistanceMeasurementLCoilOut()
-{
+
+
+
+void TMotorInterface::stopDistanceMeasurementLCoilOut() {
 	if (coilOutMeasurementRunningL) {
 		//errorHandler.setInfo(F("STOP L\r\n"));
 		encCountsLCoilOut = L->myEncoder->getTickCounter() - encCountsLCoilOut;
@@ -273,8 +259,7 @@ void TMotorInterface::stopDistanceMeasurementLCoilOut()
 	}
 }
 
-void TMotorInterface::stopDistanceMeasurementRCoilOut()
-{
+void TMotorInterface::stopDistanceMeasurementRCoilOut() {
 	if (coilOutMeasurementRunningR) {
 		//errorHandler.setInfo(F("STOP R\r\n"));
 		encCountsRCoilOut = R->myEncoder->getTickCounter() - encCountsRCoilOut;
@@ -283,11 +268,10 @@ void TMotorInterface::stopDistanceMeasurementRCoilOut()
 }
 
 
-float TMotorInterface::getDistanceDiffInCMForCoilOut()
-{
+float TMotorInterface::getDistanceDiffInCMForCoilOut() {
 	if (coilOutMeasurementRunningL || coilOutMeasurementRunningR) { //Eine Spule nicht drinnen gewesen
 		if (flagShowDistance) {
-			if (millis() - lastRunDistanceMeasurementCoilOut  > 100) {
+			if (millis() - lastRunDistanceMeasurementCoilOut > 100) {
 				lastRunDistanceMeasurementCoilOut = millis();
 				sprintf(errorHandler.msg, "!03,DistCoilOutDiff=100 Coil out L:%d R:%d\r\n", coilOutMeasurementRunningL, coilOutMeasurementRunningR);
 				errorHandler.setInfo();
@@ -303,7 +287,7 @@ float TMotorInterface::getDistanceDiffInCMForCoilOut()
 	//difference = abs(difference);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementCoilOut  > 100) {
+		if (millis() - lastRunDistanceMeasurementCoilOut > 100) {
 			lastRunDistanceMeasurementCoilOut = millis();
 			sprintf(errorHandler.msg, "!03,DistCoilOutDiff CM: %f encCountsDiff %ld\r\n", difference, encCounts);
 			errorHandler.setInfo();
@@ -314,11 +298,10 @@ float TMotorInterface::getDistanceDiffInCMForCoilOut()
 }
 
 
-float TMotorInterface::getDistanceAngleCoilOut()
-{
+float TMotorInterface::getDistanceAngleCoilOut() {
 	if (coilOutMeasurementRunningL || coilOutMeasurementRunningR) {
 		if (flagShowDistance) {
-			if (millis() - lastRunDistanceMeasurementCoilOut  > 100) {
+			if (millis() - lastRunDistanceMeasurementCoilOut > 100) {
 				lastRunDistanceMeasurementCoilOut = millis();
 				sprintf(errorHandler.msg, "!03,DistCoilOutAngle=90 Coil out L:%d R:%d\r\n", coilOutMeasurementRunningL, coilOutMeasurementRunningR);
 				errorHandler.setInfo();
@@ -336,7 +319,7 @@ float TMotorInterface::getDistanceAngleCoilOut()
 	float angle = atan(difference / CONF_DISTANCE_BETWEEN_COILS_CM) * 180 / PI; // 14.0cm Abstand der Spulen
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementCoilAngle  > 100) {
+		if (millis() - lastRunDistanceMeasurementCoilAngle > 100) {
 			lastRunDistanceMeasurementCoilAngle = millis();
 			sprintf(errorHandler.msg, "!03,DistCoilOutAngle: %f encCountsDiff %ld\r\n", angle, encCounts);
 			errorHandler.setInfo();
@@ -347,15 +330,13 @@ float TMotorInterface::getDistanceAngleCoilOut()
 }
 
 
-void TMotorInterface::startDistanceMeasurement()
-{
+void TMotorInterface::startDistanceMeasurement() {
 	encCountsLDistTraveled = L->myEncoder->getTickCounter();
 	encCountsRDistTraveled = R->myEncoder->getTickCounter();
 	lastRunDistanceMeasurementTraveled = millis();
 }
 
-float TMotorInterface::getDistanceInCM()
-{
+float TMotorInterface::getDistanceInCM() {
 	long encCountsL = L->myEncoder->getTickCounter() - encCountsLDistTraveled;
 	long encCountsR = R->myEncoder->getTickCounter() - encCountsRDistTraveled;
 
@@ -369,7 +350,7 @@ float TMotorInterface::getDistanceInCM()
 	//drivenDistance = abs(drivenDistance);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementTraveled  > 100) {
+		if (millis() - lastRunDistanceMeasurementTraveled > 100) {
 			lastRunDistanceMeasurementTraveled = millis();
 			sprintf(errorHandler.msg, "!03,DrivenDistance CM: %f encCounts %ld\r\n", drivenDistance, encCounts);
 			errorHandler.setInfo();
@@ -380,8 +361,7 @@ float TMotorInterface::getDistanceInCM()
 }
 
 
-float TMotorInterface::getAngleRotatedDistanceCM()
-{
+float TMotorInterface::getAngleRotatedDistanceCM() {
 	long encCountsL = L->myEncoder->getTickCounter() - encCountsLDistTraveled;
 	long encCountsR = R->myEncoder->getTickCounter() - encCountsRDistTraveled;
 
@@ -392,7 +372,7 @@ float TMotorInterface::getAngleRotatedDistanceCM()
 	//drivenDistance = abs(drivenDistance);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementTraveled  > 100) {
+		if (millis() - lastRunDistanceMeasurementTraveled > 100) {
 			lastRunDistanceMeasurementTraveled = millis();
 			float _angle = (drivenDistance * 360.f) / (PI * CONF_DISTANCE_BETWEEN_WHEELS_CM);
 			sprintf(errorHandler.msg, "!03,Rotated Angle angle: %f CM: %f encCounts: %ld \r\n", _angle, drivenDistance, encCounts);
@@ -403,8 +383,7 @@ float TMotorInterface::getAngleRotatedDistanceCM()
 	return drivenDistance;
 }
 
-float TMotorInterface::getAngleRotatedAngleDeg()
-{
+float TMotorInterface::getAngleRotatedAngleDeg() {
 	long encCountsL = L->myEncoder->getTickCounter() - encCountsLDistTraveled;
 	long encCountsR = R->myEncoder->getTickCounter() - encCountsRDistTraveled;
 
@@ -414,7 +393,7 @@ float TMotorInterface::getAngleRotatedAngleDeg()
 	float drivenDistance = pcL->getCMForCounts(encCounts);
 	//drivenDistance = abs(drivenDistance);
 	float _angle = (drivenDistance * 360.f) / (PI * CONF_DISTANCE_BETWEEN_WHEELS_CM);
-	
+
 	// set negative if direction was CC
 	if (encCountsL < 0) {
 		_angle = -_angle;
@@ -422,9 +401,9 @@ float TMotorInterface::getAngleRotatedAngleDeg()
 	}
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementTraveled  > 100) {
+		if (millis() - lastRunDistanceMeasurementTraveled > 100) {
 			lastRunDistanceMeasurementTraveled = millis();
-			
+
 			sprintf(errorHandler.msg, "!03,Rotated Angle angle: %f CM: %f encCounts: %ld \r\n", _angle, drivenDistance, encCounts);
 			errorHandler.setInfo();
 		}
@@ -434,15 +413,13 @@ float TMotorInterface::getAngleRotatedAngleDeg()
 }
 
 
-void TMotorInterface::startDistanceMeasurementSpiral()
-{
+void TMotorInterface::startDistanceMeasurementSpiral() {
 	encCountsLSpiral = L->myEncoder->getTickCounter();
 	lastRunDistanceMeasurementSpiral = millis();
 }
 
 
-float TMotorInterface::getDistanceLInCMSpiral()
-{
+float TMotorInterface::getDistanceLInCMSpiral() {
 	long encCounts = L->myEncoder->getTickCounter() - encCountsLSpiral;;
 
 	encCounts = abs(encCounts);
@@ -451,7 +428,7 @@ float TMotorInterface::getDistanceLInCMSpiral()
 	drivenDistance = abs(drivenDistance);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementSpiral  > 100) {
+		if (millis() - lastRunDistanceMeasurementSpiral > 100) {
 			lastRunDistanceMeasurementSpiral = millis();
 			sprintf(errorHandler.msg, "!03,DistSpiralL CM: %f encCounts %ld\r\n", drivenDistance, encCounts);
 			errorHandler.setInfo();
@@ -463,15 +440,13 @@ float TMotorInterface::getDistanceLInCMSpiral()
 
 
 
-void TMotorInterface::startDistanceMeasurementAreax()
-{
+void TMotorInterface::startDistanceMeasurementAreax() {
 	encCountsLAreaX = L->myEncoder->getTickCounter();
 	encCountsRAreaX = R->myEncoder->getTickCounter();
 	lastRunDistanceMeasurementAreaX = millis();
 }
 
-long TMotorInterface::getDistanceInMeterAreax()
-{
+long TMotorInterface::getDistanceInMeterAreax() {
 	long encCountsL = L->myEncoder->getTickCounter() - encCountsLAreaX;
 	long encCountsR = R->myEncoder->getTickCounter() - encCountsRAreaX;
 
@@ -486,7 +461,7 @@ long TMotorInterface::getDistanceInMeterAreax()
 	drivenDistance = abs(drivenDistance);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementAreaX  > 500) {
+		if (millis() - lastRunDistanceMeasurementAreaX > 500) {
 			lastRunDistanceMeasurementAreaX = millis();
 			sprintf(errorHandler.msg, "!03,DistAreax M: %ld encCounts %ld\r\n", drivenDistance, encCounts);
 			errorHandler.setInfo();
@@ -498,15 +473,13 @@ long TMotorInterface::getDistanceInMeterAreax()
 }
 
 
-void TMotorInterface::startDistanceMeasurementOverRun()
-{
+void TMotorInterface::startDistanceMeasurementOverRun() {
 	encCountsLOverRun = L->myEncoder->getTickCounter();
 	encCountsROverRun = R->myEncoder->getTickCounter();
 	lastRunDistanceMeasurementOverRun = millis();
 }
 
-float TMotorInterface::getDistanceInCMForOverRun()
-{
+float TMotorInterface::getDistanceInCMForOverRun() {
 	long encCountsL = L->myEncoder->getTickCounter() - encCountsLOverRun;
 	long encCountsR = R->myEncoder->getTickCounter() - encCountsROverRun;
 
@@ -517,7 +490,7 @@ float TMotorInterface::getDistanceInCMForOverRun()
 	drivenDistance = abs(drivenDistance);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementOverRun  > 100) {
+		if (millis() - lastRunDistanceMeasurementOverRun > 100) {
 			lastRunDistanceMeasurementOverRun = millis();
 			sprintf(errorHandler.msg, "!03,DistOverRun CM: %f encCounts %ld\r\n", drivenDistance, encCounts);
 			errorHandler.setInfo();
@@ -529,15 +502,13 @@ float TMotorInterface::getDistanceInCMForOverRun()
 
 
 
-void TMotorInterface::startDistanceMeasurementTriangle()
-{
+void TMotorInterface::startDistanceMeasurementTriangle() {
 	encCountsLTriangle = L->myEncoder->getTickCounter();
 	encCountsRTriangle = R->myEncoder->getTickCounter();
 	lastRunDistanceMeasurementTriangle = millis();
 }
 
-float TMotorInterface::getDistanceInCMForTriangle()
-{
+float TMotorInterface::getDistanceInCMForTriangle() {
 	long encCountsL = L->myEncoder->getTickCounter() - encCountsLTriangle;
 	long encCountsR = R->myEncoder->getTickCounter() - encCountsRTriangle;
 
@@ -547,7 +518,7 @@ float TMotorInterface::getDistanceInCMForTriangle()
 	float drivenDistance = pcL->getCMForCounts(encCounts);
 
 	if (flagShowDistance) {
-		if (millis() - lastRunDistanceMeasurementOverRun  > 100) {
+		if (millis() - lastRunDistanceMeasurementOverRun > 100) {
 			lastRunDistanceMeasurementOverRun = millis();
 			sprintf(errorHandler.msg, "!03,DistOverRun CM: %f encCounts %ld\r\n", drivenDistance, encCounts);
 			errorHandler.setInfo();
@@ -560,8 +531,7 @@ float TMotorInterface::getDistanceInCMForTriangle()
 
 // Used for tuning the PID values
 // Changes the speed between speedMinTest and speedMaxTest every 4 sec.
-void TMotorInterface::motorStepSpeed()
-{
+void TMotorInterface::motorStepSpeed() {
 
 	if (stateTest == 0) {
 		// Do nothing
@@ -569,7 +539,8 @@ void TMotorInterface::motorStepSpeed()
 	else if (stateTest == 1) { // Start Test
 		stateTest = 3;
 		lastrunTest = millis() - 4001ul; // Next loop don't wait for 4000ms. Go imediatly to state 2
-	} else 	if (stateTest == 99) { // Deactivate Test
+	}
+	else 	if (stateTest == 99) { // Deactivate Test
 		setSpeedCLC(0);
 		L->hardStop();
 		R->hardStop();
@@ -580,7 +551,7 @@ void TMotorInterface::motorStepSpeed()
 
 	if ((millis() - lastrunTest) > 6000) {
 		lastrunTest = millis();
-		
+
 		if (stateTest == 2) {
 			setSpeedCLC(speedMinTest);
 			stateTest = 3;
@@ -594,8 +565,7 @@ void TMotorInterface::motorStepSpeed()
 
 // Used for tuning the rampAccRPM and values
 //Not used anymore
-void TMotorInterface::testForwardStopBackward()
-{
+void TMotorInterface::testForwardStopBackward() {
 	if (stateTest == 0) {
 		// Do nothing
 	}
@@ -663,8 +633,7 @@ void TMotorInterface::testForwardStopBackward()
 
 
 // Fährt vor und zurück nach Position. Test von TPositionControl
-void TMotorInterface::testPosForwardStopBackward()
-{
+void TMotorInterface::testPosForwardStopBackward() {
 	if (stateTest == 0) {
 		// Do nothing
 	}
@@ -701,8 +670,7 @@ void TMotorInterface::testPosForwardStopBackward()
 
 
 
-void TMotorInterface::motorPerOverrunTest()
-{
+void TMotorInterface::motorPerOverrunTest() {
 	if (stateTest == 0) {
 		// Do nothing
 	}
@@ -722,7 +690,7 @@ void TMotorInterface::motorPerOverrunTest()
 		stateTest = 3;
 		break;
 	case 3:
-		if (perimeterSensoren.isLeftOutside() || perimeterSensoren.isRightOutside()) {
+		if (srvPerSensoren.isLeftOutside() || srvPerSensoren.isRightOutside()) {
 			stateTest = 99;
 		}
 		break;
@@ -730,11 +698,10 @@ void TMotorInterface::motorPerOverrunTest()
 	default:
 		break;
 	}
-	
-	
+
+
 }
-void TMotorInterface::showConfig()
-{
+void TMotorInterface::showConfig() {
 	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
 	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
 	errorHandler.setInfoNoLog(F("!03,speedMinTest %f\r\n"), speedMinTest);

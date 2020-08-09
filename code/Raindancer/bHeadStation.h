@@ -12,7 +12,7 @@
 #include "BehaviourTree.h"
 #include "config.h"
 
-class TdriveBackXCS : public Node    // Each task will be a class (derived from Node of course).
+class TdriveBackXCS : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -23,28 +23,18 @@ public:
 	virtual void onInitialize(Blackboard& bb) {
 
 		errorHandler.setInfo(F("!03,TdriveBackXCS called\r\n"));
-		bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
-		bb.motor.rotateCM(-CONF_HEAD_CHARGING_DRIVE_BACK_CM, bb.cruiseSpeed);
-		bb.driveDirection = DD_REVERSE_ESC_OBST;
 
-		bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, CO_NONE);
+
+		THistory hist = bb.getInitialisedHistoryEntry();
+		hist.cruiseSpeed = bb.CRUISE_SPEED_LOW;
+		hist.driveDirection = DD_REVERSE;
+		hist.distanceSoll = -CONF_HEAD_CHARGING_DRIVE_BACK_CM;
+		bb.addHistoryEntry(hist);
+		srvMotor.enableDefaultRamping();
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
-
-		if (getTimeInNode() > 10000) {
-			errorHandler.setError(F("!03,TdriveBackXCS too long in state\r\n"));
-		}
-
-
-		if (bb.motor.isPositionReached()) {
-			errorHandler.setInfo(F("!03,TdriveForwardXCS position reached\r\n"));
-			return BH_SUCCESS;
-		}
-
-		return BH_RUNNING;
+		return BH_SUCCESS;
 
 	}
 
@@ -54,7 +44,34 @@ public:
 };
 
 
-class TdriveForwardXCS : public Node    // Each task will be a class (derived from Node of course).
+class TRrotate90CC : public Action {
+private:
+
+public:
+
+	TRrotate90CC() {
+
+	}
+
+	virtual void onInitialize(Blackboard& bb) {
+
+		errorHandler.setInfo(F("!03,TARrotate90CC called\r\n"));
+		THistory hist = bb.getInitialisedHistoryEntry();
+		hist.cruiseSpeed = bb.CRUISE_SPEED_LOW;
+		hist.driveDirection = DD_ROTATECC;
+		hist.distanceSoll = -90;
+		bb.addHistoryEntry(hist);
+		
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+
+		return BH_SUCCESS;
+
+	}
+};
+
+class TdriveForwardXCS : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
@@ -65,28 +82,17 @@ public:
 	virtual void onInitialize(Blackboard& bb) {
 
 		errorHandler.setInfo(F("!03,TdriveForwardXCS called\r\n"));
-		bb.cruiseSpeed = bb.CRUISE_SPEED_LOW;
-		bb.motor.rotateCM(CONF_HEAD_CHARGING_DRIVE_FORW_CM, bb.cruiseSpeed);
-		bb.driveDirection = DD_REVERSE_ESC_OBST;
+		THistory hist = bb.getInitialisedHistoryEntry();
+		hist.cruiseSpeed = bb.CRUISE_SPEED_LOW;
+		hist.driveDirection = DD_FORWARD;
+		hist.distanceSoll = CONF_HEAD_CHARGING_DRIVE_FORW_CM;
+		bb.addHistoryEntry(hist);
 
-		bb.addHistoryEntry(bb.driveDirection, 0.0f, 0.0f, 0.0f, FRD_NONE, CO_NONE);
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		bb.history[0].distanceDriven = bb.motor.getDistanceInCM();
-
-		if (getTimeInNode() > 10000) {
-			errorHandler.setError(F("!03,TdriveForwardXCS too long in state\r\n"));
-		}
-
-
-		if (bb.motor.isPositionReached()) {
-			errorHandler.setInfo(F("!03,TdriveForwardXCS position reached\r\n"));
-			return BH_SUCCESS;
-		}
-
-		return BH_RUNNING;
+		return BH_SUCCESS;
 
 	}
 
@@ -97,7 +103,7 @@ public:
 
 
 
-class TSetArcHeadStation_ROT : public Node    // Each task will be a class (derived from Node of course).
+class TSetArcHeadStation_ROT : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 public:
@@ -106,21 +112,31 @@ public:
 
 	virtual void onInitialize(Blackboard& bb) {
 
+
+		errorHandler.setInfo(F("!03,TdriveForwardXCS called\r\n"));
+		THistory hist = bb.getInitialisedHistoryEntry();
+		hist.cruiseSpeed = bb.CRUISE_SPEED_LOW;
+
+
 		// select random angle first
 		int i = myRandom(0, 10000);
 		if (i < 5000) {
-			bb.flagForceRotateDirection = FRD_CC;
-			bb.driveDirection = DD_FEOROTATECC;
+			hist.driveDirection = DD_ROTATECC;
+			hist.distanceSoll = -myRandom(0, 50);
+
 		}
 		else {
-			bb.flagForceRotateDirection = FRD_CW;
-			bb.driveDirection = DD_FEOROTATECW;
+			hist.driveDirection = DD_ROTATECW;
+			hist.distanceSoll = myRandom(0, 50);
+
 		}
 
-		bb.arcRotateXArc = myRandom(0, 50);
 		if (bb.flagShowRotateX) {
-			errorHandler.setInfo(F("!05,TSetArcHeadStation_ROT:0-50: %ld\r\n"), bb.arcRotateXArc);
+			errorHandler.setInfo(F("!05,TSetArcHeadStation_ROT:0-50: %ld\r\n"), hist.distanceSoll);
 		}
+
+		bb.addHistoryEntry(hist);
+
 	}
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
@@ -129,6 +145,21 @@ public:
 	}
 
 };
+
+class TsetMowBehaviour : public Action {
+private:
+
+public:
+
+	TsetMowBehaviour() {
+	}
+
+	virtual NodeStatus onUpdate(Blackboard& bb) {
+		bb.setBehaviour(BH_MOW);
+		return BH_SUCCESS;
+	}
+};
+
 
 #endif
 

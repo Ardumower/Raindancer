@@ -42,6 +42,7 @@ public:
      //bber  ----------------------------
     bool isBumperActivatedLeft();
     bool isBumperActivatedRight();
+    bool isBumperDuinoActivated();
     //----------------------------------
 	void showConfig();
 private:

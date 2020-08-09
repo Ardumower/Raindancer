@@ -33,10 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rangeSensor.h"
 #include "bumperSensor.h"
 #include "Blackboard.h"
-#include "behaviour.h"
-#include "bPerimeterTracking.h"
+#include "bCreateTree.h"
 #include "chargeSystem.h"
-#include "bRotate.h"
+
 
 extern unsigned long loopCounter;
 extern unsigned long maxLoopTime;
@@ -46,29 +45,29 @@ extern void executeLoop();
 extern unsigned long lastTimeShowError;
 
 // mow motor closed loop control - no closed loop used
-extern TMowClosedLoopControlThread clcM;
+extern TMowClosedLoopControlThread srvClcM;
 // drive motor left closed loop control
-extern TClosedLoopControlThread clcL;
+extern TClosedLoopControlThread srvClcL;
 // drive motor rigth closed loop control
-extern TClosedLoopControlThread clcR;
+extern TClosedLoopControlThread srvClcR;
 //drive motor left position control
-extern TPositionControl pcL;
+extern TPositionControl srvPcL;
 //drive motor right position control
-extern TPositionControl pcR;
+extern TPositionControl srvPcR;
 // Motorensteuerung Interface. KEIN THREAD. Wird verwendet um clcX und pcX zu steuern.
-extern TMotorInterface motor;
+extern TMotorInterface srvMotor;
 // Daten von Perimetersensoren vom 446RE
-extern TPerimeterThread perimeterSensoren;
+extern TPerimeterThread srvPerSensoren;
 // Messung der Batteriespannung
-extern TbatterieSensor batterieSensor;
+extern TbatterieSensor srvBatSensor;
 // Messung des MÃ¤hmotorstroms
-extern TMowMotorSensor mowMotorSensor;
+extern TMowMotorSensor srvMowMotorSensor;
 // SRF08 Range Sensor Messung der Entfernung
-extern TrangeSensor rangeSensor;
+extern TrangeSensor srvRangeSensor;
 // Bumper Sensor
-extern TbumperSensor bumperSensor;
+extern TbumperSensor srvBumperSensor;
 // Charge System
-extern TchargeSystem chargeSystem;
+extern TchargeSystem srvChargeSystem;
 
 extern Blackboard myBlackboard;
 extern TBehaviour myBehaviour;
@@ -82,10 +81,10 @@ void printSensordata()
 {
 
     if(_printProcessingData) {
-        //errorHandler.setInfoNoLog(F("!01,%lu,%lu, %lu,%.2f,%.2f,%.2f,"),millis(),loopsPerSec, maxLoopTime, clcL.getCurrentSpeedInRPM(),clcR.getCurrentSpeedInRPM(),mowMotorSensor.watt);
-        //errorHandler.setInfoNoLog(F("%d,%d,"),perimeterSensoren.magnetudeL , perimeterSensoren.magnetudeR);
-        //errorHandler.setInfoNoLog(F("%.2f,"),batterieSensor.voltage);
-        //errorHandler.setInfoNoLog(F("%.2f,"),chargeSystem.chargeVoltage*chargeSystem.chargeCurrent);
+        //errorHandler.setInfoNoLog(F("!01,%lu,%lu, %lu,%.2f,%.2f,%.2f,"),millis(),loopsPerSec, maxLoopTime, srvClcL.getCurrentSpeedInRPM(),srvClcR.getCurrentSpeedInRPM(),srvMowMotorSensor.watt);
+        //errorHandler.setInfoNoLog(F("%d,%d,"),srvPerSensoren.magnetudeL , srvPerSensoren.magnetudeR);
+        //errorHandler.setInfoNoLog(F("%.2f,"),srvBatSensor.voltage);
+        //errorHandler.setInfoNoLog(F("%.2f,"),srvChargeSystem.chargeVoltage*srvChargeSystem.chargeCurrent);
         //errorHandler.setInfoNoLog(F("\r\n"));
 //xdes1
         errorHandler.setInfoNoLog(F("$loop,%lu, %lu\r\n"), loopCounter, maxLoopTime);

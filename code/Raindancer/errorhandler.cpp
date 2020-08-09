@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const char errorTxt[] PROGMEM = { "ERROR " };
 const char noErrorTxt[] PROGMEM = { "No Error\r\n" };
 
+extern bool _controlManuel;
 
 TErrorHandler::TErrorHandler()
     {
@@ -165,6 +166,12 @@ void TErrorHandler::setInfo(const __FlashStringHelper *fmt, ...)
 #endif
     va_end(args);
     setInfo();
+
+#if  CONF_ENABLEWATCHDOG ==  true
+    if(_controlManuel){
+      watchdogReset();
+    }
+#endif
     }
 
 void TErrorHandler::setInfoNoLog(const __FlashStringHelper *fmt, ...)
@@ -178,6 +185,12 @@ void TErrorHandler::setInfoNoLog(const __FlashStringHelper *fmt, ...)
 #endif
     va_end(args);
     debug->print((char*)msg);
+
+#if  CONF_ENABLEWATCHDOG ==  true
+    if (_controlManuel) {
+          watchdogReset();
+    }
+#endif
     }
 
 /*

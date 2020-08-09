@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _MOTOR_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+#include "arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 #include "helpers.h"
@@ -34,14 +34,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TMotorInterface : public Thread
-{
+class TMotorInterface : public Thread {
 private:
 
 
 	// Distance measurement for different functions
-	
-	long encCountsLDistTraveled; 
+
+	long encCountsLDistTraveled;
 	long encCountsRDistTraveled;
 	unsigned long lastRunDistanceMeasurementTraveled;
 
@@ -69,13 +68,13 @@ private:
 
 public:
 
-	TClosedLoopControlThread *L;
-	TClosedLoopControlThread *R;
-	TMowClosedLoopControlThread *M;
-	TPositionControl *pcL;
-	TPositionControl *pcR;
+	TClosedLoopControlThread* L;
+	TClosedLoopControlThread* R;
+	TMowClosedLoopControlThread* M;
+	TPositionControl* pcL;
+	TPositionControl* pcR;
 
-	virtual void run(); 
+	virtual void run();
 
 	void stopAllMotors();
 
@@ -112,7 +111,7 @@ public:
 
 
 	void resetEncoderCounter();
-	void startDistanceMeasurementCoilOut(); 
+	void startDistanceMeasurementCoilOut();
 	void stopDistanceMeasurementLCoilOut();
 	void stopDistanceMeasurementRCoilOut();
 	float getDistanceDiffInCMForCoilOut();
@@ -137,11 +136,15 @@ public:
 	void startDistanceMeasurementOverRun();
 	float getDistanceInCMForOverRun();
 
+
+	long getEncoderTickCountsL();
+	long getEncoderTickCountsR();
+
 	bool flagShowDistance; // When GotoAreaX is activated, showing the distance can be switched on with this flag.
 
 	void showConfig();
 
-	void setup(TMowClosedLoopControlThread *_M, TClosedLoopControlThread *_LEFT, TClosedLoopControlThread *_R, TPositionControl *_pcL, TPositionControl *_pcR);
+	void setup(TMowClosedLoopControlThread* _M, TClosedLoopControlThread* _LEFT, TClosedLoopControlThread* _R, TPositionControl* _pcL, TPositionControl* _pcR);
 
 
 	// Variable Functions for testing

@@ -1,0 +1,4 @@
+
+Zonerecognition rausgenommen.
+Es ist passiert, das robbi über draht stand aber nicht rübergefahren ist und die Spulen kurz wieder innen waren.
+Danach wieder draussen woeurch nochmal TOverrun ausgeführt wurde.

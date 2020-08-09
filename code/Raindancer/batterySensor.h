@@ -39,7 +39,7 @@
 #define DIODEDROPVOLTAGE_BS 0.4f
 
 //xdes1
-extern TShutdown shutdown;
+extern TShutdown srvShutdown;
 
 class TbatterieSensor : public Thread
 {
@@ -109,7 +109,7 @@ class TbatterieSensor : public Thread
 
         // Wait 60sec before switch off.
         if (dt > 60000ul) {
-          shutdown.enabled = true;
+          srvShutdown.enabled = true;
         }
       }
       else {

@@ -1,3 +1,23 @@
+V2.0.0
++ Redesigned the behaviour tree
++ At the perimeter the robot drives now back instead of turning directly on the perimeterwire
++ removed zone recognition 
++ removed spiral
+V1.2.0
++ Changed the code of the behavior tree: 
+  Removed stack operation for running nodes. Now the tree recognize by itself, if a running node has to be cancelled. 
+  New classes in BHT: 
+  Instead of Node use: Action, Condition for leafs.
+  Action nodes can now have a condition: ActionCond, ActionMemCond.
+  Now a Conditiondecorator node is availabe: ConditionDeco. 
+  A waittimedecorator which queries the waittime from a variable on the blackboard is now available: WaitBBTimeDecorator.
+  A decisiondecorator which queries a bool flag on the blackboard is now available: ExecuteOnTrue.
+  A second Parallenode is introduces: ParallelUntilFail, Monitor.
+  A filter is introduced, which is derivated from a Sequence : Filter.
+  Introduced  Services which can be connected to Compositnodes: CompNodeService.  
+  Introduced a Setup function which will be called only once before the tree starts running.
+  Logging of changed leafs and control nodes during a tick is now available.
++ The decorator nodes with flags are now changed to ExecuteOnTrue nodes.
 V1.1.1
 Solved Issue #21 Unable to compile when CONF_DISABLE_CHARGINGSTATION is set to false
 V1.1.0

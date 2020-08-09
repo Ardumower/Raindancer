@@ -27,124 +27,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "BehaviourTree.h"
+#include "UseServices.h"
 
 
-class TConBatLow : public Node    // Each task will be a class (derived from Node of course).
-{
-private:
 
-public:
 
-	TConBatLow() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
-			if (bb.batterieSensor.isVoltageLow() || bb.flagGoHome) {
-				sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-				else { errorHandler.writeToLogOnly(); }
-				return BH_SUCCESS;
-			}
-		}
-		return BH_FAILURE;
-	}
-};
-
-class TConRaining : public Node    // Each task will be a class (derived from Node of course).
-{
-private:
-
-public:
-
-	TConRaining() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightInside() && (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW)) {
-			if (bb.rainSensor.isRaining()) {
-				sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-				else { errorHandler.writeToLogOnly(); }
-				return BH_SUCCESS;
-			}
-		}
-		return BH_FAILURE;
-	}
-};
-
-/*
-class TConFEO_BACK180 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_BACK180() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_BACK180) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-*/
-
-/*
-class TConFEO_FWD20 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_FWD20() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_FWD20) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-*/
-
-class TconSecondReverse : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TconSecondReverse() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEnableSecondReverse  == true) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			//errorHandler.setInfo();
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-class TconDriveCurve : public Node    // Each task will be a class (derived from Node of course).
+class TconDriveCurve : public Condition    // Each task will be a class (derived from Condition of course).
 {
 public:
 
 	TconDriveCurve() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
 		if (bb.flagDriveCurve == true) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			//errorHandler.setInfo();
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
@@ -156,16 +54,16 @@ public:
 };
 
 
-class TconRotateAtPer : public Node    // Each task will be a class (derived from Node of course).
+class TconRotateAtPer : public Condition    // Each task will be a class (derived from Condition of course).
 {
 public:
 
 	TconRotateAtPer() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
 		if (bb.flagRotateAtPer == true) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			//errorHandler.setInfo();
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
@@ -177,297 +75,18 @@ public:
 };
 
 
-class TConFEO_ROTCC1 : public Node    // Each task will be a class (derived from Node of course).
+
+
+class TConIsDirectionForward : public Condition    // Each task will be a class (derived from Condition of course).
 {
 public:
 
-	TConFEO_ROTCC1() {}
+	TConIsDirectionForward() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.flagEscabeObstacleConFlag == FEO_ROTCC1) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			//errorHandler.setInfo();
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConFEO_ROTCW1 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_ROTCW1() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_ROTCW1) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			//errorHandler.setInfo();
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-class TConFEO_ROTCC2 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_ROTCC2() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_ROTCC2) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			//errorHandler.setInfo();
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConFEO_ROTCW2 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_ROTCW2() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_ROTCW2) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			//errorHandler.setInfo();
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConFEO_ROT : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_ROT() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_ROT) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			//errorHandler.setInfo();
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConFEO_BACKINSIDE : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConFEO_BACKINSIDE() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.flagEscabeObstacleConFlag == FEO_BACKINSIDE) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-class TConWasDirectionForward : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionForward() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FORWARD || bb.driveDirection == DD_SPIRAL_CW) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-     
-
-class TConWasDirectionFeoRotateCC : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionFeoRotateCC() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FEOROTATECC ) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConWasDirectionFeoRotateCW : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionFeoRotateCW() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FEOROTATECW ) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-class TConWasDirectionFeoRotateCC1 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionFeoRotateCC1() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FEOROTATECC1 || bb.driveDirection == DD_FEOROTATECC2) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConWasDirectionFeoRotateCW1 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionFeoRotateCW1() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FEOROTATECW1 || bb.driveDirection == DD_FEOROTATECW2) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-/*
-class TConWasDirectionForward20 : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionForward20() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FORWARD20) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-*/
-
-class TConWasDirectionForwardInside : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionForwardInside() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_FORWARD_INSIDE) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConWasDirectionReverseObstacle : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionReverseObstacle() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_REVERSE_ESC_OBST) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-
-		return BH_FAILURE;
-	}
-};
-
-
-class TConWasDirectionOverrun : public Node    // Each task will be a class (derived from Node of course).
-{
-public:
-
-	TConWasDirectionOverrun() {}
-
-	virtual NodeStatus onUpdate(Blackboard& bb) {
-
-		if (bb.driveDirection == DD_OVERRUN) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (bb.history0.driveDirection == DD_FORWARD || bb.history0.driveDirection == DD_SPIRAL_CW) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -479,17 +98,16 @@ public:
 
 
 
-
-class TConWasDirectionReverseInside : public Node    // Each task will be a class (derived from Node of course).
+class TconLCO_and_DDCC : public Condition    // Each task will be a class (derived from Condition of course).
 {
 public:
 
-	TConWasDirectionReverseInside() {}
+	TconLCO_and_DDCC() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_REVERSE_INSIDE) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (srvPerSensoren.isLeftOutside() && bb.history0.driveDirection == DD_ROTATECC) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -501,16 +119,16 @@ public:
 
 
 
-class TConWasDirectionRotateCW : public Node    // Each task will be a class (derived from Node of course).
+class TconRCO_and_DDCW : public Condition    // Each task will be a class (derived from Condition of course).
 {
 public:
 
-	TConWasDirectionRotateCW() {}
+	TconRCO_and_DDCW() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_ROTATECW || bb.driveDirection == DD_ROTATECW1) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (srvPerSensoren.isRightOutside() && bb.history0.driveDirection == DD_ROTATECW) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -521,16 +139,16 @@ public:
 };
 
 
-class TConWasDirectionRotateCC : public Node    // Each task will be a class (derived from Node of course).
+class TConIsDirectionRotateCW : public Condition    // Each task will be a class (derived from Condition of course).
 {
 public:
 
-	TConWasDirectionRotateCC() {}
+	TConIsDirectionRotateCW() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_ROTATECC || bb.driveDirection == DD_ROTATECC1) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (bb.history0.driveDirection == DD_ROTATECW) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -541,37 +159,100 @@ public:
 };
 
 
+class TConIsDirectionRotateCC : public Condition    // Each task will be a class (derived from Condition of course).
+{
+public:
 
-class TConPerOutside : public Node    // Each task will be a class (derived from Node of course).
+	TConIsDirectionRotateCC() {}
+
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
+
+		if (bb.history0.driveDirection == DD_ROTATECC) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
+			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+			else { errorHandler.writeToLogOnly(); }
+			return BH_SUCCESS;
+		}
+
+		return BH_FAILURE;
+	}
+};
+
+
+class TConIsDirectionRotateCCorCW : public Condition    // Each task will be a class (derived from Condition of course).
+{
+public:
+
+	TConIsDirectionRotateCCorCW() {}
+
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
+
+		if (bb.history0.driveDirection == DD_ROTATECC || bb.history0.driveDirection == DD_ROTATECW) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
+			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+			else { errorHandler.writeToLogOnly(); }
+			return BH_SUCCESS;
+		}
+
+		return BH_FAILURE;
+	}
+};
+
+
+class TConPerOutside : public Condition    // Each task will be a class (derived from Condition of course).
+{
+private:
+	bool latched;
+public:
+
+	TConPerOutside() : latched(false) {}
+
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
+
+		if (srvPerSensoren.isLeftOutside() || srvPerSensoren.isRightOutside()) {
+			if (latched == false) {
+				sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
+				if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
+				else { errorHandler.writeToLogOnly(); }
+				latched = true;
+			}
+			return BH_SUCCESS;
+		}
+
+		latched = false;
+		return BH_FAILURE;
+	}
+};
+
+
+class TConditionPerimeterNotFound : public Action    // Each task will be a class (derived from Node of course).
 {
 private:
 
 public:
 
-	TConPerOutside() {}
+	TConditionPerimeterNotFound() {}
+
+
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		if (bb.flagCoilFirstOutsideLatched != CO_NONE) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
+
+		// When not useing zone recognition, then TOverRun changes the drivedirection to DD_FORWARD if both coils inside again and the branch is executed until
+		// this node. Therfore this Node will be executed with the driveDirection==DD_Forward.
+		// To prevent setting an error, we have to chech this here..
+		if (bb.history0.driveDirection == DD_FORWARD) {
 			return BH_SUCCESS;
 		}
-		/*
-		if (bb.perimeterSensoren.isLeftOutside() || bb.perimeterSensoren.isRightOutside()) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
-			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
-			else { errorHandler.writeToLogOnly(); }
-			return BH_SUCCESS;
-		}
-		*/
-		return BH_FAILURE;
+		errorHandler.setError(F("!03,TConditionPerimeterNotFound not found %s\r\n"), enuDriveDirectionString[bb.history0.driveDirection]);
+		return BH_SUCCESS;
 	}
+
+
 };
 
 
-class TConBumperActive : public Node    // Condition
+class TConBumperActive : public Condition    // Condition
 {
 private:
 
@@ -579,15 +260,15 @@ public:
 
 	TConBumperActive() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.driveDirection == DD_REVERSE_ESC_OBST) {
+		if (bb.history0.driveDirection == DD_REVERSE) {
 			return BH_FAILURE;
 		}
 
-		if (bb.bumperSensor.isBumperActivated()) {  
-	
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (srvBumperSensor.isBumperActivated()) {
+			
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -599,9 +280,7 @@ public:
 
 
 
-
-
-class TConLeftCoilOutside : public Node    // Each task will be a class (derived from Node of course).
+class TConLeftCoilOutside : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -609,22 +288,24 @@ public:
 
 	TConLeftCoilOutside() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightInside()) {
-			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", nodeName);
+		if (srvPerSensoren.isLeftOutside() && srvPerSensoren.isRightInside()) {
+			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
 		}
-		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", nodeName);
+		/*
+		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", m_nodeName);
 		if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 		else { errorHandler.writeToLogOnly(); }
+		*/
 		return BH_FAILURE;
 	}
 };
 
-class TConRightCoilOutside : public Node    // Each task will be a class (derived from Node of course).
+class TConRightCoilOutside : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -632,23 +313,26 @@ public:
 
 	TConRightCoilOutside() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightOutside()) {
-			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", nodeName);
+		if (srvPerSensoren.isLeftInside() && srvPerSensoren.isRightOutside()) {
+			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
 		}
-		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", nodeName);
+
+		/*
+		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", m_nodeName);
 		if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 		else { errorHandler.writeToLogOnly(); }
+		*/
 		return BH_FAILURE;
 	}
 };
 
 
-class TConBothCoilsOutside : public Node    // Each task will be a class (derived from Node of course).
+class TConBothCoilsOutside : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -656,22 +340,26 @@ public:
 
 	TConBothCoilsOutside() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightOutside()) {
-			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", nodeName);
+		if (srvPerSensoren.isLeftOutside() && srvPerSensoren.isRightOutside()) {
+			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
 		}
-		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", nodeName);
+
+		/*
+		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", m_nodeName);
 		if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 		else { errorHandler.writeToLogOnly(); }
+		*/
+
 		return BH_FAILURE;
 	}
 };
 
-class TConOneCoilOutside : public Node    // Each task will be a class (derived from Node of course).
+class TConOneCoilOutside : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -679,25 +367,28 @@ public:
 
 	TConOneCoilOutside() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if ((bb.perimeterSensoren.isLeftInside() && bb.perimeterSensoren.isRightOutside()) ||
-			(bb.perimeterSensoren.isLeftOutside() && bb.perimeterSensoren.isRightInside())
+		if ((srvPerSensoren.isLeftInside() && srvPerSensoren.isRightOutside()) ||
+			(srvPerSensoren.isLeftOutside() && srvPerSensoren.isRightInside())
 			) {
-			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", nodeName);
+			sprintf(errorHandler.msg, "!03,->%s BH_SUCCESS\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
 		}
-		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", nodeName);
+
+		/*		sprintf(errorHandler.msg, "!03,->%s BH_FAILURE\r\n", m_nodeName);
 		if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 		else { errorHandler.writeToLogOnly(); }
+		*/
+
 		return BH_FAILURE;
 	}
 };
 
 
-class TConInDockingStation : public Node    // Each task will be a class (derived from Node of course).
+class TConInDockingStation : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -705,10 +396,10 @@ public:
 
 	TConInDockingStation() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.chargeSystem.isInChargingStation()) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (srvChargeSystem.isInChargingStation()) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -719,7 +410,7 @@ public:
 };
 
 
-class TConIsOutsidePerimeter : public Node    // Each task will be a class (derived from Node of course).
+class TConIsOutsidePerimeter : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -727,10 +418,10 @@ public:
 
 	TConIsOutsidePerimeter() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.perimeterSensoren.isLeftOutside() || bb.perimeterSensoren.isRightOutside()) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (srvPerSensoren.isLeftOutside() || srvPerSensoren.isRightOutside()) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;
@@ -741,7 +432,7 @@ public:
 };
 
 
-class TconAreaReached : public Node    // Each task will be a class (derived from Node of course).
+class TconAreaReached : public Condition    // Each task will be a class (derived from Condition of course).
 {
 private:
 
@@ -749,10 +440,10 @@ public:
 
 	TconAreaReached() {}
 
-	virtual NodeStatus onUpdate(Blackboard& bb) {
+	virtual NodeStatus onCheckCondition(Blackboard& bb) {
 
-		if (bb.motor.getDistanceInMeterAreax() >= bb.areaTargetDistanceInMeter) {
-			sprintf(errorHandler.msg, "!03,->%s\r\n", nodeName);
+		if (srvMotor.getDistanceInMeterAreax() >= bb.areaTargetDistanceInMeter) {
+			sprintf(errorHandler.msg, "!03,->%s\r\n", m_nodeName);
 			if (bb.flagBHTShowLastNode) { errorHandler.setInfo(); }
 			else { errorHandler.writeToLogOnly(); }
 			return BH_SUCCESS;

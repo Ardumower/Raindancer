@@ -1,8 +1,6 @@
 /*
-Robotic Lawn Mower
-Copyright (c) 2017 by Kai Würtz
-
-
+Behaviour Tree
+Copyright (c) 2019 by Kai Würtz
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,280 +14,582 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 The base of this code comes from https://github.com/aigamedev/btsk
 I have extended it to own needs.
 */
 
 #include "BehaviourTree.h"
+#include "errorhandler.h"
 
 //#define DEBUG_BHT_TREE 1
-//#define DEBUG_BHT_STACK 1
-//#define DEBUG_BHT_ABORT 1
+//#define DEBUG_BHT_SETUP 1
+
+// Action, Condition, WaitDecorator and ParallelUntilFail will be logged
+#define LOG_NODES 1
+
+// Enable LOG_CONTROL_NODES to see how the tree runs. 
+#define LOG_CONTROL_NODES 1
+
 
 #ifdef DEBUG_BHT_TREE
 #  define DTREE(x) x
 #else
-#  define DTREE(x)
+#  define DTREE(x) 
 #endif
 
-#ifdef DEBUG_BHT_STACK
-#  define DSTACK(x) x
+#ifdef DEBUG_BHT_SETUP
+#  define DSETUP(x) x
 #else
-#  define DSTACK(x)
+#  define DSETUP(x) 
 #endif
 
-#ifdef DEBUG_BHT_ABORT
-#  define DABORT(x) x
+#ifdef LOG_NODES
+#	define LOG_SAVE_OLD_STATUS NodeStatus oldState = m_eNodeStatus;
+#	define LOG_NODE(o,n, node)  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[o], enumNodeStatusStrings[n]);
+#	define LOG_CONDITION_DECO(node)  	if (m_result != oldResult) {\
+								if (m_result == BH_SUCCESS) { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_FALSE], enumNodeStatusStrings[BH_TRUE]);\
+								} \
+								else { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_TRUE], enumNodeStatusStrings[BH_FALSE]);\
+								}\
+							}
+#	define LOG_CONDITION(node)     if (m_eNodeStatus != oldState) {\
+								if (m_eNodeStatus == BH_SUCCESS) { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_FALSE], enumNodeStatusStrings[BH_TRUE]);\
+								} \
+								else { \
+									errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, node->m_nodeName, enumNodeStatusStrings[BH_TRUE], enumNodeStatusStrings[BH_FALSE]);\
+								}\
+							}
+						
+#     define SAVE_OLD_CON_RESULT NodeStatus oldResult = m_result;
 #else
-#  define DABORT(x)
+#	define LOG_SAVE_OLD_STATUS 
+#	define LOG_NODE(o,n, node)
+#	define LOG_CONDITION_DECO(node)
+#	define LOG_CONDITION(node) 
+#     define SAVE_OLD_CON_RESULT
 #endif
+
+
+
+#ifdef LOG_CONTROL_NODES
+#	define SAVE_OLD_STATUS NodeStatus oldState = m_eNodeStatus;
+#	define LOG_CONTROL_NODE  if (m_eNodeStatus != oldState) { \
+					errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, this->m_nodeName, enumNodeStatusStrings[oldState], enumNodeStatusStrings[m_eNodeStatus]); \
+				 }
+#	define LOG_CONTROL_NODE_ABORT  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, this->m_nodeName, enumNodeStatusStrings[oldState], enumNodeStatusStrings[m_eNodeStatus]);
+// The message showing try to abort childs is disabled. Because it will also be shown if no child will be aborted.
+//#     define LOG_TRY_ABORT_CHILD  errorHandler.setInfo(F("%4d %-20s\t%s -> %s\r\n"), groupIdx, this->m_nodeName, enumNodeStatusStrings[BH_EMPTY], enumNodeStatusStrings[BH_TRY_TO_ABORT_CHILD]);
+#     define LOG_TRY_ABORT_CHILD
+#else
+#	define SAVE_OLD_STATUS
+#	define LOG_CONTROL_NODE
+#	define LOG_CONTROL_NODE_ABORT
+#     define LOG_TRY_ABORT_CHILD
+#endif
+
+
+
+#ifdef BHT_USE_SERVICES
+#  define RUNSERVICE(b) runService(b);
+#else
+#  define RUNSERVICE(b) 
+#endif
+
+static uint16_t groupIdx = 0;
 
 static int nodeIdCounter = 0;
 
-const char* enumNodeStatusStrings[] = { "BH_FAILURE", "BH_SUCCESS", "BH_RUNNING", "BH_ABORTED", "BH_INVALID","BH_RESET_SUCCSESS","BH_RESET_FAILURE","BH_FREEZ_SUCCSESS","BH_FREEZ_FAILURE" };
+const char* enumNodeStatusStrings[] = { "BH_FAILURE", "BH_SUCCESS", "BH_RUNNING", "BH_ABORTED", "BH_INVALID","TRUE","FALSE", "SET_FLAG: FALSE", "WAITING", "WAITTIME_EXPIRED", "TRY_TO_ABORT_CHILD(REN)", " ", "WRONG1","WRONG2","WRONG3" };
+
+const char* enumNodeAddInfoStrings[] = { "FALSE", "TRUE", "SET_FLAG: FALSE", "WAITING", "WAITTIME_EXPIRED", "TRY_TO_ABORT_CHILD", " ", "WRONG1","WRONG2","WRONG3" };
+
+const char* notINITIALISED= "NotInitialised!!!!";
 
 
 // ============================================================================
-/** Node Class
- *  Base class for actions, conditions and composites.
- */
-void Node::onInitialize(Blackboard& bb)
-{
-}
-
-void Node::onTerminate(NodeStatus status,Blackboard& bb)
-{
-    //if(status != BH_ABORTED) {
-    //}
-}
-
+// Node
 Node::Node()
-    :   m_eNodeStatus(BH_INVALID)
-{
-    nodeId = nodeIdCounter++;
+	: m_eNodeStatus(BH_INVALID), m_nodeName((char*)notINITIALISED)  {
+	m_nodeId = nodeIdCounter++;
 }
 
-Node::~Node()
-{
+Node::~Node() {
+}
+
+bool Node::onSetup(Blackboard& bb) {
+	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t Node::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	return true;
+}
+
+NodeStatus Node::getNodeStatus() const {
+	return m_eNodeStatus;
+}
+
+int16_t Node::getNodeID() const {
+	return m_nodeId;
+}
+
+char* Node::getNodeName() const {
+	return m_nodeName;
+}
+
+void Node::setNodeName(char* s) {
+	m_nodeName = s;
+}
+
+void Node::reset() {
+	m_eNodeStatus = BH_INVALID;
+}
+
+bool Node::isTerminated() const {
+	return m_eNodeStatus == BH_SUCCESS || m_eNodeStatus == BH_FAILURE;
+}
+
+/*
+inline bool Node::isRunning() const {
+return m_eNodeStatus == BH_RUNNING;
+}*/
+
+
+bool Node::isInvalid() const {
+	return m_eNodeStatus == BH_INVALID;
+}
+
+
+void Node::print(int level) {
+	for (int i = 0; i < level; i++) {
+		errorHandler.setInfoNoLog(F("."));
+	}
+	errorHandler.setInfoNoLog(F("%4d %s\r\n"), this->m_nodeId, this->m_nodeName);
+}
+
+
+// ============================================================================
+// Action
+
+void Action::onInitialize(Blackboard& bb) {
+}
+
+void Action::onTerminate(NodeStatus status, Blackboard& bb) {
+}
+
+Action::Action() {
+}
+
+Action::~Action() {
 }
 
 // This function will be called to run a node.
-NodeStatus Node::tick(Blackboard& bb)
-{
-    // push to stack on entering
-    DSTACK(errorHandler.setInfoNoLog(F("PUSH %s \r\n"),nodeName);)
-    bb.runningNodes.Push(this);
+NodeStatus Action::tick(Blackboard& bb) {
 
-    if (m_eNodeStatus != BH_RUNNING) {
-        _start_time_of_node = millis();
-        DTREE(debug->printf("onInitialize %s %d\r\n",nodeName, nodeId);)
-        onInitialize(bb);
-    }
+	NodeStatus oldState = m_eNodeStatus;
+
+	if (m_eNodeStatus != BH_RUNNING) {
+		_start_time_of_node = millis();
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> calling onInitialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		onInitialize(bb);
+	}
+
+	m_eNodeStatus = onUpdate(bb);
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> called onUpdate returned status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 
 
-    // only for showing the current last active node. Every called node in the tree writes its instance in the variable until the last one is in there.
-    bb.lastNodeCurrentRun = this;
-   
-    m_eNodeStatus = onUpdate(bb);
+	if (m_eNodeStatus != oldState) {
+		LOG_NODE(oldState, m_eNodeStatus, this);
+	}
 
-    if (m_eNodeStatus != BH_RUNNING) {
-        DTREE(debug->printf("onTerminate %s %d status %s\r\n",nodeName, nodeId, enumNodeStatusStrings[m_eNodeStatus]);)
-        onTerminate(m_eNodeStatus, bb);
-        // pop from stack because status is != running
-        DSTACK(errorHandler.setInfoNoLog(F("POP %s \r\n"),nodeName);)
-        bb.runningNodes.Pop();
-    }
 
-    DTREE(debug->printf("%s %d return: %s\r\n",nodeName, nodeId, enumNodeStatusStrings[m_eNodeStatus]);)
-    return m_eNodeStatus;
+	if (m_eNodeStatus != BH_RUNNING) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> calling onTerminate status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		onTerminate(m_eNodeStatus, bb);
+	}
+
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	return m_eNodeStatus;
 }
 
-//  called from Repeat::onUpdate(Blackboard& bb) to run node again
-void Node::reset()
-{
-    m_eNodeStatus = BH_INVALID;
+void Action::abort(Blackboard& bb) {
+	LOG_SAVE_OLD_STATUS;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::abort -> executing onTerminate\r\n"), m_nodeName, m_nodeId););
+	onTerminate(BH_ABORTED, bb);
+	m_eNodeStatus = BH_ABORTED;
+	LOG_NODE(oldState, m_eNodeStatus, this);
 }
 
-// will be called from BehaviorTree class to abort a node
-void Node::abort(Blackboard& bb)
-{
-    // Only abort if in state running
-    if (m_eNodeStatus == BH_RUNNING) {
-        DTREE(debug->printf( "Node aborted: %s %d\r\n", nodeName,nodeId);)
-        onTerminate(BH_ABORTED, bb);
-        m_eNodeStatus = BH_ABORTED;
-    }
+unsigned long Action::getTimeInNode() {
+	return millis() - _start_time_of_node;
 }
 
-bool Node::isTerminated() const
-{
-    return m_eNodeStatus == BH_SUCCESS  ||  m_eNodeStatus == BH_FAILURE;
-}
-
-bool Node::isRunning() const
-{
-    return m_eNodeStatus == BH_RUNNING;
-}
-
-NodeStatus Node::getNodeStatus() const
-{
-    return m_eNodeStatus;
-}
-
-
-unsigned long Node::getTimeInNode()
-{
-    return millis() - _start_time_of_node;
-}
-
-void Node::setTimeInNode(unsigned long t)
-{
-    _start_time_of_node = t;
+void Action::setTimeInNode(unsigned long t) {
+	_start_time_of_node = t;
 }
 
 // ============================================================================
+//
+//  Action class with condition
+//  Works likes a conditon and action added to a Sequence
+//  The condition will always be called, before the Action will be done
+//  If condition is BH_SUCCESS the Action node will be called.
+//  If condition returns with BH_FAILURE, the node returns with BH_FAILURE. If the node is also in running state, abort will be called before returning BH_FAILURE.
+
+NodeStatus ActionCond::tick(Blackboard& bb) {
+	NodeStatus result;
+	NodeStatus oldState = m_eNodeStatus;
+
+	result = onCheckCondition(bb);
+
+	if (result == BH_SUCCESS) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> cond returned BH_SUCCESS current status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		return Action::tick(bb);
+	}
+
+	if (isRunning()) { // Is current node running, then abort ActionCond
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> cond BH_FAILURE and node running -> call abort %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		abort(bb);
+		oldState = m_eNodeStatus;
+	}
+	// Node is not running when code comes here and condition was false
+
+	// if condition returns runnig, error should be thrown
+	if (result != BH_FAILURE) {
+		errorHandler.setError(F("%s %d\t\t ActionCond::tick -> condition returned != BH_FAILURE\r\n"), m_nodeName, m_nodeId);
+	}
+
+
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	m_eNodeStatus = BH_FAILURE;
+	if (m_eNodeStatus != oldState) {
+		LOG_NODE(oldState, m_eNodeStatus, this);
+	}
+	return BH_FAILURE;
+}
+
+// ============================================================================
+//
+//  Action class with memory condition
+//  Works likes a conditon and action added to a MemSequence
+//  The condition will not be called if the node is in status RUNNING
+//  If condition returns BH_FAILURE, the node returns with FAIURE
+
+NodeStatus ActionMemCond::tick(Blackboard& bb) {
+	NodeStatus result;
+	NodeStatus oldState = m_eNodeStatus;
+
+	if (isRunning()) { // Is current node running, then don't query condition.
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick -> cond not called node because node is in status %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		return Action::tick(bb);
+	}
+
+	result = onCheckCondition(bb);
+
+	if (result == BH_SUCCESS) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick -> cond returned BH_SUCCESS current status %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		return Action::tick(bb);
+	}
+
+	// Node is not running, therfore I don't need to abort here.
+
+	// if condition returns runnig, error should be thrown
+	// if condition returns runnig, error should be thrown
+	if (result != BH_FAILURE) {
+		errorHandler.setError(F("%s %d\t\t ActionMemCond::tick -> condition returned != BH_FAILURE\r\n"), m_nodeName, m_nodeId);
+	}
+
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick ->cond returned BH_FAILURE returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	m_eNodeStatus = BH_FAILURE;
+	if (m_eNodeStatus != oldState) {
+		LOG_NODE(oldState, m_eNodeStatus, this);
+	}
+	return BH_FAILURE;
+}
+
+
+// ============================================================================
+// Condition
+// The condition node has only onCheckCondition function. It should only query things and never change things!
+Condition::Condition() {
+}
+
+Condition::~Condition() {
+}
+
+// This function will be called to run a node.
+NodeStatus Condition::tick(Blackboard& bb) {
+
+	LOG_SAVE_OLD_STATUS;
+
+	m_eNodeStatus = onCheckCondition(bb);
+
+	LOG_CONDITION(this);
+
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	return m_eNodeStatus;
+}
+
+void Condition::abort(Blackboard& bb) {
+	LOG_SAVE_OLD_STATUS;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::abort\r\n"), m_nodeName, m_nodeId););
+	m_eNodeStatus = BH_ABORTED;
+	LOG_NODE(oldState, m_eNodeStatus, this);
+
+}
+// ============================================================================
+//
+//  Service Class
+//  Services must be derivated from this class. 
+//  Services can be assigned to composit nodes. Every time the composit node is executed, it will check if
+//  the service shold be run. (interval expired). Therefore the intervall must be set in milli seconds.
+//  A service will not be runned if the associated composit node is not executed.
+//  The service will be runned, before the childs of the compositnodes are executed.
+//  Services are often used to make checks and to update variables on the Blackboard.These may take the place of Parallel nodes.
+
+#ifdef BHT_USE_SERVICES
+
+CompNodeService::~CompNodeService() {
+}
+
+CompNodeService::CompNodeService(unsigned long _interval) {
+	last_run = millis();
+	setInterval(_interval);
+};
+
+void CompNodeService::runned() {
+	// Saves last_run
+	last_run = millis();
+}
+
+void CompNodeService::setInterval(unsigned long _interval) {
+	// Save interval
+	interval = _interval;
+}
+
+bool CompNodeService::shouldRun() {
+
+	unsigned long time = millis();
+	if (time - last_run >= interval) {
+		return (true);
+	}
+
+	return false;
+}
+
+
+#endif //#ifdef BHT_USE_SERVICES
 
 /*
-Composites
+CompositeNode
 ==========
-A composite node can have one or more children. The node is responsible to propagate the Blackboard signal to its children, respecting some order.
-A composite node also must decide which and when to return the state values of its children, when the value is SUCCESS or FAILURE.
+A CompositeNode can have one or more children. The node is responsible to propagate the Blackboard signal to its children, respecting some order.
+A CompositeNode node also must decide which and when to return the state values of its children, when the value is SUCCESS or FAILURE.
 Notice that, when a child returns RUNNING, the composite node must return the state immediately.
 */
 
 
-void CompositeNode::_clear()
-{
-    for (int i = 0; i < _size; i++) {
-        _children[i] = NULL;
-    }
-}
+bool CompositeNode::onSetup(Blackboard& bb) {
 
-CompositeNode::CompositeNode():_size(0) {}
+	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	// Check if all children were initialized
+	// If we check this here, we don't need to use if(children[i] != NULL){...} in the classes, which based on CompositeNode.
+	for (int i = 0; i < m_children_size; i++) {
+		if (!m_children[i]) {
+			errorHandler.setError(F("%s %d\t\t CompositeNode found child which is not initialized\r\n"), m_nodeName, m_nodeId);
+			return false;
+		}
+	}
 
-CompositeNode::~CompositeNode()
-{
-    delete[] _children;
-}
-
-void CompositeNode::setupNumberOfChildren( const int& bufferSize )
-{
-    if(_size == 0) {
-        _children = new Node*[bufferSize];
-        _size = bufferSize;
-        _clear();
-    } else {
-        sprintf(errorHandler.msg,"!03,ERROR CompositeNode Array already filled %s\r\n",nodeName);
-        errorHandler.setError(); 
-    }
-}
-
-void CompositeNode::addChild(Node* child)
-{
-    // Find an empty slot
-    for (int i = 0; i < _size; i++) {
-        if (!_children[i]) {
-            // Found an empty slot, now add child
-            _children[i] = child;
-            return;
-        }
-    }
-    // Array is full
-    sprintf(errorHandler.msg,"!03,ERROR CompositeNode Array is full %s\r\n",nodeName);
-    errorHandler.setError();
-    return;
-}
-
-void CompositeNode::addChildren(Node* child1)
-{
-    setupNumberOfChildren(1);
-    addChild(child1);
-}
-void CompositeNode::addChildren(Node* child1, Node* child2)
-{
-    setupNumberOfChildren(2);
-    addChild(child1);
-    addChild(child2);
-}
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3)
-{
-    setupNumberOfChildren(3);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-}
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4)
-{
-    setupNumberOfChildren(4);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-    addChild(child4);
-}
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5)
-{
-    setupNumberOfChildren(5);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-    addChild(child4);
-    addChild(child5);
-}
-
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6)
-{
-    setupNumberOfChildren(6);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-    addChild(child4);
-    addChild(child5);
-    addChild(child6);
+#ifdef BHT_USE_SERVICES
+	// Check if all services were initialized
+	for (int i = 0; i < m_service_size; i++) {
+		if (!m_services[i]) {
+			errorHandler.setError(F("%s %d\t\t CompositeNode found service which is not initialized\r\n"), m_nodeName, m_nodeId);
+			return false;
+		}
+	}
+#endif
+	// call the onSetup of the children.
+	for (int i = 0; i < m_children_size; i++) {
+		if (!m_children[i]->onSetup(bb)) {
+			return false;
+		}
+	}
+	return true;
 }
 
 
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7)
-{
-    setupNumberOfChildren(7);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-    addChild(child4);
-    addChild(child5);
-    addChild(child6);
-    addChild(child7);
+
+#ifdef BHT_USE_SERVICES
+CompositeNode::CompositeNode() : m_children_size(0), m_service_size(0) {}
+#else
+CompositeNode::CompositeNode() : m_children_size(0) {}
+#endif
+
+CompositeNode::~CompositeNode() {
+	for (int i = 0; i < m_children_size; i++) {
+		if (!m_children[i]) {
+			delete m_children[i];
+		}
+	}
+	delete[] m_children;
+
+#ifdef BHT_USE_SERVICES
+	for (int i = 0; i < m_service_size; i++) {
+		if (!m_services[i]) {
+			delete m_services[i];
+		}
+	}
+	delete[] m_services;
+#endif
 }
 
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8)
-{
-    setupNumberOfChildren(8);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-    addChild(child4);
-    addChild(child5);
-    addChild(child6);
-    addChild(child7);
-    addChild(child8);
+void CompositeNode::setupNumberOfChildren(const int& n) {
+
+	// only 255 sub nodes allowed 
+	if (n > 255) {
+		errorHandler.setError(F("!03,ERROR CompositeNode size > 255 %s\r\n"), m_nodeName);
+	}
+
+	if (m_children_size == 0) {
+		m_children = new Node*[n];
+		m_children_size = n;
+		_clearChildren();
+	}
+	else {
+		errorHandler.setError(F("!03,ERROR CompositeNode children array size already set %s\r\n"), m_nodeName);
+	}
 }
 
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9)
-{
-    setupNumberOfChildren(9);
-    addChild(child1);
-    addChild(child2);
-    addChild(child3);
-    addChild(child4);
-    addChild(child5);
-    addChild(child6);
-    addChild(child7);
-    addChild(child8);
-    addChild(child9);
+void CompositeNode::_clearChildren() {
+	for (int i = 0; i < m_children_size; i++) {
+		m_children[i] = NULL;
+	}
 }
 
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10)
-{
+
+void CompositeNode::print(int level) {
+	Node:: print(level);
+	for (int i = 0; i < m_children_size; i++) {
+		m_children[i]->print(level+1);
+	}
+}
+
+void CompositeNode::addChild(Node* child) {
+	// Find an empty slot
+	for (int i = 0; i < m_children_size; i++) {
+		if (!m_children[i]) {
+			// Found an empty slot, now add child
+			m_children[i] = child;
+			return;
+		}
+	}
+	// Array is full
+	errorHandler.setError(F("!03,ERROR CompositeNode array is full %s\r\n"), m_nodeName);
+
+	return;
+}
+
+
+void CompositeNode::abortChild(Blackboard& bb, int i) {
+	LOG_TRY_ABORT_CHILD;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChild -> try abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+	if (m_children[i]->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChild -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+		m_children[i]->abort(bb);
+	}
+}
+
+void CompositeNode::abortChildren(Blackboard& bb, int i) {
+	LOG_TRY_ABORT_CHILD;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChildren -> try abort children\r\n"), m_nodeName, m_nodeId););
+	for (int j = i; j < m_children_size; j++) {
+		if (m_children[j]->isRunning()) {
+			DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChildren -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[j]->m_nodeName););
+			m_children[j]->abort(bb);
+		}
+	}
+}
+
+void CompositeNode::addChildren(Node* child1) {
+	setupNumberOfChildren(1);
+	addChild(child1);
+}
+void CompositeNode::addChildren(Node* child1, Node* child2) {
+	setupNumberOfChildren(2);
+	addChild(child1);
+	addChild(child2);
+}
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3) {
+	setupNumberOfChildren(3);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+}
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4) {
+	setupNumberOfChildren(4);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+}
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5) {
+	setupNumberOfChildren(5);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+}
+
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6) {
+	setupNumberOfChildren(6);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+	addChild(child6);
+}
+
+
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7) {
+	setupNumberOfChildren(7);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+	addChild(child6);
+	addChild(child7);
+}
+
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8) {
+	setupNumberOfChildren(8);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+	addChild(child6);
+	addChild(child7);
+	addChild(child8);
+}
+
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9) {
+	setupNumberOfChildren(9);
+	addChild(child1);
+	addChild(child2);
+	addChild(child3);
+	addChild(child4);
+	addChild(child5);
+	addChild(child6);
+	addChild(child7);
+	addChild(child8);
+	addChild(child9);
+}
+
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10) {
 	setupNumberOfChildren(10);
 	addChild(child1);
 	addChild(child2);
@@ -304,8 +604,7 @@ void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* 
 
 }
 
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10, Node* child11)
-{
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10, Node* child11) {
 	setupNumberOfChildren(11);
 	addChild(child1);
 	addChild(child2);
@@ -321,8 +620,7 @@ void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* 
 
 }
 
-void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10, Node* child11, Node* child12)
-{
+void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* child4, Node* child5, Node* child6, Node* child7, Node* child8, Node* child9, Node* child10, Node* child11, Node* child12) {
 	setupNumberOfChildren(12);
 	addChild(child1);
 	addChild(child2);
@@ -339,244 +637,519 @@ void CompositeNode::addChildren(Node* child1, Node* child2, Node* child3, Node* 
 
 }
 
+#ifdef BHT_USE_SERVICES
+
+void CompositeNode::_clearServices() {
+	for (int i = 0; i < m_service_size; i++) {
+		m_services[i] = NULL;
+	}
+}
+
+void CompositeNode::setupNumberOfServices(const int& n) {
+
+	// only 255 sub nodes allowed 
+	if (n > 255) {
+		errorHandler.setError(F("!03,ERROR ServiceNode size > 255 %s\r\n"), m_nodeName);
+	}
+
+	if (m_service_size == 0) {
+		m_services = new CompNodeService*[n];
+		m_service_size = n;
+		_clearServices();
+	}
+	else {
+		errorHandler.setError(F("!03,ERROR CompositeNode service array size already set %s\r\n"), m_nodeName);
+	}
+}
+
+
+void CompositeNode::addService(CompNodeService* _service) {
+	// Find an empty slot
+	for (int i = 0; i < m_service_size; i++) {
+		if (!m_services[i]) {
+			// Found an empty slot, now add child
+			m_services[i] = _service;
+			return;
+		}
+	}
+	// Array is full
+	errorHandler.setError(F("!03,ERROR CompositeNode service array is full %s\r\n"), m_nodeName);
+
+	return;
+}
+
+void CompositeNode::runService(Blackboard& bb) {
+	for (int i = 0; i < m_service_size; i++) {
+		if (m_services[i]->shouldRun()) {
+			m_services[i]->onRun(bb);
+			m_services[i]->runned();
+		}
+	}
+}
+
+
+
+
+void CompositeNode::setServiceInterval(int idx, unsigned long _interval) {
+	if (!m_services[idx]) {
+		m_services[idx]->setInterval(_interval);
+	}
+	else {
+		errorHandler.setError(F("!03,ERROR CompositeNode has no service configured %s idx: %d\r\n"), m_nodeName,idx);
+	}
+
+}
+
+void CompositeNode::addServices(CompNodeService* service1) {
+	setupNumberOfServices(1);
+	addService(service1);
+}
+void CompositeNode::addServices(CompNodeService* service1, CompNodeService* service2) {
+	setupNumberOfServices(2);
+	addService(service1);
+	addService(service2);
+}
+void CompositeNode::addServices(CompNodeService* service1, CompNodeService* service2, CompNodeService* service3) {
+	setupNumberOfServices(3);
+	addService(service1);
+	addService(service2);
+	addService(service3);
+}
+#endif //#ifdef BHT_USE_SERVICES
+
 
 // ============================================================================
 //The sequence node calls its children sequentially until one of them returns FAILURE or RUNNING. If all children return the success state, the sequence also returns SUCCESS.
-NodeStatus Sequence::onUpdate(Blackboard& bb)
-{
-    NodeStatus s;
-    for (int i = 0; i < _size; i++) {
-        // Object exists?
-        if (_children[i]) {
-            s = _children[i]->tick(bb);
-            if (s != BH_SUCCESS) {
-                // If one child fails, then enter operation run() fails.  Success only results if all children succeed.
-                return s;
-            }
-        }
-    }
-    return BH_SUCCESS;  // All children failed so the entire run() operation fails.
+Sequence::Sequence() : m_idxLastRunnedNode(0) {
+}
+
+NodeStatus Sequence::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+
+	RUNSERVICE(bb);
+
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_idxLastRunnedNode = 0;
+	}
+
+	// run all children until one returns running or failure
+	for (int i = 0; i < m_children_size; i++) {
+		m_eNodeStatus = m_children[i]->tick(bb); // The status of the child is also my status
+
+		if (m_eNodeStatus != BH_SUCCESS) {
+
+			LOG_CONTROL_NODE;
+			
+			// Switching from a low -> high priority branch causes an abort signal to be sent to the previously executing low priority branch.
+			// if the current child is running or failure the sequence will break.
+			// therefore check if the current node was also in state running at the previous call.
+			// If yes, the last runned child is also in BH_RUNNING mode and must be aborted if it is not the same child.
+
+			if (m_idxLastRunnedNode > i) {
+				abortChild(bb, m_idxLastRunnedNode);
+			}
+
+			/*
+			if ((m_children[m_idxLastRunnedNode]->isRunning()) && (m_idxLastRunnedNode != i)) {
+				DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
+				LOG_TRY_ABORT_CHILD;
+				m_children[m_idxLastRunnedNode]->abort(bb);
+			}
+			*/
+			m_idxLastRunnedNode = i;
+			return m_eNodeStatus;
+		}
+	}
+
+	LOG_CONTROL_NODE;
+
+	return BH_SUCCESS;  // All children succeeded so the entire sequence succeeds
+}
+
+void Sequence::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_children[m_idxLastRunnedNode]->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		m_children[m_idxLastRunnedNode]->abort(bb);
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+
+// ============================================================================
+//  A Filter is a branch in the tree that will not execute its child behavior under specific conditions.
+//  For instance, if an attack has a cooldown timer to prevent it from executing
+//  too often, or a behavior that is only valid at a specific distance away from a target, etc.
+
+void Filter::setNumberOfChildren(int n) {
+	CompositeNode::setupNumberOfChildren(n);
+}
+void Filter::addCondition(Condition* cond) {
+	addChild(cond);
+}
+void Filter::addAction(Node* action) {
+	addChild(action);
 }
 
 // ============================================================================
 // MemSequence is similar to Sequence node, but when a child returns a RUNNING state, its index is recorded and in the next tick the
 // MemSequence call the child recorded directly, without calling previous children again.
+// Therefore it is not possible to switching from a low -> high priority 
 
-MemSequence::MemSequence(): runningChild(0) {}
-
-void MemSequence::onInitialize(Blackboard& bb)
-{
-    runningChild = 0;
-    Node::onInitialize(bb);  // Print out that onInitialize was called. For debugging.
-}
-
-NodeStatus MemSequence::onUpdate(Blackboard& bb)
-{
-    NodeStatus s;
-    for(int i = runningChild; i < _size; i++) {
-        // Object exists?
-        if(_children[i]) {
-            s = _children[i]->tick(bb);
-            if (s != BH_SUCCESS) { // If one child fails, then enter operation run() fails.  Success only results if all children succeed.
-                if (s == BH_RUNNING) {
-                    runningChild = i;
-                }
-                return s;
-            }
-        }
-    }
-    return BH_SUCCESS;  // All children failed so the entire run() operation fails.
-}
-
-// ============================================================================
-// MemRing executes one node and returns the result back to the parent. When called again, the next child will be executed if not running is returned.
-// Will not be aborted like a sequence when returning Failure or Success or by Stack abort. Returns always the result of the child. 
-// A child node can reset the MemRing while returning BH_RESETx or Freez it with  BH_FREEZ_SUCCSESS, BH_FREEZ_FAILURE
-
-// Eigentlich mÃ¼sste bei abort runningChild weitergezÃ¤hlt werden, damit nÃ¤chste sequenz beim nÃ¤chsten Aufruf lÃ¤uft
- 
-MemRing::MemRing(): runningChild(0) {}
-
-void MemRing::onInitialize(Blackboard& bb)
-{
-    Node::onInitialize(bb);  // Print out that onInitialize was called. For debugging.
-}
-
-NodeStatus MemRing::onUpdate(Blackboard& bb)
-{
-    NodeStatus s;
-    // Object exists?
-    if(_children[runningChild]) {
-        
-        s = _children[runningChild]->tick(bb);
-        
-        if (s == BH_RUNNING) {
-            //runningChild = runningChild;
-        }
-        else if (s == BH_FAILURE) {
-            runningChild++;
-        }
-        else if (s == BH_SUCCESS) {
-            runningChild++;
-        }
-        else if (s == BH_RESET_SUCCSESS) {
-            runningChild = 0;
-            s = BH_SUCCESS;
-        }
-        else if (s == BH_RESET_FAILURE) {
-            runningChild = 0;
-            s = BH_FAILURE;
-        }
-        else if (s == BH_FREEZ_SUCCSESS) {
-            s = BH_SUCCESS;
-        }
-        else if (s == BH_FREEZ_FAILURE) {
-            s = BH_FAILURE;
-        }
-        
-        if (runningChild >= _size) {
-            runningChild = 0;
-        }
-
-        return s;
-    }
-    return BH_SUCCESS;  // Will never been reached.
-}
-
-// ============================================================================
-//The Selector node (sometimes called priority) Blackboards its children sequentially until one of them returns SUCCESS, RUNNING. 
-//If all children return the failure state, the priority also returns FAILURE.
-
-NodeStatus Selector::onUpdate(Blackboard& bb)
-{
-    NodeStatus s;
-    for (int i = 0; i < _size; i++) {
-        // Object exists?
-        if (_children[i]) {
-            s = _children[i]->tick(bb);
-            if (s != BH_FAILURE) {
-                // If one child succeeds/running, the entire operation run() succeeds/running.  Failure only results if all children fail.
-                return s;
-            }
-        }
-    }
-    return BH_FAILURE;  // All children failed so the entire run() operation fails.
-}
-
-// ============================================================================
-
-// MemSelector is similar to Selector node, but when a child returns a  RUNNING state, its index is recorded and in the next Blackboard the,
-// MemSelector  calls the child recorded directly, without calling previous children again.
-
-MemSelector::MemSelector(): runningChild(0) {}
-
-void MemSelector::onInitialize(Blackboard& bb)
-{
-    runningChild = 0;
-    Node::onInitialize(bb);
-}
-
-NodeStatus MemSelector::onUpdate(Blackboard& bb)
-{
-    NodeStatus s;
-    for(int i = runningChild; i < _size; i++) {
-        // Object exists?
-        if(_children[i]) {
-            s = _children[i]->tick(bb);
-            if (s != BH_FAILURE) { // If one child succeeds/running, the entire operation run() succeeds/running.  Failure only results if all children fail.
-                if (s == BH_RUNNING) {
-                    runningChild = i;
-                }
-                return s;
-            }
-        }
-    }
-    return BH_FAILURE;  // All children failed so the entire run() operation fails.
-}
+MemSequence::MemSequence() : m_idxLastRunnedNode(0) {}
 
 
-// ============================================================================
+NodeStatus MemSequence::tick(Blackboard& bb) {
 
-// Parallel executes the children parallel.
-// returns running if all children return running
-// if one child suceed or fail the entire operation suceed or fail
+	SAVE_OLD_STATUS;
 
-Parallel::Parallel() : runningChild(0) {}
+	RUNSERVICE(bb);
 
-void Parallel::onInitialize(Blackboard& bb)
-{
-	runningChild = 0;
-	Node::onInitialize(bb);
-}
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSequence::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_idxLastRunnedNode = 0;
+	}
 
-NodeStatus Parallel::onUpdate(Blackboard& bb)
-{
-	NodeStatus s;
-	for (int i = runningChild; i < _size; i++) {
-		// Object exists?
-		if (_children[i]) {
-			s = _children[i]->tick(bb);
-			if (s != BH_RUNNING) { // If one child succeeds/fails, the entire operation run() succeeds/fails. 
-				return s;
-			}
+	for (int i = m_idxLastRunnedNode; i < m_children_size; i++) {
+		m_eNodeStatus = m_children[i]->tick(bb);
+
+		if (m_eNodeStatus != BH_SUCCESS) {
+
+			LOG_CONTROL_NODE;
+
+			m_idxLastRunnedNode = i;
+			return m_eNodeStatus;
 		}
 	}
+
+	LOG_CONTROL_NODE;
+
+	return BH_SUCCESS;  // All children failed so the entire run() operation fails.
+}
+
+void MemSequence::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_children[m_idxLastRunnedNode]->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSequence::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		m_children[m_idxLastRunnedNode]->abort(bb);
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+
+// ============================================================================
+// StarSequence Use this ControlNode when you don't want to tick children again that already returned SUCCESS.
+// StarSequence tries to executes all children one after another
+// StarSequence will return FAILURE immediately if any child returns FAILURE. But if StarSequence is called again, the child which has returned FAILURE is called directly again.
+// StarSequence will return RUNNING immediately if any child returns RUNNING. But if StarSequence is called again, the child which has returned RUNNING is called directly again.
+// StarSequence will return SUCCESS if all childs returned SUCCESS
+// If a child return SUCCESS, the next child will be executed (StarSequence will not return)
+
+// Currently the StarSequence has the problem, that m_idxLastRunnedNode = 0 if the node is running and then will be aborted.
+// But if it returns FAILURE and a higher priority branch is executed, then m_idxLastRunnedNode will not be set to 0.
+
+/*
+StarSequence::StarSequence() : m_idxLastRunnedNode(0), originalStatus(BH_INVALID) {}
+
+
+NodeStatus StarSequence::tick(Blackboard& bb) {
+
+	m_eNodeStatus = originalStatus;
+
+	RUNSERVICE(bb);
+
+	// Object exists?
+	while (m_idxLastRunnedNode < m_children_size) {
+		SAVE_OLD_STATUS;
+
+		m_eNodeStatus = m_children[m_idxLastRunnedNode]->tick(bb);
+		switch (m_eNodeStatus) {
+		case BH_RUNNING:
+		{
+			LOG_CONTROL_NODE;
+			return BH_RUNNING;
+			break;
+		}
+		case BH_FAILURE:
+		{
+			LOG_CONTROL_NODE;
+			originalStatus = m_eNodeStatus;
+			m_eNodeStatus = BH_RUNNING;
+			return BH_FAILURE;
+			break;
+		}
+		case BH_SUCCESS:
+		{
+			LOG_CONTROL_NODE;
+			m_idxLastRunnedNode++;
+			break;
+		}
+		default:
+			errorHandler.setInfoNoLog(F("%s %d\t\t StarSequence::tick wrong status from child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName());
+			break;
+
+		}
+	}
+	// All the children have returned SUCCESS
+	if (m_idxLastRunnedNode >= m_children_size) {
+		m_idxLastRunnedNode = 0;
+	}
+
+	originalStatus = m_eNodeStatus;
+	//	errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]);)
+	return BH_SUCCESS;  // Should never been reached.
+
+}
+
+void StarSequence::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_children[m_idxLastRunnedNode]->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemRing::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		m_children[m_idxLastRunnedNode]->abort(bb);
+	}
+	m_idxLastRunnedNode = 0;
+	originalStatus = BH_ABORTED;
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+*/
+
+
+// ============================================================================
+// The Selector node (sometimes called priority) calls its children sequentially until one of them returns SUCCESS, RUNNING. 
+// If all children return the failure state, the priority also returns FAILURE.
+
+Selector::Selector() : m_idxLastRunnedNode(0) {}
+
+NodeStatus Selector::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+
+	RUNSERVICE(bb);
+
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_idxLastRunnedNode = 0;
+	}
+
+	for (int i = 0; i < m_children_size; i++) {
+		m_eNodeStatus = m_children[i]->tick(bb);
+
+		if (m_eNodeStatus != BH_FAILURE) {
+			LOG_CONTROL_NODE;
+			// Switching from a low -> high priority branch causes an abort signal to be sent to the previously executing low priority branch.
+			// if the current child is running or success the sequence will break.
+			// therefore check if the current node was also in state running at the previous call.
+			// If yes, the last runned child is also in BH_RUNNING mode and must be aborted if it is not the same child.
+
+			if (m_idxLastRunnedNode > i) {
+				abortChild(bb, m_idxLastRunnedNode);
+			}
+
+			/*
+			if ((m_children[m_idxLastRunnedNode]->isRunning()) && (m_idxLastRunnedNode != i)) {
+				DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
+				LOG_TRY_ABORT_CHILD;
+				m_children[m_idxLastRunnedNode]->abort(bb);
+			}
+			*/
+
+			m_idxLastRunnedNode = i;
+
+			return m_eNodeStatus;
+		}
+	}
+
+	LOG_CONTROL_NODE;
+	return BH_FAILURE;  // All children failed so the entire run() operation fails
+}
+
+void Selector::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_children[m_idxLastRunnedNode]->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		m_children[m_idxLastRunnedNode]->abort(bb);
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+
+// ============================================================================
+// MemSelector is similar to Selector node, but when a child returns a  RUNNING state, its index is recorded and in the next tick the
+// MemSelector  calls the running child directly, without calling previous children again.
+// Therefore it is not possible to switching from a low -> high priority 
+
+MemSelector::MemSelector() : m_idxLastRunnedNode(0) {}
+
+
+NodeStatus MemSelector::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+
+	RUNSERVICE(bb);
+
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSelector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_idxLastRunnedNode = 0;
+	}
+
+	for (int i = m_idxLastRunnedNode; i < m_children_size; i++) {
+		// Object exists?
+		m_eNodeStatus = m_children[i]->tick(bb);
+
+		if (m_eNodeStatus != BH_FAILURE) {
+			LOG_CONTROL_NODE;
+			m_idxLastRunnedNode = i; //don't have to ask if node is running, because if not running, m_idxLastRunnedNode will be reseted to 0.
+			return m_eNodeStatus;
+		}
+	}
+	LOG_CONTROL_NODE;
+	return BH_FAILURE;  // All children failed so the entire run() operation fails.
+}
+
+void MemSelector::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_children[m_idxLastRunnedNode]->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSelector::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		m_children[m_idxLastRunnedNode]->abort(bb);
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+
+// ============================================================================
+// Parallel executes all children "parallel"
+// Parallel will return FAILURE immediately if any child returns FAILURE
+// Parallel will return SUCCESS immediately if any child returns SUCCESS
+// Parallel will return RUNNING if all children return RUNNING
+
+Parallel::Parallel() {}
+
+
+NodeStatus Parallel::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+
+	RUNSERVICE(bb);
+
+	/*if (!isRunning()) {
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+
+	}*/
+
+	for (int i = 0; i < m_children_size; i++) {
+		m_eNodeStatus = m_children[i]->tick(bb);
+		if (m_eNodeStatus != BH_RUNNING) {
+			LOG_CONTROL_NODE;
+			// Abort all running children
+			abortChildren(bb, 0);
+			/*
+			LOG_TRY_ABORT_CHILD;
+			for (int i = 0; i < m_children_size; i++) {
+				if (m_children[i]->isRunning()) {
+					DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+					m_children[i]->abort(bb);
+				}
+			}
+			*/
+			return m_eNodeStatus;
+		}
+	}
+	LOG_CONTROL_NODE;
 	return BH_RUNNING;  // All children failed so the entire run() operation fails.
 }
 
-
-void Parallel::onTerminate(NodeStatus status, Blackboard& bb) {
-
-	for (int i = runningChild; i < _size; i++) {
-		// Object exists?
-		if (_children[i]) {
-				_children[i]->abort(bb);
+void Parallel::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	for (int i = 0; i < m_children_size; i++) {
+		if (m_children[i]->isRunning()) {
+			DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+			m_children[i]->abort(bb);
 		}
 	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
 }
-
 
 // ============================================================================
-/**
-* TimeSwitch switches from node1 to node2 after a specified amount of time
-* If node1 returns BH_FAILURE, then TimeSwitch will be reseted and returns BH_FAILURE also.
-* If node1 returns BH_RUNNING or BH_SUCCESS, then TimeSwitch will always return BH_RUNNING.
-* If node2 returns BH_SUCCESS or BH_FAILURE, node1 will next call start again.
-* If node2 returns BH_RUNNING, then TimeSwitch will returning BH_RUNNING also and node2 will next time executed again.
-* Use addChildren(Node* child1, Node* child2); to set the child nodes
-*/
-TimeSwitch::TimeSwitch(): m_ulWaitMillis(0), m_ulStartTime(0), waittimeExpired(false) {}
+// ParallelUntilFail executes all children "parallel"
+// ParallelUntilFail will return FAILURE immediately if any child returns FAILURE
+// ParallelUntilFail will return SUCCESS if all children return SUCCESS
+// ParallelUntilFail will return RUNNING if at least one child returns RUNNING and the other childs return SUCCESS
 
-void TimeSwitch::onInitialize(Blackboard& bb)
-{
-    waittimeExpired = false;
-    m_ulStartTime = millis();
-    Node::onInitialize(bb);
+ParallelUntilFail::ParallelUntilFail() {}
+
+
+NodeStatus ParallelUntilFail::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+
+	RUNSERVICE(bb);
+
+	/*if (!isRunning()) {
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	}*/
+
+	int countRunning = 0;
+	for (int i = 0; i < m_children_size; i++) {
+		m_eNodeStatus = m_children[i]->tick(bb);
+		if (m_eNodeStatus == BH_RUNNING) {
+			countRunning++;
+		}
+		if (m_eNodeStatus == BH_FAILURE) {
+			LOG_CONTROL_NODE;
+			// Abort all running children
+			abortChildren(bb, 0);
+			/*
+			LOG_TRY_ABORT_CHILD;
+			for (int i = 0; i < m_children_size; i++) {
+				if (m_children[i]->isRunning()) {
+					DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+					m_children[i]->abort(bb);
+				}
+			}
+			*/
+			return m_eNodeStatus;
+		}
+	}
+
+	if (countRunning > 0) {
+		m_eNodeStatus = BH_RUNNING;
+		return BH_RUNNING;  // All children failed so the entire run() operation fails.
+	}
+
+	m_eNodeStatus = BH_SUCCESS;
+	LOG_CONTROL_NODE;
+	return BH_SUCCESS;  // All children failed so the entire run() operation fails.
 }
 
-NodeStatus TimeSwitch::onUpdate(Blackboard& bb)
-{
-    NodeStatus s;
-
-    if(  (millis() - m_ulStartTime > m_ulWaitMillis)  && !waittimeExpired) {
-        waittimeExpired = true;
-        _children[0]->abort(bb);
-    }
-
-    if(waittimeExpired) {
-        s = _children[1]->tick(bb);
-    } else {
-        s = _children[0]->tick(bb);
-        if(s == BH_SUCCESS) {
-            s = BH_RUNNING;
-        }
-    }
-    return s;
+void ParallelUntilFail::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	for (int i = 0; i < m_children_size; i++) {
+		if (m_children[i]->isRunning()) {
+			DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+			m_children[i]->abort(bb);
+		}
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
 }
 
-void TimeSwitch::setWaitMillis(unsigned long millis)
-{
-    m_ulWaitMillis = millis;
+// ============================================================================
+// Monitor
+// Arguably, continuously checking if assumptions are valid (i.e., monitoring conditions)
+// is the most useful pattern that involves running behaviors in parallel. Many behaviors
+// tend to have assumptions that should be maintained while a behavior is active, and if
+// those assumptions are found invalid the whole sub-tree should exit. Some examples of this
+// include using an object (assumes the object exists) or melee attacks (assumes the enemy is
+// in range), and many others.
+
+
+void Monitor::setNumberOfChildren(int n) {
+	CompositeNode::setupNumberOfChildren(n);
+}
+void Monitor::addCondition(Condition* cond) {
+	addChild(cond);
+}
+void Monitor::addAction(Node* action) {
+	addChild(action);
 }
 
 
@@ -584,86 +1157,295 @@ void TimeSwitch::setWaitMillis(unsigned long millis)
 /*
 Decorators
 Decorators are special nodes that can have only a single child. The goal of the decorator is to change the
-behavior of the child by manipulating the returning value or changing its Blackboarding frequency.
+behavior of the child by manipulating the returning value or changing its calling frequency.
 */
 DecoratorNode::DecoratorNode() : m_pChild(NULL) {}
 DecoratorNode::DecoratorNode(Node* child) : m_pChild(child) {}
 
-void DecoratorNode::setChild (Node* newChild)
-{
-    m_pChild = newChild;
+bool DecoratorNode::onSetup(Blackboard& bb) {
+
+	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t DecoratorNode::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+
+	if (m_pChild == NULL) {
+		errorHandler.setError(F("!03,%s %d\t\t DecoratorNode m_pChild == NULL\r\n"), m_nodeName, m_nodeId);
+		return false;
+	}
+	if (!m_pChild->onSetup(bb)) {
+		return false;
+	}
+	return true;
 }
+void DecoratorNode::setChild(Node* newChild) {
+	m_pChild = newChild;
+}
+
+void DecoratorNode::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_pChild->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t DecoratorNode::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		m_pChild->abort(bb);
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+
+
+void DecoratorNode::print(int level) {
+
+	Node::print(level);
+	m_pChild->print(level+1);
+
+}
+
+// ============================================================================
+// Check a flag, wich is given by a pointer. If it is true, the child will be called.
+// If it is false, the child will be aborted if running
+ExecuteOnTrue::ExecuteOnTrue() : DecoratorNode(), m_pFlag(NULL), m_setFalseOnTerminate(false) {}
+ExecuteOnTrue::ExecuteOnTrue(Node* child, bool* _flag) : DecoratorNode(child), m_pFlag(_flag), m_setFalseOnTerminate(false) {}
+
+bool ExecuteOnTrue::onSetup(Blackboard& bb) {
+
+	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t ExecuteOnTrue::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+
+	if (m_pFlag == NULL) {
+		errorHandler.setError(F("!03,%s %d\t\t ExecuteOnTrue m_flag == NULL\r\n"), m_nodeName, m_nodeId);
+		return false;
+	}
+
+	if (!DecoratorNode::onSetup(bb)) {
+		return false;
+	}
+	return true;
+}
+
+void ExecuteOnTrue::setFlag(bool * _pFlag) {
+	m_pFlag = _pFlag;
+	m_flag_last_value = *m_pFlag;
+}
+
+void ExecuteOnTrue::setChangedStatusNodes(Blackboard& bb) {
+	if (*m_pFlag != m_flag_last_value) {
+		if (*m_pFlag == true) {
+			LOG_NODE(BH_FALSE, BH_TRUE, this);
+		}
+		else {
+			LOG_NODE(BH_TRUE, BH_FALSE, this);
+		}
+		m_flag_last_value = *m_pFlag;
+	}
+}
+void ExecuteOnTrue::setChangedStatusNodesSetFlagFalse(Blackboard& bb) {
+	if (*m_pFlag == true) {
+		LOG_NODE(BH_TRUE, BH_SET_FLAG_FALSE, this);
+	}
+	*m_pFlag = false;
+	m_flag_last_value = *m_pFlag;
+}
+void ExecuteOnTrue::setFlagToFalseOnTerminate() {
+	m_setFalseOnTerminate = true;
+}
+
+NodeStatus ExecuteOnTrue::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	setChangedStatusNodes(bb);
+
+	if (*m_pFlag == true) {
+		m_eNodeStatus = m_pChild->tick(bb);
+
+		if (!isRunning() && m_setFalseOnTerminate) {
+			setChangedStatusNodesSetFlagFalse(bb);
+
+		}
+
+		LOG_CONTROL_NODE;
+		return m_eNodeStatus;
+	}
+	else {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ExecuteOnTrue::tick -> flag=false. Child NOT executed: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+	}
+
+	m_eNodeStatus = BH_FAILURE;
+
+	if (m_setFalseOnTerminate) {
+		setChangedStatusNodesSetFlagFalse(bb);
+	}
+
+	LOG_CONTROL_NODE;
+
+	if (m_pChild->isRunning()) {
+		LOG_TRY_ABORT_CHILD;
+		m_pChild->abort(bb);
+	}
+
+	return m_eNodeStatus;
+}
+
+void ExecuteOnTrue::abort(Blackboard& bb) {
+	if (m_setFalseOnTerminate) {
+		setChangedStatusNodesSetFlagFalse(bb);
+	}
+	else {
+		setChangedStatusNodes(bb);
+	}
+	DecoratorNode::abort(bb);
+}
+
+
+
+// ============================================================================
+//
+//  Condition decorator
+//  Works likes a conditon and action added to a Sequence
+//  The condition will always be called, before the child->tick will be called
+//  If condition is BH_SUCCESS the child->tick will be called.
+//  If condition returns with BH_FAILURE, the node returns with BH_FAILURE. If 
+//  the child is also in running satate, bort will be called before returning BH_FAILURE which aborts the child.
+
+ConditionDeco::ConditionDeco() : DecoratorNode(), m_result(BH_FAILURE){}
+ConditionDeco::ConditionDeco(Node* child) : DecoratorNode(child), m_result(BH_FAILURE) {}
+
+NodeStatus ConditionDeco::tick(Blackboard& bb) {
+	SAVE_OLD_CON_RESULT;
+	SAVE_OLD_STATUS;
+
+	m_result = onCheckCondition(bb);
+
+	LOG_CONDITION_DECO(this);
+
+	if (m_result == BH_SUCCESS) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> cond returned BH_SUCCESS -> call child->tick %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_eNodeStatus = m_pChild->tick(bb);
+		LOG_CONTROL_NODE;
+		return m_eNodeStatus;
+	}
+
+	if (m_pChild->isRunning()) { // Is child node running, then abort child
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> cond BH_FAILURE and child node running -> call child->abort %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		abort(bb);
+#ifdef LOG_CONTROL_NODES
+		oldState = m_eNodeStatus;
+#endif
+		return m_eNodeStatus;
+	}
+
+	// Node is not running when code comes here and condition was failure
+
+	m_eNodeStatus = BH_FAILURE;
+	LOG_CONTROL_NODE;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	return BH_FAILURE;
+}
+
+
+// ============================================================================
+//
+//  Condition decorator with memory
+//  Works likes a conditon and action added to a MemSequence
+//  The condition will not be called if the child is in status RUNNING. But the child->tick is called.
+//  If condition returns BH_SUCCESS, the child->tick is called.
+//  If condition returns BH_FAILURE, the node returns with BH_FAILURE
+
+
+ConditionMemDeco::ConditionMemDeco() : DecoratorNode(), m_result(BH_FAILURE) {}
+ConditionMemDeco::ConditionMemDeco(Node* child) : DecoratorNode(child), m_result(BH_FAILURE) {}
+
+
+NodeStatus ConditionMemDeco::tick(Blackboard& bb) {
+	SAVE_OLD_CON_RESULT;
+	SAVE_OLD_STATUS;
+
+	if (m_pChild->isRunning()) { // Is child is running, then don't query condition. Run child directly.
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond not called because child is running -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_eNodeStatus = m_pChild->tick(bb);
+		LOG_CONTROL_NODE;
+		return m_eNodeStatus;
+	}
+
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> calling condition %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	m_result = onCheckCondition(bb);
+
+	LOG_CONDITION_DECO(this);
+
+	if (m_result == BH_SUCCESS) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_SUCCESS  -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_eNodeStatus = m_pChild->tick(bb);
+		LOG_CONTROL_NODE;
+		return m_eNodeStatus;
+	}
+
+	// Node is not running, therfore I don't need to abort here.
+	m_eNodeStatus = BH_FAILURE;
+	LOG_CONTROL_NODE;
+	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_FAILURE. Returning failure to parent %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	return BH_FAILURE;
+}
+
 
 // ============================================================================
 // Like the NOT operator, the inverter decorator negates the result of its child node, i.e., SUCCESS state becomes FAILURE, and FAILURE becomes SUCCESS.
 // Notice that, inverter does not change RUNNING or ERROR states, as described in algorithm below.
 Inverter::Inverter() : DecoratorNode() {}
-Inverter::Inverter(Node* child) :  DecoratorNode(child) {}
+Inverter::Inverter(Node* child) : DecoratorNode(child) {}
 
-NodeStatus Inverter::onUpdate(Blackboard& bb)
-{
+NodeStatus Inverter::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
 
-    if (m_pChild == NULL) {
-        errorHandler.setError(F("!03,Inverter child == NULL\r\n"));
-        return BH_FAILURE;
-    }
-
-    NodeStatus s = m_pChild->tick(bb);
-    if( s == BH_FAILURE) {
-        s= BH_SUCCESS;
-    } else if( s == BH_SUCCESS) {
-        s =  BH_FAILURE;
-    }
-    return s;
+	m_eNodeStatus = m_pChild->tick(bb);
+	if (m_eNodeStatus == BH_FAILURE) {
+		m_eNodeStatus = BH_SUCCESS;
+	}
+	else if (m_eNodeStatus == BH_SUCCESS) {
+		m_eNodeStatus = BH_FAILURE;
+	}
+	LOG_CONTROL_NODE;
+	return m_eNodeStatus;
 }
+
 
 // ============================================================================
 // A succeeder will always return success, irrespective of what the child node actually returned.
 // These are useful in cases where you want to process a branch of a tree where a failure is expected or anticipated, but you donâ€™t want to abandon processing of a sequence that branch sits on.
-Succeeder::Succeeder(): DecoratorNode() {}
+Succeeder::Succeeder() : DecoratorNode() {}
 Succeeder::Succeeder(Node* child) : DecoratorNode(child) {}
 
-NodeStatus Succeeder::onUpdate(Blackboard& bb)
-{
-
-    if (m_pChild == NULL) {
-        errorHandler.setError(F("!03,Succeeder child == NULL\r\n"));
-        return BH_FAILURE;
-    }
-
-	NodeStatus s = m_pChild->tick(bb);
-    if( s == BH_FAILURE) {
-        s= BH_SUCCESS;
-    } else if( s == BH_SUCCESS) {
-        s =  BH_SUCCESS;
-    }
-
-    return s;
+NodeStatus Succeeder::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	m_eNodeStatus = m_pChild->tick(bb);
+	if (m_eNodeStatus != BH_RUNNING) {
+		m_eNodeStatus = BH_SUCCESS;
+	}
+	/*
+	if (m_eNodeStatus == BH_FAILURE) {
+		m_eNodeStatus = BH_SUCCESS;
+	}
+	else if (m_eNodeStatus == BH_SUCCESS) {
+		m_eNodeStatus = BH_SUCCESS;
+	}*/
+	LOG_CONTROL_NODE;
+	return m_eNodeStatus;
 }
 
 
 // ============================================================================
 // The opposite of a Succeeder, always returning fail.  Note that this can be achieved also by using an Inverter and setting its child to a Succeeder.
-Failer::Failer(): DecoratorNode() {}
+Failer::Failer() : DecoratorNode() {}
 Failer::Failer(Node* child) : DecoratorNode(child) {}
 
-NodeStatus Failer::onUpdate(Blackboard& bb)
-{
-
-    if (m_pChild == NULL) {
-        errorHandler.setError(F("!03,Failer child == NULL\r\n"));
-        return BH_FAILURE;
-    }
-
-	NodeStatus s = m_pChild->tick(bb);
-    if( s == BH_FAILURE) {
-        s= BH_FAILURE;
-    } else if( s == BH_SUCCESS) {
-        s =  BH_FAILURE;
-    }
-
-    return s;
-
+NodeStatus Failer::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	m_eNodeStatus = m_pChild->tick(bb);
+	if (m_eNodeStatus != BH_RUNNING) {
+		m_eNodeStatus = BH_FAILURE;
+	}
+	/*
+	if (m_eNodeStatus == BH_FAILURE) {
+		m_eNodeStatus = BH_FAILURE;
+	}
+	else if (m_eNodeStatus == BH_SUCCESS) {
+		m_eNodeStatus = BH_FAILURE;
+	}*/
+	LOG_CONTROL_NODE;
+	return m_eNodeStatus;
 }
 
 
@@ -672,39 +1454,52 @@ NodeStatus Failer::onUpdate(Blackboard& bb)
 // to make the tree to run continuously. Repeaters may optionally run their children a set number of times before returning to their parent.
 //
 
-Repeat::Repeat(): DecoratorNode() {}
+Repeat::Repeat() : DecoratorNode() {}
 Repeat::Repeat(Node* child) : DecoratorNode(child) {}
 
-void Repeat::setCount(int count)
-{
-    m_iLimit = count;
+void Repeat::setCount(int count) {
+	m_iLimit = count;
 }
 
-void Repeat::onInitialize(Blackboard& bb)
-{
-    m_iCounter = 0;
-}
 
-NodeStatus Repeat::onUpdate(Blackboard& bb)
-{
-    for (;;) {
-        m_pChild->tick(bb);
-        if (m_pChild->getNodeStatus() == BH_RUNNING) break;
-        if (m_pChild->getNodeStatus() == BH_FAILURE) return BH_FAILURE;
-        if (++m_iCounter == m_iLimit) return BH_SUCCESS;
-        m_pChild->reset();
-    }
-    return BH_RUNNING;
+NodeStatus Repeat::tick(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Repeat::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_iCounter = 0;
+	}
+
+	for (;;) {
+		m_eNodeStatus = m_pChild->tick(bb);
+		if (m_eNodeStatus == BH_RUNNING) {
+			LOG_CONTROL_NODE;
+			break;
+		}
+		if (m_eNodeStatus == BH_FAILURE) {
+			LOG_CONTROL_NODE;
+			return BH_FAILURE;
+		}
+		if (++m_iCounter == m_iLimit) {
+			m_eNodeStatus = BH_SUCCESS;
+			LOG_CONTROL_NODE;
+			return BH_SUCCESS;
+		}
+		m_pChild->reset();
+	}
+	return BH_RUNNING;
 }
 
 
 // ============================================================================
 // Like a repeater, these decorators will continue to reprocess their child. That is until the child finally returns a failure, at which point the repeater will return success to its parent.
 
-NodeStatus RepeatUntilFail::onUpdate(Blackboard& bb)
-{
-    while (!(BH_FAILURE == m_pChild->tick(bb))) {}
-    return BH_SUCCESS;
+NodeStatus RepeatUntilFail::tick(Blackboard& bb) {
+	do {
+		m_eNodeStatus = m_pChild->tick(bb);
+	} while (!(BH_FAILURE == m_eNodeStatus));
+
+	return BH_SUCCESS;
 }
 
 
@@ -712,189 +1507,179 @@ NodeStatus RepeatUntilFail::onUpdate(Blackboard& bb)
 // WaitDecorator node. Waits the configured amount of time until the child will be executed.
 // As long as the child returns BH_RUNNING, the status waittimeExpired will be latched
 
-WaitDecorator::WaitDecorator(): m_ulWaitMillis(0), m_ulStartTime(0), waittimeExpired(false) {}
+WaitDecorator::WaitDecorator() : m_ulWaitMillis(0), m_ulStartTime(0), m_waittimeExpired(false) {}
 
-void WaitDecorator::onInitialize(Blackboard& bb)
-{
-    waittimeExpired = false;
-    m_ulStartTime = millis();
-    //debug->printf("set start time mm_ulStartTime: %lu\r\n",m_ulStartTime);
+
+NodeStatus WaitDecorator::tick(Blackboard& bb) {
+
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitDecorator::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_waittimeExpired = false;
+		m_ulStartTime = millis();
+		m_eNodeStatus = BH_RUNNING;
+		LOG_NODE(BH_EMPTY, BH_WAITING, this);
+	}
+
+
+	if ((millis() - m_ulStartTime > m_ulWaitMillis) && (m_waittimeExpired == false)) {
+		m_waittimeExpired = true;
+		LOG_NODE(BH_WAITING, BH_WAITTIME_EXPIRED, this);
+		//debug->printf("millis(): %lu  m_ulStartTime: %lu\r\n",millis(), m_ulStartTime);
+	}
+
+	if (m_waittimeExpired) {
+		m_eNodeStatus = m_pChild->tick(bb);
+		return m_eNodeStatus;
+	}
+
+	return m_eNodeStatus;
 }
-NodeStatus WaitDecorator::onUpdate(Blackboard& bb)
-{
-    if( (millis() - m_ulStartTime > m_ulWaitMillis) && (waittimeExpired == false)) {
-        waittimeExpired = true;
-        //debug->printf("millis(): %lu  m_ulStartTime: %lu\r\n",millis(), m_ulStartTime);
-    }
 
-    if(waittimeExpired) {
-        NodeStatus s = m_pChild->tick(bb);
-        return s;
-    }
-    return BH_RUNNING;
+void WaitDecorator::setWaitMillis(uint32_t millis) {
+	m_ulWaitMillis = millis;
 }
 
-void WaitDecorator::setWaitMillis(unsigned long millis)
-{
-    m_ulWaitMillis = millis;
+
+void WaitDecorator::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_pChild->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitDecorator::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		m_pChild->abort(bb);
+
+		if (m_waittimeExpired) {
+			LOG_NODE(BH_WAITTIME_EXPIRED, BH_ABORTED, this);
+		}
+		else {
+			LOG_NODE(BH_WAITING, BH_ABORTED, this);
+		}
+
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
 }
 
 
 
 // ============================================================================
-// The tree must keep a list of open nodes of the last tick, in order to close them if another branch breaks the execution
-// (e.g., when a priority branch returns RUNNING.). After each tick, the tree must close all open nodes that werenâ€™t executed.
+// WaitDecorator node. Waits the configured amount of time until the child will be executed.
+// The time is set in a variable at the black board
+// As long as the child returns BH_RUNNING, the status waittimeExpired will be latched
 
-BehaviourTree::BehaviourTree():flagLogLastNode(true) {}
+WaitBBTimeDecorator::WaitBBTimeDecorator() : m_ulpWaitMillis(NULL), m_ulStartTime(0), m_waittimeExpired(false) {}
 
-void BehaviourTree::setRootNode(Node* newChild)
-{
-    root = newChild;
+bool WaitBBTimeDecorator::onSetup(Blackboard& bb) {
+
+	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t WaitBBTimeDecorator::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+
+	if (m_ulpWaitMillis == NULL) {
+		errorHandler.setError(F("!03,%s %d\t\t WaitBBTimeDecorator m_ulpWaitMillis == NULL\r\n"), m_nodeName, m_nodeId);
+		return false;
+	}
+
+	if (!DecoratorNode::onSetup(bb)) {
+		return false;
+	}
+	return true;
 }
 
-NodeStatus BehaviourTree::tick(Blackboard& bb)
-{
-    NodeStatus status;
-    int nodeIdLastRun = -1;
+NodeStatus WaitBBTimeDecorator::tick(Blackboard& bb) {
 
-    DTREE(debug->printf("**TREE BEGIN**\r\n");)
-
-    // run the tree
-    status = root->tick(bb);
-
-    // Log current node only if node changes from last run and if flagShowLastNode is set
-    if(flagLogLastNode && bb.lastNodeCurrentRun!=NULL) {
-
-        if(bb.lastNodeLastRun != NULL) {
-            nodeIdLastRun = bb.lastNodeLastRun->nodeId;
-        } else {
-            nodeIdLastRun = -1;
-        }
-
-        if(nodeIdLastRun != bb.lastNodeCurrentRun->nodeId) {
-            NodeStatus s = bb.lastNodeCurrentRun->m_eNodeStatus;
-            //sprintf(errorHandler.msg,"!02,%s %d %s\r\n", bb.lastNodeCurrentRun->nodeName, bb.lastNodeCurrentRun->nodeId ,enumNodeStatusStrings[s]);
-            sprintf(errorHandler.msg,"!02,%s %s\r\n", bb.lastNodeCurrentRun->nodeName, enumNodeStatusStrings[s]);
-			if (bb.flagBHTShowLastNode) {
-				errorHandler.setInfo();
-			}
-			else {
-				errorHandler.writeToLogOnly();
-			}
-	
-
-            bb.lastNodeLastRun = bb.lastNodeCurrentRun ;
-        }
-    }
+	if (!isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitBBTimeDecorator::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		m_waittimeExpired = false;
+		m_ulStartTime = millis();
+		m_eNodeStatus = BH_RUNNING;
+		LOG_NODE(BH_WAITING, BH_WAITING, this);
+	}
 
 
-#ifdef DEBUG_BHT_STACK
-	errorHandler.setInfoNoLog(F("######Stack lastRunningNodes\r\n"));
-    int end1;
-    end1 = lastRunningNodes.size;
-	errorHandler.setInfoNoLog(F("lastRunningNodes StackSize: %d\r\n"), end1);
-    for (int i=0; i<end1; i++) {
-        Node* n = lastRunningNodes[i];
-		errorHandler.setInfoNoLog(F("Node: %s %d\r\n"), n->nodeName, n->nodeId);
-    }
+	if ((millis() - m_ulStartTime > (*m_ulpWaitMillis)) && (m_waittimeExpired == false)) {
+		m_waittimeExpired = true;
+		LOG_NODE(BH_WAITING, BH_WAITTIME_EXPIRED, this);
+		//debug->printf("millis(): %lu  m_ulStartTime: %lu\r\n",millis(), m_ulStartTime);
+	}
 
-	errorHandler.setInfoNoLog(F("######Stack runningNodes\r\n"));
-    end1 = bb.runningNodes.size;
-	errorHandler.setInfoNoLog(F("runningNodes StackSize: %d\r\n"), end1);
-    for (int i=0; i<end1; i++) {
-        Node* n = bb.runningNodes[i];
-		errorHandler.setInfoNoLog(F("Node: %s %d\r\n"),n->nodeName, n->nodeId);
-    }
-	errorHandler.setInfoNoLog(F("######STACK END\r\n"));
-#endif
+	if (m_waittimeExpired) {
+		m_eNodeStatus = m_pChild->tick(bb);
+	}
 
-    // Es kann vorkommen, das im aktuellen durchlauf eine node von running auf success gegangen ist.
-    // Diese sich aber trotzdem noch im last Stack befindet. Hier wird dann trotzdem die abort function aufgerufen
-    // abort() prÃ¼ft , ob die node noch im running state ist und terminiert diese nur dann
-    // wenn diese tatsÃ¤chlich noch im running state ist.
+	return m_eNodeStatus;
+}
 
-    /* CLOSE NODES FROM LAST TICK, IF NEEDED */
-    int start = -1;  // go through stack and find first node unequal
-    int end = min(lastRunningNodes.size, bb.runningNodes.size);
-    for (int i=0; i< end; i++) {
-        Node* last  = lastRunningNodes[i];
-        Node* current =  bb.runningNodes[i];
-        if (last->nodeId != current->nodeId ) {
-            start = i;
-            DSTACK(errorHandler.setInfoNoLog(F("lastNode %s %d != currentNode %s %d\r\n"), last->nodeName, last->nodeId, current->nodeName, current->nodeId);)
-            break;
-        }
-    }
-
-
-    if(start!=-1) {
-        // close last running nodes from the end of the stack
-        for (int  i=lastRunningNodes.size-1; i>=start; i--) {
-            Node* n = lastRunningNodes[i]; //.Get(i);
-            DABORT(debug->printf( "Node called to abort (A): %s %d\r\n", n->nodeName.c_str(),n->nodeId);)
-            n->abort(bb);
-        }
-    }
-
-
-    // Wenn bei aktuellem Durchlauf kein runningNode zurÃ¼ckgemeldet wurde, in lastRunningNodes aber noch EintrÃ¤ge
-    // vorhanden sind, diese aborten. Dies kann vorkommen, wenn ein Selector einen vorherigen anderen Zweig aufruft der mit Success beendet wird.
-    // oder der letzte Zweig mit success/failure beendet wird.
-    if(bb.runningNodes.size == 0 && lastRunningNodes.size > 0) {
-        // close last running nodes from the end of the stack
-        for (int  i=lastRunningNodes.size-1; i>=0; i--) {
-            Node* n = lastRunningNodes[i]; //.Get(i);
-            DABORT(debug->printf( "Node called to abort(B): %s %d\r\n", n->nodeName.c_str(),n->nodeId);)
-            n->abort(bb);
-        }
-    }
-
-    /* POPULATE lastRunningNodes with current runningNodes*/
-    memcpy(&lastRunningNodes.data[0], &bb.runningNodes.data[0], NODE_STACK_MAX * sizeof(Node*));
-    lastRunningNodes.size = bb.runningNodes.size;
-
-#ifdef DEBUG_BHT_STACK
-	errorHandler.setInfoNoLog(F("######Stack lastRunningNodes populated\r\n"));
-    end1 = lastRunningNodes.size;
-	errorHandler.setInfoNoLog(F("lastRunningNodes StackSize: %d\r\n"), end1);
-    for (int i=0; i<end1; i++) {
-        Node* n = lastRunningNodes[i];
-		errorHandler.setInfoNoLog(F("Node: %s %d\r\n"), n->nodeName, n->nodeId);
-    }
-	errorHandler.setInfoNoLog(F("######STACK END\r\n"));
-#endif
-
-    // clear current stack to prepare for next run
-    bb.runningNodes.Clear();
-    DTREE(debug->printf("**TREE END**\r\n");)
-    return status;
+void WaitBBTimeDecorator::setWaitBBPointer(uint32_t* pWaitTimePointer) {
+	m_ulpWaitMillis = pWaitTimePointer;
 }
 
 
-void BehaviourTree::reset(Blackboard& bb)
-{
+void WaitBBTimeDecorator::abort(Blackboard& bb) {
+	SAVE_OLD_STATUS;
+	if (m_pChild->isRunning()) {
+		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitBBTimeDecorator::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		m_pChild->abort(bb);
 
-    bb.lastNodeLastRun = NULL;
-    bb.lastNodeCurrentRun = NULL;
+		if (m_waittimeExpired) {
+			LOG_NODE(BH_WAITTIME_EXPIRED, BH_ABORTED, this);
+		}
+		else {
+			LOG_NODE(BH_WAITING, BH_ABORTED, this);
+		}
+
+	}
+	m_eNodeStatus = BH_ABORTED;
+	LOG_CONTROL_NODE_ABORT;
+}
+// ============================================================================
+//  BehaviourTree
+//  In this class the root node must be set
+
+BehaviourTree::BehaviourTree() :root(NULL), flagLogChangedNode(true) {}
+
+void BehaviourTree::setRootNode(Node* newChild) {
+	root = newChild;
+}
+bool BehaviourTree::onSetup(Blackboard& bb) {
+	m_nodeName = (char*)"tree";
+
+	if (root == NULL) {
+		errorHandler.setInfoNoLog(F("**TREE root is not initialized**\r\n"));
+		return false;
+	}
+	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t BehaviourTree::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	return root->onSetup(bb);
+}
+
+NodeStatus BehaviourTree::tick(Blackboard& bb) {
+
+	DTREE(errorHandler.setInfoNoLog(F("** TREE BEGIN **\r\n")););
 
 
-    // close last running nodes from the end of the stack
-    for (int  i=lastRunningNodes.size-1; i>=0; i--) {
-        Node* n = lastRunningNodes[i];
-        DABORT(debug->printf( "Node called to abort (R): %s %d\r\n", n->nodeName.c_str(),n->nodeId);)
-        n->abort(bb);
-    }
-    lastRunningNodes.Clear();
+	// run the tree
+	m_eNodeStatus = root->tick(bb);
 
-    // close current  blackboard running nodes from the end of the stack
-    for (int  i=bb.runningNodes.size-1; i>=0; i--) {
-        Node* n = bb.runningNodes[i];
-        DABORT(debug->printf( "Node called to abort (R): %s %d\r\n", n->nodeName.c_str(),n->nodeId);)
-        n->abort(bb);
-    }
-    bb.runningNodes.Clear();
+	groupIdx++;
+
+	if (groupIdx > 9999) {
+		groupIdx = 0;
+	}
+	return m_eNodeStatus;
+}
+
+void BehaviourTree::abort(Blackboard& myBlackboard) {
+	if (root->isRunning()) {
+		root->abort(myBlackboard);
+	}
+	m_eNodeStatus = BH_ABORTED;
+}
+
+void BehaviourTree::reset(Blackboard& bb) {
+
+	flagLogChangedNode = true;
+	groupIdx = 0;
 
 }
 
 
+void BehaviourTree::print(){
+		root->print(0);
+}
 

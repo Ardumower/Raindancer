@@ -19,51 +19,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Blackboard.h"
+#include "UseServices.h"
 
 
 const char* enuDriveDirectionString[] = { "DD_FORWARD",
-										"DD_FORWARD_INSIDE",
-										"DD_OVERRUN",
-										"DD_REVERSE_ESC_OBST",
-										"DD_REVERSE_INSIDE",
-										"DD_ROTATECW",
-										"DD_ROTATECC",
-										"DD_ROTATECW1",
-										"DD_ROTATECC1",
-										"DD_REVERSE_LINE_FOLLOW",
-										"DD_SPIRAL_CW",
-										"DD_FEOROTATECC",
-										"DD_FEOROTATECW",
-										"DD_FEOROTATECC1",
-										"DD_FEOROTATECW1",
-										"DD_FEOROTATECC2",
-										"DD_FEOROTATECW2",
-										"DD_FREEBUMPER", // only used for history
-										"DD_NONE",
-	//"DD_ROTATE90CW",
-	//"DD_ROTATE90CC",
-	"UNKNOWN1", //Only for safety if one extends enum enuDriveDirection and forgot to extend the strings here. Never overwrite this. Append it always to enuDriveDirectionString.
-	"UNKNOWN2",
-	"UNKNOWN3",
-	"UNKNOWN4",
-	"UNKNOWN5",
-	"UNKNOWN6"
+							"DD_REVERSE",
+							"DD_ROTATECW",
+							"DD_ROTATECC",
+							"DD_SPIRAL_CW",
+							"DD_NONE",
+							"UNKNOWN1",
+							"UNKNOWN2",
+							"UNKNOWN3",
+							"UNKNOWN4",
+							"UNKNOWN5",
+							"UNKNOWN6"
 };
 
-const char* enuFlagEscabeObstacleConFlagString[] = { "FEO_NONE",
-		"FEO_ROTCC1",
-		"FEO_ROTCW1",
-		"FEO_ROTCC2",
-		"FEO_ROTCW2",
-		"FEO_BACKINSIDE",
-		"FEO_ROT",
-		"UNKNOWN1",
-		"UNKNOWN2",
-		"UNKNOWN3",
-		"UNKNOWN4",
-		"UNKNOWN5",
-		"UNKNOWN6"
-};
 
 
 const char* enuFlagForceRotateDirectionString[] = { "FRD_NONE",
@@ -91,30 +63,44 @@ const char* enuFlagCoilsOutsideString[] = { "CO_NONE",
 };
 
 
-void Blackboard::setBehaviour(enuBehaviour b)
-{
+const char* enuFlagBumperActivatedString[] = { "BUM_NONE",
+	"BUM_RIGHT",  //Not used jet
+	"BUM_LEFT",   //Not used jet
+	"BUM_BOTH",
+	"BUM_DUINO",
+	"UNKNOWN1",
+	"UNKNOWN2",
+	"UNKNOWN3",
+	"UNKNOWN4",
+	"UNKNOWN5",
+	"UNKNOWN6"
+};
+
+
+
+
+void Blackboard::setBehaviour(enuBehaviour b) {
 
 	// save statistic
+
 #if CONF_DISABLE_EEPROM_SERVICE == false
-	if (flagEnableMowing == true) { //only save if in mowing mode
+	if (flagEnableMowing == true && b!= BH_MOW) { //only save if in mowing mode
 		errorHandler.setInfo(F("!04,Write Stats to EEPROM\r\n"));
 
-		float mowtime = eeprom.readFloat(EEPADR_MOWTIME);
+		float mowtime = srvEeprom.readFloat(EEPADR_MOWTIME);
 		unsigned long time = millis() - timeInMowBehaviour;
 		double hours = (double)time / 3600000.0;
 		mowtime += hours;
-		eeprom.writeFloat(EEPADR_MOWTIME, mowtime);
+		srvEeprom.writeFloat(EEPADR_MOWTIME, mowtime);
 
+		float mowway = srvEeprom.readFloat(EEPADR_MOWDIRVENWAY);
+		float ticks = (srvMotor.L->myEncoder->getAbsTicksCounter() + srvMotor.R->myEncoder->getAbsTicksCounter()) / 2.0f;
+		mowway += srvMotor.getMForCounts(ticks);
+		srvEeprom.writeFloat(EEPADR_MOWDIRVENWAY, mowway);
 
-		float mowway = eeprom.readFloat(EEPADR_MOWDIRVENWAY);
-		float ticks = (motor.L->myEncoder->getAbsTicksCounter() + motor.R->myEncoder->getAbsTicksCounter()) / 2.0f;
-		mowway += motor.getMForCounts(ticks);
-		eeprom.writeFloat(EEPADR_MOWDIRVENWAY, mowway);
-
-		int32_t rotations = eeprom.read32t(EEPADR_ROTATIONCOUNT);
+		int32_t rotations = srvEeprom.read32t(EEPADR_ROTATIONCOUNT);
 		rotations = rotations + numberOfRotations;
-		eeprom.write32t(EEPADR_ROTATIONCOUNT, rotations);
-
+		srvEeprom.write32t(EEPADR_ROTATIONCOUNT, rotations);
 	}
 #endif
 
@@ -125,67 +111,67 @@ void Blackboard::setBehaviour(enuBehaviour b)
 	flagEnableFindPerimeter = false;
 	flagEnableLeaveHeadChargingStation = false;
 
-	motor.enableDefaultRamping();
+	srvMotor.enableDefaultRamping();
 
 	switch (b) {
 	case BH_GOTOAREA:
 		resetBB();  //Reset BB because here starts a new mow sequence
 		flagEnableGotoAreaX = true;
 		flagGotoAreaXFirstCall = true;
-		//rangeSensor.enabled = false;
-		chargeSystem.deactivateRelay();  //Muss hier auch abgeschaltet werden, falls user dieses ueber das UI einschaltet.
-		//motor.mowMotStop(); // Will be started in BH_MOW behaviour tree.
-		motor.stopAllMotors(); // Nur zur Sicherheit, falls diese gerade laufen.
-		motor.startDistanceMeasurementAreax();
+		//srvRangeSensor.enabled = false;
+		srvChargeSystem.deactivateRelay();  //Muss hier auch abgeschaltet werden, falls user dieses ueber das UI einschaltet.
+		//srvMotor.mowMotStop(); // Will be started in BH_MOW behaviour tree.
+		srvMotor.stopAllMotors(); // Nur zur Sicherheit, falls diese gerade laufen.
+		srvMotor.startDistanceMeasurementAreax();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_GOTOAREA\r\n"));
 		break;
 	case BH_CHARGING:
 		flagEnableCharging = true;
-		//rangeSensor.enabled = false;
-		motor.mowMotStop();
+		//srvRangeSensor.enabled = false;
+		srvMotor.mowMotStop();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_CHARGING\r\n"));
 		break;
 	case BH_PERITRACK:
 		flagEnablePerimetertracking = true;
-		//rangeSensor.enabled = false;
-		chargeSystem.deactivateRelay();
-		//motor.mowMotStop();
+		//srvRangeSensor.enabled = false;
+		srvChargeSystem.deactivateRelay();
+		//srvMotor.mowMotStop();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_PERITRACK\r\n"));
 		break;
 	case BH_FINDPERIMETER:
 		flagEnableFindPerimeter = true;
-		//rangeSensor.enabled = true;
-		chargeSystem.deactivateRelay();
-		//motor.mowMotStop();
+		//srvRangeSensor.enabled = true;
+		srvChargeSystem.deactivateRelay();
+		//srvMotor.mowMotStop();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_FINDPERIMETER\r\n"));
 		break;
 	case BH_MOW:
 		resetBB(); //Reset BB because here starts a new mow sequence
 		myRandom(0, 5000, true); // init seed value
 		flagEnableMowing = true;
-		//rangeSensor.enabled = true;
-		chargeSystem.deactivateRelay();
+		//srvRangeSensor.enabled = true;
+		srvChargeSystem.deactivateRelay();
 		// reset statistic counter
-		motor.resetEncoderCounter();
+		srvMotor.resetEncoderCounter();
 		numberOfRotations = 0;
 		timeInMowBehaviour = millis();
-		//motor.startDistanceMeasurement();
+		//srvMotor.startDistanceMeasurement();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_MOW\r\n"));
 		break;
 	case BH_LEAVE_HEAD_CS:
 		resetBB();  //Reset BB because here starts a new mow sequence
 		flagEnableLeaveHeadChargingStation = true;
-		//rangeSensor.enabled = false;
-		chargeSystem.deactivateRelay();  
-		motor.stopAllMotors(); // Nur zur Sicherheit, falls diese gerade laufen.
-		//motor.startDistanceMeasurementAreax();
+		//srvRangeSensor.enabled = false;
+		srvChargeSystem.deactivateRelay();
+		srvMotor.stopAllMotors(); // Nur zur Sicherheit, falls diese gerade laufen.
+		//srvMotor.startDistanceMeasurementAreax();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_LEAVE_HEAD_CS\r\n"));
 		break;
 	case BH_NONE:
 		// Don't reset BB here because if you change in manual mode, you will probaly check the BB variables like history or so.
-		//rangeSensor.enabled = false;
-		chargeSystem.deactivateRelay();
-		motor.mowMotStop();
+		//srvRangeSensor.enabled = false;
+		srvChargeSystem.deactivateRelay();
+		srvMotor.mowMotStop();
 		errorHandler.setInfo(F("!04,SET BEHAV -> BH_NONE\r\n"));
 		break;
 	default:
@@ -193,95 +179,106 @@ void Blackboard::setBehaviour(enuBehaviour b)
 	}
 }
 
-//void Blackboard::addHistoryEntry(THistory &h) {
-
-void Blackboard::addHistoryEntry(enuDriveDirection _driveDirection, float  _distanceDriven, float _rotAngleSoll, float _rotAngleIst,
-	enuFlagForceRotateDirection _flagForceRotDirection, enuFlagCoilsOutside   _coilFirstOutside) {
+void Blackboard::addHistoryEntry(THistory& hist) {
 	//Shift History for new entry
 	for (int i = HISTROY_BUFSIZE - 1; i > 0; i--) {
 		history[i] = history[i - 1];
 	}
 
-	history[0].driveDirection = _driveDirection;
-	history[0].distanceDriven = _distanceDriven;
-	history[0].rotAngleSoll = _rotAngleSoll;
-	history[0].rotAngleIst = _rotAngleIst;
-	history[0].flagForceRotDirection = _flagForceRotDirection;
-	history[0].coilFirstOutside = _coilFirstOutside;
+	history[0] = hist;
+	history0.timeAdded = millis();
 
-	history[0].restored = false;
-	history[0].timeAdded = millis();
+	errorHandler.setInfo(F("!03,add histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history0.driveDirection]);
 
-	errorHandler.setInfo(F("!03,add histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history[0].driveDirection]);
-
-	motor.startDistanceMeasurement();
-
+	srvMotor.startDistanceMeasurement();
 
 	if (flagShowHistory == true) {
-
-		errorHandler.setInfoNoLog(F("============================\r\n"));
-		sprintf(errorHandler.msg, "!05,driveDirection %s %s %s %s\r\n", enuDriveDirectionString[history[0].driveDirection], enuDriveDirectionString[history[1].driveDirection], enuDriveDirectionString[history[2].driveDirection], enuDriveDirectionString[history[3].driveDirection]);
-		errorHandler.setInfoNoLog();
-
-		sprintf(errorHandler.msg, "!05,coilFirstOut %s %s %s %s\r\n", enuFlagCoilsOutsideString[history[0].coilFirstOutside], enuFlagCoilsOutsideString[history[1].coilFirstOutside], enuFlagCoilsOutsideString[history[2].coilFirstOutside], enuFlagCoilsOutsideString[history[3].coilFirstOutside]);
-		errorHandler.setInfoNoLog();
-
-		sprintf(errorHandler.msg, "!05,rotAngleSoll %3.2f %3.2f %3.2f %3.2f\r\n", history[0].rotAngleSoll, history[1].rotAngleSoll, history[2].rotAngleSoll, history[3].rotAngleSoll);
-		errorHandler.setInfoNoLog();
-
-		sprintf(errorHandler.msg, "!05,flagForceRotDir %s %s %s %s\r\n", enuFlagForceRotateDirectionString[history[0].flagForceRotDirection], enuFlagForceRotateDirectionString[history[1].flagForceRotDirection], enuFlagForceRotateDirectionString[history[2].flagForceRotDirection], enuFlagForceRotateDirectionString[history[3].flagForceRotDirection]);
-		errorHandler.setInfoNoLog();
-
-		errorHandler.setInfoNoLog(F("---\r\n"));
-
-		sprintf(errorHandler.msg, "!05,distanceDriven %3.2f %3.2f %3.2f %3.2f\r\n", history[0].distanceDriven, history[1].distanceDriven, history[2].distanceDriven, history[3].distanceDriven);
-		errorHandler.setInfoNoLog();
-
-		sprintf(errorHandler.msg, "!05,rotAngleIst %3.2f %3.2f %3.2f %3.2f\r\n", history[0].rotAngleIst, history[1].rotAngleIst, history[2].rotAngleIst, history[3].rotAngleIst);
-		errorHandler.setInfoNoLog();
-
-		sprintf(errorHandler.msg, "!05,restored  %d %d %d %d\r\n", history[0].restored, history[1].restored, history[2].restored, history[3].restored);
-		errorHandler.setInfoNoLog();
-
-		sprintf(errorHandler.msg, "!05,timeAdded %lu %lu %lu %lu\r\n", history[0].timeAdded, history[1].timeAdded, history[2].timeAdded, history[3].timeAdded);
-		errorHandler.setInfoNoLog();
+		printHistoryEntry(0);
 	}
 
 }
 
+THistory Blackboard::getInitialisedHistoryEntry(){
+	THistory hist;
+	hist.driveDirection = DD_NONE;		// [0]  Enthaelt Fahrtrichtung
+	hist.distanceSoll = 0;
+	hist.distanceIst = 0;				// [0] Enthaelt die gerade gefahrene distanz/winkeldistanz
+	hist.coilFirstOutside = CO_NONE;   // [0] which coil was first outside jet
+	hist.coilOutsideAfterOverrun = CO_NONE;
+	hist.restored = false;					// wurde die node restored
+	hist.timeAdded = 0;			// zeit, wann node erstellt wurde in ms
+	hist.bumperActivated = BUM_NONE;		// Was bumper activated?
+	hist.cruiseSpeed = 0;
+	hist.coilsOutsideAngle = 0;
+	return hist;
+}
+
+
+void Blackboard::printHistoryEntry(int x) {
+	errorHandler.setInfoNoLog(F("============================\r\n"));
+	errorHandler.setInfoNoLog(F("!05,Idx:             %d \r\n"), x);
+	errorHandler.setInfoNoLog(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[history[x].driveDirection]);
+	errorHandler.setInfoNoLog(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[history[x].coilFirstOutside]);
+	errorHandler.setInfoNoLog(F("!05,coilOutAfterOver %s\r\n"), enuFlagCoilsOutsideString[history[x].coilOutsideAfterOverrun]);
+	errorHandler.setInfoNoLog(F("!05,bumperActivated  %s\r\n"), enuFlagBumperActivatedString[history[x].bumperActivated]);
+	errorHandler.setInfoNoLog(F("!05,timeAdded        %d \r\n"), history[x].timeAdded);
+	errorHandler.setInfoNoLog(F("---\r\n"));
+	errorHandler.setInfoNoLog(F("!05,distanceSoll   %f\r\n"), history[x].distanceSoll);
+	errorHandler.setInfoNoLog(F("!05,distanceIst   %f\r\n"), history[x].distanceIst);
+	errorHandler.setInfoNoLog(F("!05,cruiseSpeed   %d\r\n"), history[x].cruiseSpeed);
+	errorHandler.setInfoNoLog(F("!05,coilsOutsideAngle   %f\r\n"), history[x].coilsOutsideAngle);
+	errorHandler.setInfoNoLog(F("!05,restored         %d \r\n"), history[x].restored);
+}
+
+void Blackboard::historyUpdateDistance() {
+
+	if (history0.driveDirection == DD_ROTATECC || history0.driveDirection == DD_ROTATECW) {
+		history0.distanceIst = srvMotor.getAngleRotatedAngleDeg();
+	}
+	else {
+		history0.distanceIst = srvMotor.getDistanceInCM();
+	}
+}
 
 void Blackboard::deleteLastHistoryEntry() {
 
-	//history[0].restored = true;
+	//history0.restored = true;
 
-	errorHandler.setInfo(F("!03,delete histEntry driveDirection: %s \r\n"), enuDriveDirectionString[history[0].driveDirection]);
+	errorHandler.setInfo(F("!03,delete deleteLastHistoryEntry driveDirection: %s \r\n"), enuDriveDirectionString[history0.driveDirection]);
 
 	//Delete History entry [0] while shifting to left
 	for (int i = 0; i < HISTROY_BUFSIZE - 1; i++) {
 		history[i] = history[i + 1];
 	}
+	history[HISTROY_BUFSIZE - 1] = getInitialisedHistoryEntry();
+}
 
-	history[HISTROY_BUFSIZE - 1].distanceDriven = 300; // [0] Enthaelt die gerade gefahrene distanz von der letzten rotation bis jetzt. Jedes mal nachdem rotiert wurde, wird distanzmessung neu gestartet.
-	history[HISTROY_BUFSIZE - 1].coilFirstOutside = CO_NONE; // [0] which coil was first outside jet
-	history[HISTROY_BUFSIZE - 1].driveDirection = DD_NONE;; // [0]  Enthaelt rotationsrichtung der aktuellen Drehung.
-	history[HISTROY_BUFSIZE - 1].rotAngleSoll = 0; // [0] Sollwinkel der aktuellen Drehung
-	history[HISTROY_BUFSIZE - 1].rotAngleIst = 0;
-	history[HISTROY_BUFSIZE - 1].flagForceRotDirection = FRD_NONE;
+enuDriveDirection Blackboard::historyGetLastRotateDirection() {
+	int i;
+	enuDriveDirection dd = DD_ROTATECC;
+	for (i = 0; i < HISTROY_BUFSIZE; i++) {
+		if (history[i].driveDirection == DD_ROTATECC  || history[i].driveDirection == DD_ROTATECW) {
+			dd = history[i].driveDirection;
+			break;
+		}
+	}
+	return dd;
 
 }
 
+int8_t Blackboard::histGetThreeLastForwardDistances(float& a, float& b, float& c) {
 
-bool Blackboard::histGetTwoLastForwardDistances(float& a, float& b) {
-
-	int i, j;
-	bool aFound, bFound;
+	int i, j, h;
+	bool aFound, bFound, cFound;
 	j = HISTROY_BUFSIZE;
+	h = HISTROY_BUFSIZE;
 	aFound = false;
 	bFound = false;
+	cFound = false;
 
 	for (i = 0; i < HISTROY_BUFSIZE; i++) {
 		if (history[i].driveDirection == DD_FORWARD) {
-			a = history[i].distanceDriven;
+			a = history[i].distanceIst;
 			aFound = true;
 			j = i + 1;
 			break;
@@ -290,54 +287,53 @@ bool Blackboard::histGetTwoLastForwardDistances(float& a, float& b) {
 
 	for (; j < HISTROY_BUFSIZE; j++) {
 		if (history[j].driveDirection == DD_FORWARD) {
-			b = history[j].distanceDriven;
+			b = history[j].distanceIst;
 			bFound = true;
+			h = j + 1;
+			break;
+		}
+	}
+
+
+	for (; h < HISTROY_BUFSIZE; h++) {
+		if (history[h].driveDirection == DD_FORWARD) {
+			c = history[h].distanceIst;
+			cFound = true;
 			break;
 		}
 	}
 
 	if (flagShowRotateX) {
-		errorHandler.setInfo(F("!5,histGTLFD result: %d forwDistA: %f forwDistB: %f\r\n"), aFound && bFound, a, b);
+		errorHandler.setInfo(F("!5,histGTLFD result: %d forwDistA: %f forwDistB: %f forwDistC: %f\r\n"), aFound && bFound && cFound, a, b, c);
+	}
+
+	if (aFound && bFound && cFound) {
+		return 3;
 	}
 
 	if (aFound && bFound) {
-		return true;
+		return 2;
 	}
 
-	return false;
+	return 0;
 
 }
 
-void Blackboard::resetBB()
-{
-	errorHandler.setInfo(F("Blackboard:reset\r\n"));
-	// Init black board variables
-	lastNodeLastRun = NULL;
-	lastNodeCurrentRun = NULL;
 
-	cruiseSpeed = 0;
-	timeCruiseSpeedSet = 0;
+void Blackboard::resetBB() {
+	errorHandler.setInfo(F("Blackboard:reset\r\n"));
+
 
 	flagEnableRestoreHistory = false;
-	flagBumperInsidePerActivated = false;
-	flagBumperOutsidePerActivated = false;
 	flagCruiseSpiral = false;
 
-	flagBumperActivatedLeft = false;  // rest variables of the blackboard here
-	flagBumperActivatedRight = false;
-
 	//errorHandler.setInfo(F("bht->reset disable flagCruiseSpiral\r\n"));
-
-	flagCoilFirstOutside = CO_NONE;
-	flagCoilFirstOutsideLatched = CO_NONE;
-	//flagCoilOutsideAfterOverrun  = CO_BOTH;
 	flagForceSmallRotAngle = 0;
 
-	flagEscabeObstacleConFlag = FEO_NONE;
 
 	flagForceRotateDirection = FRD_NONE;
 
-	arcRotateXArc = 0;
+	//arcRotateXArc = 0;
 
 	lastTimeSpiralStarted = millis() + 60000ul; // Erst eine Minute nach Reset warten, bevor Sprirale aktiviert werden kann.
 
@@ -348,32 +344,19 @@ void Blackboard::resetBB()
 
 	flagBHTShowLastNode = CONF_bb_flagBHTShowLastNode;
 
-	if (perimeterSensoren.isLeftOutside() || perimeterSensoren.isRightOutside()) {
-		driveDirection = DD_REVERSE_INSIDE;
-	}
-	else {
-		driveDirection = DD_FORWARD;
-	}
-
+	
+	THistory hist = getInitialisedHistoryEntry();
 	for (int i = 0; i < HISTROY_BUFSIZE; i++) {
-		history[i].distanceDriven = 300; // [0] Enthaelt die gerade gefahrene distanz von der letzten rotation bis jetzt. Jedes mal nachdem rotiert wurde, wird distanzmessung neu gestartet.
-		history[i].coilFirstOutside = CO_NONE; // [0] which coil was first outside jet
-		history[i].driveDirection = DD_NONE;; // [0]  Enthaelt rotationsrichtung der aktuellen Drehung.
-		history[i].rotAngleSoll = 0; // [0] Sollwinkel der aktuellen Drehung
-		history[i].rotAngleIst = 0;
-		history[i].flagForceRotDirection = FRD_NONE;
-		history[i].restored = false;
+		history[i] = hist;
 	}
 
-	numberToRestoreHist = 0;
 	randAngle = 0;
 	flagForceAngle = false;
-	flagDeactivateRotInside = false;;
-
+	
 	flagShowRotateX = false;
 	flagShowHistory = false;
 
 	flagRotateAtPer = false;
 	flagDriveCurve = false;
-	flagEnableSecondReverse = false;
+	
 }

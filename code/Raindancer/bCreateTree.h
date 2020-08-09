@@ -54,6 +54,8 @@ public:
     void reset();
     
     void loop();
+
+    void print();
 };
 #endif
 

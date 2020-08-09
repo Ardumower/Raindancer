@@ -12,7 +12,7 @@
 #include "hardware.h"
 #include "motor.h"
 #include "config.h"
-extern TMotorInterface motor;
+extern TMotorInterface srvMotor;
 extern bool _controlManuel;
 
 class TShutdown : public Thread {
@@ -38,7 +38,7 @@ public:
             case 0:
                 startTime = millis();
                 _controlManuel = true; // Set manual mode
-                motor.stopAllMotors();
+                srvMotor.stopAllMotors();
                 if (CONF_WAIT_FOR_PI_SHUTDOWN) {
                     errorHandler.setInfoNoLog(F("!03,PowerOff requested. Wait 50 sec for Raspberry PI shutdown.\r\n"));
                     }
@@ -50,7 +50,7 @@ public:
                 break;
             case 1:
                 // wait that motors hs been stopped
-                if (motor.isCLCStopped()) {
+                if (srvMotor.isCLCStopped()) {
                     state = 2;
                     }
                 break;

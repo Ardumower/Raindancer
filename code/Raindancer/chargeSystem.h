@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BATTERYFACTOR_CS  11.0f // ((100.0f+10.0f)/10.0f) ((R1+R2)/R2)  ADC voltage to charge voltage. 10.9 determined by measuring 
 #define CURRENTFACTOR_CS  0.5f         // ADC voltage to current ampere
 
-extern BuzzerClass Buzzer;
+extern BuzzerClass srvBuzzer;
 
 class TchargeSystem : public Thread
 {
@@ -73,7 +73,7 @@ public:
 		}
 
         if(doChargeEnable == LOW){
-			Buzzer.sound(SND_CHARGERELAYON);
+			srvBuzzer.sound(SND_CHARGERELAYON);
 		}
 		doChargeEnable = HIGH;
 		errorHandler.setInfo(F("Relay On\r\n"));
@@ -82,7 +82,7 @@ public:
     void deactivateRelay() {
 
 		if (doChargeEnable != LOW) {
-			Buzzer.sound(SND_CHARGERELAYOFF);
+			srvBuzzer.sound(SND_CHARGERELAYOFF);
 		}
 		doChargeEnable = LOW;
 		errorHandler.setInfo(F("Relay Off\r\n"));

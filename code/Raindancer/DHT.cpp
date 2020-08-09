@@ -17,7 +17,7 @@
 #define MIN_INTERVAL 2000
 
 //xdes1
-extern TShutdown shutdown;
+extern TShutdown srvShutdown;
 
 TDHT::TDHT( uint8_t type) {
   _type = type;
@@ -110,7 +110,7 @@ void TDHT::run() {
     errorHandler.setError(F("#T,TDHT CONF_OVERHEATING_TEMP reached: %f\r\n"), dhtTempActual);
     doChargeEnable = LOW;
     //xdes1
-    shutdown.enabled = true;
+    srvShutdown.enabled = true;
   }
 
 }

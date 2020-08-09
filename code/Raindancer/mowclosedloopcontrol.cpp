@@ -40,7 +40,7 @@ void TMowClosedLoopControlThread::setup(uint8_t motorNumber)    // Motor 1 oder 
 	flagShowSpeed = false;
 	directionForward = true;
 	resetCount = 0;
-	//errorHandler.setInfoNoLog(F("!03,CLCM SETUP \r\n"));
+	//errorHandler.setInfoNoLog(F("!03,srvClcM SETUP \r\n"));
 }
 
 
@@ -169,11 +169,11 @@ void TMowClosedLoopControlThread::UpdateState(EMowMotorState t)
 			if (diMotorMowFault == LOW) {
 				mowMotorDriver.resetFault(true);
 				resetCount++;
-				errorHandler.setInfo(F("clcM Motor %c resetCount++;\r\n"),'M');
+				errorHandler.setInfo(F("srvClcM Motor %c resetCount++;\r\n"),'M');
 			}
 		}
 		else {
-			errorHandler.setError(F("clcM Motor %c  fault\r\n"), 'M');
+			errorHandler.setError(F("srvClcM Motor %c  fault\r\n"), 'M');
 			resetCount = 111;
 		}
 
@@ -186,7 +186,7 @@ void TMowClosedLoopControlThread::UpdateState(EMowMotorState t)
 	}
 
 	if (flagShowSpeed) {
-		errorHandler.setInfoNoLog(F("!03,CLCM speed: %f \r\n"), speedCurr);
+		errorHandler.setInfoNoLog(F("!03,srvClcM speed: %f \r\n"), speedCurr);
 	}
 
 };
@@ -197,7 +197,7 @@ void TMowClosedLoopControlThread::forward()
 {
 
 	if (GetState() == STMM_BACKWARD) {
-		errorHandler.setInfo(F("!03,CLCM FORWARD not possible. STOP MOTOR FIRST!!!\r"));
+		errorHandler.setInfo(F("!03,srvClcM FORWARD not possible. STOP MOTOR FIRST!!!\r"));
 		return;
 	}
 	SetState(STMM_FORWARD);
@@ -208,7 +208,7 @@ void TMowClosedLoopControlThread::backward()
 {
 
 	if (GetState() == STMM_FORWARD) {
-		errorHandler.setInfo(F("!03,CLCM BACKWARD not possible. STOP MOTOR FIRST!!!\r"));
+		errorHandler.setInfo(F("!03,srvClcM BACKWARD not possible. STOP MOTOR FIRST!!!\r"));
 		return;
 	}
 	SetState(STMM_BACKWARD);
@@ -243,7 +243,7 @@ void TMowClosedLoopControlThread::controlDirect(int speed)
 
 void TMowClosedLoopControlThread::showConfig()
 {
-	errorHandler.setInfoNoLog(F("!03,CLCM Config MowMotorNo: %i\r\n"), motorNo);
+	errorHandler.setInfoNoLog(F("!03,srvClcM Config MowMotorNo: %i\r\n"), motorNo);
 	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
 	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
 	errorHandler.setInfoNoLog(F("!03,motorMowAccel %d\r\n"), motorMowAccel);

@@ -20,32 +20,14 @@
 
 #include "ui.h"
 
-#include "hardware.h"
+#include "UseServices.h"
 #include "cmd.h"
-#include "perimeter.h"
-#include "batterySensor.h"
-#include "motor.h"
-#include "closedloopcontrol.h"
-#include "mowclosedloopcontrol.h"
-#include "errorhandler.h"
-#include "mowmotorSensor.h"
-#include "rangeSensor.h"
-#include "bumperSensor.h"
+
 #include "Blackboard.h"
-#include "behaviour.h"
-#include "bPerimeterTracking.h"
-#include "chargeSystem.h"
-#include "bRotate.h"
+#include "bCreateTree.h"
 #include "bt.h"
 #include "adcman.h"
-#include "rtc.h"
-#include "EEPROM.h"
-#include "motorSensor.h"
-#include "bGotoAreaX.h"
-#include "rainSensor.h"
-#include "DHT.h"
-#include "shutdown.h"
-#include "gps.h"
+#include "bPerimeterTracking.h"
 
 
 extern void executeLoop();
@@ -56,59 +38,25 @@ extern unsigned long maxLoopTime;
 //extern unsigned long lastTimeShowError;
 extern TfindTriangle findTriangle;
 
-// mow motor closed loop control - no closed loop used
-extern TMowClosedLoopControlThread clcM;
-// drive motor left closed loop control
-extern TClosedLoopControlThread clcL;
-// drive motor rigth closed loop control
-extern TClosedLoopControlThread clcR;
-//drive motor left position control
-extern TPositionControl pcL;
-//drive motor right position control
-extern TPositionControl pcR;
-// Motorensteuerung Interface. KEIN THREAD. Wird verwendet um clcX und pcX zu steuern.
-extern TMotorInterface motor;
-// Daten von Perimetersensoren vom 446RE
-extern TPerimeterThread perimeterSensoren;
-// Messung der Batteriespannung
-extern TbatterieSensor batterieSensor;
-// Messung des MÃ¤hmotorstroms
-extern TMowMotorSensor mowMotorSensor;
-// SRF08 Range Sensor Messung der Entfernung
-extern TrangeSensor rangeSensor;
-// Bumper Sensor
-extern TbumperSensor bumperSensor;
-// Charge System
-extern TchargeSystem chargeSystem;
-// Rain Sensor
-extern TrainSensor rainSensor;
-
-extern TPreUpdateHistoryBump preUpdateHistoryBump;
-extern TPreUpdateHistory preUpdateHistory;
-extern TCalcAngle calcAngle;
-//extern TPostUpdateHistory postUpdateHistory;
-extern TRotateX rotateX;
-
 extern Blackboard myBlackboard;
 extern TBehaviour myBehaviour;
 extern TlineFollow lineFollow;
 
 extern TErrorHandler errorHandler;
 
-extern Trtc rtc;
-extern TEEPROM eeprom;
-extern TDHT dht;
+extern Trtc srvRtc;
+extern TEEPROM srvEeprom;
+extern TDHT srvDht;
 
-extern Tgps gps;
+extern Tgps srvGps;
 
 
-extern TmotorSensor motorSensorL;
-extern TmotorSensor motorSensorR;
+extern TmotorSensor srvMotorSensorL;
+extern TmotorSensor srvMotorSensorR;
 
 extern void FreeMem(void);
 
-//xdes1
-extern TShutdown shutdown;
+extern TShutdown srvShutdown;
 
 bool checkManualMode()
 {
@@ -339,6 +287,7 @@ void cmd_help(int arg_cnt, char **args)
   errorHandler.setInfoNoLog(F("show.distance   //show distance while drving to areaX\r\n"));
   errorHandler.setInfoNoLog(F("show.rot        //show rotate values\r\n"));
   errorHandler.setInfoNoLog(F("show.hist       //show history\r\n"));
+  errorHandler.setInfoNoLog(F("show.bht        //show bht node id an names\n"));
   wait = millis();
   while (millis() - wait < 100) executeLoop();
 
@@ -416,50 +365,50 @@ void cmd_help(int arg_cnt, char **args)
 void cmd_clc_setKP(int arg_cnt, char **args)
 {
   float val = cmdStr2Float(args[1]);
-  clcL.kp = val;
-  clcR.kp = val;
+  srvClcL.kp = val;
+  srvClcR.kp = val;
 }
 
 void cmd_clc_setKI(int arg_cnt, char **args)
 {
   float val = cmdStr2Float(args[1]);
-  clcL.ki = val;
-  clcR.ki = val;
+  srvClcL.ki = val;
+  srvClcR.ki = val;
 }
 
 
 void cmd_clc_show_config(int arg_cnt, char **args)
 {
-  clcL.showConfig();
-  clcR.showConfig();
+  srvClcL.showConfig();
+  srvClcR.showConfig();
 }
 
 void cmd_clc_showSpeedL(int arg_cnt, char **args)
 {
-  clcL.flagShowSpeed = !clcL.flagShowSpeed;
+  srvClcL.flagShowSpeed = !srvClcL.flagShowSpeed;
 }
 
 void cmd_clc_showSpeedR(int arg_cnt, char **args)
 {
-  clcR.flagShowSpeed = !clcR.flagShowSpeed;
+  srvClcR.flagShowSpeed = !srvClcR.flagShowSpeed;
 }
 
 
 void cmd_clc_showSetpointCurSpeedL(int arg_cnt, char **args)
 {
-  clcL.flagShowSetpointCurrSpeed = !clcL.flagShowSetpointCurrSpeed;
+  srvClcL.flagShowSetpointCurrSpeed = !srvClcL.flagShowSetpointCurrSpeed;
 }
 
 
 void cmd_clc_showSetpointCurSpeedR(int arg_cnt, char **args)
 {
-  clcR.flagShowSetpointCurrSpeed = !clcR.flagShowSetpointCurrSpeed;
+  srvClcR.flagShowSetpointCurrSpeed = !srvClcR.flagShowSetpointCurrSpeed;
 }
 
 void cmd_clc_showCallOfEnableXRamping(int arg_cnt, char **args)
 {
-  clcL.flagShowEnableRamping = !clcL.flagShowEnableRamping;
-  clcR.flagShowEnableRamping = !clcR.flagShowEnableRamping;
+  srvClcL.flagShowEnableRamping = !srvClcL.flagShowEnableRamping;
+  srvClcR.flagShowEnableRamping = !srvClcR.flagShowEnableRamping;
 }
 
 
@@ -470,8 +419,8 @@ void cmd_clc_setSpeed(int arg_cnt, char **args)
   if (checkManualMode())
   {
     int val = cmdStr2Num(args[1], 10);
-    clcL.setSpeed(val);
-    clcR.setSpeed(val);
+    srvClcL.setSpeed(val);
+    srvClcR.setSpeed(val);
   }
 }
 
@@ -480,10 +429,10 @@ void cmd_clc_setAgility(int arg_cnt, char **args)
 {
   float val0 = cmdStr2Float(args[1]);
   float val1 = cmdStr2Float(args[2]);
-  clcL.setOutputToZeroAtRPm = val0;
-  clcL.stopReachedThresholdAtRpm = val1;
-  clcR.setOutputToZeroAtRPm = val0;
-  clcR.stopReachedThresholdAtRpm = val1;
+  srvClcL.setOutputToZeroAtRPm = val0;
+  srvClcL.stopReachedThresholdAtRpm = val1;
+  srvClcR.setOutputToZeroAtRPm = val0;
+  srvClcR.stopReachedThresholdAtRpm = val1;
 
 }
 
@@ -493,16 +442,16 @@ void cmd_clc_driveStop(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    //motor.stop();
-    clcL.stop();
-    clcR.stop();
+    //srvMotor.stop();
+    srvClcL.stop();
+    srvClcR.stop();
   }
 }
 
 void cmd_clc_showEncoder(int arg_cnt, char **args)
 {
-  clcL.flagShowEncoder = !clcL.flagShowEncoder;
-  clcR.flagShowEncoder = !clcR.flagShowEncoder;
+  srvClcL.flagShowEncoder = !srvClcL.flagShowEncoder;
+  srvClcR.flagShowEncoder = !srvClcR.flagShowEncoder;
 }
 
 void cmd_clc_motorTest(int arg_cnt, char **args)
@@ -515,25 +464,25 @@ void cmd_clc_motorTest(int arg_cnt, char **args)
 
     if (val == 0)
     {
-      clcL.flagControldirect = false;
-      clcR.flagControldirect = false;
-      clcL.controlDirect(val);
-      clcR.controlDirect(val);
-      clcL.stop();
-      clcR.stop();
+      srvClcL.flagControldirect = false;
+      srvClcR.flagControldirect = false;
+      srvClcL.controlDirect(val);
+      srvClcR.controlDirect(val);
+      srvClcL.stop();
+      srvClcR.stop();
       return;
     }
     if (mot == 1)
     {
-      clcL.flagControldirect = true;
+      srvClcL.flagControldirect = true;
       motorDriver.resetFault(true);
-      clcL.controlDirect(val);
+      srvClcL.controlDirect(val);
     }
     if (mot == 2)
     {
-      clcR.flagControldirect = true;
+      srvClcR.flagControldirect = true;
       motorDriver.resetFault(true);
-      clcR.controlDirect(val);
+      srvClcR.controlDirect(val);
     }
 
   }
@@ -546,19 +495,19 @@ void cmd_motor_motorStepSpeed(int arg_cnt, char **args)
   if (checkManualMode())
   {
 
-    motor.speedMinTest = cmdStr2Num(args[1], 10);
-    motor.speedMaxTest = cmdStr2Num(args[2], 10);
+    srvMotor.speedMinTest = cmdStr2Num(args[1], 10);
+    srvMotor.speedMaxTest = cmdStr2Num(args[2], 10);
 
     // Turn off test
-    if (motor.speedMinTest == 0 && motor.speedMaxTest == 0)
+    if (srvMotor.speedMinTest == 0 && srvMotor.speedMaxTest == 0)
     {
-      motor.stateTest = 99;
+      srvMotor.stateTest = 99;
     }
     // Turn on test
     else
     {
-      motor.stateTest = 1;
-      motor.flagMotorStepSpeed = true;
+      srvMotor.stateTest = 1;
+      srvMotor.flagMotorStepSpeed = true;
     }
   }
 }
@@ -569,19 +518,19 @@ void cmd_motor_motorFSB(int arg_cnt, char **args)
   if (checkManualMode())
   {
 
-    motor.speedMinTest = cmdStr2Num(args[1], 10);
-    motor.speedMaxTest = cmdStr2Num(args[2], 10);
+    srvMotor.speedMinTest = cmdStr2Num(args[1], 10);
+    srvMotor.speedMaxTest = cmdStr2Num(args[2], 10);
 
     // Turn off test
-    if (motor.speedMinTest == 0 && motor.speedMaxTest == 0)
+    if (srvMotor.speedMinTest == 0 && srvMotor.speedMaxTest == 0)
     {
-      motor.stateTest = 99;
+      srvMotor.stateTest = 99;
     }
     // Turn on test
     else
     {
-      motor.stateTest = 1;
-      motor.flagMotorFSB = true;
+      srvMotor.stateTest = 1;
+      srvMotor.flagMotorFSB = true;
     }
   }
 
@@ -594,19 +543,19 @@ void cmd_motor_motorPFSB(int arg_cnt, char **args)
   if (checkManualMode())
   {
 
-    motor.speedMinTest = cmdStr2Num(args[1], 10); // Angle
-    motor.speedMaxTest = cmdStr2Num(args[2], 10); // Speed
+    srvMotor.speedMinTest = cmdStr2Num(args[1], 10); // Angle
+    srvMotor.speedMaxTest = cmdStr2Num(args[2], 10); // Speed
 
     // Turn off test
-    if (motor.speedMinTest == 0 && motor.speedMaxTest == 0)
+    if (srvMotor.speedMinTest == 0 && srvMotor.speedMaxTest == 0)
     {
-      motor.stateTest = 99;
+      srvMotor.stateTest = 99;
     }
     // Turn on test
     else
     {
-      motor.stateTest = 1;
-      motor.flagMotorPFSB = true;
+      srvMotor.stateTest = 1;
+      srvMotor.flagMotorPFSB = true;
 
     }
   }
@@ -620,17 +569,17 @@ void cmd_motor_motorOverRunTest(int arg_cnt, char **args)
   if (checkManualMode())
   {
 
-    motor.speedMinTest = cmdStr2Num(args[1], 10); // Angle
+    srvMotor.speedMinTest = cmdStr2Num(args[1], 10); // Angle
     // Turn off test
-    if (motor.speedMinTest == 0)
+    if (srvMotor.speedMinTest == 0)
     {
-      motor.stateTest = 99;
+      srvMotor.stateTest = 99;
     }
     // Turn on test
     else
     {
-      motor.stateTest = 1;
-      motor.flagMotorPerOverrun = true;
+      srvMotor.stateTest = 1;
+      srvMotor.flagMotorPerOverrun = true;
 
     }
   }
@@ -646,15 +595,15 @@ void cmd_clcM_motorTest(int arg_cnt, char **args)
 
     if (val == 0)
     {
-      clcM.enabled = true;
+      srvClcM.enabled = true;
       mowMotorDriver.motor(1, val);
-      clcM.stop();
+      srvClcM.stop();
       return;
     }
 
     if (mot == 1)
     {
-      clcM.enabled = false;
+      srvClcM.enabled = false;
       mowMotorDriver.resetFault(true);
       mowMotorDriver.motor(1, val);
     }
@@ -666,49 +615,49 @@ void cmd_clcM_motorTest(int arg_cnt, char **args)
 
 void cmd_clcm_show_config(int arg_cnt, char **args)
 {
-  clcM.showConfig();
+  srvClcM.showConfig();
 }
 
 void cmd_clcm_showSpeed(int arg_cnt, char **args)
 {
-  clcM.flagShowSpeed = !clcM.flagShowSpeed;
+  srvClcM.flagShowSpeed = !srvClcM.flagShowSpeed;
 }
 
 void cmd_clcm_setRamp(int arg_cnt, char **args)
 {
   int val = cmdStr2Num(args[1], 10);
-  clcM.motorMowAccel = val;
+  srvClcM.motorMowAccel = val;
 }
 
 void cmd_clcm_setSpeedLimit(int arg_cnt, char **args)
 {
   float val = cmdStr2Float(args[1]);
-  clcM.speedLimit = val;
+  srvClcM.speedLimit = val;
 }
 
 void cmd_pc_setTuneup(int arg_cnt, char **args)
 {
-  pcL.stopCmBeforeTarget = cmdStr2Float(args[1]);
-  //pcL.addCmToTargetPosition = cmdStr2Float(args[2]);
+  srvPcL.stopCmBeforeTarget = cmdStr2Float(args[1]);
+  //srvPcL.addCmToTargetPosition = cmdStr2Float(args[2]);
 
-  pcR.stopCmBeforeTarget = pcL.stopCmBeforeTarget;
-  //pcR.addCmToTargetPosition = pcL.addCmToTargetPosition;
+  srvPcR.stopCmBeforeTarget = srvPcL.stopCmBeforeTarget;
+  //srvPcR.addCmToTargetPosition = srvPcL.addCmToTargetPosition;
 }
 
 void cmd_pos_show_config(int arg_cnt, char **args)
 {
-  pcL.showConfig();
-  pcR.showConfig();
+  srvPcL.showConfig();
+  srvPcR.showConfig();
 }
 
 void cmd_pos_show_resultsL(int arg_cnt, char **args)
 {
-  pcL.flagShowResults = !pcL.flagShowResults;
+  srvPcL.flagShowResults = !srvPcL.flagShowResults;
 }
 
 void cmd_pos_show_resultsR(int arg_cnt, char **args)
 {
-  pcR.flagShowResults = !pcR.flagShowResults;
+  srvPcR.flagShowResults = !srvPcR.flagShowResults;
 }
 
 
@@ -733,7 +682,7 @@ void cmd_driveAngle(int arg_cnt, char **args)
   {
     float winkel = cmdStr2Float(args[1]);
     float speed = cmdStr2Float(args[2]);
-    motor.rotateAngle(winkel, speed);
+    srvMotor.rotateAngle(winkel, speed);
   }
 }
 
@@ -745,7 +694,7 @@ void cmd_driveCM(int arg_cnt, char **args)
     float cmR = cmdStr2Float(args[2]);
     float speedL = cmdStr2Float(args[3]);
     float speedR = cmdStr2Float(args[4]);
-    motor.rotateCM(cmL, cmR, speedL, speedR);
+    srvMotor.rotateCM(cmL, cmR, speedL, speedR);
   }
 }
 
@@ -755,7 +704,7 @@ void cmd_turnTo(int arg_cnt, char **args)
   {
     float winkel = cmdStr2Float(args[1]);
     float speed = cmdStr2Float(args[2]);
-    motor.turnTo(winkel, speed);
+    srvMotor.turnTo(winkel, speed);
   }
 }
 
@@ -763,7 +712,7 @@ void cmd_stopPositioning(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    motor.stopPC();
+    srvMotor.stopPC();
   }
 }
 
@@ -771,7 +720,7 @@ void cmd_stopPositioningAtPer(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    motor.stopPCAtPerimeter();
+    srvMotor.stopPCAtPerimeter();
   }
 }
 
@@ -782,13 +731,13 @@ void cmd_startMowMot(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    motor.mowMotStart();
-    motor.M->uiMotorDisabled = false;
-    motor.M->motorDisabled = false;
+    srvMotor.mowMotStart();
+    srvMotor.M->uiMotorDisabled = false;
+    srvMotor.M->motorDisabled = false;
   }
   else
   {
-    motor.M->uiMotorDisabled = false;
+    srvMotor.M->uiMotorDisabled = false;
   }
 }
 
@@ -796,11 +745,11 @@ void cmd_stopMowMot(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    motor.mowMotStop();
+    srvMotor.mowMotStop();
   }
   else
   {
-    motor.M->uiMotorDisabled = true;
+    srvMotor.M->uiMotorDisabled = true;
   }
 }
 
@@ -808,7 +757,7 @@ void cmd_cntrManuel(int arg_cnt, char **args)
 {
   _controlManuel = true;;
   myBlackboard.setBehaviour(BH_NONE);
-  motor.stopAllMotors();
+  srvMotor.stopAllMotors();
   //myBehaviour.reset();
 
 }
@@ -828,13 +777,13 @@ void cmd_cntrGotoAreaX(int arg_cnt, char **args)
 {
   myBehaviour.reset();
   long distance = cmdStr2Num(args[1], 10);
-  if (CONF_PASS_THROUGH_CHARGING_STATION)
+  if (CONF_LEAVE_CHARGING_STATION_BACKWARDS)
   {
-    myBlackboard.setBehaviour(BH_GOTOAREA);
+        myBlackboard.setBehaviour(BH_LEAVE_HEAD_CS);
   }
   else
   {
-    myBlackboard.setBehaviour(BH_LEAVE_HEAD_CS);
+        myBlackboard.setBehaviour(BH_GOTOAREA);
   }
 
   _controlManuel = false;
@@ -862,14 +811,14 @@ void cmd_cntrGotoAreaX(int arg_cnt, char **args)
 void cmd_showBattery(int arg_cnt, char **args)
 {
   //xdes1
-  errorHandler.setInfoNoLog(F("Battery Voltage: %f sensorValue: %f "), batterieSensor.voltage, batterieSensor.sensorValue);
+  errorHandler.setInfoNoLog(F("Battery Voltage: %f sensorValue: %f "), srvBatSensor.voltage, srvBatSensor.sensorValue);
   errorHandler.setInfoNoLog(F("aiBATVOLT.read_int32() %d\r\n"), aiBATVOLT.read_int32());
-  //errorHandler.setInfoNoLog(F("$batV,%f,%f,%d\r\n"), batterieSensor.voltage, batterieSensor.sensorValue);
+  //errorHandler.setInfoNoLog(F("$batV,%f,%f,%d\r\n"), srvBatSensor.voltage, srvBatSensor.sensorValue);
 }
 
 void cmd_showRain(int arg_cnt, char **args)
 {
-  rainSensor.flagShowRainSensor = !rainSensor.flagShowRainSensor;
+  srvRainSensor.flagShowRainSensor = !srvRainSensor.flagShowRainSensor;
 }
 
 //bber2
@@ -885,16 +834,16 @@ void cmd_showTemperature(int arg_cnt, char **args)
   if (checkManualMode())
   {
     float temp;
-    temp = dht.readTemperature();
+    temp = srvDht.readTemperature();
     errorHandler.setInfoNoLog(F("Current Temperature: %f\r\n"), temp);
-    errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), dht.readHumidity());
-    errorHandler.setInfoNoLog(F("Temperature stored in service: %f,%d\r\n"), dht.getLastReadTemperature(), dht.errorCounter);
-    //errorHandler.setInfoNoLog(F("$temp, %.1f,%d\r\n"), dht.getLastReadTemperature(), dht.errorCounter);
+    errorHandler.setInfoNoLog(F("Current Humidity: %f\r\n"), srvDht.readHumidity());
+    errorHandler.setInfoNoLog(F("Temperature stored in service: %f,%d\r\n"), srvDht.getLastReadTemperature(), srvDht.errorCounter);
+    //errorHandler.setInfoNoLog(F("$temp, %.1f,%d\r\n"), srvDht.getLastReadTemperature(), srvDht.errorCounter);
   }
   else
   {
-    errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), dht.getLastReadTemperature());
-    //errorHandler.setInfoNoLog(F("$temp, %.1f,%d\r\n"), dht.getLastReadTemperature(), dht.errorCounter);
+    errorHandler.setInfoNoLog(F("Temperature stored in service: %f\r\n"), srvDht.getLastReadTemperature());
+    //errorHandler.setInfoNoLog(F("$temp, %.1f,%d\r\n"), srvDht.getLastReadTemperature(), srvDht.errorCounter);
   }
 
 }
@@ -906,9 +855,9 @@ void cmd_activateControlCenterOutput(int arg_cnt, char **args)
   //xdes1
   if (i == 0)
   {
-    gps.flagSendToCC = false;
-    dht.hide();
-    batterieSensor.hide();
+    srvGps.flagSendToCC = false;
+    srvDht.hide();
+    srvBatSensor.hide();
     _printProcessingData = false;
     errorHandler.setInfoNoLog(F("Control Center Output Off\r\n"), i);
   }
@@ -917,15 +866,15 @@ void cmd_activateControlCenterOutput(int arg_cnt, char **args)
 
     if (CONF_DISABLE_DHT_SERVICE == false)
     {
-      dht.show();
+      srvDht.show();
     }
     if (CONF_DISABLE_BATTERY_SERVICE == false)
     {
-      batterieSensor.show();
+      srvBatSensor.show();
     }
     if (CONF_DISABLE_GPS == false)
     {
-      gps.flagSendToCC = true;
+      srvGps.flagSendToCC = true;
     }
     _printProcessingData = true;
     errorHandler.setInfoNoLog(F("Control Center Output On\r\n"), i);
@@ -935,7 +884,7 @@ void cmd_activateControlCenterOutput(int arg_cnt, char **args)
 //----------
 void cmd_showMowSensor(int arg_cnt, char **args)
 {
-  mowMotorSensor.showValuesOnConsole = !mowMotorSensor.showValuesOnConsole;
+  srvMowMotorSensor.showValuesOnConsole = !srvMowMotorSensor.showValuesOnConsole;
 }
 
 
@@ -948,18 +897,18 @@ void cmd_showStatistik(int arg_cnt, char **args)
   double minutes = (double)time / 60000.0;
   errorHandler.setInfoNoLog(F("MOWTIME %fmin\r\n"), minutes);
 
-  float ticks = (motor.L->myEncoder->getAbsTicksCounter() + motor.R->myEncoder->getAbsTicksCounter()) / 2.0f;
-  float mowway = motor.getMForCounts(ticks);
+  float ticks = (srvMotor.L->myEncoder->getAbsTicksCounter() + srvMotor.R->myEncoder->getAbsTicksCounter()) / 2.0f;
+  float mowway = srvMotor.getMForCounts(ticks);
   errorHandler.setInfoNoLog(F("MOWDIRVENWAY %f\r\n"), mowway);
 
   errorHandler.setInfoNoLog(F("ROTATIONCOUNT %d\r\n"), (int)myBlackboard.numberOfRotations);
 
 
   errorHandler.setInfoNoLog(F("SAVED:\r\n"));
-  int count = eeprom.read32t(EEPADR_CHARGINGCOUNT);
-  float mowtime = eeprom.readFloat(EEPADR_MOWTIME);
-  mowway = eeprom.readFloat(EEPADR_MOWDIRVENWAY);
-  int32_t rotations = eeprom.read32t(EEPADR_ROTATIONCOUNT);
+  int count = srvEeprom.read32t(EEPADR_CHARGINGCOUNT);
+  float mowtime = srvEeprom.readFloat(EEPADR_MOWTIME);
+  mowway = srvEeprom.readFloat(EEPADR_MOWDIRVENWAY);
+  int32_t rotations = srvEeprom.read32t(EEPADR_ROTATIONCOUNT);
   errorHandler.setInfoNoLog(F("CHARGINGCOUNT %d\r\n"), count);
   errorHandler.setInfoNoLog(F("MOWTIME %fm\r\n"), mowtime * 60.0f);
   errorHandler.setInfoNoLog(F("MOWTIME %fh\r\n"), mowtime);
@@ -972,16 +921,16 @@ void cmd_showStatistik(int arg_cnt, char **args)
 
 void cmd_mot_show_config(int arg_cnt, char **args)
 {
-  motorSensorL.showConfig();
-  motorSensorR.showConfig();
-  mowMotorSensor.showConfig();
+  srvMotorSensorL.showConfig();
+  srvMotorSensorR.showConfig();
+  srvMowMotorSensor.showConfig();
 }
 
 
 void cmd_showMotorCurrent(int arg_cnt, char **args)
 {
-  motorSensorL.showValuesOnConsole = !motorSensorL.showValuesOnConsole;
-  motorSensorR.showValuesOnConsole = !motorSensorR.showValuesOnConsole;
+  srvMotorSensorL.showValuesOnConsole = !srvMotorSensorL.showValuesOnConsole;
+  srvMotorSensorR.showValuesOnConsole = !srvMotorSensorR.showValuesOnConsole;
 }
 
 
@@ -989,97 +938,97 @@ void cmd_motorCalculateLScale(int arg_cnt, char **args)
 {
   float data = cmdStr2Float(args[1]);
   float data2 = cmdStr2Float(args[2]);
-  motorSensorL.calculateScale(data, data2);
+  srvMotorSensorL.calculateScale(data, data2);
 }
 void cmd_motorCalculateRScale(int arg_cnt, char **args)
 {
   float data = cmdStr2Float(args[1]);
   float data2 = cmdStr2Float(args[2]);
-  motorSensorR.calculateScale(data, data2);
+  srvMotorSensorR.calculateScale(data, data2);
 }
 
 void cmd_motorCalculateMScale(int arg_cnt, char **args)
 {
   float data = cmdStr2Float(args[1]);
   float data2 = cmdStr2Float(args[2]);
-  mowMotorSensor.calculateScale(data, data2);
+  srvMowMotorSensor.calculateScale(data, data2);
 }
 
 
 
 void cmd_showPerimeter(int arg_cnt, char **args)
 {
-  perimeterSensoren.showValuesOnConsole = !perimeterSensoren.showValuesOnConsole;
+  srvPerSensoren.showValuesOnConsole = !srvPerSensoren.showValuesOnConsole;
 }
 
 void cmd_showPerimeterMax(int arg_cnt, char **args)
 {
-  errorHandler.setInfoNoLog(F("magMax:   %ld\r\n"), perimeterSensoren.magMax);
+  errorHandler.setInfoNoLog(F("magMax:   %ld\r\n"), srvPerSensoren.magMax);
 }
 
 void cmd_showPerAdcOffsetCorrectedL(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilL.showADCWithoutOffset = !perimeterSensoren.coilL.showADCWithoutOffset;
+  srvPerSensoren.coilL.showADCWithoutOffset = !srvPerSensoren.coilL.showADCWithoutOffset;
 }
 
 void cmd_showPerAdcOffsetCorrectedR(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilR.showADCWithoutOffset = !perimeterSensoren.coilR.showADCWithoutOffset;
+  srvPerSensoren.coilR.showADCWithoutOffset = !srvPerSensoren.coilR.showADCWithoutOffset;
 }
 
 
 void cmd_showPerCorrelationL(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilL.showCorrelation = !perimeterSensoren.coilL.showCorrelation;
+  srvPerSensoren.coilL.showCorrelation = !srvPerSensoren.coilL.showCorrelation;
 }
 
 void cmd_showPerCorrelationR(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilR.showCorrelation = !perimeterSensoren.coilR.showCorrelation;
+  srvPerSensoren.coilR.showCorrelation = !srvPerSensoren.coilR.showCorrelation;
 }
 
 
 void cmd_showPerCorrelationSQL(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilL.showCorrelationSQ = !perimeterSensoren.coilL.showCorrelationSQ;
+  srvPerSensoren.coilL.showCorrelationSQ = !srvPerSensoren.coilL.showCorrelationSQ;
 }
 
 void cmd_showPerCorrelationSQR(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilR.showCorrelationSQ = !perimeterSensoren.coilR.showCorrelationSQ;
+  srvPerSensoren.coilR.showCorrelationSQ = !srvPerSensoren.coilR.showCorrelationSQ;
 }
 
 
 void cmd_showPerPsnrFL(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilL.showPSNRFunction = !perimeterSensoren.coilL.showPSNRFunction;
+  srvPerSensoren.coilL.showPSNRFunction = !srvPerSensoren.coilL.showPSNRFunction;
 }
 
 void cmd_showPerPsnrFR(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilR.showPSNRFunction = !perimeterSensoren.coilR.showPSNRFunction;
+  srvPerSensoren.coilR.showPSNRFunction = !srvPerSensoren.coilR.showPSNRFunction;
 }
 
 
 void cmd_showPerResultL(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilL.showValuesResults = !perimeterSensoren.coilL.showValuesResults;
+  srvPerSensoren.coilL.showValuesResults = !srvPerSensoren.coilL.showValuesResults;
 }
 
 void cmd_showPerResultR(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilR.showValuesResults = !perimeterSensoren.coilR.showValuesResults;
+  srvPerSensoren.coilR.showValuesResults = !srvPerSensoren.coilR.showValuesResults;
 }
 
 
 void cmd_showFFTL(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilL.showMatchedFilter = !perimeterSensoren.coilL.showMatchedFilter;
+  srvPerSensoren.coilL.showMatchedFilter = !srvPerSensoren.coilL.showMatchedFilter;
 }
 
 void cmd_showFFTR(int arg_cnt, char **args)
 {
-  perimeterSensoren.coilR.showMatchedFilter = !perimeterSensoren.coilR.showMatchedFilter;
+  srvPerSensoren.coilR.showMatchedFilter = !srvPerSensoren.coilR.showMatchedFilter;
 }
 
 
@@ -1087,18 +1036,18 @@ void cmd_showFFTR(int arg_cnt, char **args)
 void cmd_showRTC(int arg_cnt, char **args)
 {
   //bber11
-  //rtc.flagShowRTCRead = !rtc.flagShowRTCRead;
+  //srvRtc.flagShowRTCRead = !srvRtc.flagShowRTCRead;
 
-  //if (rtc.flagShowRTCRead)
+  //if (srvRtc.flagShowRTCRead)
   //{
   errorHandler.setInfoNoLog(F("millis():   %lu\r\n"), millis());
 
-  //errorHandler.setInfoNoLog(F("Current RTC:\r\n"));  //here i suppose it's the time in the due and not updated by the rtc
-  //rtc.showImmediately();
+  //errorHandler.setInfoNoLog(F("Current RTC:\r\n"));  //here i suppose it's the time in the due and not updated by the srvRtc
+  //srvRtc.showImmediately();
 
   errorHandler.setInfoNoLog(F("Read from RTC:\r\n"));
-  rtc.readDS1307();
-  rtc.showImmediately();
+  srvRtc.readDS1307();
+  srvRtc.showImmediately();
   //}
   //errorHandler.setInfoNoLog(F( "micros():   %lu\r\n",micros());
   //errorHandler.setInfoNoLog(F( "micros64(): %llu\r\n",micros64());
@@ -1111,13 +1060,13 @@ void cmd_showRTCfind(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    rtc.findDS1307();
+    srvRtc.findDS1307();
   }
 }
 
 void cmd_showRTCconfig(int arg_cnt, char **args)
 {
-  rtc.showConfig();
+  srvRtc.showConfig();
 }
 
 
@@ -1127,20 +1076,20 @@ void cmd_setRTC(int arg_cnt, char **args)
 {
   if (checkManualMode())
   {
-    rtc.hour = cmdStr2Num(args[1], 10);;
-    rtc.minute = cmdStr2Num(args[2], 10);;
-    rtc.dayOfWeek = cmdStr2Num(args[3], 10);;
-    rtc.day = cmdStr2Num(args[4], 10);;
-    rtc.month = cmdStr2Num(args[5], 10);;
-    rtc.year = cmdStr2Num(args[6], 10);;
-    rtc.showImmediately();
+    srvRtc.hour = cmdStr2Num(args[1], 10);;
+    srvRtc.minute = cmdStr2Num(args[2], 10);;
+    srvRtc.dayOfWeek = cmdStr2Num(args[3], 10);;
+    srvRtc.day = cmdStr2Num(args[4], 10);;
+    srvRtc.month = cmdStr2Num(args[5], 10);;
+    srvRtc.year = cmdStr2Num(args[6], 10);;
+    srvRtc.showImmediately();
     errorHandler.setInfoNoLog(F("saving...\r\n"));
-    rtc.setDS1307();
+    srvRtc.setDS1307();
     errorHandler.setInfoNoLog(F("saved\r\n"));
     delay(500);
-    errorHandler.setInfoNoLog(F("reading from rtc...\r\n"));
-    rtc.readDS1307();
-    rtc.showImmediately();
+    errorHandler.setInfoNoLog(F("reading from srvRtc...\r\n"));
+    srvRtc.readDS1307();
+    srvRtc.showImmediately();
     errorHandler.setInfoNoLog(F("read\r\n"));
 
   }
@@ -1149,12 +1098,12 @@ void cmd_setRTC(int arg_cnt, char **args)
 
 void cmd_showEEPROM_Erase(int arg_cnt, char **args)
 {
-  eeprom.erase();
+  srvEeprom.erase();
 }
 
 void cmd_showEEPROMCconfig(int arg_cnt, char **args)
 {
-  eeprom.showConfig();
+  srvEeprom.showConfig();
 }
 
 void cmd_setEEPROMbyte(int arg_cnt, char **args)
@@ -1164,7 +1113,7 @@ void cmd_setEEPROMbyte(int arg_cnt, char **args)
     int16_t address = cmdStr2Num(args[1], 10);
     uint8_t data = cmdStr2Num(args[2], 10);
 
-    eeprom.writeu8t(address, data);
+    srvEeprom.writeu8t(address, data);
     errorHandler.setInfoNoLog(F("saved\r\n"));
   }
 
@@ -1177,7 +1126,7 @@ void cmd_setEEPROM32t(int arg_cnt, char **args)
     int16_t address = cmdStr2Num(args[1], 10);
     int32_t data = cmdStr2Num(args[2], 10);
 
-    eeprom.write32t(address, data);
+    srvEeprom.write32t(address, data);
     errorHandler.setInfoNoLog(F("saved\r\n"));
   }
 
@@ -1190,7 +1139,7 @@ void cmd_setEEPROMfloat(int arg_cnt, char **args)
     int16_t address = cmdStr2Num(args[1], 10);
     float data = cmdStr2Float(args[2]);
 
-    eeprom.writeFloat(address, data);
+    srvEeprom.writeFloat(address, data);
     errorHandler.setInfoNoLog(F("saved\r\n"));
   }
 
@@ -1204,7 +1153,7 @@ void cmd_showEEPROMbyte(int arg_cnt, char **args)
   {
     int16_t address = cmdStr2Num(args[1], 10);
 
-    data = eeprom.readu8t(address);
+    data = srvEeprom.readu8t(address);
     errorHandler.setInfoNoLog(F("Value: %d\r\n"), data);
 
   }
@@ -1219,7 +1168,7 @@ void cmd_showEEPROM32t(int arg_cnt, char **args)
   {
     int16_t address = cmdStr2Num(args[1], 10);
 
-    data = eeprom.read32t(address);
+    data = srvEeprom.read32t(address);
     errorHandler.setInfoNoLog(F("Value: %d\r\n"), data);
 
   }
@@ -1232,7 +1181,7 @@ void cmd_showEEPROMfloat(int arg_cnt, char **args)
   if (checkManualMode())
   {
     int16_t address = cmdStr2Num(args[1], 10);
-    data = eeprom.readFloat(address);
+    data = srvEeprom.readFloat(address);
     errorHandler.setInfoNoLog(F("Value: %f\r\n"), data);
 
   }
@@ -1250,17 +1199,17 @@ void cmd_showi2c(int arg_cnt, char **args)
 
 void cmd_range_show_config(int arg_cnt, char **args)
 {
-  rangeSensor.showConfig();
+  srvRangeSensor.showConfig();
 }
 
 void cmd_showRange(int arg_cnt, char **args)
 {
-  rangeSensor.flagShowRange = !rangeSensor.flagShowRange;
+  srvRangeSensor.flagShowRange = !srvRangeSensor.flagShowRange;
 }
 
 void cmd_gps_show_config(int arg_cnt, char **args)
 {
-  gps.showConfig();
+  srvGps.showConfig();
 }
 
 void cmd_showGPS(int arg_cnt, char **args)
@@ -1271,45 +1220,45 @@ void cmd_showGPS(int arg_cnt, char **args)
   }
   else
   {
-    gps.flagShowGPS = !gps.flagShowGPS;
+    srvGps.flagShowGPS = !srvGps.flagShowGPS;
   }
 }
 
 void cmd_bumper_show_config(int arg_cnt, char **args)
 {
-  bumperSensor.showConfig();
+  srvBumperSensor.showConfig();
 }
 
 void cmd_showBumper(int arg_cnt, char **args)
 {
-  bumperSensor.flagShowBumper = !bumperSensor.flagShowBumper;
+  srvBumperSensor.flagShowBumper = !srvBumperSensor.flagShowBumper;
 }
 
 void cmd_showChargeSystem(int arg_cnt, char **args)
 {
-  chargeSystem.flagShowChargeSystem = !chargeSystem.flagShowChargeSystem;
+  srvChargeSystem.flagShowChargeSystem = !srvChargeSystem.flagShowChargeSystem;
 }
 
 void cmd_charge_show_config(int arg_cnt, char **args)
 {
-  chargeSystem.showConfig();
+  srvChargeSystem.showConfig();
 }
 
 
 void cmd_bat_show_config(int arg_cnt, char **args)
 {
-  batterieSensor.showConfig();
+  srvBatSensor.showConfig();
 }
 
 
 void cmd_rain_show_config(int arg_cnt, char **args)
 {
-  rainSensor.showConfig();
+  srvRainSensor.showConfig();
 }
 
 void cmd_per_show_config(int arg_cnt, char **args)
 {
-  perimeterSensoren.showConfig();
+  srvPerSensoren.showConfig();
 }
 
 
@@ -1356,7 +1305,7 @@ void cmd_showADCValues(int arg_cnt, char **args)
 
 void cmd_showGotoAreaDistance(int arg_cnt, char **args)
 {
-  motor.flagShowDistance = true;
+  srvMotor.flagShowDistance = true;
 }
 
 
@@ -1369,39 +1318,23 @@ void cmd_showRotate(int arg_cnt, char **args)
 
 void cmd_showHistory(int arg_cnt, char **args)
 {
+      if (checkManualMode()) {
 
-  if (_controlManuel == true)
-  {
+            for (int x = HISTROY_BUFSIZE-1; x > -1; x--) {
+                  myBlackboard.printHistoryEntry(x);
+            }
 
+            return;
+      }
 
-    for (int x = 0; x < HISTROY_BUFSIZE; x++)
-    {
-      errorHandler.setInfoNoLog(F("============================\r\n"));
-      errorHandler.setInfoNoLog(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[myBlackboard.history[x].driveDirection]);
-      errorHandler.setInfoNoLog(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[myBlackboard.history[x].coilFirstOutside]);
-      errorHandler.setInfoNoLog(F("!05,rotAngleSoll     %f\r\n"), myBlackboard.history[x].rotAngleSoll);
-      errorHandler.setInfoNoLog(F("!05,flagForceRotDir  %s\r\n"), enuFlagForceRotateDirectionString[myBlackboard.history[x].flagForceRotDirection]);
-      errorHandler.setInfoNoLog(F("!05,timeAdded        %d \r\n"), myBlackboard.history[x].timeAdded);
-      errorHandler.setInfoNoLog(F("---\r\n"));
-      errorHandler.setInfoNoLog(F("!05,distanceDriven   %f\r\n"), myBlackboard.history[x].distanceDriven);
-      errorHandler.setInfoNoLog(F("!05,rotAngleIst      %f \r\n"), myBlackboard.history[x].rotAngleIst);
-      errorHandler.setInfoNoLog(F("!05,restored         %d \r\n"), myBlackboard.history[x].restored);
-
-    }
-
-    return;
-  }
-
-
-
-  myBlackboard.flagShowHistory = !myBlackboard.flagShowHistory;
-  errorHandler.setInfoNoLog(F("showHist\r\n"));
+      myBlackboard.flagShowHistory = !myBlackboard.flagShowHistory;
+      errorHandler.setInfoNoLog(F("showHist\r\n"));
 }
 
 
 void cmd_showBHTTriangle(int arg_cnt, char **args)
 {
-  findTriangle.flagShowFindTriangleStates = !findTriangle.flagShowFindTriangleStates;
+	findTriangle.flagShowFindTriangleStates = !findTriangle.flagShowFindTriangleStates;
 }
 
 void cmd_showBHTShowLastNode(int arg_cnt, char **args)
@@ -1413,46 +1346,46 @@ void cmd_showBHTShowLastNode(int arg_cnt, char **args)
 
 void cmd_hideShowing(int arg_cnt, char **args)
 {
-  clcL.flagShowSpeed = false;
-  clcR.flagShowSpeed = false;
-  clcL.flagShowEncoder = false;
-  clcR.flagShowEncoder = false;
-  mowMotorSensor.showValuesOnConsole = false;
-  perimeterSensoren.showValuesOnConsole = false;
-  rangeSensor.flagShowRange = false;
-  gps.flagShowGPS = false;
-  bumperSensor.flagShowBumper = false;
-  chargeSystem.flagShowChargeSystem = false;
-  motor.flagShowDistance = false;
+  srvClcL.flagShowSpeed = false;
+  srvClcR.flagShowSpeed = false;
+  srvClcL.flagShowEncoder = false;
+  srvClcR.flagShowEncoder = false;
+  srvMowMotorSensor.showValuesOnConsole = false;
+  srvPerSensoren.showValuesOnConsole = false;
+  srvRangeSensor.flagShowRange = false;
+  srvGps.flagShowGPS = false;
+  srvBumperSensor.flagShowBumper = false;
+  srvChargeSystem.flagShowChargeSystem = false;
+  srvMotor.flagShowDistance = false;
 
-  rainSensor.flagShowRainSensor = false;
+  srvRainSensor.flagShowRainSensor = false;
 
   ADCMan.showValuesOnConsole = false;
-  rtc.flagShowRTCRead = false;
+  srvRtc.flagShowRTCRead = false;
 
-  clcL.flagShowSetpointCurrSpeed = false;
-  clcR.flagShowSetpointCurrSpeed = false;
-  clcL.flagShowEnableRamping = false;
-  clcR.flagShowEnableRamping = false;
+  srvClcL.flagShowSetpointCurrSpeed = false;
+  srvClcR.flagShowSetpointCurrSpeed = false;
+  srvClcL.flagShowEnableRamping = false;
+  srvClcR.flagShowEnableRamping = false;
 
-  pcL.flagShowResults = false;
-  pcR.flagShowResults = false;
-  clcM.flagShowSpeed = false;
-  motorSensorL.showValuesOnConsole = false;
-  motorSensorR.showValuesOnConsole = false;
+  srvPcL.flagShowResults = false;
+  srvPcR.flagShowResults = false;
+  srvClcM.flagShowSpeed = false;
+  srvMotorSensorL.showValuesOnConsole = false;
+  srvMotorSensorR.showValuesOnConsole = false;
 
-  perimeterSensoren.coilL.showADCWithoutOffset = false;
-  perimeterSensoren.coilR.showADCWithoutOffset = false;
-  perimeterSensoren.coilL.showCorrelation = false;
-  perimeterSensoren.coilR.showCorrelation = false;
-  perimeterSensoren.coilL.showCorrelationSQ = false;
-  perimeterSensoren.coilR.showCorrelationSQ = false;
-  perimeterSensoren.coilL.showPSNRFunction = false;
-  perimeterSensoren.coilR.showPSNRFunction = false;
-  perimeterSensoren.coilL.showValuesResults = false;
-  perimeterSensoren.coilR.showValuesResults = false;
-  perimeterSensoren.coilL.showMatchedFilter = false;
-  perimeterSensoren.coilR.showMatchedFilter = false;
+  srvPerSensoren.coilL.showADCWithoutOffset = false;
+  srvPerSensoren.coilR.showADCWithoutOffset = false;
+  srvPerSensoren.coilL.showCorrelation = false;
+  srvPerSensoren.coilR.showCorrelation = false;
+  srvPerSensoren.coilL.showCorrelationSQ = false;
+  srvPerSensoren.coilR.showCorrelationSQ = false;
+  srvPerSensoren.coilL.showPSNRFunction = false;
+  srvPerSensoren.coilR.showPSNRFunction = false;
+  srvPerSensoren.coilL.showValuesResults = false;
+  srvPerSensoren.coilR.showValuesResults = false;
+  srvPerSensoren.coilL.showMatchedFilter = false;
+  srvPerSensoren.coilR.showMatchedFilter = false;
 
   findTriangle.flagShowFindTriangleStates = false;
   myBlackboard.flagBHTShowLastNode = CONF_bb_flagBHTShowLastNode;
@@ -1467,8 +1400,8 @@ void cmd_hideShowing(int arg_cnt, char **args)
 void cmd_setLineFollowerKi(int arg_cnt, char **args)
 {
 
-  lineFollow.Ki = cmdStr2Float(args[1]);
-  errorHandler.setInfoNoLog(F("KI: %f\r\n"), lineFollow.Ki);
+	lineFollow.Ki = cmdStr2Float(args[1]);
+	errorHandler.setInfoNoLog(F("KI: %f\r\n"), lineFollow.Ki);
 
 }
 
@@ -1478,12 +1411,12 @@ void cmd_setChargeRelay(int arg_cnt, char **args)
 
   if (i == 0)
   {
-    chargeSystem.deactivateRelay();
+    srvChargeSystem.deactivateRelay();
     errorHandler.setInfoNoLog(F("Relay disabled i: %d\r\n"), i);
   }
   else
   {
-    chargeSystem.activateRelay();
+    srvChargeSystem.activateRelay();
     errorHandler.setInfoNoLog(F("Relay enabled: %d\r\n"), i);
   }
 }
@@ -1527,10 +1460,18 @@ void cmd_setCruiseSpiral(int arg_cnt, char **args)
 }
 
 
+void cmd_showBHT(int arg_cnt, char** args) {
+      if (checkManualMode()) {
+            myBehaviour.print();
+      }
+}
+
+
+
 //xdes1
 void cmd_PowerOff(int arg_cnt, char **args)
 {
-  shutdown.enabled = true;
+  srvShutdown.enabled = true;
 }
 
 // Print "hello world" when called from the command line.
@@ -1755,8 +1696,8 @@ void cmd_setup()
 
   cmdAdd((char *)"show.stat", cmd_showStatistik);
 
-
-
+  cmdAdd((char*)"show.bht", cmd_showBHT);
+  
 
 
   cmdAdd((char *)"h", cmd_hideShowing);

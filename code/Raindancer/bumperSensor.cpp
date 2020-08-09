@@ -45,14 +45,20 @@ bool TbumperSensor::isBumperActivated()
 // and is only used in TFreeBumper to set the variables bb.flagBumperActivatedLeft and bb.flagBumperActivatedRight
 bool TbumperSensor::isBumperActivatedLeft()
 {
-	errorHandler.setInfo(F("TbumperSensor::isBumperActivatedLeft(); %d\r\n"), _bumperLeftActivated);
+	//errorHandler.setInfo(F("TbumperSensor::isBumperActivatedLeft(); %d\r\n"), _bumperLeftActivated);
 	return (_bumperLeftActivated); 
 }
 bool TbumperSensor::isBumperActivatedRight()
 {
-	errorHandler.setInfo(F("TbumperSensor::isBumperActivatedRight(); %d\r\n"), _bumperRightActivated);
+	//errorHandler.setInfo(F("TbumperSensor::isBumperActivatedRight(); %d\r\n"), _bumperRightActivated);
 	return (_bumperRightActivated); 
 }
+
+bool TbumperSensor::isBumperDuinoActivated() {
+	//errorHandler.setInfo(F("TbumperSensor::isBumperDuinoActivated(); %d\r\n"), _bumperDuinoActivated);
+	return (_bumperDuinoActivated);
+}
+
 
 // Handle the different possibilities for the bumper usage low active, high active, enabled
 bool TbumperSensor::_checkBumperLeft()

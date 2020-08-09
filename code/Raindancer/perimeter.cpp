@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gps.h"
 
 //GPS Service
-extern Tgps gps;
+extern Tgps srvGps;
 
 void TPerimeterThread::setup()
     {
@@ -127,7 +127,7 @@ void TPerimeterThread::CaluculateInsideOutsideL(int32_t magl)
     // Overwrite values when inside GPS polygon
     if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
         {
-        if (gps.flagInsidePolygon && abs(magnetudeL) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+        if (srvGps.flagInsidePolygon && abs(magnetudeL) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
             {
             signalCounterLFast = 2;
             signalCounterL = 3;
@@ -191,9 +191,9 @@ void TPerimeterThread::CaluculateInsideOutsideR(int32_t magr)
         }
 
     // Overwrite values when inside GPS polygon
-    if (CONF_USE_GPS_POLYGON) // Check if the gps signal shows, that robot is inside the defined gps polygon.
+    if (CONF_USE_GPS_POLYGON) // Check if the srvGps signal shows, that robot is inside the defined gps polygon.
         {
-        if (gps.flagInsidePolygon && abs(magnetudeR) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
+        if (srvGps.flagInsidePolygon && abs(magnetudeR) < CONF_PER_THRESHOLD_IGNORE_GPS) // only check if amplitude is lower than threshold
             {
             signalCounterRFast = 2;
             signalCounterR = 3;

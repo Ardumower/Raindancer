@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "errorhandler.h"
 #include "RunningMedian.h"
 
-extern TbatterieSensor batterieSensor;
+extern TbatterieSensor srvBatSensor;
 extern TErrorHandler errorHandler;
 
 // Liest Motorstrom aus und berechnet die Wattzahl
@@ -99,7 +99,7 @@ public:
 
 		current = (1.0f - accel) * current + accel * sensorCurrent;
 
-		watt = batterieSensor.voltage * current;
+		watt = srvBatSensor.voltage * current;
 		
 		if (showValuesOnConsole && (++count > 10)) { //show message only every tenth call
 			errorHandler.setInfo(F("!03,Motor%c  Watt: %f MotorCurrent: %f SensorValue: %f scale: %f\r\n"),myName, watt, current, sensorValue,scale);

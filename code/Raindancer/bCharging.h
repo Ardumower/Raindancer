@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //-----------
 
 
-class TchargeRelayOn : public Node
+class TchargeRelayOn : public Action
 {
 private:
 
@@ -48,9 +48,9 @@ public:
 	virtual void onInitialize(Blackboard& bb) {
 		//firstTimeCall = true;
 #if CONF_DISABLE_EEPROM_SERVICE == false
-		int32_t count = bb.eeprom.read32t(EEPADR_CHARGINGCOUNT);
+		int32_t count = srvEeprom.read32t(EEPADR_CHARGINGCOUNT);
 		count++;
-		bb.eeprom.write32t(EEPADR_CHARGINGCOUNT, count);
+		srvEeprom.write32t(EEPADR_CHARGINGCOUNT, count);
 #endif
 		//bb.chargeSystem.activateRelay();
 
@@ -66,8 +66,8 @@ public:
 		case 0:
 			if (getTimeInNode() > 1000) { // wait 1 sec. until contacts set
       //bber1
-        if (CONF_PASS_THROUGH_CHARGING_STATION == true) {  //forward 4 cm 
-          bb.motor.rotateCM(4, bb.CRUISE_SPEED_LOW);
+        if (CONF_CHARGING_STATION_GRIND_CONTACTS == true) {  //forward 4 cm 
+          srvMotor.rotateCM(4, bb.CRUISE_SPEED_LOW);
           errorHandler.setInfo(F("TchargeRelayOn forward 4\r\n"));
         }
       //------------  
@@ -77,8 +77,8 @@ public:
 			}
 			break;
 		case 1:
-			if (bb.motor.isPositionReached()) {
-				bb.motor.rotateCM(-3, bb.CRUISE_SPEED_LOW);
+			if (srvMotor.isPositionReached()) {
+				srvMotor.rotateCM(-3, bb.CRUISE_SPEED_LOW);
 				state = 2;
 				setTimeInNode(millis());
 				errorHandler.setInfo(F("TchargeRelayOn backward -3\r\n"));
@@ -88,10 +88,10 @@ public:
 			}
 			break;
 		case 2:
-			if (bb.motor.isPositionReached()) {
+			if (srvMotor.isPositionReached()) {
         //bber1
-        if (CONF_HEAD_CHARGING_STATION == true) bb.motor.rotateCM(3, bb.CRUISE_SPEED_LOW); // back in station for stoping station
-        if (CONF_PASS_THROUGH_CHARGING_STATION == true) bb.motor.rotateCM(2, bb.CRUISE_SPEED_LOW);// normal forward for raindancer chassis
+        if (CONF_CHARGING_STATION_GRIND_CONTACTS == false) srvMotor.rotateCM(3, bb.CRUISE_SPEED_LOW); // back in station for stoping station
+        if (CONF_CHARGING_STATION_GRIND_CONTACTS == true) srvMotor.rotateCM(2, bb.CRUISE_SPEED_LOW);// normal forward for raindancer chassis
         //--------------------------
 				state = 3;
 				setTimeInNode(millis());
@@ -101,9 +101,9 @@ public:
 				errorHandler.setError(F("!03,TchargeRelayOn too long in state\r\n"));
 			}
 		case 3:
-			if (bb.motor.isPositionReached()) {
+			if (srvMotor.isPositionReached()) {
 				state = 4;
-				bb.chargeSystem.activateRelay();
+				srvChargeSystem.activateRelay();
 				setTimeInNode(millis());
 				errorHandler.setInfo(F("TchargeRelayOn get contact finished\r\n"));
 			}
@@ -114,14 +114,14 @@ public:
 		case 4:
 
 			if (getTimeInNode() > 10000) { // Check after 10 seconds, if current is flowing
-				if (bb.chargeSystem.chargeCurrent > 0.001f) {
+				if (srvChargeSystem.chargeCurrent > 0.001f) {
 					state = 5;
 					errorHandler.setInfo(F("TchargeRelayOn second check ok\r\n"));
 				}
 				else {
 					errorHandler.setInfo(F("TchargeRelayOn attemp %c check failed\r\n"), connectAttempts);
 					state = 0;
-					bb.chargeSystem.deactivateRelay();
+					srvChargeSystem.deactivateRelay();
 					setTimeInNode(millis());
 	   			    if (connectAttempts > 2) {
 						state = 5;
@@ -140,7 +140,7 @@ public:
 	}
 
 	virtual void onTerminate(NodeStatus status, Blackboard& bb) {
-		bb.chargeSystem.deactivateRelay();
+		srvChargeSystem.deactivateRelay();
 	}
 };
 
