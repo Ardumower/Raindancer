@@ -65,7 +65,7 @@ Set to true only the correct CHASSIS
 /*********************************************************************/
 // Global Variables
 /*********************************************************************/
-#define VERSION "1.1.0 Raindancer"
+#define VERSION "1.1.1 Raindancer"
 
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;

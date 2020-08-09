@@ -1,3 +1,5 @@
+V1.1.1
+Solved Issue #21 Unable to compile when CONF_DISABLE_CHARGINGSTATION is set to false
 V1.1.0
 + GotoArea Behaviour: TCheck2PerSignal was activated first, before TCheck2CoilSignalAreaX could rotate the mower while starting GotoArea => Changed position of TCheck2CoilSignalAreaX in selCheck2  and mower will always be rotated outside
 with the right coil, before starting GotoArea Behaviour.
