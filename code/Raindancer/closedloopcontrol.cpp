@@ -69,6 +69,7 @@ void TClosedLoopControlThread::enableDefaultRamping()
 	ki = 8;
 	setOutputToZeroAtRPm = 4;
 	stopReachedThresholdAtRpm = 0.5f;
+	stopNearReachedThresholdAtRpm = 5.0f;
 	resetPDFF();
 	if (flagShowEnableRamping) {
 		errorHandler.setInfoNoLog(F(" sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f D\r\n"),  setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
@@ -268,6 +269,10 @@ bool TClosedLoopControlThread::isStopped()
 	return (fabsf(current_speedRPM) < stopReachedThresholdAtRpm);
 }
 
+bool TClosedLoopControlThread::isNearStopped()
+{
+	return (fabsf(current_speedRPM) < stopNearReachedThresholdAtRpm);
+}
 
 // send pwm direct to motot. speed: -255 to 255
 void TClosedLoopControlThread::controlDirect(int speed)
@@ -389,6 +394,8 @@ void TClosedLoopControlThread::showConfig()
 	errorHandler.setInfoNoLog(F("!03,KP: %f KI: %f \r\n"), kp, ki);
 	errorHandler.setInfoNoLog(F("!03,setOutputZeroAtRPm %f\r\n"), setOutputToZeroAtRPm);
 	errorHandler.setInfoNoLog(F("!03,stopReachedThresholdAtRpm %f\r\n"), stopReachedThresholdAtRpm);
+	errorHandler.setInfoNoLog(F("!03,stopNearReachedThresholdAtRpm %f\r\n"), stopNearReachedThresholdAtRpm);
+	
 }
 
 /*

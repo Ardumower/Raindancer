@@ -81,7 +81,7 @@ public:
 
 	float setOutputToZeroAtRPm;      //If sollSpeedRPM should be 0, this is the threshold  where output is set to zero to improve agility. Positive value!
 	float stopReachedThresholdAtRpm; //If the motor is running at this threshold, it is asssumed, that the motor is stopped 
-
+    float stopNearReachedThresholdAtRpm; //If the motor is running at this threshold, it is asssumed, that the motor is just before stopping. Used for line follower to get a smoother motion. 
 	void setup(uint8_t motorNumber, CRotaryEncoder *enc);
 
 	virtual void run();  // Called at the loop rate 20ms to run the state machine and therfore the motor
@@ -91,7 +91,8 @@ public:
 	void stop(); // motor stoppen
 	void hardStop();
 	bool isStopped();
-
+	bool isNearStopped();
+	
 	void enableDefaultRamping();
 	void enablePerTrackRamping();
 	void enableFastStopRamping();

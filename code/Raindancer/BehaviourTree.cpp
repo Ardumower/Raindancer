@@ -1672,7 +1672,7 @@ void BehaviourTree::abort(Blackboard& myBlackboard) {
 }
 
 void BehaviourTree::reset(Blackboard& bb) {
-
+	////abort(bb); //Software hängt sich auf, wenn das hier steht.
 	flagLogChangedNode = true;
 	groupIdx = 0;
 

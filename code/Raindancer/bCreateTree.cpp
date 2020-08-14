@@ -270,14 +270,15 @@ TdriveForwardXCS driveForwardXCS;
 TSetArcHeadStation_ROT setArcHeadStation_ROT;
 TsetMowBehaviour setMowBehaviour;
 
-void TBehaviour::reset() {
-	errorHandler.setInfo(F("TBehaviour::reset\r\n"));
+void TCreateTree::reset() {
+	errorHandler.setInfo(F("TCreateTree::reset\r\n"));
+	behaviorTree.abort(bb);
 	bb.resetBB();
 	behaviorTree.reset(bb);
 	bb.setBehaviour(BH_NONE);
 }
 
-void TBehaviour::setup() {
+void TCreateTree::setup() {
 	reset();
 
 
@@ -469,6 +470,7 @@ void TBehaviour::setup() {
 	mseqPTBumperActive1.addChildren(&conBumperActive, &mselPTBumperActive2, &monPTBumperActive3);
 
 	monTrackPerimeter.addChildren(&invConBumperActive, &mseqTrackPerimeter);
+	//parLineFollow.addChildren(&lineFollow);
 	parLineFollow.addChildren(&lineFollow, &findTriangle);
 	mseqTrackPerimeter.addChildren(&parLineFollow, &motorStop, &LFRotateCC105);
 	mseqDockingStation.addChildren(&conInDockingStation, &MotorStopFast, &dnWaitDockingStation, &perTrackChargingStationReached);
@@ -574,13 +576,13 @@ void TBehaviour::setup() {
 	behaviorTree.onSetup(bb);
 }
 
-void TBehaviour::loop() {
+void TCreateTree::loop() {
 	behaviorTree.tick(bb);
 
 }
 
 
-void TBehaviour::print() {
+void TCreateTree::print() {
 	behaviorTree.print();
 
 }

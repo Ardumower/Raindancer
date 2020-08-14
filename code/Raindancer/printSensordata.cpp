@@ -70,7 +70,7 @@ extern TbumperSensor srvBumperSensor;
 extern TchargeSystem srvChargeSystem;
 
 extern Blackboard myBlackboard;
-extern TBehaviour myBehaviour;
+extern TCreateTree myCreateTree;
 
 extern TErrorHandler errorHandler;
 

@@ -116,7 +116,7 @@ ThreadController controller = ThreadController(); // Thread die vor manuellen mo
 /*********************************************************************/
 
 Blackboard myBlackboard;
-TBehaviour myBehaviour(myBlackboard);
+TCreateTree myCreateTree(myBlackboard);
 
 
 /*********************************************************************/
@@ -267,7 +267,7 @@ void setup() {
 	// Behaviour Objects konfigurieren
 	//---------------------------------
 
-	myBehaviour.setup();
+	myCreateTree.setup();
 
 
 	//---------------------------------
@@ -386,7 +386,7 @@ void loop() {
 		srvDht.run(); // run srvDht here, because in auto it runs from BHT and not from controller
 	}
 	else {
-		myBehaviour.loop();
+		myCreateTree.loop();
 	}
 
 	unsigned long loopTime = micros() - startLoopTime;

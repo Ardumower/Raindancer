@@ -120,6 +120,14 @@ private:
 	int _cur_state;
 };
 
+
+
+#define myMax(a,b) ((a)>(b)?(a):(b))
+
+#define myMin(a,b) ((a)<(b)?(a):(b))
+
+
+
 #endif
 
 

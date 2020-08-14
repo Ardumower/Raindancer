@@ -34,28 +34,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-class TBehaviour 
-{
+class TCreateTree {
 private:
-    Blackboard& bb;
-    
-    BehaviourTree behaviorTree;
-  
-    Selector selRoot;
-    
+	Blackboard& bb;
+
+	BehaviourTree behaviorTree;
+
+	Selector selRoot;
+
 public:
 
-    TBehaviour(Blackboard& _myBlackboard): bb(_myBlackboard){}
-    
+	TCreateTree(Blackboard& _myBlackboard) : bb(_myBlackboard) {}
+
 	BehaviourTree& gettree() { return behaviorTree; };
 
-    void setup();
+	void setup();
 
-    void reset();
-    
-    void loop();
+	void reset();
 
-    void print();
+	void loop();
+
+	void print();
 };
 #endif
 
