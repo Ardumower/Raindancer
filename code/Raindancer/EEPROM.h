@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WProgram.h"
 #endif
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "hardware.h"
 #include "errorhandler.h"
 
@@ -44,11 +44,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EEPADR_ERASE_PAGES  3 // first pages will be erased erase(). No need to erase more at the moment. These are 24 4Byte Values.
 
 
-class TEEPROM : public Thread {
+class TEEPROM : public Protothread {
 public:
 	TEEPROM();
 	void setup();
-	virtual void run();
+	virtual bool Run();
 	void writeu8t(uint16_t address, uint8_t data);
 	void writeFloat(uint16_t address, float data);
 	void write32t(uint16_t address, int32_t data);

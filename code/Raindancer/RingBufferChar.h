@@ -28,7 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 
-#define NODE_RINGBUFFER_MAX 5000
+//NODE_RINGBUFFER_MAX is limited to 32766
+#define NODE_RINGBUFFER_MAX 10000
 
 class RingBufferChar
 {
@@ -40,7 +41,7 @@ public:
 	void putString(const char *dat);
 	void putString(const __FlashStringHelper *ifsh);
 	void get(char& dat);
-
+	void resetRead();
 	void print();
 
 	void clear();

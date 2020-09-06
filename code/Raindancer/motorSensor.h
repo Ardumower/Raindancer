@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WProgram.h"
 #endif
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "hardware.h"
 #include "batterySensor.h"
@@ -40,8 +40,7 @@ extern TErrorHandler errorHandler;
 // Liest Motorstrom aus und berechnet die Wattzahl
 // Wenn diese zu hoch ist, wird der Mähmotor sofort ausgeschaltet.
 
-class TmotorSensor : public Thread
-{
+class TmotorSensor : public Protothread {
 private:
 	AnalogIn& myAnalogIn;
 	DigitalIn& myDiMotorFault;
@@ -63,7 +62,7 @@ public:
 	float offset;
 	float scale;
 
-	TmotorSensor(AnalogIn& _myAnalogIn, DigitalIn& _myDiMotorFault, DigitalOut& _myMotorEnable, char name) :myAnalogIn(_myAnalogIn), myDiMotorFault(_myDiMotorFault), myMotorEnable(_myMotorEnable), myName(name){
+	TmotorSensor(AnalogIn& _myAnalogIn, DigitalIn& _myDiMotorFault, DigitalOut& _myMotorEnable, char name) :myAnalogIn(_myAnalogIn), myDiMotorFault(_myDiMotorFault), myMotorEnable(_myMotorEnable), myName(name) {
 	}
 
 	void setup() {
@@ -79,35 +78,41 @@ public:
 	}
 
 
-	virtual void run() {
+	bool Run() {
 		// Wird alle 77ms aufgerufen
 		const float accel = 0.1f;
 		float sensorCurrent;
 
-		runned();
+		PT_BEGIN();
+		while (1) {
 
-		sensorValue = myAnalogIn.getVoltage();
+			PT_YIELD_INTERVAL();
 
-		if (sensorValue < 0.001f) {
-			sensorValue = 0.0f;
-			sensorCurrent = 0.0f;
+			sensorValue = myAnalogIn.getVoltage();
+
+			if (sensorValue < 0.001f) {
+				sensorValue = 0.0f;
+				sensorCurrent = 0.0f;
+			}
+			else {
+				sensorCurrent = (sensorValue - offset) * scale;
+				if (sensorCurrent < 0.0f) sensorCurrent = 0;
+			}
+
+			current = (1.0f - accel) * current + accel * sensorCurrent;
+
+			watt = srvBatSensor.voltage * current;
+
+			if (showValuesOnConsole && (++count > 10)) { //show message only every tenth call
+				errorHandler.setInfo(F("!03,Motor%c  Watt: %f MotorCurrent: %f SensorValue: %f scale: %f\r\n"), myName, watt, current, sensorValue, scale);
+				count = 0;
+			}
+
+			checkCurrent();
+			checkMotorFault();
+
 		}
-		else {
-			sensorCurrent = (sensorValue - offset) * scale;
-			if (sensorCurrent < 0.0f) sensorCurrent = 0;
-		}
-
-		current = (1.0f - accel) * current + accel * sensorCurrent;
-
-		watt = srvBatSensor.voltage * current;
-		
-		if (showValuesOnConsole && (++count > 10)) { //show message only every tenth call
-			errorHandler.setInfo(F("!03,Motor%c  Watt: %f MotorCurrent: %f SensorValue: %f scale: %f\r\n"),myName, watt, current, sensorValue,scale);
-			count = 0;
-		}
-
-		checkCurrent();
-		checkMotorFault();
+		PT_END();
 	}
 
 
@@ -124,7 +129,7 @@ public:
 		// Wird alle 77ms aufgerufen
 		if (current >= motorMaxCurrent) {
 			motorSenseCounter++;
-			if (motorSenseCounter >35) { // Überlauf verhindern
+			if (motorSenseCounter > 35) { // Überlauf verhindern
 				motorSenseCounter = 35;
 			}
 		}
@@ -133,7 +138,7 @@ public:
 		}
 
 		if (motorSenseCounter >= 25) { //ignore motorMowPower for 2 seconds
-				errorHandler.setError(F("!03,Motor %c overcurrent: %f\r\n"), myName, current);
+			errorHandler.setError(F("!03,Motor %c overcurrent: %f\r\n"), myName, current);
 		}
 	}
 
@@ -141,24 +146,23 @@ public:
 
 	void calculateScale(float measuredCurrent, float softwareCurrent) {
 		scale = measuredCurrent * scale / softwareCurrent;
-		errorHandler.setInfoNoLog(F("!03,Motor %c scale calculated: %f\r\n"), myName,scale);
+		errorHandler.setInfo(F("!03,Motor %c scale calculated: %f\r\n"), myName, scale);
 	}
 
 	void measureOffset() {
 		errorHandler.setInfo(F("!03,Motor %c measure offset\r\n"), myName);
-		errorHandler.setInfoNoLog(F("!03,"));
+		errorHandler.setInfo(F("!03,"));
 		offset = myAnalogIn.measureOffsetVoltage();
-   	    errorHandler.setInfo(F("  offset: %f\r\n"), offset);
+		errorHandler.setInfo(F("  offset: %f\r\n"), offset);
 	}
 
 
-	void showConfig()
-	{
-		errorHandler.setInfoNoLog(F("!03,motSensor Config Motor: %c\r\n"), myName);
-		errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-		errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-		errorHandler.setInfoNoLog(F("!03,offset %d\r\n"), offset);
-		errorHandler.setInfoNoLog(F("!03,scale %f\r\n"), scale);
+	void showConfig() {
+		errorHandler.setInfo(F("!03,motSensor Config Motor: %c\r\n"), myName);
+		errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+		errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+		errorHandler.setInfo(F("!03,offset %d\r\n"), offset);
+		errorHandler.setInfo(F("!03,scale %f\r\n"), scale);
 	}
 };
 

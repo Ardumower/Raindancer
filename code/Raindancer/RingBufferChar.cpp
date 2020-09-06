@@ -18,22 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
+#include <Arduino.h>
 #include "RingBufferChar.h"
 #include "hardware.h"
 #include "errorhandler.h"
 #include "config.h"
 
-RingBufferChar::RingBufferChar()
-{
+RingBufferChar::RingBufferChar() {
 	size = NODE_RINGBUFFER_MAX - 1;
 	addr_w = 0;
 	addr_r = 0;
+	memset((void*)buf, 0, NODE_RINGBUFFER_MAX);
+
 }
 
+void RingBufferChar::resetRead() {
+	addr_r = addr_w ? (addr_w - 1) : size;
+}
 
-void RingBufferChar::put(char  dat)
-{
+void RingBufferChar::put(char  dat) {
 	addr_w = addr_w ? (addr_w - 1) : size;
 	buf[addr_w] = dat;
 
@@ -43,8 +46,8 @@ void RingBufferChar::put(char  dat)
 	}
 }
 
-void RingBufferChar::putString(const char *dat) {
-	for (int i = 0; dat[i] != '\0'; i++) {
+void RingBufferChar::putString(const char* dat) {
+	for (uint16_t i = 0; dat[i] != '\0'; i++) {
 		put(dat[i]);
 		if (i > 200) { // if 0 at the end is missing
 			errorHandler.setError(F("###### MORE THAN 200 ######\r\n"));
@@ -54,10 +57,9 @@ void RingBufferChar::putString(const char *dat) {
 }
 
 
-void RingBufferChar::putString(const __FlashStringHelper *ifsh)
-{
+void RingBufferChar::putString(const __FlashStringHelper* ifsh) {
 	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
-	size_t i = 0;
+	uint16_t i = 0;
 	while (1) {
 		char c = pgm_read_byte(p++);
 		if (c == 0) break;
@@ -72,47 +74,49 @@ void RingBufferChar::putString(const __FlashStringHelper *ifsh)
 
 }
 
-void RingBufferChar::get(char& dat)
-{
+void RingBufferChar::get(char& dat) {
 	addr_r = addr_r ? (addr_r - 1) : size;
 	dat = buf[addr_r];
 }
 
 
-bool RingBufferChar::unreadable(void)
-{
+bool RingBufferChar::unreadable(void) {
 	return (addr_r == addr_w);
 }
 
-bool RingBufferChar::readable(void)
-{
+bool RingBufferChar::readable(void) {
 	return !(addr_r == addr_w);
 }
 
 
-void RingBufferChar::print()
-{
-
+void RingBufferChar::print() {
 	char character;
-
-	addr_r_backup = addr_r;
+	int16_t inQueue;
+	//addr_r_backup = addr_r;
 
 	while (readable()) {
-		get(character);
-		debug->print(char(character));
-		delay(1);
+
+		inQueue = SERIAL_BUFFER_SIZE - debug->availableForWrite();
+		if (inQueue < 8) {
+			get(character);
+			if (character != 0) {
+				debug->print(char(character));
+			}
+		}
+		else {
+			return;
+		}
 #if  CONF_ENABLEWATCHDOG ==  true
 		watchdogReset();
 #endif
 	}
 
 	// Reset addr_r in order not to delete the ringbuffer
-	addr_r = addr_r_backup;
+	//addr_r = addr_r_backup;
 
 }
 
-void RingBufferChar::clear()
-{
+void RingBufferChar::clear() {
 	addr_w = 0;
 	addr_r = 0;
 }

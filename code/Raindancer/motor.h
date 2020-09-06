@@ -31,10 +31,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mowclosedloopcontrol.h"
 #include "closedloopcontrol.h"
 #include "positioncontrol.h"
+#include "Protothread.h"
 
 
 
-class TMotorInterface : public Thread {
+class TMotorInterface : public Protothread {
 private:
 
 
@@ -74,7 +75,7 @@ public:
 	TPositionControl* pcL;
 	TPositionControl* pcR;
 
-	virtual void run();
+	virtual bool Run();
 
 	void stopAllMotors();
 

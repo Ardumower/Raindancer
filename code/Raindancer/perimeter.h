@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 //#include "BufferedSerial.h"
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "PerimeterCoil.h"
 #include "RunningMedian.h"
@@ -53,7 +53,7 @@ enum EPerReceiveState {
 
 
 
-class TPerimeterThread: public Thread, public FSM<EPerReceiveState>
+class TPerimeterThread: public Protothread, public FSM<EPerReceiveState>
 {
 private:
 
@@ -123,7 +123,7 @@ public:
 	//bool isRightOutsideMag();
 
     void setup();
-    virtual void run(void);
+    virtual bool Run(void);
 	void showConfig();
 };
 

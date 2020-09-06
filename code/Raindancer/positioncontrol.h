@@ -51,18 +51,18 @@ is enabled.  'period' is the period between calls, in seconds.
 
 
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "closedloopcontrol.h"
 #include "CRotaryEncoder.h"
 
 
 
-class TPositionControl : public Thread
+class TPositionControl : public Protothread
 {
 
 public:
 
-	virtual void run();
+	virtual bool Run();
 
 	void setup(TClosedLoopControlThread *_motor, CRotaryEncoder *enc);
 

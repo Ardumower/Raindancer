@@ -13,10 +13,19 @@ this library solves this
 */
 
 #include "pinman.h"
+#include "config.h"
 
+#undef PWM_FREQUENCY
+#undef TC_FREQUENCY
 
-#define PWM_FREQUENCY 3900
-#define TC_FREQUENCY 3900
+#if CONF_USE_BLDC_DRIVER == true
+   #define PWM_FREQUENCY 1000
+   #define TC_FREQUENCY 1000
+#else 
+   #define PWM_FREQUENCY 3900
+   #define TC_FREQUENCY 3900
+#endif
+
 
 //#define PWM_FREQUENCY 20000
 //#define TC_FREQUENCY 20000
@@ -38,7 +47,7 @@ void PinManager::setDebounce(int pin, int usecs) {  // reject spikes shorter tha
 		g_APinDescription[pin].pPort->PIO_DIFSR &= ~g_APinDescription[pin].ulPin;
 		return;
 	}
-	int div = (usecs / 31) - 1; if (div<0)div = 0; if (div > 16383) div = 16383;
+	int div = (usecs / 31) - 1; if (div < 0)div = 0; if (div > 16383) div = 16383;
 	g_APinDescription[pin].pPort->PIO_SCDR = div;
 }
 
@@ -50,7 +59,7 @@ void PinManager::begin() {
 #endif
 
 	uint8_t i;
-	for (i = 0; i<PINS_COUNT; i++)
+	for (i = 0; i < PINS_COUNT; i++)
 		pinEnabled[i] = 0;
 }
 
@@ -65,13 +74,11 @@ static inline uint32_t mapResolution(uint32_t value, uint32_t from, uint32_t to)
 }
 
 #ifndef __AVR__
-static void TC_SetCMR_ChannelA(Tc *tc, uint32_t chan, uint32_t v)
-{
+static void TC_SetCMR_ChannelA(Tc* tc, uint32_t chan, uint32_t v) {
 	tc->TC_CHANNEL[chan].TC_CMR = (tc->TC_CHANNEL[chan].TC_CMR & 0xFFF0FFFF) | v;
 }
 
-static void TC_SetCMR_ChannelB(Tc *tc, uint32_t chan, uint32_t v)
-{
+static void TC_SetCMR_ChannelB(Tc* tc, uint32_t chan, uint32_t v) {
 	tc->TC_CHANNEL[chan].TC_CMR = (tc->TC_CHANNEL[chan].TC_CMR & 0xF0FFFFFF) | v;
 }
 #endif
@@ -175,14 +182,14 @@ void PinManager::analogWrite(uint32_t ulPin, uint32_t ulValue) {
 		ETCChannel channel = g_APinDescription[ulPin].ulTCChannel;
 		static const uint32_t channelToChNo[] = { 0, 0, 1, 1, 2, 2, 0, 0, 1, 1, 2, 2, 0, 0, 1, 1, 2, 2 };
 		static const uint32_t channelToAB[] = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 };
-		static Tc *channelToTC[] = {
+		static Tc* channelToTC[] = {
 			TC0, TC0, TC0, TC0, TC0, TC0,
 			TC1, TC1, TC1, TC1, TC1, TC1,
 			TC2, TC2, TC2, TC2, TC2, TC2 };
 		static const uint32_t channelToId[] = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8 };
 		uint32_t chNo = channelToChNo[channel];
 		uint32_t chA = channelToAB[channel];
-		Tc *chTC = channelToTC[channel];
+		Tc* chTC = channelToTC[channel];
 		uint32_t interfaceID = channelToId[channel];
 
 		if (!TCChanEnabled[interfaceID]) {

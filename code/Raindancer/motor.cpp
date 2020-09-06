@@ -53,30 +53,36 @@ void TMotorInterface::setup(TMowClosedLoopControlThread* _M, TClosedLoopControlT
 }
 
 
-void TMotorInterface::run() {
+bool TMotorInterface::Run() {
 	// Wird alle 100ms aufgerufen
-	runned();
-	/*
-	pcL->run();
-	L->run();
-	pcR->run();
-	R->run();
-	*/
+	PT_BEGIN();
+	while (1) {
+
+		PT_YIELD_INTERVAL();
+		/*
+		pcL->run();
+		L->run();
+		pcR->run();
+		R->run();
+		*/
 
 
-	// Test functions start
-	if (flagMotorStepSpeed) {
-		motorStepSpeed();
+		// Test functions start
+		if (flagMotorStepSpeed) {
+			motorStepSpeed();
+		}
+		else if (flagMotorFSB) {
+			testForwardStopBackward();
+		}
+		else if (flagMotorPFSB) {
+			testPosForwardStopBackward();
+		}
+		else if (flagMotorPerOverrun) {
+			motorPerOverrunTest();
+		}
+
 	}
-	else if (flagMotorFSB) {
-		testForwardStopBackward();
-	}
-	else if (flagMotorPFSB) {
-		testPosForwardStopBackward();
-	}
-	else if (flagMotorPerOverrun) {
-		motorPerOverrunTest();
-	}
+	PT_END();
 }
 
 
@@ -592,7 +598,7 @@ void TMotorInterface::testForwardStopBackward() {
 		if ((now - lastrunTest) > 4000) {
 			stateTest = 4;
 			stopCLC();
-			errorHandler.setInfoNoLog(F("STOP\r\n"));
+			errorHandler.setInfo(F("STOP\r\n"));
 		}
 
 		break;
@@ -602,7 +608,7 @@ void TMotorInterface::testForwardStopBackward() {
 			lastrunTest = now;
 			setSpeedCLC(speedMinTest);
 			stateTest = 5;
-			errorHandler.setInfoNoLog(F("MIN\r\n"));
+			errorHandler.setInfo(F("MIN\r\n"));
 		}
 
 		break;
@@ -611,7 +617,7 @@ void TMotorInterface::testForwardStopBackward() {
 		if ((now - lastrunTest) > 4000) {
 			stateTest = 6;
 			stopCLC();
-			errorHandler.setInfoNoLog(F("STOP\r\n"));
+			errorHandler.setInfo(F("STOP\r\n"));
 		}
 		break;
 
@@ -620,7 +626,7 @@ void TMotorInterface::testForwardStopBackward() {
 			lastrunTest = now;
 			setSpeedCLC(speedMaxTest);
 			stateTest = 3;
-			errorHandler.setInfoNoLog(F("MAX\r\n"));
+			errorHandler.setInfo(F("MAX\r\n"));
 		}
 		break;
 
@@ -702,8 +708,8 @@ void TMotorInterface::motorPerOverrunTest() {
 
 }
 void TMotorInterface::showConfig() {
-	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-	errorHandler.setInfoNoLog(F("!03,speedMinTest %f\r\n"), speedMinTest);
-	errorHandler.setInfoNoLog(F("!03,speedMaxTest %f\r\n"), speedMaxTest);
+	errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+	errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+	errorHandler.setInfo(F("!03,speedMinTest %f\r\n"), speedMinTest);
+	errorHandler.setInfo(F("!03,speedMaxTest %f\r\n"), speedMaxTest);
 }

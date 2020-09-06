@@ -15,7 +15,7 @@
 #include "hardware.h"
 #include "errorhandler.h"
 #include "config.h"
-#include "thread.h"
+#include "Protothread.h"
 
 
 #define N_EMPTY 0x00
@@ -79,7 +79,7 @@ struct gpsData
   short year = 0;
 };
 
-class Tgps : public Thread
+class Tgps : public Protothread
 {
   private:
 
@@ -132,7 +132,7 @@ class Tgps : public Thread
     gpsData m_gpsData; // pgs date determined
 
     void setup();
-    virtual void run();
+    virtual bool Run();
     void showConfig();
 
 };

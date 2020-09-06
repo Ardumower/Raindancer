@@ -3,7 +3,7 @@
 
 
 
-BufferSerial::BufferSerial(HardwareSerial& s, const int& bufferSize) : serial(s), usbserial(SerialUSB) // set SerialUSB as default for usbserial that the reference has a value, which is not used because this is a serial buffer
+BufferSerial::BufferSerial(UARTClass& s, const int& bufferSize) : serial(s), usbserial(SerialUSB) // set SerialUSB as default for usbserial that the reference has a value, which is not used because this is a serial buffer
 {
 	//_setup(bufferSize);
 	isUSB = false;
@@ -65,6 +65,9 @@ int BufferSerial::available() {
 	return (isUSB ? usbserial.available() : serial.available());
 }
 
+int BufferSerial::availableForWrite() {
+	return (isUSB ? usbserial.availableForWrite() : serial.availableForWrite());
+}
 
 void BufferSerial::begin(unsigned long x) {
 	return (isUSB ? usbserial.begin(x) : serial.begin(x));

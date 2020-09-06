@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "Sabertooth.h"
 #include "errorhandler.h"
 #include "DueTimer.h"
+#include "Protothread.h"
 
 //#include "SRF08.h"
 
@@ -120,8 +121,6 @@ extern MC33926Mow mowMotorDriver;
 extern i2cInOut i2cRTC;
 extern i2cInOut i2cEEPROM;
 
-
-extern void hardwareRun();
 extern void hardwareSetup();
 
 
@@ -141,6 +140,15 @@ public:
 	~InterruptLock() {
 		
 	}
+
+};
+
+
+
+class THal : public Protothread {
+public:
+	virtual bool Run();
+private:
 
 };
 

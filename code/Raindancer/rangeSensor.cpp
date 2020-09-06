@@ -23,60 +23,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-void   TrangeSensor::setup()
-{
+void   TrangeSensor::setup() {
 
-	_rangeActivated  = false;
+	_rangeActivated = false;
 	flagShowRange = false;
 
 };
 
-bool TrangeSensor::isNearObstacle()
-{
+bool TrangeSensor::isNearObstacle() {
 	return _rangeActivated;
 }
 
 
-void TrangeSensor::run()
-{
+bool TrangeSensor::Run() {
 
+	PT_BEGIN();
+	while (1) {
 
-	runned();
+		PT_YIELD_INTERVAL();
 
-	if (CONF_DISABLE_RANGE_SERVICE) {
-		_rangeActivated = false;
-		return;
-	}
-
-
-	//if (flagShowRange) {
-	//errorHandler.setInfo("!03,Range %d\r\n", diNearObsacleSensor.read());
-	//}
-
-	// Low active
-	if (diNearObsacleSensor == HIGH && _rangeActivated == true) {
-		_rangeActivated = false;
-		if (flagShowRange) {
-			errorHandler.setInfo(F("!03,Range deactivated\r\n"));
+		if (CONF_DISABLE_RANGE_SERVICE) {
+			_rangeActivated = false;
+			PT_EXIT();
 		}
-	}
 
-	if (diNearObsacleSensor == LOW && _rangeActivated == false) {
-		_rangeActivated = true;
-		if (flagShowRange) {
-			errorHandler.setInfo(F("!03,Range activated\r\n"));
+
+		//if (flagShowRange) {
+		//errorHandler.setInfo("!03,Range %d\r\n", diNearObsacleSensor.read());
+		//}
+
+		// Low active
+		if (diNearObsacleSensor == HIGH && _rangeActivated == true) {
+			_rangeActivated = false;
+			if (flagShowRange) {
+				errorHandler.setInfo(F("!03,Range deactivated\r\n"));
+			}
 		}
+
+		if (diNearObsacleSensor == LOW && _rangeActivated == false) {
+			_rangeActivated = true;
+			if (flagShowRange) {
+				errorHandler.setInfo(F("!03,Range activated\r\n"));
+			}
+		}
+
 	}
-
-
+	PT_END();
 }
 
 
-void TrangeSensor::showConfig()
-{
-	errorHandler.setInfoNoLog(F("!03,Range Sensor Config\r\n"));
-	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
+void TrangeSensor::showConfig() {
+	errorHandler.setInfo(F("!03,Range Sensor Config\r\n"));
+	errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+	errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
 }
 
 

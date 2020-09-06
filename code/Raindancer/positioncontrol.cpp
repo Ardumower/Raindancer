@@ -54,10 +54,10 @@ is enabled.  'period' is the period between calls, in seconds.
 /**********************************************************************************/
 /**********************************************************************************/
 
-void TPositionControl::setup(TClosedLoopControlThread *_motor, CRotaryEncoder *enc)
-{
+void TPositionControl::setup(TClosedLoopControlThread* _motor, CRotaryEncoder* enc) {
 	flagShowResults = false;
-	ta = 0.1f; //run is called round about every 100ms
+
+	ta = 0.1f; //only for initatisation. Will be set in run to the right value
 	stopCmBeforeTarget = 0.5f; // Must be positive and >0 
 	max_acc = 70.0f; //maximal 70% speed change per 1 sec
 	motor = _motor;
@@ -66,112 +66,106 @@ void TPositionControl::setup(TClosedLoopControlThread *_motor, CRotaryEncoder *e
 }
 
 
-void TPositionControl::run()
-{
+bool TPositionControl::Run() {
 	float max_dv, tiny_dp, pos_err, vel_req;
 
-	runned();
+	PT_BEGIN();
+	while (1) {
 
-	switch (state)
-	{
-	case 0:  // simple trajectory planer
+		PT_YIELD_INTERVAL();
 
-		active = 0;
-		/* compute max change in velocity per servo period */
-		max_dv = max_acc * ta;
-		/* compute a tiny position range, to be treated as zero */
-		tiny_dp = stopCmBeforeTarget; // TINY_DP(max_acc, ta);
-		curr_pos = getCMForCounts(myEncoder->getTickCounter());
+		ta = static_cast<float>(interval) / 1000.0f;
+
+		if (state == 0) {
+			active = 0;
+			/* compute max change in velocity per servo period */
+			max_dv = max_acc * ta;
+			/* compute a tiny position range, to be treated as zero */
+			tiny_dp = stopCmBeforeTarget; // TINY_DP(max_acc, ta);
+			curr_pos = getCMForCounts(myEncoder->getTickCounter());
 
 
-		if (enable) {
-			/* planner enabled, request a velocity that tends to drive
-			pos_err to zero, but allows for stopping without position
-			overshoot */
-			pos_err = pos_cmd - curr_pos;
-			/* positive and negative errors require some sign flipping to avoid sqrt(negative)
-			forward and backward I added to prevent driving back in case of overshoot of tiny_dp*/
-			if ( (pos_err > tiny_dp) && forward) {
-				vel_req = -max_dv +
-					sqrt(2.0f * max_acc * pos_err + max_dv * max_dv);
-				/* mark planner as active */
-				active = 1;
-			}
-			else if ( (pos_err < -tiny_dp) && backward) {
-				vel_req = max_dv -
-					sqrt(-2.0f * max_acc * pos_err + max_dv * max_dv);
-				/* mark planner as active */
-				active = 1;
+			if (enable) {
+				/* planner enabled, request a velocity that tends to drive
+				pos_err to zero, but allows for stopping without position
+				overshoot */
+				pos_err = pos_cmd - curr_pos;
+				/* positive and negative errors require some sign flipping to avoid sqrt(negative)
+				forward and backward I added to prevent driving back in case of overshoot of tiny_dp*/
+				if ((pos_err > tiny_dp) && forward) {
+					vel_req = -max_dv +
+						sqrt(2.0f * max_acc * pos_err + max_dv * max_dv);
+					/* mark planner as active */
+					active = 1;
+				}
+				else if ((pos_err < -tiny_dp) && backward) {
+					vel_req = max_dv -
+						sqrt(-2.0f * max_acc * pos_err + max_dv * max_dv);
+					/* mark planner as active */
+					active = 1;
+				}
+				else {
+					/* within 'tiny_dp' of desired pos, no need to move */
+					vel_req = 0.0f;
+				}
 			}
 			else {
-				/* within 'tiny_dp' of desired pos, no need to move */
+				/* planner disabled, request zero velocity */
 				vel_req = 0.0f;
+				/* and set command to present position to avoid movement when next enabled */
+				pos_cmd = curr_pos;
 			}
-		}
-		else {
-			/* planner disabled, request zero velocity */
-			vel_req = 0.0f;
-			/* and set command to present position to avoid movement when next enabled */
-			pos_cmd = curr_pos;
-		}
 
-		/* limit velocity request */
-		if (vel_req > max_vel) {
-			vel_req = max_vel;
-		}
-		else if (vel_req < -max_vel) {
-			vel_req = -max_vel;
-		}
+			/* limit velocity request */
+			if (vel_req > max_vel) {
+				vel_req = max_vel;
+			}
+			else if (vel_req < -max_vel) {
+				vel_req = -max_vel;
+			}
 
 
-		/* ramp velocity toward request at accel limit */
-		if (vel_req > curr_vel + max_dv) {
-			curr_vel += max_dv;
-		}
-		else if (vel_req < curr_vel - max_dv) {
-			curr_vel -= max_dv;
-		}
-		else {
-			curr_vel = vel_req;
-		}
+			/* ramp velocity toward request at accel limit */
+			if (vel_req > curr_vel + max_dv) {
+				curr_vel += max_dv;
+			}
+			else if (vel_req < curr_vel - max_dv) {
+				curr_vel -= max_dv;
+			}
+			else {
+				curr_vel = vel_req;
+			}
 
-		motor->setSpeed(curr_vel);
+			motor->setSpeed(curr_vel);
 
-		/* check for still moving */
-		if (curr_vel != 0.0f) {
-			/* yes, mark planner active */
-			active = 1;
-		}
+			/* check for still moving */
+			if (curr_vel != 0.0f) {
+				/* yes, mark planner active */
+				active = 1;
+			}
 
-		/* It could be that closed loop is used direct and then the positioning should not call setSpeed.*/
-		/* Therfore change state to 1 to call this planer not again if position is reached*/
-		if (active == 0)
-		{
-			enable = 0;
-			motor->stop();
-			state = 1;
+			/* It could be that closed loop is used direct and then the positioning should not call setSpeed.*/
+			/* Therfore change state to 1 to call this planer not again if position is reached*/
+			if (active == 0) {
+				enable = 0;
+				motor->stop();
+				state = 1;
+				if (flagShowResults) {
+					errorHandler.setInfo(F("motor %i stop state=1\r\n"), motor->motorNo);
+				}
+			}
+
 			if (flagShowResults) {
-				errorHandler.setInfoNoLog(F("motor %i stop state=1\r\n"), motor->motorNo);
+				sprintf(errorHandler.msg, "!03,motor %i speed: %f%% pos: %f cm posError %fcm e: %d a: %d\r\n", motor->motorNo, curr_vel, curr_pos, pos_cmd - curr_pos, enable, active);
+				errorHandler.setInfo();
 			}
 		}
-
-		if (flagShowResults) {
-			sprintf(errorHandler.msg, "!03,motor %i speed: %f%% pos: %f cm posError %fcm e: %d a: %d\r\n", motor->motorNo, curr_vel, curr_pos, pos_cmd - curr_pos, enable, active);
-			errorHandler.setInfoNoLog();
-		}
-		break;
-	case 1:
-		//do nothing
-		break;
-	default:
-		break;
 	}
-
+	PT_END();
 }
 
 
-bool  TPositionControl::isPositionReached()
-{
+bool  TPositionControl::isPositionReached() {
 	if (state == 1 && motor->isStopped()) {
 		return true;
 	}
@@ -182,7 +176,7 @@ bool  TPositionControl::isPositionReached()
 void TPositionControl::changeSpeed(long _speedPercentage) {
 
 	max_vel = abs(_speedPercentage);
-	
+
 	if (max_vel > 70) { //if accelerate to 90% do it slower
 		max_acc = 30.0f;
 	}
@@ -191,14 +185,13 @@ void TPositionControl::changeSpeed(long _speedPercentage) {
 	}
 }
 
-void TPositionControl::stop()
-{
+void TPositionControl::stop() {
 	state = 0;
 	max_acc = 80.0f;
 	enable = 0; /* if zero, motion stops ASAP. Depending only on max_acc => max_dv */
 	//active = 1;
 	curr_vel = motor->getCurrentSpeedInPerc();
-	max_vel =  fabsf(curr_vel);
+	max_vel = fabsf(curr_vel);
 
 	if (max_vel < 4) {
 		motor->stop();
@@ -210,8 +203,7 @@ void TPositionControl::stop()
 
 }
 
-void TPositionControl::stopAtPerimeter()
-{
+void TPositionControl::stopAtPerimeter() {
 	// should only called while driving forward 
 	curr_vel = motor->getCurrentSpeedInPerc();
 
@@ -247,14 +239,14 @@ void TPositionControl::stopAtPerimeter()
 
 	/*
 	if (motor->motorNo == 1) {
-		errorHandler.setInfoNoLog(F("TPositionControl::stopAtPerimeter\r\n"));
+		errorHandler.setInfo(F("TPositionControl::stopAtPerimeter\r\n"));
 	}
 	*/
 
 	if (flagShowResults) {
-		errorHandler.setInfoNoLog(F("\r\n!03,rotateCM motor %i speed: %f%%\r\n"), motor->motorNo, max_vel);
-		errorHandler.setInfoNoLog(F("!03,start: %fcm end: %fcm dist: %fcm\r\n"), pos_start, pos_cmd, CONF_DRIVE_OVER_PERIMETER_CM);
-		//		errorHandler.setInfoNoLog(F("!03,original endpos: %fcm\r\n"), pos_cmd-addCmToTargetPosition);
+		errorHandler.setInfo(F("\r\n!03,rotateCM motor %i speed: %f%%\r\n"), motor->motorNo, max_vel);
+		errorHandler.setInfo(F("!03,start: %fcm end: %fcm dist: %fcm\r\n"), pos_start, pos_cmd, CONF_DRIVE_OVER_PERIMETER_CM);
+		//		errorHandler.setInfo(F("!03,original endpos: %fcm\r\n"), pos_cmd-addCmToTargetPosition);
 	}
 
 
@@ -263,15 +255,13 @@ void TPositionControl::stopAtPerimeter()
 }
 
 
-void TPositionControl::rotateAngle(float _angle, long _speedPercentage)
-{
+void TPositionControl::rotateAngle(float _angle, long _speedPercentage) {
 	long counts = getCountsForDegree(_angle);
 	float distanceCM = getCMForCounts(counts);
 	rotateCM(distanceCM, _speedPercentage);
 }
 
-void TPositionControl::rotateCM(float _distanceCm, long _speedPercentage)
-{
+void TPositionControl::rotateCM(float _distanceCm, long _speedPercentage) {
 
 	state = 0;
 	max_acc = 60.0f;  //=> max_dv = max_acc * ta; max_dv = 60 * 0.1 = 6; This means maximum 6% acceleration per every loop.
@@ -310,9 +300,9 @@ void TPositionControl::rotateCM(float _distanceCm, long _speedPercentage)
 	}
 
 	if (flagShowResults) {
-		errorHandler.setInfoNoLog(F("\r\n!03,rotateCM motor %i speed: %f%%\r\n"), motor->motorNo, max_vel);
-		errorHandler.setInfoNoLog(F("!03,start: %fcm end: %fcm dist: %fcm\r\n"), pos_start, pos_cmd, _distanceCm);
-		//		errorHandler.setInfoNoLog(F("!03,original endpos: %fcm\r\n"), pos_cmd-addCmToTargetPosition);
+		errorHandler.setInfo(F("\r\n!03,rotateCM motor %i speed: %f%%\r\n"), motor->motorNo, max_vel);
+		errorHandler.setInfo(F("!03,start: %fcm end: %fcm dist: %fcm\r\n"), pos_start, pos_cmd, _distanceCm);
+		//		errorHandler.setInfo(F("!03,original endpos: %fcm\r\n"), pos_cmd-addCmToTargetPosition);
 	}
 
 
@@ -325,13 +315,12 @@ void TPositionControl::reset()  // Motors must be stopped before calling!!!
 	state = 1;
 }
 
-void TPositionControl::showConfig()
-{
-	errorHandler.setInfoNoLog(F("!03,PC Config MotorNo: %i\r\n"), motor->motorNo);
-	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-	errorHandler.setInfoNoLog(F("!03,stopCmBeforeTarget %f\r\n"), stopCmBeforeTarget);
-	//errorHandler.setInfoNoLog(F("!03,addCmToTargetPosition %f\r\n"), addCmToTargetPosition);
+void TPositionControl::showConfig() {
+	errorHandler.setInfo(F("!03,PC Config MotorNo: %i\r\n"), motor->motorNo);
+	errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+	errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+	errorHandler.setInfo(F("!03,stopCmBeforeTarget %f\r\n"), stopCmBeforeTarget);
+	//errorHandler.setInfo(F("!03,addCmToTargetPosition %f\r\n"), addCmToTargetPosition);
 }
 
 
@@ -339,29 +328,25 @@ void TPositionControl::showConfig()
 // Umrechnungs Routinen
 // ---------------------------------------------------------
 
-long TPositionControl::getCountsForCM(float x)
-{
+long TPositionControl::getCountsForCM(float x) {
 	float y;
 	y = (x * CONF_ENCTICKSPERREVOLUTION) / CONF_RADUMFANG_CM;
 	return y;
 }
 
-float TPositionControl::getCMForCounts(float x)
-{
+float TPositionControl::getCMForCounts(float x) {
 	float y;
 	y = (x * CONF_RADUMFANG_CM) / CONF_ENCTICKSPERREVOLUTION;
 	return y;
 }
 
-long TPositionControl::getCountsForDegree(float x)
-{
+long TPositionControl::getCountsForDegree(float x) {
 	float y;
 	y = x * CONF_ENCTICKSPERREVOLUTION / 360.0f;
 	return y;
 }
 
-float TPositionControl::getDegreeForCounts(float x)
-{
+float TPositionControl::getDegreeForCounts(float x) {
 	float y;
 	y = x * 360.0f / CONF_ENCTICKSPERREVOLUTION;
 	return y;

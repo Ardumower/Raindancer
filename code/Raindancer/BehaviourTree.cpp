@@ -120,7 +120,7 @@ Node::~Node() {
 }
 
 bool Node::onSetup(Blackboard& bb) {
-	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t Node::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DSETUP(errorHandler.setInfo(F("%s %d\t\t Node::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return true;
 }
 
@@ -161,9 +161,9 @@ bool Node::isInvalid() const {
 
 void Node::print(int level) {
 	for (int i = 0; i < level; i++) {
-		errorHandler.setInfoNoLog(F("."));
+		errorHandler.setInfo(F("."));
 	}
-	errorHandler.setInfoNoLog(F("%4d %s\r\n"), this->m_nodeId, this->m_nodeName);
+	errorHandler.setInfo(F("%4d %s\r\n"), this->m_nodeId, this->m_nodeName);
 }
 
 
@@ -189,12 +189,12 @@ NodeStatus Action::tick(Blackboard& bb) {
 
 	if (m_eNodeStatus != BH_RUNNING) {
 		_start_time_of_node = millis();
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> calling onInitialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t act::tick -> calling onInitialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		onInitialize(bb);
 	}
 
 	m_eNodeStatus = onUpdate(bb);
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> called onUpdate returned status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t act::tick -> called onUpdate returned status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 
 
 	if (m_eNodeStatus != oldState) {
@@ -203,17 +203,17 @@ NodeStatus Action::tick(Blackboard& bb) {
 
 
 	if (m_eNodeStatus != BH_RUNNING) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> calling onTerminate status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t act::tick -> calling onTerminate status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		onTerminate(m_eNodeStatus, bb);
 	}
 
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t act::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return m_eNodeStatus;
 }
 
 void Action::abort(Blackboard& bb) {
 	LOG_SAVE_OLD_STATUS;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t act::abort -> executing onTerminate\r\n"), m_nodeName, m_nodeId););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t act::abort -> executing onTerminate\r\n"), m_nodeName, m_nodeId););
 	onTerminate(BH_ABORTED, bb);
 	m_eNodeStatus = BH_ABORTED;
 	LOG_NODE(oldState, m_eNodeStatus, this);
@@ -242,12 +242,12 @@ NodeStatus ActionCond::tick(Blackboard& bb) {
 	result = onCheckCondition(bb);
 
 	if (result == BH_SUCCESS) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> cond returned BH_SUCCESS current status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ActionCond::tick -> cond returned BH_SUCCESS current status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		return Action::tick(bb);
 	}
 
 	if (isRunning()) { // Is current node running, then abort ActionCond
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> cond BH_FAILURE and node running -> call abort %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ActionCond::tick -> cond BH_FAILURE and node running -> call abort %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		abort(bb);
 		oldState = m_eNodeStatus;
 	}
@@ -259,7 +259,7 @@ NodeStatus ActionCond::tick(Blackboard& bb) {
 	}
 
 
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionCond::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t ActionCond::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	m_eNodeStatus = BH_FAILURE;
 	if (m_eNodeStatus != oldState) {
 		LOG_NODE(oldState, m_eNodeStatus, this);
@@ -279,14 +279,14 @@ NodeStatus ActionMemCond::tick(Blackboard& bb) {
 	NodeStatus oldState = m_eNodeStatus;
 
 	if (isRunning()) { // Is current node running, then don't query condition.
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick -> cond not called node because node is in status %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ActionMemCond::tick -> cond not called node because node is in status %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		return Action::tick(bb);
 	}
 
 	result = onCheckCondition(bb);
 
 	if (result == BH_SUCCESS) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick -> cond returned BH_SUCCESS current status %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ActionMemCond::tick -> cond returned BH_SUCCESS current status %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		return Action::tick(bb);
 	}
 
@@ -298,7 +298,7 @@ NodeStatus ActionMemCond::tick(Blackboard& bb) {
 		errorHandler.setError(F("%s %d\t\t ActionMemCond::tick -> condition returned != BH_FAILURE\r\n"), m_nodeName, m_nodeId);
 	}
 
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ActionMemCond::tick ->cond returned BH_FAILURE returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t ActionMemCond::tick ->cond returned BH_FAILURE returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	m_eNodeStatus = BH_FAILURE;
 	if (m_eNodeStatus != oldState) {
 		LOG_NODE(oldState, m_eNodeStatus, this);
@@ -325,13 +325,13 @@ NodeStatus Condition::tick(Blackboard& bb) {
 
 	LOG_CONDITION(this);
 
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t cond::tick -> returning status to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return m_eNodeStatus;
 }
 
 void Condition::abort(Blackboard& bb) {
 	LOG_SAVE_OLD_STATUS;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t cond::abort\r\n"), m_nodeName, m_nodeId););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t cond::abort\r\n"), m_nodeName, m_nodeId););
 	m_eNodeStatus = BH_ABORTED;
 	LOG_NODE(oldState, m_eNodeStatus, this);
 
@@ -390,7 +390,7 @@ Notice that, when a child returns RUNNING, the composite node must return the st
 
 bool CompositeNode::onSetup(Blackboard& bb) {
 
-	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DSETUP(errorHandler.setInfo(F("%s %d\t\t CompositeNode::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	// Check if all children were initialized
 	// If we check this here, we don't need to use if(children[i] != NULL){...} in the classes, which based on CompositeNode.
 	for (int i = 0; i < m_children_size; i++) {
@@ -493,19 +493,19 @@ void CompositeNode::addChild(Node* child) {
 
 void CompositeNode::abortChild(Blackboard& bb, int i) {
 	LOG_TRY_ABORT_CHILD;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChild -> try abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t CompositeNode::abortChild -> try abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 	if (m_children[i]->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChild -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t CompositeNode::abortChild -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 		m_children[i]->abort(bb);
 	}
 }
 
 void CompositeNode::abortChildren(Blackboard& bb, int i) {
 	LOG_TRY_ABORT_CHILD;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChildren -> try abort children\r\n"), m_nodeName, m_nodeId););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t CompositeNode::abortChildren -> try abort children\r\n"), m_nodeName, m_nodeId););
 	for (int j = i; j < m_children_size; j++) {
 		if (m_children[j]->isRunning()) {
-			DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t CompositeNode::abortChildren -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[j]->m_nodeName););
+			DTREE(errorHandler.setInfo(F("%s %d\t\t CompositeNode::abortChildren -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[j]->m_nodeName););
 			m_children[j]->abort(bb);
 		}
 	}
@@ -729,7 +729,7 @@ NodeStatus Sequence::tick(Blackboard& bb) {
 	RUNSERVICE(bb);
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t Sequence::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_idxLastRunnedNode = 0;
 	}
 
@@ -752,7 +752,7 @@ NodeStatus Sequence::tick(Blackboard& bb) {
 
 			/*
 			if ((m_children[m_idxLastRunnedNode]->isRunning()) && (m_idxLastRunnedNode != i)) {
-				DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
+				DTREE(errorHandler.setInfo(F("%s %d\t\t Sequence::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
 				LOG_TRY_ABORT_CHILD;
 				m_children[m_idxLastRunnedNode]->abort(bb);
 			}
@@ -770,7 +770,7 @@ NodeStatus Sequence::tick(Blackboard& bb) {
 void Sequence::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_children[m_idxLastRunnedNode]->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Sequence::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t Sequence::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
@@ -807,7 +807,7 @@ NodeStatus MemSequence::tick(Blackboard& bb) {
 	RUNSERVICE(bb);
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSequence::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t MemSequence::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_idxLastRunnedNode = 0;
 	}
 
@@ -831,7 +831,7 @@ NodeStatus MemSequence::tick(Blackboard& bb) {
 void MemSequence::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_children[m_idxLastRunnedNode]->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSequence::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t MemSequence::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
@@ -886,7 +886,7 @@ NodeStatus StarSequence::tick(Blackboard& bb) {
 			break;
 		}
 		default:
-			errorHandler.setInfoNoLog(F("%s %d\t\t StarSequence::tick wrong status from child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName());
+			errorHandler.setInfo(F("%s %d\t\t StarSequence::tick wrong status from child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName());
 			break;
 
 		}
@@ -897,7 +897,7 @@ NodeStatus StarSequence::tick(Blackboard& bb) {
 	}
 
 	originalStatus = m_eNodeStatus;
-	//	errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]);)
+	//	errorHandler.setInfo(F("%s %d\t\t Selector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]);)
 	return BH_SUCCESS;  // Should never been reached.
 
 }
@@ -905,7 +905,7 @@ NodeStatus StarSequence::tick(Blackboard& bb) {
 void StarSequence::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_children[m_idxLastRunnedNode]->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemRing::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t MemRing::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_idxLastRunnedNode = 0;
@@ -928,7 +928,7 @@ NodeStatus Selector::tick(Blackboard& bb) {
 	RUNSERVICE(bb);
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t Selector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_idxLastRunnedNode = 0;
 	}
 
@@ -948,7 +948,7 @@ NodeStatus Selector::tick(Blackboard& bb) {
 
 			/*
 			if ((m_children[m_idxLastRunnedNode]->isRunning()) && (m_idxLastRunnedNode != i)) {
-				DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
+				DTREE(errorHandler.setInfo(F("%s %d\t\t Selector::tick abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->getNodeName()););
 				LOG_TRY_ABORT_CHILD;
 				m_children[m_idxLastRunnedNode]->abort(bb);
 			}
@@ -967,7 +967,7 @@ NodeStatus Selector::tick(Blackboard& bb) {
 void Selector::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_children[m_idxLastRunnedNode]->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Selector::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t Selector::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
@@ -988,7 +988,7 @@ NodeStatus MemSelector::tick(Blackboard& bb) {
 	RUNSERVICE(bb);
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSelector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t MemSelector::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_idxLastRunnedNode = 0;
 	}
 
@@ -1009,7 +1009,7 @@ NodeStatus MemSelector::tick(Blackboard& bb) {
 void MemSelector::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_children[m_idxLastRunnedNode]->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t MemSelector::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t MemSelector::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[m_idxLastRunnedNode]->m_nodeName););
 		m_children[m_idxLastRunnedNode]->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
@@ -1031,7 +1031,7 @@ NodeStatus Parallel::tick(Blackboard& bb) {
 	RUNSERVICE(bb);
 
 	/*if (!isRunning()) {
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t Parallel::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 
 	}*/
 
@@ -1045,7 +1045,7 @@ NodeStatus Parallel::tick(Blackboard& bb) {
 			LOG_TRY_ABORT_CHILD;
 			for (int i = 0; i < m_children_size; i++) {
 				if (m_children[i]->isRunning()) {
-					DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+					DTREE(errorHandler.setInfo(F("%s %d\t\t Parallel::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 					m_children[i]->abort(bb);
 				}
 			}
@@ -1061,7 +1061,7 @@ void Parallel::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	for (int i = 0; i < m_children_size; i++) {
 		if (m_children[i]->isRunning()) {
-			DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Parallel::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+			DTREE(errorHandler.setInfo(F("%s %d\t\t Parallel::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 			m_children[i]->abort(bb);
 		}
 	}
@@ -1084,7 +1084,7 @@ NodeStatus ParallelUntilFail::tick(Blackboard& bb) {
 	RUNSERVICE(bb);
 
 	/*if (!isRunning()) {
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t ParallelUntilFail::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	}*/
 
 	int countRunning = 0;
@@ -1101,7 +1101,7 @@ NodeStatus ParallelUntilFail::tick(Blackboard& bb) {
 			LOG_TRY_ABORT_CHILD;
 			for (int i = 0; i < m_children_size; i++) {
 				if (m_children[i]->isRunning()) {
-					DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+					DTREE(errorHandler.setInfo(F("%s %d\t\t ParallelUntilFail::tick -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 					m_children[i]->abort(bb);
 				}
 			}
@@ -1124,7 +1124,7 @@ void ParallelUntilFail::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	for (int i = 0; i < m_children_size; i++) {
 		if (m_children[i]->isRunning()) {
-			DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ParallelUntilFail::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
+			DTREE(errorHandler.setInfo(F("%s %d\t\t ParallelUntilFail::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_children[i]->m_nodeName););
 			m_children[i]->abort(bb);
 		}
 	}
@@ -1164,7 +1164,7 @@ DecoratorNode::DecoratorNode(Node* child) : m_pChild(child) {}
 
 bool DecoratorNode::onSetup(Blackboard& bb) {
 
-	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t DecoratorNode::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DSETUP(errorHandler.setInfo(F("%s %d\t\t DecoratorNode::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 
 	if (m_pChild == NULL) {
 		errorHandler.setError(F("!03,%s %d\t\t DecoratorNode m_pChild == NULL\r\n"), m_nodeName, m_nodeId);
@@ -1182,7 +1182,7 @@ void DecoratorNode::setChild(Node* newChild) {
 void DecoratorNode::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_pChild->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t DecoratorNode::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t DecoratorNode::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
 		m_pChild->abort(bb);
 	}
 	m_eNodeStatus = BH_ABORTED;
@@ -1205,7 +1205,7 @@ ExecuteOnTrue::ExecuteOnTrue(Node* child, bool* _flag) : DecoratorNode(child), m
 
 bool ExecuteOnTrue::onSetup(Blackboard& bb) {
 
-	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t ExecuteOnTrue::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DSETUP(errorHandler.setInfo(F("%s %d\t\t ExecuteOnTrue::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 
 	if (m_pFlag == NULL) {
 		errorHandler.setError(F("!03,%s %d\t\t ExecuteOnTrue m_flag == NULL\r\n"), m_nodeName, m_nodeId);
@@ -1261,7 +1261,7 @@ NodeStatus ExecuteOnTrue::tick(Blackboard& bb) {
 		return m_eNodeStatus;
 	}
 	else {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ExecuteOnTrue::tick -> flag=false. Child NOT executed: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ExecuteOnTrue::tick -> flag=false. Child NOT executed: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
 	}
 
 	m_eNodeStatus = BH_FAILURE;
@@ -1313,14 +1313,14 @@ NodeStatus ConditionDeco::tick(Blackboard& bb) {
 	LOG_CONDITION_DECO(this);
 
 	if (m_result == BH_SUCCESS) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> cond returned BH_SUCCESS -> call child->tick %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionDeco::tick -> cond returned BH_SUCCESS -> call child->tick %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_eNodeStatus = m_pChild->tick(bb);
 		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
 	}
 
 	if (m_pChild->isRunning()) { // Is child node running, then abort child
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> cond BH_FAILURE and child node running -> call child->abort %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionDeco::tick -> cond BH_FAILURE and child node running -> call child->abort %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		abort(bb);
 #ifdef LOG_CONTROL_NODES
 		oldState = m_eNodeStatus;
@@ -1332,7 +1332,7 @@ NodeStatus ConditionDeco::tick(Blackboard& bb) {
 
 	m_eNodeStatus = BH_FAILURE;
 	LOG_CONTROL_NODE;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionDeco::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionDeco::tick -> returning failure to parent: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return BH_FAILURE;
 }
 
@@ -1355,19 +1355,19 @@ NodeStatus ConditionMemDeco::tick(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 
 	if (m_pChild->isRunning()) { // Is child is running, then don't query condition. Run child directly.
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond not called because child is running -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionMemDeco::tick -> cond not called because child is running -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_eNodeStatus = m_pChild->tick(bb);
 		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
 	}
 
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> calling condition %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionMemDeco::tick -> calling condition %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	m_result = onCheckCondition(bb);
 
 	LOG_CONDITION_DECO(this);
 
 	if (m_result == BH_SUCCESS) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_SUCCESS  -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_SUCCESS  -> calling child %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_eNodeStatus = m_pChild->tick(bb);
 		LOG_CONTROL_NODE;
 		return m_eNodeStatus;
@@ -1376,7 +1376,7 @@ NodeStatus ConditionMemDeco::tick(Blackboard& bb) {
 	// Node is not running, therfore I don't need to abort here.
 	m_eNodeStatus = BH_FAILURE;
 	LOG_CONTROL_NODE;
-	DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_FAILURE. Returning failure to parent %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DTREE(errorHandler.setInfo(F("%s %d\t\t ConditionMemDeco::tick -> cond returned BH_FAILURE. Returning failure to parent %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return BH_FAILURE;
 }
 
@@ -1466,7 +1466,7 @@ NodeStatus Repeat::tick(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t Repeat::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t Repeat::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_iCounter = 0;
 	}
 
@@ -1513,7 +1513,7 @@ WaitDecorator::WaitDecorator() : m_ulWaitMillis(0), m_ulStartTime(0), m_waittime
 NodeStatus WaitDecorator::tick(Blackboard& bb) {
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitDecorator::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t WaitDecorator::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_waittimeExpired = false;
 		m_ulStartTime = millis();
 		m_eNodeStatus = BH_RUNNING;
@@ -1543,7 +1543,7 @@ void WaitDecorator::setWaitMillis(uint32_t millis) {
 void WaitDecorator::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_pChild->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitDecorator::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t WaitDecorator::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
 		m_pChild->abort(bb);
 
 		if (m_waittimeExpired) {
@@ -1569,7 +1569,7 @@ WaitBBTimeDecorator::WaitBBTimeDecorator() : m_ulpWaitMillis(NULL), m_ulStartTim
 
 bool WaitBBTimeDecorator::onSetup(Blackboard& bb) {
 
-	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t WaitBBTimeDecorator::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DSETUP(errorHandler.setInfo(F("%s %d\t\t WaitBBTimeDecorator::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 
 	if (m_ulpWaitMillis == NULL) {
 		errorHandler.setError(F("!03,%s %d\t\t WaitBBTimeDecorator m_ulpWaitMillis == NULL\r\n"), m_nodeName, m_nodeId);
@@ -1585,7 +1585,7 @@ bool WaitBBTimeDecorator::onSetup(Blackboard& bb) {
 NodeStatus WaitBBTimeDecorator::tick(Blackboard& bb) {
 
 	if (!isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitBBTimeDecorator::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t WaitBBTimeDecorator::tick initialize status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 		m_waittimeExpired = false;
 		m_ulStartTime = millis();
 		m_eNodeStatus = BH_RUNNING;
@@ -1614,7 +1614,7 @@ void WaitBBTimeDecorator::setWaitBBPointer(uint32_t* pWaitTimePointer) {
 void WaitBBTimeDecorator::abort(Blackboard& bb) {
 	SAVE_OLD_STATUS;
 	if (m_pChild->isRunning()) {
-		DTREE(errorHandler.setInfoNoLog(F("%s %d\t\t WaitBBTimeDecorator::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
+		DTREE(errorHandler.setInfo(F("%s %d\t\t WaitBBTimeDecorator::abort -> abort child: %s\r\n"), m_nodeName, m_nodeId, m_pChild->m_nodeName););
 		m_pChild->abort(bb);
 
 		if (m_waittimeExpired) {
@@ -1641,16 +1641,16 @@ bool BehaviourTree::onSetup(Blackboard& bb) {
 	m_nodeName = (char*)"tree";
 
 	if (root == NULL) {
-		errorHandler.setInfoNoLog(F("**TREE root is not initialized**\r\n"));
+		errorHandler.setInfo(F("**TREE root is not initialized**\r\n"));
 		return false;
 	}
-	DSETUP(errorHandler.setInfoNoLog(F("%s %d\t\t BehaviourTree::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
+	DSETUP(errorHandler.setInfo(F("%s %d\t\t BehaviourTree::onSetup -> status: %s\r\n"), m_nodeName, m_nodeId, enumNodeStatusStrings[m_eNodeStatus]););
 	return root->onSetup(bb);
 }
 
 NodeStatus BehaviourTree::tick(Blackboard& bb) {
 
-	DTREE(errorHandler.setInfoNoLog(F("** TREE BEGIN **\r\n")););
+	DTREE(errorHandler.setInfo(F("** TREE BEGIN **\r\n")););
 
 
 	// run the tree

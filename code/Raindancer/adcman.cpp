@@ -82,16 +82,16 @@ void ADCManager::begin() {
 }
 
 void ADCManager::printInfo() {
-	errorHandler.setInfoNoLog(F("---ADC---\r\nconversions = %d sampleRate="), convCounter);
+	errorHandler.setInfo(F("---ADC---\r\nconversions = %d sampleRate="), convCounter);
 	switch (sampleRate) {
-	case SRATE_38462: errorHandler.setInfoNoLog(F("38462\r\n")); break;
-	case SRATE_19231: errorHandler.setInfoNoLog(F("19231\r\n")); break;
-	case SRATE_9615: errorHandler.setInfoNoLog(F("9615\r\n")); break;
+	case SRATE_38462: errorHandler.setInfo(F("38462\r\n")); break;
+	case SRATE_19231: errorHandler.setInfo(F("19231\r\n")); break;
+	case SRATE_9615: errorHandler.setInfo(F("9615\r\n")); break;
 	}
 	for (int ch = 0; ch < ADC_CHANNEL_COUNT_MAX; ch++) {
 		if (channels[ch].sampleCount != 0) {
-				errorHandler.setInfoNoLog(F("AD%d\tsampleCount=%d\r\n"), ch, channels[ch].sampleCount);
-				errorHandler.setInfoNoLog(F("\r\n"));
+				errorHandler.setInfo(F("AD%d\tsampleCount=%d\r\n"), ch, channels[ch].sampleCount);
+				errorHandler.setInfo(F("\r\n"));
 		}
 	}
 }
@@ -104,7 +104,7 @@ int ADCManager::getConvCounter() {
 
 void ADCManager::setupChannel(byte pin, int samplecount) {
 	byte ch = pin - A0;
-    errorHandler.setInfoNoLog(F("adcman setup pin: AD%d\r\n"), ch);
+    errorHandler.setInfo(F("adcman setup pin: AD%d\r\n"), ch);
 	pinMode(pin, INPUT);
 	channels[ch].pin = pin;
 	channels[ch].convComplete = false;
@@ -172,17 +172,17 @@ void ADCManager::run() {
 		// --------transfer DMA samples----------
 		for (int i = 0; i < channels[chCurr].sampleCount; i++) {
 			//if (channels[chCurr].sampleCount > 1) {
-			//	errorHandler.setInfoNoLog(F("%d, "), dmaData[i]);
+			//	errorHandler.setInfo(F("%d, "), dmaData[i]);
 			//}
 			channels[chCurr].samples[i] = (int32_t)dmaData[i];
 		}
 
 		if (showValuesOnConsole) {
-			errorHandler.setInfoNoLog(F("AD%d: "), chCurr);
+			errorHandler.setInfo(F("AD%d: "), chCurr);
 			for (int i = 0; i < channels[chCurr].sampleCount; i++) {
-				errorHandler.setInfoNoLog(F("%d, "), channels[chCurr].samples[i]);
+				errorHandler.setInfo(F("%d, "), channels[chCurr].samples[i]);
 			}
-			errorHandler.setInfoNoLog(F("\r\n"));
+			errorHandler.setInfo(F("\r\n"));
 		}
 
 

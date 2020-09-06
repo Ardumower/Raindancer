@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WProgram.h"
 #endif
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "hardware.h"
 #include "errorhandler.h"
@@ -39,47 +39,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern BuzzerClass srvBuzzer;
 
-class TchargeSystem : public Thread
-{
+class TchargeSystem : public Protothread {
 private:
-    uint8_t count;
+	uint8_t count;
 
 public:
 
-    bool flagShowChargeSystem;
+	bool flagShowChargeSystem;
 
-    float sensorValueCV;
+	float sensorValueCV;
 	float offsetCV;
-    float sensorValueCC;
+	float sensorValueCC;
 	float offsetCC;
 	float chargeVoltage;
-    float chargeCurrent;
+	float chargeCurrent;
 
-    void setup() {
-        sensorValueCV = 0; // Converts and read the analog input value (value from 0.0 to 1.0)
+	void setup() {
+		sensorValueCV = 0; // Converts and read the analog input value (value from 0.0 to 1.0)
 		sensorValueCC = 0;
-        chargeVoltage = 0;
-        chargeCurrent = 0;
+		chargeVoltage = 0;
+		chargeCurrent = 0;
 		offsetCV = 0;
 		offsetCC = 0;
-        flagShowChargeSystem = false;
-        count = 20;
+		flagShowChargeSystem = false;
+		count = 20;
 		doChargeEnable = LOW;
-    }
+	}
 
-    void activateRelay() {
+	void activateRelay() {
 		if (CONF_DISABLE_CHARGE_SERVICE) {
 			return;
 		}
 
-        if(doChargeEnable == LOW){
+		if (doChargeEnable == LOW) {
 			srvBuzzer.sound(SND_CHARGERELAYON);
 		}
 		doChargeEnable = HIGH;
 		errorHandler.setInfo(F("Relay On\r\n"));
-    }
+	}
 
-    void deactivateRelay() {
+	void deactivateRelay() {
 
 		if (doChargeEnable != LOW) {
 			srvBuzzer.sound(SND_CHARGERELAYOFF);
@@ -87,99 +86,105 @@ public:
 		doChargeEnable = LOW;
 		errorHandler.setInfo(F("Relay Off\r\n"));
 
-		
-    }
+
+	}
 
 
-    virtual void run() {
-        // Wird alle 53ms aufgerufen
-        runned();
-		if (CONF_DISABLE_CHARGE_SERVICE) {
-			chargeVoltage = 0;
-			chargeCurrent = 0;
-			return;
+	virtual bool Run() {
+		// Wird alle 53ms aufgerufen
+
+		PT_BEGIN();
+		while (1) {
+
+			PT_YIELD_INTERVAL();
+
+			if (CONF_DISABLE_CHARGE_SERVICE) {
+				chargeVoltage = 0;
+				chargeCurrent = 0;
+				PT_EXIT();
+			}
+			sensorValueCV = aiCHARGEVOLTAGE.getVoltage() - offsetCV;
+			if (sensorValueCV < 0) {
+				sensorValueCV = 0;
+			}
+			float chargeVoltage1 = sensorValueCV * BATTERYFACTOR_CS;
+
+			sensorValueCC = aiCHARGECURRENT.getVoltage() - offsetCC;
+			if (sensorValueCC < 0) {
+				sensorValueCC = 0;
+			}
+			float chargeCurrent1 = sensorValueCC * CURRENTFACTOR_CS;
+
+			const float accel = 0.1f;
+
+			if (abs(chargeVoltage - chargeVoltage1) > 5)
+				chargeVoltage = chargeVoltage1;
+			else
+				chargeVoltage = (1.0f - accel) * chargeVoltage + accel * chargeVoltage1;
+
+			if (abs(chargeCurrent - chargeCurrent1) > 0.3)
+				chargeCurrent = chargeCurrent1;
+			else
+				chargeCurrent = (1.0f - accel) * chargeCurrent + accel * chargeCurrent1;
+
+
+			if (flagShowChargeSystem && (++count > 20)) {
+
+				if (isBatFull()) {
+					sprintf(errorHandler.msg, "!03,FULL adcCV: %f CV: %f  adcCC: %f  CC: %f Watt: %f\r\n", sensorValueCV, chargeVoltage, sensorValueCC, chargeCurrent, chargeVoltage * chargeCurrent);
+					errorHandler.setInfo();
+				}
+				else {
+					sprintf(errorHandler.msg, "!03,CHARGING adcCV: %f CV: %f  adcCC: %f  CC: %f Watt: %f\r\n", sensorValueCV, chargeVoltage, sensorValueCC, chargeCurrent, chargeVoltage * chargeCurrent);
+					errorHandler.setInfo();
+
+				}
+				count = 0;
+			}
 		}
-        sensorValueCV = aiCHARGEVOLTAGE.getVoltage() - offsetCV;
-		if (sensorValueCV < 0) {
-			sensorValueCV = 0;
+		PT_END();
+	}
+
+	bool isInChargingStation() {
+		if (chargeVoltage > 10.0f) {
+			return true;
 		}
-        float chargeVoltage1 = sensorValueCV  * BATTERYFACTOR_CS;
+		return false;
+	}
 
-        sensorValueCC = aiCHARGECURRENT.getVoltage() - offsetCC;
-		if (sensorValueCC < 0) {
-			sensorValueCC = 0;
+
+	bool isBatFull() {
+		//float watt = chargeVoltage * chargeCurrent;
+		//if (watt < 8.0f)  {
+
+		if (chargeCurrent < 0.3f) {
+			return true;
 		}
-		float chargeCurrent1 = sensorValueCC * CURRENTFACTOR_CS;
 
-        const float accel = 0.1f;
-
-        if (abs(chargeVoltage - chargeVoltage1)>5)
-            chargeVoltage = chargeVoltage1;
-        else
-            chargeVoltage = (1.0f - accel) * chargeVoltage + accel * chargeVoltage1;
-
-        if (abs(chargeCurrent - chargeCurrent1)>0.3)
-            chargeCurrent = chargeCurrent1;
-        else
-            chargeCurrent = (1.0f - accel) * chargeCurrent + accel * chargeCurrent1;
-
-
-        if(flagShowChargeSystem && (++count > 20) ) {
-
-            if(isBatFull()) {
-                sprintf(errorHandler.msg,"!03,FULL adcCV: %f CV: %f  adcCC: %f  CC: %f Watt: %f\r\n", sensorValueCV, chargeVoltage, sensorValueCC, chargeCurrent, chargeVoltage*chargeCurrent);
-                errorHandler.setInfo(); 
-            } else {
-                sprintf(errorHandler.msg,"!03,CHARGING adcCV: %f CV: %f  adcCC: %f  CC: %f Watt: %f\r\n", sensorValueCV, chargeVoltage, sensorValueCC, chargeCurrent, chargeVoltage*chargeCurrent);
-                errorHandler.setInfo(); 
-
-            }
-            count = 0;
-        }
-
-    }
-
-    bool isInChargingStation() {
-        if (chargeVoltage > 10.0f)  {
-            return true;
-        }
-        return false;
-    }
-
-
-    bool isBatFull() {
-        //float watt = chargeVoltage * chargeCurrent;
-        //if (watt < 8.0f)  {
-
-         if(chargeCurrent < 0.3f){
-            return true;
-        }
-
-        return false;
-    }
+		return false;
+	}
 
 	void measureOffset() {
 
 		errorHandler.setInfo(F("!03,ChargeSystem measure offsetCV\r\n"));
-		errorHandler.setInfoNoLog(F("!03,"));
+		errorHandler.setInfo(F("!03,"));
 		offsetCV = aiCHARGEVOLTAGE.measureOffsetVoltage();
 		errorHandler.setInfo(F("  offsetCV: %f\r\n"), offsetCV);
 
 		errorHandler.setInfo(F("!03,ChargeSystem measure offsetCC\r\n"));
-		errorHandler.setInfoNoLog(F("!03,"));
+		errorHandler.setInfo(F("!03,"));
 		offsetCC = aiCHARGEVOLTAGE.measureOffsetVoltage();
 		errorHandler.setInfo(F("  offsetCC: %f\r\n"), offsetCC);
 	}
 
 
-	void showConfig()
-	{
-		errorHandler.setInfoNoLog(F("!03,charge system\r\n"));
-		errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-		errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-		errorHandler.setInfoNoLog(F("!03,relay on: %d\r\n"), doChargeEnable.read());
-		errorHandler.setInfoNoLog(F("!03,BATTERYFACTOR_CS %f\r\n"), BATTERYFACTOR_CS);
-		errorHandler.setInfoNoLog(F("!03,CURRENTFACTOR_CS %f\r\n"), CURRENTFACTOR_CS);
+	void showConfig() {
+		errorHandler.setInfo(F("!03,charge system\r\n"));
+		errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+		errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+		errorHandler.setInfo(F("!03,relay on: %d\r\n"), doChargeEnable.read());
+		errorHandler.setInfo(F("!03,BATTERYFACTOR_CS %f\r\n"), BATTERYFACTOR_CS);
+		errorHandler.setInfo(F("!03,CURRENTFACTOR_CS %f\r\n"), CURRENTFACTOR_CS);
 	}
 
 };

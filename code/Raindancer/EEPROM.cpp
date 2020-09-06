@@ -97,9 +97,8 @@ TEEPROM::TEEPROM() {
 void TEEPROM::setup() {
 }
 
-void TEEPROM::run() {
-	runned();
-
+bool TEEPROM::Run() {
+	return true;
 }
 
 /**
@@ -239,7 +238,7 @@ void TEEPROM::erase() {
 	}
 
 	for (int i = 0; i < EEPADR_ERASE_PAGES; i++) {
-		errorHandler.setInfoNoLog(F("!03,Erasing page %d\r\n"), i);
+		errorHandler.setInfo(F("!03,Erasing page %d\r\n"), i);
 		write(i*EEP_PAGESIZE, _b, EEP_PAGESIZE);
 		delay(50);
 	}
@@ -253,7 +252,7 @@ void TEEPROM::readChars(unsigned int address, char *data, int n) {
 
 void TEEPROM::showConfig()
 {
-	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-	errorHandler.setInfoNoLog(F("!03,I2C addr: %u\r\n"), i2cEEPROM.read_seven_bit_address());
+	errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+	errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+	errorHandler.setInfo(F("!03,I2C addr: %u\r\n"), i2cEEPROM.read_seven_bit_address());
 }

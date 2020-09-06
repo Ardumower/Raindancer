@@ -22,69 +22,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdarg.h> 
 #include "errorhandler.h"
 #include "hardware.h"
+#include "config.h"
 
 const char errorTxt[] PROGMEM = { "ERROR " };
 const char noErrorTxt[] PROGMEM = { "No Error\r\n" };
 
 extern bool _controlManuel;
 
-TErrorHandler::TErrorHandler()
-    {
-    error = "";
-    errorAvtive = false;
-    msg[0] = '\0';
-    }
+TErrorHandler::TErrorHandler() {
+	error = "";
+	errorAvtive = false;
+	msg[0] = '\0';
+}
 
 /*
 void TErrorHandler::setError(String e)
 {
     if (errorAvtive)
-        return;
+	  return;
     error = e;
     errorAvtive = true;
 }
 */
 
 
-void TErrorHandler::setError()
-    {
-    if (errorAvtive) { return; }
-    error += (char*)msg;
-    errorAvtive = true;
-    printError();
-    }
+void TErrorHandler::setError() {
+	if (errorAvtive) { return; }
+	error += (char*)msg;
+	errorAvtive = true;
+	printError();
+}
 
-void TErrorHandler::resetError()
-    {
-    error = "";
-    errorAvtive = false;
-    }
+void TErrorHandler::resetError() {
+	error = "";
+	errorAvtive = false;
+}
 
+void TErrorHandler::setInfo() {
+	if (errorAvtive) { return; }
+	//r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
+	r.putString(msg);
+	////debug->print((char*)msg);
+
+}
+
+void TErrorHandler::writeToLogOnly() {
+	if (errorAvtive) { return; }
+	//r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
+	r.putString(msg);
+
+
+}
+
+/*
 void TErrorHandler::setInfo()
     {
     if (errorAvtive) { return; }
-    //r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
     r.putString(msg);
-    debug->print((char*)msg);
+    //debug->print((char*)msg);
 
     }
-
-void TErrorHandler::writeToLogOnly()
-    {
-    if (errorAvtive) { return; }
-    //r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
-    r.putString(msg);
-
-
-    }
-
-void TErrorHandler::setInfoNoLog()
-    {
-    if (errorAvtive) { return; }
-    debug->print((char*)msg);
-
-    }
-
+*/
 /*
 void TErrorHandler::setInfo(const char* i) {
     //r.put('#'); // Erstmal einfuegen, damit ich feststellen kann, ob ich alle debug->printf Befehle erwisch habe bei dedr Umstellung
@@ -99,30 +97,25 @@ void TErrorHandler::setInfo(const __FlashStringHelper *ifshi) {
 }
 */
 
-void TErrorHandler::print()
-    {
-    r.print(); // print info log
-    printError(); // print error
-    }
+void TErrorHandler::print() {
+	r.resetRead();
+}
 
-void TErrorHandler::printError()
-    {
-    if (errorAvtive)
-        {
-        debug->print(errorTxt);
-        debug->println(error.c_str());
-        }
-    else
-        {
-        debug->println(noErrorTxt);
-        }
-    }
+void TErrorHandler::printError() {
+	if (errorAvtive) {
+		r.putString(error.c_str());
+		debug->print(errorTxt);
+		debug->println(error.c_str());
+	}
+	else {
+		debug->println(noErrorTxt);
+	}
+}
 
 
-bool TErrorHandler::isErrorActive()
-    {
-    return errorAvtive;
-    }
+bool TErrorHandler::isErrorActive() {
+	return errorAvtive;
+}
 
 
 /*
@@ -155,6 +148,26 @@ void TErrorHandler::setInfo(const char *fmt, ...) {
 }
 */
 
+void TErrorHandler::setInfo(const __FlashStringHelper* fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+#ifdef __AVR__
+	vsnprintf_P(msg, EH_MEASSAGE_SIZE, (const char*)fmt, args); // progmem for AVR
+#else
+	vsnprintf(msg, EH_MEASSAGE_SIZE, (const char*)fmt, args); // for the rest of the world
+#endif
+	va_end(args);
+	setInfo();
+
+#if  CONF_ENABLEWATCHDOG ==  true
+	if (_controlManuel) {
+		watchdogReset();
+	}
+#endif
+}
+
+
+/*
 void TErrorHandler::setInfo(const __FlashStringHelper *fmt, ...)
     {
     va_list args;
@@ -166,32 +179,15 @@ void TErrorHandler::setInfo(const __FlashStringHelper *fmt, ...)
 #endif
     va_end(args);
     setInfo();
-
-#if  CONF_ENABLEWATCHDOG ==  true
-    if(_controlManuel){
-      watchdogReset();
-    }
-#endif
-    }
-
-void TErrorHandler::setInfoNoLog(const __FlashStringHelper *fmt, ...)
-    {
-    va_list args;
-    va_start(args, fmt);
-#ifdef __AVR__
-    vsnprintf_P(msg, EH_MEASSAGE_SIZE, (const char *)fmt, args); // progmem for AVR
-#else
-    vsnprintf(msg, EH_MEASSAGE_SIZE, (const char *)fmt, args); // for the rest of the world
-#endif
-    va_end(args);
-    debug->print((char*)msg);
+    //debug->print((char*)msg);
 
 #if  CONF_ENABLEWATCHDOG ==  true
     if (_controlManuel) {
-          watchdogReset();
+	    watchdogReset();
     }
 #endif
     }
+*/
 
 /*
 void TErrorHandler::setError(const char *fmt, ...) {
@@ -212,16 +208,19 @@ void TErrorHandler::setError(const char *fmt, ...) {
 */
 
 
-void TErrorHandler::setError(const __FlashStringHelper *fmt, ...)
-    {
-    va_list args;
-    va_start(args, fmt);
+void TErrorHandler::setError(const __FlashStringHelper* fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
 #ifdef __AVR__
-    vsnprintf_P(msg, EH_MEASSAGE_SIZE, (const char *)fmt, args); // progmem for AVR
+	vsnprintf_P(msg, EH_MEASSAGE_SIZE, (const char*)fmt, args); // progmem for AVR
 #else
-    vsnprintf(msg, EH_MEASSAGE_SIZE, (const char *)fmt, args); // for the rest of the world
+	vsnprintf(msg, EH_MEASSAGE_SIZE, (const char*)fmt, args); // for the rest of the world
 #endif
-    va_end(args);
-    setError();
-    }
+	va_end(args);
+	setError();
+}
 
+bool TErrorHandler::Run() {
+	r.print(); // print the ring buffer if data available
+	return true;
+}

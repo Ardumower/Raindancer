@@ -551,7 +551,7 @@ class AnalogIn
                 {
                 int32_t m = ADCMan.measureOffset(myPin);
                 myMedian.add((float)m);
-                errorHandler.setInfoNoLog(F("%d "), m);
+                errorHandler.setInfo(F("%d "), m);
                 }
             myMedian.getAverage(8, offset); // Get Median of 8 values in the middle of the sorted array. Spikes are on the outside of the sorted array.
             return (int32_t)offset;
@@ -805,7 +805,7 @@ class i2cInOut
             byte error, address;
             int nDevices;
 
-            errorHandler.setInfoNoLog(F("I2C scanning...\r\n"));
+            errorHandler.setInfo(F("I2C scanning...\r\n"));
 
             nDevices = 0;
             for (address = 1; address < 127; address++)
@@ -818,32 +818,32 @@ class i2cInOut
 
                 if (error == 0)
                     {
-                    errorHandler.setInfoNoLog(F("I2C device found at address %d  0x%02x  "), address, address);
+                    errorHandler.setInfo(F("I2C device found at address %d  0x%02x  "), address, address);
                     nDevices++;
                     switch (address)
                         {
-                        case 0x1E: errorHandler.setInfoNoLog(F("probably HMC5883L\r\n")); break;
-                        case 0x50: errorHandler.setInfoNoLog(F("probably AT24C32\r\n")); break;
-                        case 0x53: errorHandler.setInfoNoLog(F("probably ADXL345B\r\n")); break;
-                        case 0x60: errorHandler.setInfoNoLog(F("probably CMPS11\r\n")); break;
-                        case 0x68: errorHandler.setInfoNoLog(F("probably DS1307\r\n")); break;
-                        case 0x69: errorHandler.setInfoNoLog(F("probably MPU6050/9150 or L3G4200D\r\n")); break;
-                        case 0x77: errorHandler.setInfoNoLog(F("probably BMP180\r\n")); break;
-                        default: errorHandler.setInfoNoLog(F("unknown module\r\n"));
+                        case 0x1E: errorHandler.setInfo(F("probably HMC5883L\r\n")); break;
+                        case 0x50: errorHandler.setInfo(F("probably AT24C32\r\n")); break;
+                        case 0x53: errorHandler.setInfo(F("probably ADXL345B\r\n")); break;
+                        case 0x60: errorHandler.setInfo(F("probably CMPS11\r\n")); break;
+                        case 0x68: errorHandler.setInfo(F("probably DS1307\r\n")); break;
+                        case 0x69: errorHandler.setInfo(F("probably MPU6050/9150 or L3G4200D\r\n")); break;
+                        case 0x77: errorHandler.setInfo(F("probably BMP180\r\n")); break;
+                        default: errorHandler.setInfo(F("unknown module\r\n"));
                         }
                     }
                 else if (error == 4)
                     {
-                    errorHandler.setInfoNoLog(F("Unknown error at address %d  0x%02x\r\n"), address, address);
+                    errorHandler.setInfo(F("Unknown error at address %d  0x%02x\r\n"), address, address);
                     }
                 }
             if (nDevices == 0)
                 {
-                errorHandler.setInfoNoLog(F("No I2C devices found\r\n"));
+                errorHandler.setInfo(F("No I2C devices found\r\n"));
                 }
             else
                 {
-                errorHandler.setInfoNoLog(F("I2C scan done\r\n"));
+                errorHandler.setInfo(F("I2C scan done\r\n"));
                 }
             }
 

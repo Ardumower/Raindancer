@@ -116,7 +116,7 @@ public:
 		waitForRightInside = false;
 		lastTransitionTime = millis();
 		srvMotor.enablePerTrackRamping();
-		//errorHandler.setInfoNoLog(F("TlineFollow onInitialize \r\n"));
+		//errorHandler.setInfo(F("TlineFollow onInitialize \r\n"));
 
 		THistory hist = bb.getInitialisedHistoryEntry();
 		hist.cruiseSpeed = bb.LINEFOLLOW_SPEED_HIGH;
@@ -242,7 +242,7 @@ public:
 	}
 
 	virtual void onTerminate(NodeStatus status, Blackboard& bb) {
-		//errorHandler.setInfoNoLog(F("TlineFollow onTerminate \r\n"));
+		//errorHandler.setInfo(F("TlineFollow onTerminate \r\n"));
 		//srvMotor.enableDefaultRamping();
 	}
 	};
@@ -300,17 +300,17 @@ public:
 
 		lastTransitionTime = millis();
 		srvMotor.enablePerTrackRamping();
-		errorHandler.setInfoNoLog(F("TlineFollow onInitialize \r\n"));
+		errorHandler.setInfo(F("TlineFollow onInitialize \r\n"));
 
 
 		if (tunePID) {
 			state = 0;
-			errorHandler.setInfoNoLog(F("Set State  0 (TUNE INIT) \r\n"));
+			errorHandler.setInfo(F("Set State  0 (TUNE INIT) \r\n"));
 
 		}
 		else {
 			state = -2;
-			errorHandler.setInfoNoLog(F("Set State -2 (INIT) \r\n"));
+			errorHandler.setInfo(F("Set State -2 (INIT) \r\n"));
 
 		}
 
@@ -360,7 +360,7 @@ public:
 			pid.Initialize();
 			timeInState = millis();
 			state = -1;
-			errorHandler.setInfoNoLog(F("Set State -1 dt: %ul\r\n"), timeInState);
+			errorHandler.setInfo(F("Set State -1 dt: %ul\r\n"), timeInState);
 			pid.Compute();  //compute again because we initialised the pid new
 			lastTransitionTime = millis();
 			break;
@@ -389,25 +389,25 @@ public:
 			//*********************
 			// if the speedL reaches the limit, rotate CW. It could be, that limit must be > 100
 			if (speedL > speedLimit && Setpoint > 0.0f) {
-				errorHandler.setInfoNoLog(F("speedL limit reached Set State -1->3 \r\n"));
+				errorHandler.setInfo(F("speedL limit reached Set State -1->3 \r\n"));
 				state = 3;
 			}
 			// if the iTerm of the PID reaches the limit, rotate CW
 			if (fabs(pid.GetIterm()) > iTermLimit && Setpoint > 0.0f) {
-				errorHandler.setInfoNoLog(F("iTermLimit reached Set State -1->3 \r\n"));
+				errorHandler.setInfo(F("iTermLimit reached Set State -1->3 \r\n"));
 				state = 3;
 			}
 
 			// transition to state 1 if left outside
 			if (srvPerSensoren.isLeftOutside() == true) {
-				errorHandler.setInfoNoLog(F("left coil outside Set State -1->1 \r\n"));
+				errorHandler.setInfo(F("left coil outside Set State -1->1 \r\n"));
 				state = 1;
 			}
 
 			// after 3 second do the normal
 			if (millis() - timeInState > 3000UL) {
 				state = 0;
-				errorHandler.setInfoNoLog(F("Set State -1->0 dt: %ul\r\n"), millis() - timeInState);
+				errorHandler.setInfo(F("Set State -1->0 dt: %ul\r\n"), millis() - timeInState);
 			}
 			//**********************
 			//** State transition end
@@ -450,12 +450,12 @@ public:
 			if (!tunePID) { //don't change state while tuning the PID
 				// if the iTerm of the PID reaches the limit, rotate CW
 				if (fabs(pid.GetIterm()) > iTermLimit && Setpoint > 0.0f) {
-					errorHandler.setInfoNoLog(F("iTermLimit reached Set State 0->3 \r\n"));
+					errorHandler.setInfo(F("iTermLimit reached Set State 0->3 \r\n"));
 					state = 3;
 				}
 				// if the speedL reaches the limit, rotate CW
 				if (speedL > speedLimit && Setpoint > 0.0f) {
-					errorHandler.setInfoNoLog(F("speedL limit reached Set State -1->3 \r\n"));
+					errorHandler.setInfo(F("speedL limit reached Set State -1->3 \r\n"));
 					state = 3;
 				}
 			}
@@ -463,7 +463,7 @@ public:
 			// transition to state 1 if left outside
 			if (srvPerSensoren.isLeftOutside() == true) {
 				state = 1;
-				errorHandler.setInfoNoLog(F("Set State 0->1 \r\n"));
+				errorHandler.setInfo(F("Set State 0->1 \r\n"));
 			}
 			//**********************
 			//** State transition end
@@ -492,7 +492,7 @@ public:
 
 			// transition to state 2 to wait until right inside
 			state = 2;
-			errorHandler.setInfoNoLog(F("Set State 1->2 \r\n"));
+			errorHandler.setInfo(F("Set State 1->2 \r\n"));
 
 			break;
 
@@ -501,7 +501,7 @@ public:
 				lastTransitionTime = millis();
 
 				//transition to 5 right inside go stop motors
-				errorHandler.setInfoNoLog(F("Set State 2->5\r\n"));
+				errorHandler.setInfo(F("Set State 2->5\r\n"));
 				state = 5;
 			}
 			break;
@@ -517,13 +517,13 @@ public:
 			// transition to state 4 to wait right coil outside
 			if (!tunePID) {
 				state = 4;
-				errorHandler.setInfoNoLog(F("Set State 3->4 \r\n"));
+				errorHandler.setInfo(F("Set State 3->4 \r\n"));
 			}
 			else {
 				state = 0;
 				pid.SetMode(AUTOMATIC);
 				pid.Initialize();
-				errorHandler.setInfoNoLog(F("Set State 3->0 PID Tuning \r\n"));
+				errorHandler.setInfo(F("Set State 3->0 PID Tuning \r\n"));
 			}
 
 			break;
@@ -534,7 +534,7 @@ public:
 
 				//transition to 7 right inside go stop motors
 				state = 7;
-				errorHandler.setInfoNoLog(F("Set State 4->7 \r\n"));
+				errorHandler.setInfo(F("Set State 4->7 \r\n"));
 			}
 			break;
 
@@ -544,7 +544,7 @@ public:
 			pid.SetMode(MANUAL);
 
 			// transition to wait for motor stoped
-			errorHandler.setInfoNoLog(F("Set State 5->6 \r\n"));
+			errorHandler.setInfo(F("Set State 5->6 \r\n"));
 			state = 6;
 			break;
 
@@ -555,13 +555,13 @@ public:
 				// transition to start linefollowing smoothly
 				if (!tunePID) {
 					state = -2;
-					errorHandler.setInfoNoLog(F("Set State 6->-2 \r\n"));
+					errorHandler.setInfo(F("Set State 6->-2 \r\n"));
 				}
 				else {
 					state = 0;
 					pid.SetMode(AUTOMATIC);
 					pid.Initialize();
-					errorHandler.setInfoNoLog(F("Set State 6->0 PID Tuning \r\n"));
+					errorHandler.setInfo(F("Set State 6->0 PID Tuning \r\n"));
 				}
 			}
 			break;
@@ -573,7 +573,7 @@ public:
 			pid.SetMode(MANUAL);
 
 			// transition to wait for motor stoped
-			errorHandler.setInfoNoLog(F("Set State 7->8 \r\n"));
+			errorHandler.setInfo(F("Set State 7->8 \r\n"));
 			state = 8;
 			break;
 
@@ -584,13 +584,13 @@ public:
 				// transition to start linefollowing smoothly
 				if (!tunePID) {
 					state = -2;
-					errorHandler.setInfoNoLog(F("Set State 8->-2 \r\n"));
+					errorHandler.setInfo(F("Set State 8->-2 \r\n"));
 				}
 				else {
 					state = 0;
 					pid.SetMode(AUTOMATIC);
 					pid.Initialize();
-					errorHandler.setInfoNoLog(F("Set State 6->0 PID Tuning \r\n"));
+					errorHandler.setInfo(F("Set State 6->0 PID Tuning \r\n"));
 				}
 				break;
 
@@ -613,7 +613,7 @@ public:
 
 	}
 	virtual void onTerminate(NodeStatus status, Blackboard& bb) {
-		//errorHandler.setInfoNoLog(F("TlineFollow onTerminate \r\n"));
+		//errorHandler.setInfo(F("TlineFollow onTerminate \r\n"));
 		//srvMotor.enableDefaultRamping();
 	}
 };
@@ -669,7 +669,7 @@ public:
 		lastEncTicksR = srvMotor.getEncoderTickCountsR();
 		angle = 0;
 		state = 0;
-		//errorHandler.setInfoNoLog(F("ON INITIALIZE"));
+		//errorHandler.setInfo(F("ON INITIALIZE"));
 
 	}
 
@@ -701,9 +701,9 @@ public:
 
 			/*
 				for(int i=0; i<ENCDELTAARRAY; i++) {
-				errorHandler.setInfoNoLog(F("%d  %d  %d\r\n"),encDeltaL[i], encDeltaR[i], encDeltaL[i] - encDeltaR[i]);
+				errorHandler.setInfo(F("%d  %d  %d\r\n"),encDeltaL[i], encDeltaR[i], encDeltaL[i] - encDeltaR[i]);
 				}
-				errorHandler.setInfoNoLog(F("==============\r\n"));
+				errorHandler.setInfo(F("==============\r\n"));
 			*/
 
 			for (int i = 0; i < ENCDELTAARRAY; i++) {
@@ -720,7 +720,7 @@ public:
 			float cmR = srvMotor.pcR->getCMForCounts(sumR);
 			angle = (cmL - cmR) * 57.2957795f / CONF_DISTANCE_BETWEEN_WHEELS_CM;
 			if (flagShowFindTriangleStates) {
-				errorHandler.setInfoNoLog(F("Winkel: %f cmL %f cmR %f\r\n"), angle, cmL, cmR);
+				errorHandler.setInfo(F("Winkel: %f cmL %f cmR %f\r\n"), angle, cmL, cmR);
 			}
 		}
 

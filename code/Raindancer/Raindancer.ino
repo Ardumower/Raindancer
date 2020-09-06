@@ -29,7 +29,7 @@ Set to true only the correct CHASSIS
 
 #include <Wire.h>
 #include "config.h"
-
+#include "Protothread.h"
 #include "DueTimer.h"
 #include "adcman.h"
 #include "cmd.h"
@@ -39,13 +39,12 @@ Set to true only the correct CHASSIS
 #include "bCreateTree.h"
 #include "ui.h"
 #include "bt.h"
-
 #include "UseServices.h"
 
 /*********************************************************************/
 // Global Variables
 /*********************************************************************/
-#define VERSION "2.0.0 Raindancer"
+#define VERSION "2.1.1 Raindancer"
 
 unsigned long loopCounter = 0;
 unsigned long maxLoopTime = 0;
@@ -56,12 +55,12 @@ bool _controlManuel = true;
 void loop();
 
 /*********************************************************************/
-// Controller threads that are called at certain intervals
-// Or services that are not integrated into the thread controller
-// ATTENTION: In TreadController.h set the number of threads if 15 is exceeded
+// Protothreads
 /*********************************************************************/
 // Hardware abstaraction layer run function
-Thread srvHal;
+THal srvHal;
+// Verarbeitet Ein-/Ausgabe über Serial line console oder bluetooth. in hardware.cpp die debug zuweisung ändern.
+TCmd srvCmd;
 // mow motor closed loop control - no closed loop used
 TMowClosedLoopControlThread srvClcM;
 // drive motor left closed loop control
@@ -74,47 +73,41 @@ TPositionControl srvPcL;
 TPositionControl srvPcR;
 // Motorensteuerung Interface. Wird verwendet um clcX und pcX zu steuern und hat diverse testfunktionen
 TMotorInterface srvMotor;
-// Verarbeitet Ein-/Ausgabe über Serial line console oder bluetooth. in hardware.cpp die debug zuweisung ändern.
-Thread srvCmd;
-// Daten von Perimetersensoren vom 446RE
-TPerimeterThread srvPerSensoren;
-// Messung der Batteriespannung
-TbatterieSensor srvBatSensor;
+// SRF08 Range Sensor Messung der Entfernung
+TrangeSensor srvRangeSensor;
 // Rain sensor
 TrainSensor srvRainSensor;
 // Messung des Motorstroms
 TmotorSensor srvMotorSensorL(aiMotorLeftCurrent, diMotorLeftFault, doMotorEnable, 'L');
 TmotorSensor srvMotorSensorR(aiMotorRightCurrent, diMotorRightFault, doMotorEnable, 'R');
 TMowMotorSensor srvMowMotorSensor(diMotorMowFault, doMotorMowEnable);
-// SRF08 Range Sensor Messung der Entfernung
-TrangeSensor srvRangeSensor;
-// Bumper Sensor
-TbumperSensor srvBumperSensor;
 // Charge System
 TchargeSystem srvChargeSystem;
+// Bumper Sensor
+TbumperSensor srvBumperSensor;
+//GPS Service
+Tgps srvGps;
+// Daten von Perimetersensoren vom 446RE
+TPerimeterThread srvPerSensoren;
+// DHT Temperature sensor
+TDHT srvDht(DHTTYPE);
+// Messung der Batteriespannung
+TbatterieSensor srvBatSensor;
 // Print Sensordata for processing
-Thread srvProcessingSensorData;
+TPrintSensordata srvProcessingSensorData;
+// Shutdown service
+TShutdown srvShutdown;
 // Real time clock
 Trtc srvRtc;
 // EEPROM will not be inserted in thread controller
 TEEPROM srvEeprom;
 // Buzzer
 BuzzerClass srvBuzzer;
-// Shutdown service
-TShutdown srvShutdown;
-// DHT Temperature sensor
-TDHT srvDht(DHTTYPE);
-//GPS Service
-Tgps srvGps;
-//-----------------------------------------------------
-
-// Instantiate a new ThreadController
-ThreadController controller = ThreadController(); // Thread die vor manuellen mode laufen müssen
-
+// User Interface
+TUI srvUI;
 /*********************************************************************/
 // Behaviour Objects die auf die Threads oben zugreifen
 /*********************************************************************/
-
 Blackboard myBlackboard;
 TCreateTree myCreateTree(myBlackboard);
 
@@ -140,140 +133,115 @@ void setup() {
 	hardwareSetup();
 	errorHandler.setInfo(F("HardwareSetup finished\r\n"));
 
-
 	//---------------------------------
 	// Threads configuration
 	// Motor-/Positionthreads runs every 33ms and 100ms.
 	// The other services should not run in the same intervalls or a a multiple of that.
 	//---------------------------------
 
-	srvHal.setInterval(0);
-	srvHal.onRun(hardwareRun);
-
 	srvClcM.setup(1);  // Mow Motor 1 of sabertooth
 	srvClcM.setInterval(198);
 
-	srvClcL.setup(1, &encoderL);  // Motor 1 of sabertooth
-	srvClcL.setInterval(33);
-	srvClcR.setup(2, &encoderR);  // Motor 2 of sabertooth
-	srvClcR.setInterval(33);
 
-	srvPcL.setup(&srvClcL, &encoderL);  // Position control left
-	srvPcL.setInterval(100);
-	srvPcR.setup(&srvClcR, &encoderR);  // Position control right
-	srvPcR.setInterval(100);
+	if (CONF_USE_BLDC_DRIVER) {
+		srvClcL.setup(1, &encoderL);  // Motor 1 of sabertooth
+		srvClcL.setInterval(66);
+		srvClcR.setup(2, &encoderR);  // Motor 2 of sabertooth
+		srvClcR.setInterval(66);
+
+		srvPcL.setup(&srvClcL, &encoderL);  // Position control left
+		srvPcL.setInterval(200);
+		srvPcR.setup(&srvClcR, &encoderR);  // Position control right
+		srvPcR.setInterval(200);
+		errorHandler.setInfo(F("Use BLDC motors\r\n"));
+	}
+	else {
+
+		srvClcL.setup(1, &encoderL);  // Motor 1 of sabertooth
+		srvClcL.setInterval(33);
+		srvClcR.setup(2, &encoderR);  // Motor 2 of sabertooth
+		srvClcR.setInterval(33);
+
+		srvPcL.setup(&srvClcL, &encoderL);  // Position control left
+		srvPcL.setInterval(100);
+		srvPcR.setup(&srvClcR, &encoderR);  // Position control right
+		srvPcR.setInterval(100);
+		errorHandler.setInfo(F("Use Ardumower motors\r\n"));
+	}
 
 	srvMotor.setup(&srvClcM, &srvClcL, &srvClcR, &srvPcL, &srvPcR);
 	srvMotor.setInterval(100);
 
-	//---------------------------------
-	cmdInit();
-	srvCmd.onRun(cmdPoll);
-	srvCmd.setInterval(116);
+
 	//---------------------------------
 	errorHandler.setInfo(F("srvPerSensoren Setup Startet\r\n"));
-	srvPerSensoren.coilL.showMatchedFilter = true;
+	//srvPerSensoren.coilL.showMatchedFilter = true;
+	srvPerSensoren.coilL.showMatchedFilter = false;
 	srvPerSensoren.setup();
 	srvPerSensoren.coilL.showMatchedFilter = false;
-	srvPerSensoren.setInterval(1); // immer aufrufen und checken ob ein neues byte empfangen wurde
+	//srvPerSensoren.setInterval(1); // immer aufrufen und checken ob ein neues byte empfangen wurde
 	errorHandler.setInfo(F("srvPerSensoren Setup Finished\r\n"));
 	//---------------------------------
 	srvBatSensor.setup();
 	srvBatSensor.setInterval(1974);
-
+	//---------------------------------
 	srvRainSensor.setup();
 	srvRainSensor.setInterval(1773);
-
-
+	//---------------------------------
 	srvMotorSensorL.setup();
 	srvMotorSensorL.setInterval(77);
-
+	//---------------------------------
 	srvMotorSensorR.setup();
 	srvMotorSensorR.setInterval(77);
-
+	//---------------------------------
 	srvMowMotorSensor.setup();
 	srvMowMotorSensor.setInterval(97);
 	//---------------------------------
 	srvRangeSensor.setup();
 	srvRangeSensor.setInterval(137);
-	//srvRangeSensor.enabled = false;
+	//srvRangeSensor.Stop();
 	//---------------------------------
 	srvBumperSensor.setup();
-	srvBumperSensor.setInterval(0);
 	//---------------------------------
 	srvChargeSystem.setup();
 	srvChargeSystem.setInterval(53);
 	//---------------------------------
-	srvProcessingSensorData.onRun(printSensordata);
 	srvProcessingSensorData.setInterval(1001);
 	//---------------------------------
 	srvRtc.setup();
 	srvRtc.setInterval(10017);
 	//---------------------------------
 	srvEeprom.setup();
-	srvEeprom.enabled = false; // run() not needed at the moment
+	srvEeprom.Stop();; // run() not needed at the moment
 	//---------------------------------
 	srvBuzzer.setup();
 	//srvBuzzer.setInterval(0); // will be controled by the class itselfe
-	srvBuzzer.enabled = false;  // will be controled by the class itselfe
+	srvBuzzer.Stop();  // will be controled by the class itselfe
     //---------------------------------
 	srvShutdown.setup();
 	srvShutdown.setInterval(1000);
-	srvShutdown.enabled = false;  // when activated, service initiate shutdown
+	srvShutdown.Stop();  // when activated, service initiate shutdown
 	//---------------------------------
 	srvDht.setup();
 	srvDht.setInterval(20013);
 	//---------------------------------
 	srvGps.setup();
-	srvGps.setInterval(0);
-
-
-	//------------
-	  // Important: In TreadController.h the number of threads must be configured if services are more than 25
-	controller.add(&srvHal);
-
-	controller.add(&srvClcM);
-	controller.add(&srvClcL);
-	controller.add(&srvClcR);
-	controller.add(&srvPcL);
-	controller.add(&srvPcR);
-	controller.add(&srvMotor);
-
-	controller.add(&srvCmd);
-
-	controller.add(&srvPerSensoren);
-
-	controller.add(&srvBatSensor);
-	controller.add(&srvRainSensor);
-
-	controller.add(&srvMotorSensorL);
-	controller.add(&srvMotorSensorR);
-	controller.add(&srvMowMotorSensor);
-
-	controller.add(&srvRangeSensor);
-
-	controller.add(&srvBumperSensor);
-
-	controller.add(&srvChargeSystem);
-	controller.add(&srvProcessingSensorData);
-
-	controller.add(&srvRtc);
-
-	controller.add(&srvBuzzer);
-
-	controller.add(&srvShutdown);
-	controller.add(&srvGps);
+	//---------------------------------
+	srvUI.Stop();
 	//---------------------------------
 	// Behaviour Objects konfigurieren
 	//---------------------------------
 
 	myCreateTree.setup();
 
-
 	//---------------------------------
 	// Userinterface setup
 	//---------------------------------
+	
+	cmdInit();
 	cmd_setup();
+	srvCmd.setInterval(116);
+
 
 	srvMotor.stopAllMotors();
 
@@ -284,7 +252,7 @@ void setup() {
 	// Check if in charging station
 	errorHandler.setInfo(F("Check if in charging station\r\n"));
 	for (int i = 0; i < 10; i++) { // Read charging voltage
-		srvChargeSystem.run();
+		srvChargeSystem.Run();
 	}
 	if (srvChargeSystem.isInChargingStation()) {
 		errorHandler.setInfo(F("Charging station detected\r\n"));
@@ -315,6 +283,10 @@ void setup() {
 	errorHandler.setInfo(F("WATCHDOG ENABLED\r\n"));
 #endif
 
+	motorDriver.resetFault(true);
+	mowMotorDriver.resetFault(true);
+
+
 	errorHandler.setInfo(F("Setup finished. Loop is running.\r\n"));
 	errorHandler.setInfo(F("Version %s\r\n\r\n"), VERSION);
 	errorHandler.setInfo(F("Press H for help.\r\n"));
@@ -328,11 +300,36 @@ void setup() {
 
 	//Startsound ausgeben
 	srvBuzzer.sound(SND_START);
+	//srvCmd.Restart();
 }
 
-void executeLoop() //wird von ui.cpp verwendet wenn Hilfe ausgegeben wird
-{
-	loop();
+void runServices() {
+	// Run the services
+	srvHal.Run();
+	srvRangeSensor.Run();
+	srvRainSensor.Run();
+	srvMowMotorSensor.Run();
+	srvMotorSensorL.Run();
+	srvChargeSystem.Run();
+	srvBumperSensor.Run();
+	srvGps.Run();
+	srvPerSensoren.Run();
+	//srvDht.Run(); will be called out of the BHT
+	srvBatSensor.Run();
+	srvCmd.Run();
+	srvProcessingSensorData.Run();
+	srvClcM.Run();
+      srvClcL.Run();
+	srvClcR.Run();
+	srvPcL.Run();
+	srvPcR.Run();
+	srvMotor.Run();
+	srvShutdown.Run();
+	srvRtc.Run();
+	//srvEeprom.Run(); // not used jet
+	srvBuzzer.Run();
+	errorHandler.Run();
+	srvUI.Run();
 }
 
 void loop() {
@@ -374,16 +371,14 @@ void loop() {
 		}
 	}
 
-	// Run the services
-	controller.run();
-
+	runServices();
 
 	//srvClcR.testEncoder();
 
 	// Auswerten ob user manuellen mode gesetzt hat und kommando ausführen
 	// Auszuwertende variablen sind in Klasse TSerialEventThread definiert
 	if (_controlManuel) {
-		srvDht.run(); // run srvDht here, because in auto it runs from BHT and not from controller
+		srvDht.Run(); // run srvDht here, because in auto it runs from BHT and not from controller
 	}
 	else {
 		myCreateTree.loop();

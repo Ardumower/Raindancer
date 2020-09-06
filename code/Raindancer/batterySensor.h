@@ -2,7 +2,7 @@
   Robotic Lawn Mower
   Copyright (c) 2017 by Kai Würtz
 
-  
+
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-  
+
 */
 
 #ifndef BATTERIESENSOR_H
@@ -27,7 +27,7 @@
 #include "WProgram.h"
 #endif
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "hardware.h"
 #include "errorhandler.h"
@@ -41,102 +41,103 @@
 //xdes1
 extern TShutdown srvShutdown;
 
-class TbatterieSensor : public Thread
-{
-  private:
-    unsigned long time;
-    bool flagShowVoltage;
-    int8_t count = 10;
-  public:
+class TbatterieSensor : public Protothread {
+private:
+	unsigned long time;
+	bool flagShowVoltage;
+	int8_t count = 10;
+public:
 
-    float sensorValue;
-    float voltage;
+	float sensorValue;
+	float voltage;
 
-    void setup() {
-      sensorValue = 0;
-      voltage = 24;
-      sensorValue = aiBATVOLT.getVoltage();
-      time = millis();
-    }
-    //xdes1
-    void showData() {
-      errorHandler.setInfoNoLog(F("$batV,%f\r\n"), voltage);
-    }
-    //xdes1
-    void show() {
-      flagShowVoltage = true;
-      showData();
-    }
-    //xdes1
-    void hide() {
-      flagShowVoltage = false;
-    }
+	void setup() {
+		sensorValue = 0;
+		voltage = 24;
+		sensorValue = aiBATVOLT.getVoltage();
+		time = millis();
+	}
+	//xdes1
+	void showData() {
+		errorHandler.setInfo(F("$batV,%f\r\n"), voltage);
+	}
+	//xdes1
+	void show() {
+		flagShowVoltage = true;
+		showData();
+	}
+	//xdes1
+	void hide() {
+		flagShowVoltage = false;
+	}
 
-    virtual void run() {
-      // Wird alle 1000ms aufgerufen
-      runned();
+	bool Run() {
+		PT_BEGIN();
+		while (1) {
 
-      if (CONF_DISABLE_BATTERY_SERVICE) {
-        sensorValue = 0;
-        voltage = 24;
-        return;
-      }
+			PT_YIELD_INTERVAL();
 
-      sensorValue = aiBATVOLT.getVoltage();
-      float readVolt = sensorValue * BATTERYFACTOR_BS + DIODEDROPVOLTAGE_BS; // The diode sucks 0.4V
+			if (CONF_DISABLE_BATTERY_SERVICE) {
+				sensorValue = 0;
+				voltage = 24;
+				PT_EXIT();
+			}
 
-      const float accel = 0.1f;
+			sensorValue = aiBATVOLT.getVoltage();
+			float readVolt = sensorValue * BATTERYFACTOR_BS + DIODEDROPVOLTAGE_BS; // The diode sucks 0.4V
 
-      if (flagShowVoltage) {
-        count++;
-        if (count > 3) { // show value not every time the service is called
-          showData();
-          count = 0;
-        }
-      }
+			const float accel = 0.1f;
 
-      if (abs(voltage - readVolt) > 5) {
-        voltage = readVolt;
-      }
-      else {
-        voltage = (1.0f - accel) * voltage + accel * readVolt;
-      }
+			if (flagShowVoltage) {
+				count++;
+				if (count > 3) { // show value not every time the service is called
+					showData();
+					count = 0;
+				}
+			}
+
+			if (abs(voltage - readVolt) > 5) {
+				voltage = readVolt;
+			}
+			else {
+				voltage = (1.0f - accel) * voltage + accel * readVolt;
+			}
 
 
-      if (voltage < CONF_VOLTAGE_SWITCHOFF_BS) {
-        unsigned long dt = millis() - time;
-        errorHandler.setInfo(F("!03,Switch off voltage reached. Time: %lu dt: %lu\r\n"), time , dt);
+			if (voltage < CONF_VOLTAGE_SWITCHOFF_BS) {
+				unsigned long dt = millis() - time;
+				errorHandler.setInfo(F("!03,Switch off voltage reached. Time: %lu dt: %lu\r\n"), time, dt);
 
-        // Wait 60sec before switch off.
-        if (dt > 60000ul) {
-          srvShutdown.enabled = true;
-        }
-      }
-      else {
-        time = millis();
-        //errorHandler.setInfo("set time= &lu", time);
-      }
+				// Wait 60sec before switch off.
+				if (dt > 60000ul) {
+					srvShutdown.Restart();
+				}
+			}
+			else {
+				time = millis();
+				//errorHandler.setInfo("set time= &lu", time);
+			}
+		}
+		PT_END();
+	}
 
-    }
+	bool isVoltageLow() {
+		if (voltage < CONF_VOLTAGE_LOW_BS) {
+			return true;
+		}
 
-    bool isVoltageLow() {
-      if (voltage < CONF_VOLTAGE_LOW_BS) {
-        return true;
-      }
+		return false;
+	}
 
-      return false;
-    }
-
-    void showConfig()
-    {
-      errorHandler.setInfoNoLog(F("!03,Battery Sensor Config\r\n"));
-      errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-      errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-      errorHandler.setInfoNoLog(F("!03,BATTERYFACTOR_BS %f\r\n"), BATTERYFACTOR_BS);
-      errorHandler.setInfoNoLog(F("!03,DIODEDROPVOLTAGE_BS %f\r\n"), DIODEDROPVOLTAGE_BS);
-      errorHandler.setInfoNoLog(F("!03,VOLTAGE_LOW_BS %f\r\n"), CONF_VOLTAGE_LOW_BS);
-      errorHandler.setInfoNoLog(F("!03,VOLTAGE_SWITCHOFF_BS %f\r\n"), CONF_VOLTAGE_SWITCHOFF_BS);
-    }
+	void showConfig() {
+		errorHandler.setInfo(F("!03,Battery Sensor Config\r\n"));
+		errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+		errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+		errorHandler.setInfo(F("!03,BATTERYFACTOR_BS %f\r\n"), BATTERYFACTOR_BS);
+		errorHandler.setInfo(F("!03,DIODEDROPVOLTAGE_BS %f\r\n"), DIODEDROPVOLTAGE_BS);
+		errorHandler.setInfo(F("!03,VOLTAGE_LOW_BS %f\r\n"), CONF_VOLTAGE_LOW_BS);
+		errorHandler.setInfo(F("!03,VOLTAGE_SWITCHOFF_BS %f\r\n"), CONF_VOLTAGE_SWITCHOFF_BS);
+	}
 
 };
 

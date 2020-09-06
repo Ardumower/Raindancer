@@ -30,7 +30,7 @@
 
 
 
-extern Thread srvHal;
+extern THal srvHal;
 // mow motor closed loop control - no closed loop used
 extern TMowClosedLoopControlThread srvClcM;
 // drive motor left closed loop control
@@ -62,7 +62,7 @@ extern TbumperSensor srvBumperSensor;
 // Charge System
 extern TchargeSystem srvChargeSystem;
 // Print Sensordata for processing
-extern Thread srvProcessingSensorData;
+extern TPrintSensordata srvProcessingSensorData;
 // Real time clock
 extern Trtc srvRtc;
 // EEPROM will not insert in thread controller

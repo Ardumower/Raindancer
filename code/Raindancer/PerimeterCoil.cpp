@@ -77,24 +77,24 @@ bool PerimeterCoil::isSignalValid() {
 
 void PerimeterCoil::printSignal(char *text, DSP_TYPE *samples, int sz) {
 	if (showMatchedFilter) {
-		errorHandler.setInfoNoLog(F("%s\t%d:\r\n"), text, sz);
+		errorHandler.setInfo(F("%s\t%d:\r\n"), text, sz);
 
 		int nonZeroCounter = 0;
 		for (int i = 0; i < sz; i++) {
-			errorHandler.setInfoNoLog(F("%d"), samples[i]);
-			if (i < sz - 1)	errorHandler.setInfoNoLog(F("\t"));
+			errorHandler.setInfo(F("%d"), samples[i]);
+			if (i < sz - 1)	errorHandler.setInfo(F("\t"));
 			if (samples[i] != 0) nonZeroCounter++;
 		}
-		errorHandler.setInfoNoLog(F("\r\n"));
+		errorHandler.setInfo(F("\r\n"));
 	}
 }
 
 void PerimeterCoil::printSignalValues(DSP_TYPE *samples, int sz) {
 	for (int i = 0; i < 20; i++) {
-		errorHandler.setInfoNoLog(F("%d\r\n"), -200);
+		errorHandler.setInfo(F("%d\r\n"), -200);
 	}
 	for (int i = 0; i < sz; i++) {
-		errorHandler.setInfoNoLog(F("%d\r\n"), samples[i]);
+		errorHandler.setInfo(F("%d\r\n"), samples[i]);
 	}
 }
 
@@ -109,17 +109,17 @@ void PerimeterCoil::setup(DSP_TYPE *adc_sampling_r) {
 	setup_firsttime = true;
 
 	if (showMatchedFilter) {
-		errorHandler.setInfoNoLog(F("REFERENCE_SIGNAL:"));
+		errorHandler.setInfo(F("REFERENCE_SIGNAL:"));
 		for (int i = 0; i < REFERENCE_SIGNAL_SIZE; i++) {
-			errorHandler.setInfoNoLog(F("%d,"), referenceSignal_r[i]);
+			errorHandler.setInfo(F("%d,"), referenceSignal_r[i]);
 		}
-		errorHandler.setInfoNoLog(F("\r\n"));
+		errorHandler.setInfo(F("\r\n"));
 	}
 
 #ifdef GENERATE_DIFF_SIGNAL
 
 	if (showMatchedFilter) {
-		errorHandler.setInfoNoLog(F("GENERATE_DIFF_SIGNAL:"));
+		errorHandler.setInfo(F("GENERATE_DIFF_SIGNAL:"));
 	}
 	int8_t lastValue = referenceSignal_r[REFERENCE_SIGNAL_SIZE - 1];
 	int8_t value;
@@ -130,9 +130,9 @@ void PerimeterCoil::setup(DSP_TYPE *adc_sampling_r) {
 	}
 	if (showMatchedFilter) {
 		for (int i = 0; i < REFERENCE_SIGNAL_SIZE; i++) {
-			errorHandler.setInfoNoLog(F("%d,"), referenceSignal_r[i]);
+			errorHandler.setInfo(F("%d,"), referenceSignal_r[i]);
 		}
-		errorHandler.setInfoNoLog(F("\r\n"));
+		errorHandler.setInfo(F("\r\n"));
 	}
 #endif
 
@@ -288,7 +288,7 @@ void PerimeterCoil::run(void) {
 		}
 
 		// find second right peak instead of real peak. For testing peakSLL code only!
-		//errorHandler.setInfoNoLog(F("real peak: %d @%d\r\n"), peakValue, peakIdx);
+		//errorHandler.setInfo(F("real peak: %d @%d\r\n"), peakValue, peakIdx);
 		/*
 
 		peakIdx2 = peakIdx;
@@ -316,7 +316,7 @@ void PerimeterCoil::run(void) {
 				}
 			}
 		}
-		//errorHandler.setInfoNoLog(F("second peak: %d @%d\r\n"), peakValue, peakIdx);
+		//errorHandler.setInfo(F("second peak: %d @%d\r\n"), peakValue, peakIdx);
 		*/
 
 
@@ -404,12 +404,12 @@ void PerimeterCoil::run(void) {
 			if (MSE > 0.000001f) {
 				for (int i = 0; i < FFT_SIZE; i++) {
 					psnr = (sq(((float)(correlation_r[i]))) / MSE);
-					errorHandler.setInfoNoLog(F("%f\r\n"), psnr);
+					errorHandler.setInfo(F("%f\r\n"), psnr);
 				}
 			}
 			else {
 				for (int i = 0; i < FFT_SIZE; i++) {
-					errorHandler.setInfoNoLog(F("%f\r\n"), 0);
+					errorHandler.setInfo(F("%f\r\n"), 0);
 				}
 			}
 
@@ -508,23 +508,23 @@ void PerimeterCoil::run(void) {
 		}
 
 		if (showValuesResults) {
-			errorHandler.setInfoNoLog(F("mag: %4d  peak @ %3d : %4d   peak2 @ %3d : %4d   peakSLL @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f  psnrSLL: %8.3f  ratio: %8.3f"),
+			errorHandler.setInfo(F("mag: %4d  peak @ %3d : %4d   peak2 @ %3d : %4d   peakSLL @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f  psnrSLL: %8.3f  ratio: %8.3f"),
 				magnetude, peakIdx, peakValue, peakIdx2, peakValue2, peakIdxSLL, peakValueSLL, MSE, psnr, psnr2, psnrSLL, ratio);
 
-			//			errorHandler.setInfoNoLog(F("  peak @ %3d : %4d^2= %4d  peak2 @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f   ratio: %8.3f"),
+			//			errorHandler.setInfo(F("  peak @ %3d : %4d^2= %4d  peak2 @ %3d : %4d   MSE: %8.3f   psnr: %8.3f   psnr2: %8.3f   ratio: %8.3f"),
 			//				peakIdx, magnetude, peakValue, peakIdx2, peakValue2, MSE, psnr, psnr2, ratio);
 
 
 			if (isSignalValid()) {
 				if (overdriveDetected) {
-					errorHandler.setInfoNoLog(F("    ODR"));
+					errorHandler.setInfo(F("    ODR"));
 				}
 			}
 			else {
-				errorHandler.setInfoNoLog(F("    BAD"));
+				errorHandler.setInfo(F("    BAD"));
 			}
 
-			errorHandler.setInfoNoLog(F("\r\n"));
+			errorHandler.setInfo(F("\r\n"));
 		}
 
 		break;

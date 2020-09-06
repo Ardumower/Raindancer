@@ -53,12 +53,14 @@ debug.serial.println(F("\r\nBUFFER END ==================================:"));
 #include "helpers.h"
 #include "RingBufferChar.h"
 #include <stdarg.h>
+#include "Protothread.h"
+#include "Protothread.h"
 
 using namespace std;
 
 
 #define EH_MEASSAGE_SIZE 200
-class TErrorHandler
+class TErrorHandler  : public Protothread
 {
 private:
 	String error;
@@ -66,19 +68,20 @@ private:
 	RingBufferChar r;
 public:
 
+	
 	char msg[EH_MEASSAGE_SIZE];
 
 	TErrorHandler();
 
 	void setInfo();
-	void setInfoNoLog();
+	//void setInfo();
 	void writeToLogOnly();
 	//void setInfo(const char* i);
 	//void setInfo(const __FlashStringHelper *ifshi);
 	//void setInfo(char *fmt, ...);  //printf like
 	//void setInfo(const char *fmt, ...);  //printf like
 	void setInfo(const __FlashStringHelper *fmt, ...); //printf like
-	void setInfoNoLog(const __FlashStringHelper *fmt, ...); //printf like
+	////void setInfo(const __FlashStringHelper *fmt, ...); //printf like
 
 	//void setError(String e);
 	//void setError(char *fmt, ...);  //printf like
@@ -90,6 +93,8 @@ public:
 
 	void print();
 	void printError();
+
+	virtual bool Run();
 };
 
 

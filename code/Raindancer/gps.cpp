@@ -381,7 +381,7 @@ int Tgps::pnpoly(const int nvert, const float *vertx, const float *verty, float 
   I use here a state machine not to loose too much time in calculations and block other services
   Therefore the GPS data is calculated step by step and not in  the whole.
 */
-void Tgps::run()
+bool Tgps::Run()
     {
     //unsigned long time;
     long int ttt;
@@ -389,11 +389,10 @@ void Tgps::run()
     int readNoOfChars;
 
     // Will be called every 0ms if service is activated
-    runned();
 
     if (CONF_DISABLE_GPS)
         {
-        return;
+        return true;
         }
 
     switch (state)
@@ -451,7 +450,7 @@ void Tgps::run()
                 {
                 if (flagSendToCC)
                     {
-                    errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
+                    errorHandler.setInfo(F("%s\r\n"), gpsInString);
                     }
                 }
             if (CONF_DEACTIVATE_GPS_CALCULATION) // no calcualtion of GPS Data should be done on the DUE. Therefore start state 0 again.
@@ -499,7 +498,7 @@ void Tgps::run()
             // send data to controlcenter if needed
             //if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
             //    {
-            //    errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
+            //    errorHandler.setInfo(F("%s\r\n"), gpsInString);
             //    }
             state = 21;
             break;
@@ -512,8 +511,8 @@ void Tgps::run()
 
             if (flagShowGPS)
                 {
-                errorHandler.setInfoNoLog(F("!03,%s\r\n"), gpsInString);
-                errorHandler.setInfoNoLog(F("!03,GPGGA quality: %u satellites: %u  altitude: %.8f\r\n"), m_gpgga.quality, m_gpgga.satellites, m_gpgga.altitude);
+                errorHandler.setInfo(F("!03,%s\r\n"), gpsInString);
+                errorHandler.setInfo(F("!03,GPGGA quality: %u satellites: %u  altitude: %.8f\r\n"), m_gpgga.quality, m_gpgga.satellites, m_gpgga.altitude);
                 }
             break;
 
@@ -526,7 +525,7 @@ void Tgps::run()
             // send data to controlcenter if needed but not if CONF_GPS_PASS_THROUGH == true
             //if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
             //    {
-            //    errorHandler.setInfoNoLog(F("%s\r\n"), gpsInString);
+            //    errorHandler.setInfo(F("%s\r\n"), gpsInString);
             //    }
             state = 31;
             break;
@@ -534,7 +533,7 @@ void Tgps::run()
             // send encoder data to controlcenter if needed but not if CONF_GPS_PASS_THROUGH == true
             //if (flagSendToCC && !CONF_GPS_PASS_THROUGH)
             //    {
-            //    errorHandler.setInfoNoLog(F("$GPENC,%ld,%ld\r\n"), encoderL.getTickCounter(), encoderR.getTickCounter());
+            //    errorHandler.setInfo(F("$GPENC,%ld,%ld\r\n"), encoderL.getTickCounter(), encoderR.getTickCounter());
             //    }
             state = 32;
             break;
@@ -574,10 +573,10 @@ void Tgps::run()
 
             if (flagShowGPS)
                 {
-                errorHandler.setInfoNoLog(F("!03,%s\r\n"), gpsInString);
-                errorHandler.setInfoNoLog(F("!03,%s speed: %f course:%f\r\n"), CONF_N_GPRMC_STR, m_gpsData.speed, m_gpsData.course);
-                errorHandler.setInfoNoLog(F("!03,%s lat: %.8f,%c lon: %.8f,%c\r\n"), CONF_N_GPRMC_STR, m_gpsData.latitude, m_gpsData.lat, m_gpsData.longitude, m_gpsData.lon);
-                errorHandler.setInfoNoLog(F("!03,%s date: %d.%d.%d time: %d:%d:%d\r\n"), CONF_N_GPRMC_STR, m_gpsData.day, m_gpsData.month, m_gpsData.year, m_gpsData.hour, m_gpsData.minute, m_gpsData.second);
+                errorHandler.setInfo(F("!03,%s\r\n"), gpsInString);
+                errorHandler.setInfo(F("!03,%s speed: %f course:%f\r\n"), CONF_N_GPRMC_STR, m_gpsData.speed, m_gpsData.course);
+                errorHandler.setInfo(F("!03,%s lat: %.8f,%c lon: %.8f,%c\r\n"), CONF_N_GPRMC_STR, m_gpsData.latitude, m_gpsData.lat, m_gpsData.longitude, m_gpsData.lon);
+                errorHandler.setInfo(F("!03,%s date: %d.%d.%d time: %d:%d:%d\r\n"), CONF_N_GPRMC_STR, m_gpsData.day, m_gpsData.month, m_gpsData.year, m_gpsData.hour, m_gpsData.minute, m_gpsData.second);
                 }
 
             if (CONF_USE_GPS_POLYGON)
@@ -602,7 +601,7 @@ void Tgps::run()
                 flagInsidePolygon = false;
                 if (flagShowGPS)
                     {
-                    errorHandler.setInfoNoLog(F("!03,Outside gps polygon: %d\r\n"), result);
+                    errorHandler.setInfo(F("!03,Outside gps polygon: %d\r\n"), result);
                     }
                 }
             else
@@ -610,7 +609,7 @@ void Tgps::run()
                 flagInsidePolygon = true;
                 if (flagShowGPS)
                     {
-                    errorHandler.setInfoNoLog(F("!03,Inside gps polygon: %d\r\n"), result);
+                    errorHandler.setInfo(F("!03,Inside gps polygon: %d\r\n"), result);
                     }
                 }
 
@@ -625,20 +624,22 @@ void Tgps::run()
             break;
 
         }//ENDSWITCH
+
+        return true;
     }//ENDRUN
 
 void Tgps::showConfig()
     {
-    errorHandler.setInfoNoLog(F("!03,GPS Service\r\n"));
-    errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-    errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
+    errorHandler.setInfo(F("!03,GPS Service\r\n"));
+    errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+    errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
 
-    errorHandler.setInfoNoLog(F("!03,flagShowGPS %d\r\n"), flagShowGPS);
-    errorHandler.setInfoNoLog(F("!03,flagSendToCC %d\r\n"), flagSendToCC);
+    errorHandler.setInfo(F("!03,flagShowGPS %d\r\n"), flagShowGPS);
+    errorHandler.setInfo(F("!03,flagSendToCC %d\r\n"), flagSendToCC);
 
-    errorHandler.setInfoNoLog(F("!03,CONF_INIT_GPS_WITH_UBLOX %d\r\n"), CONF_INIT_GPS_WITH_UBLOX);
-    errorHandler.setInfoNoLog(F("!03,CONF_GPS_PASS_THROUGH %d\r\n"), CONF_GPS_PASS_THROUGH);
-    errorHandler.setInfoNoLog(F("!03,CONF_N_GPRMC_STR %s\r\n"), CONF_N_GPRMC_STR);
-    errorHandler.setInfoNoLog(F("!03,CONF_N_GPGGA_STR %s\r\n"), CONF_N_GPGGA_STR);
-    errorHandler.setInfoNoLog(F("!03,CONF_DEACTIVATE_GPS_CALCULATION %d\r\n"), CONF_DEACTIVATE_GPS_CALCULATION);
+    errorHandler.setInfo(F("!03,CONF_INIT_GPS_WITH_UBLOX %d\r\n"), CONF_INIT_GPS_WITH_UBLOX);
+    errorHandler.setInfo(F("!03,CONF_GPS_PASS_THROUGH %d\r\n"), CONF_GPS_PASS_THROUGH);
+    errorHandler.setInfo(F("!03,CONF_N_GPRMC_STR %s\r\n"), CONF_N_GPRMC_STR);
+    errorHandler.setInfo(F("!03,CONF_N_GPGGA_STR %s\r\n"), CONF_N_GPGGA_STR);
+    errorHandler.setInfo(F("!03,CONF_DEACTIVATE_GPS_CALCULATION %d\r\n"), CONF_DEACTIVATE_GPS_CALCULATION);
     }

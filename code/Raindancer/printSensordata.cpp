@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "Blackboard.h"
 #include "bCreateTree.h"
 #include "chargeSystem.h"
+#include "Protothread.h"
 
 
 extern unsigned long loopCounter;
@@ -77,23 +78,33 @@ extern TErrorHandler errorHandler;
 
 bool _printProcessingData = false;
 
+bool TPrintSensordata::Run() {
+	PT_BEGIN();
+	while (1) {
+		PT_YIELD_INTERVAL();
+		if (_printProcessingData) {
+			//errorHandler.setInfo(F("!01,%lu,%lu, %lu,%.2f,%.2f,%.2f,"),millis(),loopsPerSec, maxLoopTime, srvClcL.getCurrentSpeedInRPM(),srvClcR.getCurrentSpeedInRPM(),srvMowMotorSensor.watt);
+			//errorHandler.setInfo(F("%d,%d,"),srvPerSensoren.magnetudeL , srvPerSensoren.magnetudeR);
+			//errorHandler.setInfo(F("%.2f,"),srvBatSensor.voltage);
+			//errorHandler.setInfo(F("%.2f,"),srvChargeSystem.chargeVoltage*srvChargeSystem.chargeCurrent);
+			//errorHandler.setInfo(F("\r\n"));
+	    //xdes1
+			errorHandler.setInfo(F("$loop,%lu, %lu\r\n"), loopCounter, maxLoopTime);
+
+			//must reset here, not to include the output above in the calculation
+			startLoopTime = micros();
+			maxLoopTime = 0;
+			loopCounter = 0;
+		}
+	}
+	PT_END();
+}
+
+
 void printSensordata()
 {
 
-    if(_printProcessingData) {
-        //errorHandler.setInfoNoLog(F("!01,%lu,%lu, %lu,%.2f,%.2f,%.2f,"),millis(),loopsPerSec, maxLoopTime, srvClcL.getCurrentSpeedInRPM(),srvClcR.getCurrentSpeedInRPM(),srvMowMotorSensor.watt);
-        //errorHandler.setInfoNoLog(F("%d,%d,"),srvPerSensoren.magnetudeL , srvPerSensoren.magnetudeR);
-        //errorHandler.setInfoNoLog(F("%.2f,"),srvBatSensor.voltage);
-        //errorHandler.setInfoNoLog(F("%.2f,"),srvChargeSystem.chargeVoltage*srvChargeSystem.chargeCurrent);
-        //errorHandler.setInfoNoLog(F("\r\n"));
-//xdes1
-        errorHandler.setInfoNoLog(F("$loop,%lu, %lu\r\n"), loopCounter, maxLoopTime);
 
-		//must reset here, not to include the output above in the calculation
-		startLoopTime = micros();
-		maxLoopTime = 0;
-        loopCounter = 0;
-     }
 
 }
 

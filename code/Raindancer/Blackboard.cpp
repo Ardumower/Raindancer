@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Blackboard.h"
 #include "UseServices.h"
+#include "config.h"
 
 
 const char* enuDriveDirectionString[] = { "DD_FORWARD",
@@ -215,19 +216,19 @@ THistory Blackboard::getInitialisedHistoryEntry(){
 
 
 void Blackboard::printHistoryEntry(int x) {
-	errorHandler.setInfoNoLog(F("============================\r\n"));
-	errorHandler.setInfoNoLog(F("!05,Idx:             %d \r\n"), x);
-	errorHandler.setInfoNoLog(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[history[x].driveDirection]);
-	errorHandler.setInfoNoLog(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[history[x].coilFirstOutside]);
-	errorHandler.setInfoNoLog(F("!05,coilOutAfterOver %s\r\n"), enuFlagCoilsOutsideString[history[x].coilOutsideAfterOverrun]);
-	errorHandler.setInfoNoLog(F("!05,bumperActivated  %s\r\n"), enuFlagBumperActivatedString[history[x].bumperActivated]);
-	errorHandler.setInfoNoLog(F("!05,timeAdded        %d \r\n"), history[x].timeAdded);
-	errorHandler.setInfoNoLog(F("---\r\n"));
-	errorHandler.setInfoNoLog(F("!05,distanceSoll   %f\r\n"), history[x].distanceSoll);
-	errorHandler.setInfoNoLog(F("!05,distanceIst   %f\r\n"), history[x].distanceIst);
-	errorHandler.setInfoNoLog(F("!05,cruiseSpeed   %d\r\n"), history[x].cruiseSpeed);
-	errorHandler.setInfoNoLog(F("!05,coilsOutsideAngle   %f\r\n"), history[x].coilsOutsideAngle);
-	errorHandler.setInfoNoLog(F("!05,restored         %d \r\n"), history[x].restored);
+	errorHandler.setInfo(F("============================\r\n"));
+	errorHandler.setInfo(F("!05,Idx:             %d \r\n"), x);
+	errorHandler.setInfo(F("!05,driveDirection   %s\r\n"), enuDriveDirectionString[history[x].driveDirection]);
+	errorHandler.setInfo(F("!05,coilFirstOutside %s\r\n"), enuFlagCoilsOutsideString[history[x].coilFirstOutside]);
+	errorHandler.setInfo(F("!05,coilOutAfterOver %s\r\n"), enuFlagCoilsOutsideString[history[x].coilOutsideAfterOverrun]);
+	errorHandler.setInfo(F("!05,bumperActivated  %s\r\n"), enuFlagBumperActivatedString[history[x].bumperActivated]);
+	errorHandler.setInfo(F("!05,timeAdded        %d \r\n"), history[x].timeAdded);
+	errorHandler.setInfo(F("---\r\n"));
+	errorHandler.setInfo(F("!05,distanceSoll   %f\r\n"), history[x].distanceSoll);
+	errorHandler.setInfo(F("!05,distanceIst   %f\r\n"), history[x].distanceIst);
+	errorHandler.setInfo(F("!05,cruiseSpeed   %d\r\n"), history[x].cruiseSpeed);
+	errorHandler.setInfo(F("!05,coilsOutsideAngle   %f\r\n"), history[x].coilsOutsideAngle);
+	errorHandler.setInfo(F("!05,restored         %d \r\n"), history[x].restored);
 }
 
 void Blackboard::historyUpdateDistance() {

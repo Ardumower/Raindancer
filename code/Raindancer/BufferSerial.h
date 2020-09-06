@@ -42,7 +42,7 @@ class BufferSerial
 {
 private:
 	bool isUSB;
-	HardwareSerial &serial;
+	UARTClass &serial;
 	Serial_        &usbserial;
 protected:
 	/*
@@ -56,10 +56,11 @@ protected:
 
 
 public:
-	BufferSerial(HardwareSerial& s, const int& bufferSize);
+	BufferSerial(UARTClass& s, const int& bufferSize);
 	BufferSerial(Serial_& s, const int& bufferSize);
 
 	int available();
+	int availableForWrite();
 	void begin(unsigned long);
 	void flush();
 	char getChar(void);

@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WProgram.h"
 #endif
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "hardware.h"
 #include "batterySensor.h"
@@ -41,8 +41,7 @@ extern TMowClosedLoopControlThread srvClcM;
 // Liest MowMotorstrom aus und berechnet die Wattzahl
 // Wenn diese zu hoch ist, wird der MÃ¤hmotor sofort ausgeschaltet.
 
-class TMowMotorSensor : public Thread
-{
+class TMowMotorSensor : public Protothread {
 private:
 	DigitalIn& myDiMotorFault;
 	DigitalOut& myMotorEnable;
@@ -84,39 +83,43 @@ public:
 	}
 
 
-	virtual void run() {
+	bool Run() {
 		// Wird alle 97ms aufgerufen
 		//int adc;
 		float sensorCurrent;
 		const float accel = 0.1f;
 
-		runned();
-		//adc = aiMotorMowCurrent.read_int32();
-		sensorValue = aiMotorMowCurrent.getVoltage();
+		PT_BEGIN();
+		while (1) {
 
-		if (sensorValue < 0.001f) {
-			sensorValue = 0.0f;
-			sensorCurrent = 0.0f;
+			PT_YIELD_INTERVAL();
+			//adc = aiMotorMowCurrent.read_int32();
+			sensorValue = aiMotorMowCurrent.getVoltage();
+
+			if (sensorValue < 0.001f) {
+				sensorValue = 0.0f;
+				sensorCurrent = 0.0f;
+			}
+			else {
+				sensorCurrent = (sensorValue - offset) * scale;
+				if (sensorCurrent < 0.0f) sensorCurrent = 0.0f;
+			}
+
+			current = (1.0f - accel) * current + accel * sensorCurrent;
+
+			watt = srvBatSensor.voltage * current;
+
+			checkMowCurrent();
+			checkIfUnderHeavyLoad();
+			checkMotorFault();
+
+			if (showValuesOnConsole && (++count > 10)) {
+				errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f scale %f, motorDisabled %d\r\n"), watt, current, sensorValue, scale, srvClcM.motorDisabled);
+				//errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f motorDisabled %d ADC %d\r\n"),watt, current, sensorValue, srvClcM.motorDisabled,adc);
+				count = 0;
+			}
 		}
-		else {
-			sensorCurrent = (sensorValue - offset) * scale;
-			if (sensorCurrent < 0.0f) sensorCurrent = 0.0f;
-		}
-
-		current = (1.0f - accel) * current + accel * sensorCurrent;
-
-		watt = srvBatSensor.voltage * current;
-
-		checkMowCurrent();
-		checkIfUnderHeavyLoad();
-		checkMotorFault();
-
-		if (showValuesOnConsole && (++count > 10)) {
-			errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f scale %f, motorDisabled %d\r\n"), watt, current, sensorValue, scale, srvClcM.motorDisabled);
-			//errorHandler.setInfo(F("!03MotorM ,Watt: %f MotorCurrent: %f sensorValue: %f motorDisabled %d ADC %d\r\n"),watt, current, sensorValue, srvClcM.motorDisabled,adc);
-			count = 0;
-		}
-
+		PT_END();
 	}
 
 
@@ -184,24 +187,23 @@ public:
 
 	void calculateScale(float measuredCurrent, float softwareCurrent) {
 		scale = measuredCurrent * scale / softwareCurrent;
-		errorHandler.setInfoNoLog(F("!03,MowMotor scale calculated: %f\r\n"), scale);
+		errorHandler.setInfo(F("!03,MowMotor scale calculated: %f\r\n"), scale);
 	}
 
 	void measureOffset() {
 
 		errorHandler.setInfo(F("!03,Mow Motor measure offset\r\n"));
-		errorHandler.setInfoNoLog(F("!03,"));
+		errorHandler.setInfo(F("!03,"));
 		offset = aiMotorMowCurrent.measureOffsetVoltage();
 		errorHandler.setInfo(F("  offset: %f\r\n"), offset);
 	}
 
-	void showConfig()
-	{
-		errorHandler.setInfoNoLog(F("!03,motSensor Config Motor M:\r\n"));
-		errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-		errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-		errorHandler.setInfoNoLog(F("!03,offset %d\r\n"), offset);
-		errorHandler.setInfoNoLog(F("!03,scale %f\r\n"), scale);
+	void showConfig() {
+		errorHandler.setInfo(F("!03,motSensor Config Motor M:\r\n"));
+		errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+		errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+		errorHandler.setInfo(F("!03,offset %d\r\n"), offset);
+		errorHandler.setInfo(F("!03,scale %f\r\n"), scale);
 	}
 
 };

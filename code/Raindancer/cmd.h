@@ -53,6 +53,7 @@ Please post support questions to the FreakLabs forum.
 
 #define MAX_MSG_SIZE    60
 #include <stdint.h>
+#include "Protothread.h"
 
 
 // command line structure
@@ -70,6 +71,13 @@ void cmdAdd(char *name, void(*func)(int argc, char **argv));
 long cmdStr2Num(char *str, uint8_t base);
 float cmdStr2Float(char *str);
 
+
+class TCmd : public Protothread {
+public:
+	virtual bool Run();
+private:
+
+};
 
 #endif //CMD_H
 

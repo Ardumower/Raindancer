@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-void TClosedLoopControlThread::setup(uint8_t motorNumber, CRotaryEncoder  *enc)    // Motor 1 oder 2
+void TClosedLoopControlThread::setup(uint8_t motorNumber, CRotaryEncoder* enc)    // Motor 1 oder 2
 {
 
 	flagHardstopActive = false;
@@ -57,64 +57,69 @@ void TClosedLoopControlThread::setup(uint8_t motorNumber, CRotaryEncoder  *enc) 
 	lastTimeSpeedSet = 0;
 	lastSetSpeedPerc = 0;
 
+	setOutputToZeroAtRPm = 4;
+	stopReachedThresholdAtRpm = 0.5f;
+	stopNearReachedThresholdAtRpm = 5.0f;
+
 	resetPDFF();
 }
 
 
+
 // used for position control
-void TClosedLoopControlThread::enableDefaultRamping()
-{
-	kfr = 1;
-	kp = 7;
-	ki = 8;
-	setOutputToZeroAtRPm = 4;
-	stopReachedThresholdAtRpm = 0.5f;
-	stopNearReachedThresholdAtRpm = 5.0f;
+void TClosedLoopControlThread::enableDefaultRamping() {
+	kfr = CONF_CLC_DEFAULT_KFR;
+	kp = CONF_CLC_DEFAULT_KP;
+	ki = CONF_CLC_DEFAULT_KI;
+
 	resetPDFF();
 	if (flagShowEnableRamping) {
-		errorHandler.setInfoNoLog(F(" sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f D\r\n"),  setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
+		errorHandler.setInfo(F(" sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f D\r\n"), setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
 	}
 
 }
 
 
 //used for perimeter tracking. Smooth ramping is done by changing kfr and kp
-void TClosedLoopControlThread::enablePerTrackRamping()
-{
-	kfr = 0.45f;
-	kp = 6;
+void TClosedLoopControlThread::enablePerTrackRamping() {
+	kfr = CONF_CLC_PER_KFR;
+	kp = CONF_CLC_PER_KP;
+	ki = CONF_CLC_PER_KI;
 	resetPDFF();
 	if (flagShowEnableRamping) {
-		errorHandler.setInfoNoLog(F("sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f T\r\n"),  setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
+		errorHandler.setInfo(F("sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f T\r\n"), setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
 	}
 }
 
-void TClosedLoopControlThread::enableFastStopRamping()
-{
-	kfr = 0.4f;
-	kp = 4;
+void TClosedLoopControlThread::enableFastStopRamping() {
+	kfr = CONF_CLC_FSTOP_KFR;
+	kp = CONF_CLC_FSTOP_KP;
+	ki = CONF_CLC_FSTOP_KI;
 	resetPDFF();
 	if (flagShowEnableRamping) {
-		errorHandler.setInfoNoLog(F(" sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f FS\r\n"),setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
+		errorHandler.setInfo(F(" sp: %f cur: %f pwm: %f eRPM: %f iTerm: %f FS\r\n"), setpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
 	}
 }
 
 /*********************************************************/
 // Motor FSM ausführen
 /*********************************************************/
-void TClosedLoopControlThread::run()
-{
-	// Wird alle 33ms aufgerufen
-	runned();
+bool TClosedLoopControlThread::Run() {
+	PT_BEGIN();
+	while (1) {
 
-	calculateCurSpeed();
+		PT_YIELD_INTERVAL();
 
-	if (flagControldirect) {
-		resetPDFF();
-		return;
+		calculateCurSpeed();
+
+		if (flagControldirect) {
+			resetPDFF();
+			PT_RESTART();
+		}
+
+		calculatePDFF();
 	}
-
-	calculatePDFF();
+	PT_END();
 }
 
 void TClosedLoopControlThread::calculatePDFF() {
@@ -163,12 +168,12 @@ void TClosedLoopControlThread::calculatePDFF() {
 	motorDriver.motor(motorNo, pdffOutputPWM);
 
 	if (flagShowSpeed) {
-		errorHandler.setInfoNoLog(F("reqSp: %f cur: %f pwm: %f eRPM: %f iTerm: %f\r\n"), reqSetpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
+		errorHandler.setInfo(F("reqSp: %f cur: %f pwm: %f eRPM: %f iTerm: %f\r\n"), reqSetpointRPM, current_speedRPM, pdffOutputPWM, errorRPM, ITermRPM);
 	}
 
 	//used for pdff tuning
 	if (flagShowSetpointCurrSpeed) {
-		errorHandler.setInfoNoLog(F("%f,%f,%f\r\n"), setpointRPM, current_speedRPM, pdffOutputPWM);
+		errorHandler.setInfo(F("%f,%f,%f\r\n"), setpointRPM, current_speedRPM, pdffOutputPWM);
 	}
 }
 
@@ -210,8 +215,7 @@ float TClosedLoopControlThread::getSetpointSpeedInPerc() {
 // ---------------------------------------------------------
 // speed is -100% to +100%. This function calculates rpm for the given percentage.
 // ---------------------------------------------------------
-void TClosedLoopControlThread::setSpeed(int  speedPercentage)
-{
+void TClosedLoopControlThread::setSpeed(int  speedPercentage) {
 	// Don't execute if error is active
 	if (errorHandler.isErrorActive()) {
 		return;
@@ -219,11 +223,11 @@ void TClosedLoopControlThread::setSpeed(int  speedPercentage)
 
 	/*
 	if (motorNo == 1) {
-		errorHandler.setInfoNoLog(F("CLCsetSpeed %d%% ist: %f useRamp: %d \r\n"), speedPercentage, getCurrentSpeedInPerc(), useRamp);
+		errorHandler.setInfo(F("CLCsetSpeed %d%% ist: %f useRamp: %d \r\n"), speedPercentage, getCurrentSpeedInPerc(), useRamp);
 	}
 	*/
 
-	if(flagControldirect){
+	if (flagControldirect) {
 		flagControldirect = false;
 	}
 
@@ -237,46 +241,41 @@ void TClosedLoopControlThread::setSpeed(int  speedPercentage)
 		//	errorHandler.setInfo(F("setSpeed %d ist: %f\r\n"), speedPercentage, getCurrentSpeedInPerc());
 		//}
 	}
-	//errorHandler.setInfoNoLog(F("motorNo %d sollSpeedRPM =  %f \r\n"), motorNo, sollSpeedRPM);
+	//errorHandler.setInfo(F("motorNo %d sollSpeedRPM =  %f \r\n"), motorNo, sollSpeedRPM);
 }
 
-void TClosedLoopControlThread::hardStop()
-{
-		motorDriver.motor(motorNo, 0);
-		lastTimeSpeedSet = millis();
-		lastSetSpeedPerc = 0;
-		setpointRPM = 0;
-		flagHardstopActive = true;
-		//errorHandler.setInfoNoLog(F("!03,hardstop motor %i \r\n"), motorNo);
+void TClosedLoopControlThread::hardStop() {
+	motorDriver.motor(motorNo, 0);
+	lastTimeSpeedSet = millis();
+	lastSetSpeedPerc = 0;
+	setpointRPM = 0;
+	flagHardstopActive = true;
+	//errorHandler.setInfo(F("!03,hardstop motor %i \r\n"), motorNo);
 }
 
-void TClosedLoopControlThread::stop()
-{
+void TClosedLoopControlThread::stop() {
 	// call only if speed changes from last setting
 	if (lastSetSpeedPerc != 0) {
 		lastTimeSpeedSet = millis();
 		lastSetSpeedPerc = 0;
 		setpointRPM = 0;
 		flagHardstopActive = false;
-		//errorHandler.setInfoNoLog(F("!03,stop motor %i \r\n"), motorNo);	
+		//errorHandler.setInfo(F("!03,stop motor %i \r\n"), motorNo);	
 	}
-	
+
 }
 
 
-bool TClosedLoopControlThread::isStopped()
-{
+bool TClosedLoopControlThread::isStopped() {
 	return (fabsf(current_speedRPM) < stopReachedThresholdAtRpm);
 }
 
-bool TClosedLoopControlThread::isNearStopped()
-{
+bool TClosedLoopControlThread::isNearStopped() {
 	return (fabsf(current_speedRPM) < stopNearReachedThresholdAtRpm);
 }
 
 // send pwm direct to motot. speed: -255 to 255
-void TClosedLoopControlThread::controlDirect(int speed)
-{
+void TClosedLoopControlThread::controlDirect(int speed) {
 	// Will only work if run is not called 
 	// Therfore, before calling this function flagControldirect = true; must be set
 	if (!flagControldirect) {
@@ -289,7 +288,7 @@ void TClosedLoopControlThread::controlDirect(int speed)
 		lastSetSpeedPerc = speed;
 		pdffOutputPWM = speed;
 		resetPDFF();
-		//errorHandler.setInfoNoLog(F("cont direct setSpeed %d\r\n"),speedPercentage);
+		//errorHandler.setInfo(F("cont direct setSpeed %d\r\n"),speedPercentage);
 	}
 
 	motorDriver.motor(motorNo, speed);
@@ -297,8 +296,7 @@ void TClosedLoopControlThread::controlDirect(int speed)
 
 
 // Calculate current speed
-void TClosedLoopControlThread::calculateCurSpeed()
-{
+void TClosedLoopControlThread::calculateCurSpeed() {
 	long encTickCounter, buff;
 	unsigned long nowTime;
 
@@ -316,7 +314,7 @@ void TClosedLoopControlThread::calculateCurSpeed()
 	if (delta != 0) {
 		//float speed = 60.0f * ((float)encTickCounter / CONF_ENCTICKSPERREVOLUTION) / deltaTimeSec;
 		//float speed = 60.0f * (float)encTickCounter * 1000000.0f / (CONF_ENCTICKSPERREVOLUTION *(float)delta);
-		float speed = 60000000.0f  * (float)encTickCounter / (CONF_ENCTICKSPERREVOLUTION *(float)delta);
+		float speed = 60000000.0f * (float)encTickCounter / (CONF_ENCTICKSPERREVOLUTION * (float)delta);
 		current_speedRPM = 0.6f * current_speedRPM + 0.4f * speed;
 		//calculate current_speed in m per h. only used for flagShowEncoder/flagShowSpeed/printSensordata.cpp
 		const float x = 60.0f * CONF_RADUMFANG_CM / 100.0f;
@@ -332,15 +330,15 @@ void TClosedLoopControlThread::calculateCurSpeed()
 
 
 
-	
+
 	if (flagShowEncoder) {
-		errorHandler.setInfoNoLog(F("!03,motor %i enc: %ld absEnc: %lu rpm: %f  m/h: %f deltaTicks: %ld deltaTime: %luus\r\n"), motorNo, myEncoder->getTickCounter(), myEncoder->getAbsTicksCounter(), current_speedRPM, current_speed_mph, encTickCounter, delta);
+		errorHandler.setInfo(F("!03,motor %i enc: %ld absEnc: %lu rpm: %f  m/h: %f deltaTicks: %ld deltaTime: %luus\r\n"), motorNo, myEncoder->getTickCounter(), myEncoder->getAbsTicksCounter(), current_speedRPM, current_speed_mph, encTickCounter, delta);
 	}
 
 	// Check motorstall or if Encoder runs in wrong direction
 	//--------------------------------------------------------
-	if (!CONF_DISABLE_MOTOR_STALL_CHECK ) {
-		//errorHandler.setInfoNoLog(F("0 motor %i clc speed pwm: %f curSpeed %f\r\n"), motorNo, pdffOutputPWM, current_speedRPM);
+	if (!CONF_DISABLE_MOTOR_STALL_CHECK) {
+		//errorHandler.setInfo(F("0 motor %i clc speed pwm: %f curSpeed %f\r\n"), motorNo, pdffOutputPWM, current_speedRPM);
 
 		if (millis() - lastTimeSpeedSet > 1000ul) {
 			if (pdffOutputPWM < -50 && current_speedRPM > 3) {  // just check if odometry sensors may be turning in the wrong direction
@@ -375,7 +373,7 @@ void TClosedLoopControlThread::calculateCurSpeed()
 	}
 
 	if (flagShowSpeed) {
-		errorHandler.setInfoNoLog(F("!03,motor %i rpm: %f  m/h: %f deltaTicks: %ld deltaTime: %lu stall: %d "), motorNo, current_speedRPM, current_speed_mph, encTickCounter, delta, motorStallCounter);
+		errorHandler.setInfo(F("!03,motor %i rpm: %f  m/h: %f deltaTicks: %ld deltaTime: %lu stall: %d "), motorNo, current_speedRPM, current_speed_mph, encTickCounter, delta, motorStallCounter);
 	}
 
 }
@@ -386,16 +384,15 @@ void TClosedLoopControlThread::resetEncoderCounter() {
 	lastEncoderTickCounter = myEncoder->getTickCounter();
 }
 
-void TClosedLoopControlThread::showConfig()
-{
-	errorHandler.setInfoNoLog(F("!03,CLC Config MotorNo: %i\r\n"), motorNo);
-	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-	errorHandler.setInfoNoLog(F("!03,KP: %f KI: %f \r\n"), kp, ki);
-	errorHandler.setInfoNoLog(F("!03,setOutputZeroAtRPm %f\r\n"), setOutputToZeroAtRPm);
-	errorHandler.setInfoNoLog(F("!03,stopReachedThresholdAtRpm %f\r\n"), stopReachedThresholdAtRpm);
-	errorHandler.setInfoNoLog(F("!03,stopNearReachedThresholdAtRpm %f\r\n"), stopNearReachedThresholdAtRpm);
-	
+void TClosedLoopControlThread::showConfig() {
+	errorHandler.setInfo(F("!03,CLC Config MotorNo: %i\r\n"), motorNo);
+	errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+	errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+	errorHandler.setInfo(F("!03,KP: %f KI: %f \r\n"), kp, ki);
+	errorHandler.setInfo(F("!03,setOutputZeroAtRPm %f\r\n"), setOutputToZeroAtRPm);
+	errorHandler.setInfo(F("!03,stopReachedThresholdAtRpm %f\r\n"), stopReachedThresholdAtRpm);
+	errorHandler.setInfo(F("!03,stopNearReachedThresholdAtRpm %f\r\n"), stopNearReachedThresholdAtRpm);
+
 }
 
 /*

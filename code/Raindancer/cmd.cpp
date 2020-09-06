@@ -329,7 +329,14 @@ float cmdStr2Float(char *str)
 
 
 
-
+bool TCmd::Run() {
+      PT_BEGIN();
+      while (1) {
+            PT_YIELD_INTERVAL();
+            cmdPoll();
+      }
+      PT_END();
+}
 
 
 

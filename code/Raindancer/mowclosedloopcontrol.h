@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _MOWMOTOR_h
 
 #include <inttypes.h>
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "Sabertooth.h"
 
@@ -35,7 +35,7 @@ enum EMowMotorState
 	STMM_STOP
 };
 
-class TMowClosedLoopControlThread : public Thread, public FSM<EMowMotorState>
+class TMowClosedLoopControlThread : public Protothread, public FSM<EMowMotorState>
 {
 private:
 
@@ -63,7 +63,7 @@ public:
 
 	void setup(uint8_t motorNumber);
 	// Called at the loop rate 100ms to run the state machine and therfore the motor
-	virtual void run();
+	virtual bool Run();
 
 	void controlDirect(int speed);
 	void showConfig();

@@ -76,7 +76,7 @@ public:
 		if (srvMotor.isPositionReached()) {
 
 			bb.history0.coilsOutsideAngle = srvMotor.getDistanceAngleCoilOut();
-			//errorHandler.setInfoNoLog(F("bb.coilsOutsideAngle: %f\r\n"), bb.coilsOutsideAngle);
+			//errorHandler.setInfo(F("bb.coilsOutsideAngle: %f\r\n"), bb.coilsOutsideAngle);
 
 
 			if (srvPerSensoren.isLeftOutside() && srvPerSensoren.isRightOutside()) {
@@ -118,7 +118,7 @@ public:
 
 	virtual NodeStatus onUpdate(Blackboard& bb) {
 
-		srvDht.run();
+		srvDht.Run();
 		return BH_SUCCESS;
 
 	}

@@ -27,17 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WProgram.h"
 #endif
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "hardware.h"
 
 
-class TbumperSensor : public Thread
+class TbumperSensor : public Protothread
 {
 public:
     bool flagShowBumper;
     void setup();
-    virtual void run();
+    virtual bool Run();
     bool isBumperActivated();
      //bber  ----------------------------
     bool isBumperActivatedLeft();

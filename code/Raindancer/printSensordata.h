@@ -27,10 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #else
 #include "WProgram.h"
 #endif
+#include "Protothread.h"
 
 
+class TPrintSensordata : public Protothread {
+public:
+      virtual bool Run();
+private:
 
-void printSensordata();
+};
+
+
 
 
 #endif

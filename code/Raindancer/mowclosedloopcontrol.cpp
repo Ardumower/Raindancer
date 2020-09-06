@@ -40,26 +40,28 @@ void TMowClosedLoopControlThread::setup(uint8_t motorNumber)    // Motor 1 oder 
 	flagShowSpeed = false;
 	directionForward = true;
 	resetCount = 0;
-	//errorHandler.setInfoNoLog(F("!03,srvClcM SETUP \r\n"));
+	//errorHandler.setInfo(F("!03,srvClcM SETUP \r\n"));
 }
 
 
 /*********************************************************/
 // Motor FSM ausführen
 /*********************************************************/
-void TMowClosedLoopControlThread::run()
-{
+bool TMowClosedLoopControlThread::Run() {
 	// Wird alle 200ms aufgerufen
 
-	runned();
-	LoopFSM();
+	PT_BEGIN();
+	while (1) {
 
+		PT_YIELD_INTERVAL();
+		LoopFSM();
+	}
+	PT_END();
 }
 
 
 
-void TMowClosedLoopControlThread::BeginState(EMowMotorState t)
-{
+void TMowClosedLoopControlThread::BeginState(EMowMotorState t) {
 	switch (t) {
 	case STMM_FORWARD:
 		resetCount = 0;
@@ -76,8 +78,7 @@ void TMowClosedLoopControlThread::BeginState(EMowMotorState t)
 /*********************************************************/
 // Motor Zustände Do State
 /*********************************************************/
-void TMowClosedLoopControlThread::UpdateState(EMowMotorState t)
-{
+void TMowClosedLoopControlThread::UpdateState(EMowMotorState t) {
 
 
 	switch (t) {
@@ -169,7 +170,7 @@ void TMowClosedLoopControlThread::UpdateState(EMowMotorState t)
 			if (diMotorMowFault == LOW) {
 				mowMotorDriver.resetFault(true);
 				resetCount++;
-				errorHandler.setInfo(F("srvClcM Motor %c resetCount++;\r\n"),'M');
+				errorHandler.setInfo(F("srvClcM Motor %c resetCount++;\r\n"), 'M');
 			}
 		}
 		else {
@@ -186,15 +187,14 @@ void TMowClosedLoopControlThread::UpdateState(EMowMotorState t)
 	}
 
 	if (flagShowSpeed) {
-		errorHandler.setInfoNoLog(F("!03,srvClcM speed: %f \r\n"), speedCurr);
+		errorHandler.setInfo(F("!03,srvClcM speed: %f \r\n"), speedCurr);
 	}
 
 };
 
 
 
-void TMowClosedLoopControlThread::forward()
-{
+void TMowClosedLoopControlThread::forward() {
 
 	if (GetState() == STMM_BACKWARD) {
 		errorHandler.setInfo(F("!03,srvClcM FORWARD not possible. STOP MOTOR FIRST!!!\r"));
@@ -204,8 +204,7 @@ void TMowClosedLoopControlThread::forward()
 }
 
 
-void TMowClosedLoopControlThread::backward()
-{
+void TMowClosedLoopControlThread::backward() {
 
 	if (GetState() == STMM_FORWARD) {
 		errorHandler.setInfo(F("!03,srvClcM BACKWARD not possible. STOP MOTOR FIRST!!!\r"));
@@ -215,45 +214,40 @@ void TMowClosedLoopControlThread::backward()
 }
 
 
-bool  TMowClosedLoopControlThread::isRunning()
-{
+bool  TMowClosedLoopControlThread::isRunning() {
 
 	return (GetState() == STMM_FORWARD || GetState() == STMM_BACKWARD);
 }
 
 
-void TMowClosedLoopControlThread::stop()
-{
+void TMowClosedLoopControlThread::stop() {
 	//SetState(STMM_STOP_REQUEST);
 	SetState(STMM_STOP);
 }
 
 
-bool TMowClosedLoopControlThread::isStopped()
-{
+bool TMowClosedLoopControlThread::isStopped() {
 	return (GetState() == STMM_STOP);
 }
 
-void TMowClosedLoopControlThread::controlDirect(int speed)
-{
+void TMowClosedLoopControlThread::controlDirect(int speed) {
 	mowMotorDriver.motor(motorNo, speed);
 }
 
 
 
-void TMowClosedLoopControlThread::showConfig()
-{
-	errorHandler.setInfoNoLog(F("!03,srvClcM Config MowMotorNo: %i\r\n"), motorNo);
-	errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-	errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-	errorHandler.setInfoNoLog(F("!03,motorMowAccel %d\r\n"), motorMowAccel);
-	errorHandler.setInfoNoLog(F("!03,motorDisabled %d\r\n"), motorDisabled);
-	errorHandler.setInfoNoLog(F("!03,uiMotorDisabled %d\r\n"), uiMotorDisabled);
+void TMowClosedLoopControlThread::showConfig() {
+	errorHandler.setInfo(F("!03,srvClcM Config MowMotorNo: %i\r\n"), motorNo);
+	errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+	errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+	errorHandler.setInfo(F("!03,motorMowAccel %d\r\n"), motorMowAccel);
+	errorHandler.setInfo(F("!03,motorDisabled %d\r\n"), motorDisabled);
+	errorHandler.setInfo(F("!03,uiMotorDisabled %d\r\n"), uiMotorDisabled);
 	if (CONF_DISABLE_MOW_MOTOR) {
-		errorHandler.setInfoNoLog(F("!03,mow motor disabled in config\r\n"));
+		errorHandler.setInfo(F("!03,mow motor disabled in config\r\n"));
 	}
 	else {
-		errorHandler.setInfoNoLog(F("!03,mow motor enabled in config\r\n"));
+		errorHandler.setInfo(F("!03,mow motor enabled in config\r\n"));
 	}
-	errorHandler.setInfoNoLog(F("!03,speedLimit %f\r\n"), speedLimit);
+	errorHandler.setInfo(F("!03,speedLimit %f\r\n"), speedLimit);
 }

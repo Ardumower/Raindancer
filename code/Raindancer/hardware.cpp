@@ -108,12 +108,12 @@ byte AT24CX_ADDRESS = B1010000;
 
 // Serial
 BufferSerial pc(Serial, 1);
-BufferSerial wan(Serial1,1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
+BufferSerial wan(Serial1, 1); //Used serial 2 to Receive. Sabertoothdriver sends on this line.
 BufferSerial bt(Serial2, 1);
 BufferSerial serialGPS(Serial3, 1);
 BufferSerial nativeUSB(SerialUSB, 1); //communication with raspberry pi
 
-BufferSerial *debug = &pc;
+BufferSerial* debug = &pc;
 //BufferSerial *debug = &bt;
 //BufferSerial &perRX = per;
 //BufferSerial &sabertoothTX = per;
@@ -216,12 +216,14 @@ static void ISR_MR_ENC_SIGA() {
 }
 
 
-void hardwareRun() {
+bool THal::Run() {
 	ADCMan.run();
+	return true;
 }
 
+
 void hardwareSetup() {
-	
+
 	doBuzzer.setup();
 
 	pc.begin(CONF_PC_SERIAL_SPEED);
@@ -262,7 +264,7 @@ void hardwareSetup() {
 	}
 	nativeUSB.flush();
 
-    
+
 	errorHandler.setInfo(F("I2c reset started\r\n"));
 	i2cInOut::I2C_reset();
 	Wire.begin();
@@ -292,20 +294,26 @@ void hardwareSetup() {
 	doChargeEnable.setup();
 	doBatteryOffSwitch.setup();
 
-	
+
 	doMyLED.setup();
 
 	dioDHT.setup();
 	dioDHT.write(LOW);
 
 	diPinRain.setup();
-    aiPinRain.setup();
+	aiPinRain.setup();
 
 	diBumperL.setup();
 	diBumperR.setup();
 
 	// left wheel motor
-	doMotorEnable.setup(HIGH);
+	if (CONF_USE_BLDC_DRIVER == true) {
+		doMotorEnable.setup(HIGH);  // Disables BLDC motors
+	}
+	else {
+		doMotorEnable.setup(LOW);  // Disables Ardumower motors
+	}
+
 	pwmMotorLeft.setup();
 	doMotorLeftDir.setup();
 	aiMotorLeftCurrent.setup();
@@ -318,7 +326,13 @@ void hardwareSetup() {
 	diMotorRightFault.setup();
 
 	// mower motor
-	doMotorMowEnable.setup(HIGH);
+	if (CONF_USE_BLDC_DRIVER == true) {
+		doMotorMowEnable.setup(HIGH); // Disables BLDC motors
+	}
+	else {
+		doMotorMowEnable.setup(LOW); // Disables Ardumower motors
+	}
+
 	pwmMotorMowPWM.setup();
 	doMotorMowDir.setup();
 	aiMotorMowCurrent.setup();
@@ -344,35 +358,40 @@ void hardwareSetup() {
 
 
 	doBatteryOffSwitch = HIGH;  // keep battery switched ON
-	
+
 								// Postprocessing of date
 	if (CONF_LEFT_ENCODER_INVERSE) {
 		encoderL.isReversed();
-		errorHandler.setInfoNoLog(F("Set L encoder reverse\r\n"));
+		errorHandler.setInfo(F("Set L encoder reverse\r\n"));
 	}
 	else {
 		encoderL.isNotReversed();
-		errorHandler.setInfoNoLog(F("Set L encoder not reverse\r\n"));
+		errorHandler.setInfo(F("Set L encoder not reverse\r\n"));
 	}
 
 	if (CONF_RIGHT_ENCODER_INVERSE) {
 		encoderR.isReversed();
-		errorHandler.setInfoNoLog(F("Set R encoder reverse\r\n"));
+		errorHandler.setInfo(F("Set R encoder reverse\r\n"));
 	}
 	else {
 		encoderR.isNotReversed();
-		errorHandler.setInfoNoLog(F("Set R encoder not reverse\r\n"));
+		errorHandler.setInfo(F("Set R encoder not reverse\r\n"));
+	}
+
+
+	if (CONF_USE_BLDC_DRIVER == true) {
+		attachInterrupt(pinOdometryLeft, ISR_ML_ENC_SIGA, RISING);
+		attachInterrupt(pinOdometryRight, ISR_MR_ENC_SIGA, RISING);
+	}
+	else {
+		attachInterrupt(pinOdometryLeft, ISR_ML_ENC_SIGA, CHANGE);
+		attachInterrupt(pinOdometryRight, ISR_MR_ENC_SIGA, CHANGE);
+		PinMan.setDebounce(pinOdometryLeft, 100);  // reject spikes shorter than usecs on pin
+		PinMan.setDebounce(pinOdometryRight, 100);  // reject spikes shorter than usecs on pin	
 	}
 
 
 
-	attachInterrupt(pinOdometryLeft, ISR_ML_ENC_SIGA, CHANGE);
-	attachInterrupt(pinOdometryRight, ISR_MR_ENC_SIGA, CHANGE);
-	PinMan.setDebounce(pinOdometryLeft, 100);  // reject spikes shorter than usecs on pin
-	PinMan.setDebounce(pinOdometryRight, 100);  // reject spikes shorter than usecs on pin	
 
-	motorDriver.resetFault(true);
-	mowMotorDriver.resetFault(true);
-	
 }
 

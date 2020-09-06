@@ -26,9 +26,17 @@
 #else
 #include "WProgram.h"
 #endif
+#include "Protothread.h"
 
 void cmd_setup();
 
 
+
+class TUI : public Protothread {
+public:
+	virtual bool Run();
+private:
+
+};
 #endif
 

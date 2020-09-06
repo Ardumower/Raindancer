@@ -23,13 +23,16 @@ void BuzzerClass::sound(SoundSelect idx) {
 	soundIdx = idx;
 	toneIdx = 0;
 	interval = 0;
-	enabled = true; //enable thread!!!
-	run();
+	Restart(); //enable thread!!!
+	Run();
 }
 
-void BuzzerClass::run() {
+bool BuzzerClass::Run() {
 
-	runned();
+	if (!IsRunning()) return true;
+
+	if(millis() - last_run < interval) return true;
+	last_run = millis();
 
 	switch (soundIdx) {
 	case SND_START:
@@ -40,7 +43,7 @@ void BuzzerClass::run() {
 		case 3: tone(3000);  interval = 100; break;
 		case 4: tone(2000);  interval = 100; break;
 		case 5: tone(3000);  interval = 100; break;
-		case 6: noTone(); enabled = false;   break; //disable thread because we are done!!!
+		case 6: noTone(); Stop();   break; //disable thread because we are done!!!
 		}
 		break;
 	case SND_READY:
@@ -52,7 +55,7 @@ void BuzzerClass::run() {
 		case 4: tone(4200);  interval = 250; break;
 		case 5: noTone();    interval = 250; break;
 		case 6: tone(4200);  interval = 250; break;
-		case 7: noTone(); enabled = false;   break; //disable thread because we are done!!!
+		case 7: noTone();  Stop();   break; //disable thread because we are done!!!
 		}
 		break;
 	case SND_CHARGERELAYON:
@@ -64,7 +67,7 @@ void BuzzerClass::run() {
 		case 4: tone(880);   interval = 200; break;
 		case 5: noTone();    interval = 200; break;
 		case 6: tone(1320);  interval = 200; break;
-		case 7: noTone(); enabled = false;   break; //disable thread because we are done!!!
+		case 7: noTone();  Stop();   break; //disable thread because we are done!!!
 		}
 		break;
 	case SND_CHARGERELAYOFF:
@@ -76,7 +79,7 @@ void BuzzerClass::run() {
 		case 4: tone(600);   interval = 200; break;
 		case 5: noTone();    interval = 200; break;
 		case 6: tone(440);   interval = 200; break;
-		case 7: noTone(); enabled = false;   break; //disable thread because we are done!!!
+		case 7: noTone();  Stop();   break; //disable thread because we are done!!!
 		}
 		break;
 	case SND_PROGRESS:
@@ -89,13 +92,15 @@ void BuzzerClass::run() {
 		break;
 	}
 	toneIdx++;
+
+	return true;
 }
 
 void BuzzerClass::setup()
 {
 	doBuzzer = LOW;
 	toneIdx = 0;
-	enabled = false;
+	Stop();;
 	interval = 0;
 }
 

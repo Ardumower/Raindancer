@@ -13,7 +13,7 @@
 #endif
 
 
-#include "Thread.h"
+#include "Protothread.h"
 
 // Uncomment to enable printing out nice debug messages.
 //#define DHT_DEBUG
@@ -36,7 +36,7 @@
 
 #define OVERTEMPCOUNTLIMIT 2
 
-class TDHT : public Thread
+class TDHT : public Protothread
 {
   public:
     uint16_t errorCounter;
@@ -47,7 +47,7 @@ class TDHT : public Thread
 
     TDHT(uint8_t type);
     void setup(void);
-    virtual void run();
+    virtual bool Run();
 
     float getLastReadTemperature();
     float readTemperature(bool S = false, bool force = false);

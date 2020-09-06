@@ -30,14 +30,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "helpers.h"
 #include "Sabertooth.h"
 #include "hardware.h"
 #include "errorhandler.h"
 
 
-class TClosedLoopControlThread : public Thread
+class TClosedLoopControlThread : public Protothread
 {
 private:
 	bool flagHardstopActive;        // if hardStop() is called, set to true that calculatePDFF() sets output direct to 0
@@ -84,7 +84,7 @@ public:
     float stopNearReachedThresholdAtRpm; //If the motor is running at this threshold, it is asssumed, that the motor is just before stopping. Used for line follower to get a smoother motion. 
 	void setup(uint8_t motorNumber, CRotaryEncoder *enc);
 
-	virtual void run();  // Called at the loop rate 20ms to run the state machine and therfore the motor
+	virtual bool Run();  // Called at the loop rate 20ms to run the state machine and therfore the motor
 
 	//Speed commands
 	void setSpeed(int  speed);  // -100% bis 100% Motorgeschwindigkeit festlegen und sofort losfahren

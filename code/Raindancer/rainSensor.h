@@ -36,84 +36,74 @@ delay(1000);
 }
 */
 
-#include "Thread.h"
+#include "Protothread.h"
 #include "hardware.h"
 #include "errorhandler.h"
 #include "config.h"
 
-class TrainSensor : public Thread
-    {
-    private:
-        bool m_isRainingDefault, m_isRainingADC;
-        byte m_count;
+class TrainSensor : public Protothread {
+private:
+	bool m_isRainingDefault, m_isRainingADC;
+	byte m_count;
 
-    public:
-        bool flagShowRainSensor;
+public:
+	bool flagShowRainSensor;
 
-        void setup()
-            {
-            m_isRainingDefault = false;
-            m_isRainingADC = false;
-            m_count = 0;
-            }
+	void setup() {
+		m_isRainingDefault = false;
+		m_isRainingADC = false;
+		m_count = 0;
+	}
 
 
-        virtual void run()
-            {
-            // Will be called every 1773ms
-            runned();
+	bool  Run() {
+		PT_BEGIN();
+		while (1) {
+			PT_YIELD_INTERVAL();
+			if (CONF_DISABLE_RAIN_SERVICE) {
+				PT_EXIT();
+			}
 
-            if (CONF_DISABLE_RAIN_SERVICE)
-                {
-                return;
-                }
+			if (CONF_RAINSENSOR_USE_ADC) {
+				int value32 = aiPinRain.read_int32();
 
-            if (CONF_RAINSENSOR_USE_ADC)
-                {
-                int value32 = aiPinRain.read_int32();
+				if (value32 < CONF_RAINSENSOR_ADC_THRESHOLD) {
+					m_count++;
+					if (m_count > 100) { m_count = 100; } // limit count
+					if (m_count > 5) { m_isRainingADC = true; }
+				}
+				else {
+					m_count = 0;
+					m_isRainingADC = false;
+				}
 
-                if (value32 < CONF_RAINSENSOR_ADC_THRESHOLD)
-                    {
-                    m_count++;
-                    if (m_count > 100) {m_count = 100;} // limit count
-                    if (m_count > 5) {m_isRainingADC = true;}
-                    }
-                else
-                    {
-                    m_count = 0;
-                    m_isRainingADC = false;
-                    }
+				if (flagShowRainSensor) {
+					errorHandler.setInfo(F("Is raining: %d adc: %d count: %d\r\n"), m_isRainingADC, value32, m_count);
+				}
+			}
 
-                if (flagShowRainSensor)
-                    {
-                    errorHandler.setInfo(F("Is raining: %d adc: %d count: %d\r\n"), m_isRainingADC, value32, m_count);
-                    }
-                }
+			if (CONF_RAINSENSOR_USE_DEFAULT) {
+				m_isRainingDefault = (diPinRain == LOW);
+				if (flagShowRainSensor) {
+					errorHandler.setInfo(F("Is raining: %d\r\n"), m_isRainingDefault);
+				}
+			}
+		}
+		PT_END();
+	}
 
-            if (CONF_RAINSENSOR_USE_DEFAULT)
-                {
-                m_isRainingDefault = (diPinRain == LOW);
-                if (flagShowRainSensor)
-                    {
-                    errorHandler.setInfo(F("Is raining: %d\r\n"), m_isRainingDefault);
-                    }
-                }
-            }
+	bool isRaining() {
+		return m_isRainingDefault || m_isRainingADC;
+	}
 
-        bool isRaining()
-            {
-            return m_isRainingDefault || m_isRainingADC;
-            }
+	void showConfig() {
+		errorHandler.setInfo(F("!03,Rain Sensor Config\r\n"));
+		errorHandler.setInfo(F("!03,enabled: %d\r\n"), IsRunning());
+		errorHandler.setInfo(F("!03,interval: %lu\r\n"), interval);
+		errorHandler.setInfo(F("!03,is _isRainingDefault: %d\r\n"), m_isRainingDefault);
+		errorHandler.setInfo(F("!03,is _isRainingADC: %d\r\n"), m_isRainingADC);
+	}
 
-        void showConfig()
-            {
-            errorHandler.setInfoNoLog(F("!03,Rain Sensor Config\r\n"));
-            errorHandler.setInfoNoLog(F("!03,enabled: %lu\r\n"), enabled);
-            errorHandler.setInfoNoLog(F("!03,interval: %lu\r\n"), interval);
-            errorHandler.setInfoNoLog(F("!03,is _isRainingDefault: %d\r\n"), m_isRainingDefault);
-            errorHandler.setInfoNoLog(F("!03,is _isRainingADC: %d\r\n"), m_isRainingADC);
-            }
-
-    };
+};
 #endif
 
