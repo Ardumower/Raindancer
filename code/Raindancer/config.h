@@ -127,6 +127,7 @@ Disclaimer: this code is "AS IS" and for educational purpose only.
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  false   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          false   // Disables the mow motor
+#define CONF_DISABLE_MOW_MOTOR_ALTERNATE_DIRECTION false // Disables the alternating of mow-motor direction
 
 #define CONF_ACTVATE_AUTO_SPIRAL        true
 
@@ -334,6 +335,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  false   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          false   // Disables the mow motor
+#define CONF_DISABLE_MOW_MOTOR_ALTERNATE_DIRECTION false // Disables the alternating of mow-motor direction
 
 #define CONF_ACTVATE_AUTO_SPIRAL        true
 
@@ -528,6 +530,7 @@ const char UBLOX_INIT[] PROGMEM =
 
 #define CONF_DISABLE_MOTOR_STALL_CHECK  true   // Disables the motor stall/encoder check in closed loop control
 #define CONF_DISABLE_MOW_MOTOR          true   // Disables the mow motor
+#define CONF_DISABLE_MOW_MOTOR_ALTERNATE_DIRECTION false // Disables the alternating of mow-motor direction
 
 #define CONF_ACTVATE_AUTO_SPIRAL        true
 

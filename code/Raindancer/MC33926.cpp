@@ -95,6 +95,7 @@ void MC33926Wheels::resetFault(bool force) {
 
 MC33926Mow::MC33926Mow() {
 	m_power = 999;
+  disc_direction_positive = true;
 }
 
 MC33926Mow::~MC33926Mow() {
@@ -107,6 +108,17 @@ void MC33926Mow::motor(byte motor, int power) {
 	power = power > 255 ? 255 : power;
 	power = power < -255 ? -255 : power;
 
+  if (!CONF_DISABLE_MOW_MOTOR_ALTERNATE_DIRECTION) {
+    if (power == 0) {
+      // Alternate the direction each time we start from power-0
+      disc_direction_positive = !disc_direction_positive;
+    }
+
+    // Adjust the power to account for disc direction
+    if (!disc_direction_positive) {
+      power = -power;
+    }
+  }
 
 	if (m_power == power) return;
 	m_power = power;
