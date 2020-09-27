@@ -173,7 +173,7 @@ public:
 
 		errorHandler.setInfo(F("!03,ChargeSystem measure offsetCC\r\n"));
 		errorHandler.setInfo(F("!03,"));
-		offsetCC = aiCHARGEVOLTAGE.measureOffsetVoltage();
+		offsetCC = aiCHARGECURRENT.measureOffsetVoltage();
 		errorHandler.setInfo(F("  offsetCC: %f\r\n"), offsetCC);
 	}
 
