@@ -1,5 +1,3 @@
-blabla
-
 # Raindancer
 
 This is the robotic lawn mower firmware named Raindancer for the Ardumower PCB1.3 with Arduino DUE
