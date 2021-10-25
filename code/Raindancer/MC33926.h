@@ -54,7 +54,7 @@ public:
 
 private:
 	int m_power;
-
+  bool disc_direction_positive;
 };
 #endif
 
